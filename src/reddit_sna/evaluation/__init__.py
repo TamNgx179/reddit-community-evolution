@@ -1,4 +1,4 @@
-"""Temporal splits and metrics (Anh), leakage/bootstrap checks (Đăng).
+"""Temporal splits and metrics, leakage/bootstrap checks.
 
 Implement splits by label_month and compare identical sample/reference keys.
 Metric computations and bootstrap are not implemented yet.

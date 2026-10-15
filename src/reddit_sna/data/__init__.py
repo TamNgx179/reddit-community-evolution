@@ -1,4 +1,4 @@
-"""Corpus loading, normalization, identity mapping and quality audits (Tâm).
+"""Corpus loading, normalization, identity mapping and quality audits.
 
 Keep canonical timestamped records here. Graph semantics, projections and
 monthly R/T construction belong in reddit_sna.graphs, not in file adapters.

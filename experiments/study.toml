@@ -1,5 +1,6 @@
 # Research design record. NOT a runtime config for `reddit-sna check/run`.
-# The CLI does not load/enforce this file. Algorithm implementations remain pending.
+# The CLI does not load/enforce this file. The Reddit data-to-Leiden pilot exists;
+# research experiments, tracking and forecasting remain pending.
 protocol_version = "0.1-draft"
 status = "draft_not_executed"
 project_type = "research_with_sna_analysis"
@@ -82,5 +83,5 @@ negative_result_policy = "retain_null_or_negative_findings; do_not_change_labels
 [reproducibility]
 required_per_run = ["run_id", "data_manifest_hash", "graph_and_reference_version", "config_hash", "git_revision_and_dirty_state", "dependency_versions", "seed", "sample_key_hash", "split_counts", "exclusions", "timing", "status"]
 notebook_policy = "clean_kernel_top_to_bottom_fail_on_error; outputs_are_evidence_only_after_real_execution"
-current_manifest_limit = "source_foundation_records_only_started_status_config_package_python; additional_provenance_above_is_not_implemented"
+current_manifest_limit = "preparation_records_verified_actual_months_graph_protocol_cohort_and_month_hashes_corpus_month_audit_plus_input_output_config_source_hashes_git_state_versions_status_wall_time; peak_memory_null; sample_keys_splits_forecast_provenance_pending; other_pipeline_helpers_only_record_started_status"
 week_one_policy = "three_independent_pair_demos; no_cross_pair_generated_artifact_dependency"

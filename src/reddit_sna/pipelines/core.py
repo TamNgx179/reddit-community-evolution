@@ -1,4 +1,4 @@
-"""Tâm–Thanh: Reddit → snapshots → communities → labels/features → model → metrics."""
+"""Core pipeline: Reddit → snapshots → communities → labels/features → model → metrics."""
 
 from reddit_sna.config import RunConfig
 from reddit_sna.pipelines import PipelineNotImplemented

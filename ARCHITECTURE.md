@@ -1,145 +1,97 @@
 # Source architecture
 
-## Quyết định cấu trúc
+One functional package, `src/reddit_sna`, serves CLI and notebooks. The implemented path is ZIP audit → normalization → monthly R → Independent Leiden. Full core tracking/features/forecasting and the synthetic pair demos remain planned. Filenames describe responsibilities; ownership is in the administrative assignment.
 
-Một package `src/reddit_sna` chia theo chức năng. Đây là bố cục source đã tạo; thuật toán bên trong còn cần triển khai. Thư mục không gắn với tên người, độ khó hoặc phương pháp đề xuất/đối chứng. Detector mới nằm cạnh detector cũ và trả cùng kiểu membership; mô hình mới dùng cùng khóa mẫu và định dạng prediction.
-
-Ba pipeline là nơi ghép các bước, không phải ba bản sao source. `pipelines/core.py`, `pipelines/detection_tracking.py`, `pipelines/prediction.py` hiện trả lỗi chưa triển khai. CLI chỉ import entrypoint được chọn khi gọi `run`; `check` chỉ kiểm tra cấu hình.
-
-## Đối chiếu tiêu chí chấm và mức sẵn sàng nghiên cứu
-
-Rubric người học cung cấp: A1 thi lý thuyết 50%, A2 đồ án nhóm 50%; mức điểm tối đa của đồ án đòi hỏi **tiềm năng paper**, cùng quá trình tham gia và các mốc proposal/giữa kỳ/cuối kỳ. Đây không phải rubric chấm chi tiết; không suy ra bảo đảm 9–10 từ một cấu trúc source.
-
-Định hướng là **nghiên cứu có phân tích SNA**, với câu hỏi kiểm chứng giá trị bổ sung của ngữ cảnh thread và lịch sử thành viên so với cấu trúc reply. Tính mới chưa được xác nhận. Các nguồn phương pháp trong `experiments/literature_matrix.csv` chỉ là điểm xuất phát; còn phải tìm công trình gần nhất về temporal/multiplex community forecasting, so dữ liệu/nhiệm vụ/protocol và chỉ ra khoảng trống cụ thể trước khi gọi là đóng góp mới.
-
-Source hiện có hạ tầng và khung trách nhiệm, chưa có kết quả nghiên cứu. Phân biệt ba tầng bằng chứng: **test phần mềm**, **kiểm chứng phương pháp trên ground truth**, **kết quả ngoài thời gian trên Reddit**. Không dùng số test hoặc số notebook để thay cho hai tầng sau.
-
-## Hướng phụ thuộc
+## Dependencies and boundaries
 
 ```text
-CLI → config + pipeline được chọn
-notebooks/<nhóm> → config + module chức năng hoặc pipeline đã triển khai
-pipeline → data / graphs / benchmarks / detection / tracking / features / models / evaluation
+CLI → config + selected pipeline
+notebook → config + functional modules / implemented pipeline
+pipeline → data / graphs / detection / tracking / features / models / evaluation / benchmarks
 pipeline → artifacts
-domain modules → contracts
+reporting → recorded artifacts + graph contracts; optional plotting libraries
+algorithm modules → contracts
 artifacts → config + contracts
 ```
 
-Module thuật toán không import CLI/pipeline; pipeline không import pipeline khác. Không đọc file hoặc tính toán nặng khi import. `contracts.py` giữ records nhỏ và bất biến dữ liệu, không import thư viện graph/ML. Chưa cần factory, plugin registry, dependency injection, repository/service layer hoặc một file utils tổng hợp.
+Algorithm modules never import CLI or pipelines; pipelines do not import each other. Imports perform no file reads or expensive computation. `contracts.py` contains small records and invariants, without graph/ML dependencies. No general utils module, plugin registry or service/repository layer is needed.
 
-## Notebook và source dùng lại
-
-`notebooks/core`, `notebooks/detection_tracking`, `notebooks/prediction` là không gian thử nghiệm và trình bày riêng cho ba cặp. Mỗi nhóm có `00_research_plan.ipynb` với câu hỏi, dữ liệu, protocol, đối chứng, kết quả/bằng chứng và phản biện. Đây là template chưa chạy; cell triển khai chủ động báo NotImplementedError để không bị nhầm là demo hoàn tất. Notebook có thể chứa prototype mới; khi logic ổn định hoặc cần dùng lại thì chuyển vào module chức năng. Source không import hoặc phụ thuộc vào thứ tự thực thi notebook.
-
-Cả notebook và CLI dùng chung contracts/config và quy tắc output. Chọn kernel có package được cài trong cùng môi trường; notebook không chỉnh sys.path. Đầu notebook xác định path config rõ ràng vì cwd có thể khác vị trí notebook. Bàn giao từ kernel sạch theo thứ tự cell, ghi seed/dữ liệu nguồn, dừng khi lỗi. Template chưa được thực thi; chưa thêm công cụ chạy notebook tự động hoặc dependency notebook vào bộ khung.
-
-Notebook chạy đủ input → xử lý → evaluation có thể là demo end-to-end của cặp ở tuần 1. CLI là đường chạy để tự động hóa/tích hợp về sau; không bắt buộc mọi thử nghiệm phải bắt đầu bằng CLI.
-
-## Ranh giới và người sở hữu
-
-| Nơi | Trách nhiệm | Người sở hữu |
-|---|---|---|
-| `data/` | Corpus adapters, chuẩn hóa, ID nhất quán và audit dữ liệu | Tâm |
-| `graphs/` | Graph dị thể, cutoff, snapshot R/T, projection và coverage | Tâm |
-| `detection/` | Leiden/Louvain; temporal/consensus | Phúc; Tâm cho phương pháp đề xuất |
-| `tracking/` | Liên kết community, gán sự kiện | Đăng cho Jaccard; Thanh cho GED |
-| `features/` | Cấu trúc, dị thể, lịch sử thành viên | Thanh |
-| `models/` | Dự báo trên bảng mẫu | Trâm cho B1/B4; Phúc cho B2/B5; Thanh cho HeTCo |
-| `evaluation/` | Split, chỉ số, leakage, độ bất định | Anh cho metrics/report; Đăng cho kiểm tra nâng cao |
-| `benchmarks/` | Mạng chuẩn; bảng dự báo tổng hợp | Phúc; Trâm cho bảng dự báo |
-| `pipelines/core.py` | Demo core riêng | Tâm–Thanh |
-| `pipelines/detection_tracking.py` | Demo detection/tracking riêng | Phúc–Đăng |
-| `pipelines/prediction.py` | Demo baseline/evaluation riêng | Trâm–Anh |
-| `notebooks/core/` | Khám phá, prototype và trình bày core | Tâm–Thanh |
-| `notebooks/detection_tracking/` | Thử benchmark/detector/tracker và phân tích lỗi | Phúc–Đăng |
-| `notebooks/prediction/` | Thử baseline, evaluation và biểu đồ | Trâm–Anh |
-| `config.py`, `contracts.py`, `artifacts.py`, CLI | Giao diện chung; thay đổi cần review các nơi sử dụng | Tâm điều phối |
-
-Shared code không đồng nghĩa phải chờ shared output. Phúc–Đăng dùng benchmark tự sinh; Trâm–Anh dùng bảng tự sinh; Tâm–Thanh dùng Reddit pilot và thư viện có sẵn. Sau tuần 1 có thể đổi đầu vào/pipeline composition trong khi giữ module chức năng.
-
-## Các thành phần cần triển khai để bảo vệ kết luận khoa học
-
-Đường dẫn dưới đây là **điểm đặt code khi triển khai**, chưa phải file/thuật toán đã tồn tại. Giữ cây theo chức năng, không tạo hàng loạt file rỗng chỉ để lấp sơ đồ.
-
-| Thành phần | File dự kiến | Trách nhiệm kiểm chứng được |
-|---|---|---|
-| Data audit | `data/audit.py` | Duplicate IDs, UTC, parent links, deleted/bot policy và loss counts theo tháng |
-| Graph semantics | `graphs/snapshots.py`, `graphs/projections.py` | Reply có hướng, R/T đúng định nghĩa, cutoff, trọng số/version và coverage; tính trước chi phí projection |
-| Detection | `detection/leiden.py`, các module temporal/consensus khi cần | Membership User-only, objective/gamma/seed, coverage và độ ổn định; đóng băng C_t trước khi đọc t+1 |
-| Tracking | `tracking/jaccard.py`, `tracking/ged.py`, `tracking/events.py` | Tách liên kết, lineage và gán sự kiện; precedence rõ cho merge/split; GED có member importance |
-| Features | Các module cấu trúc/dị thể/lịch sử trong `features/` | Nguồn, window và thời điểm biết từng feature; không biến nhãn hoặc tương lai thành input |
-| Forecasting | Model modules trong `models/` | Chung giao diện fit/predict; B1/B4 và B2/B5/HeTCo với ngân sách phù hợp |
-| Evaluation | `evaluation/splits.py`, `metrics.py`, `comparison.py`, `uncertainty.py` | Chia toàn tháng nhãn, kiểm tra sample/reference/truth trùng khớp, metrics có support và so sánh ghép cặp |
-| Benchmark | Generator trong `benchmarks/` | Ground truth độc lập, mạng dễ/khó, nhóm nhỏ, sáu sự kiện và seed phát triển/đánh giá tách biệt |
-
-**Một bẫy quan trọng:** số community mỗi tháng không đều; áp dụng bộ chia theo chỉ số dòng có thể tách một tháng sang nhiều tập. Chia bằng danh sách toàn bộ `label_month` rồi ánh xạ về row indices; không chỉ sort rồi chia số dòng. [TimeSeriesSplit docs](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.TimeSeriesSplit.html) cũng lưu ý điều kiện khoảng cách mẫu khi muốn so các fold có cùng độ dài thời gian; quyết định chia theo nhóm tháng ở đây là thiết kế của project.
-
-## Hồ sơ thí nghiệm và bằng chứng
-
-`experiments/` chứa **hồ sơ thiết kế được version bằng Git**, còn `artifacts/` chứa output runtime. CLI hiện chỉ đọc `configs/`; không đọc hoặc enforce các hồ sơ `experiments/`.
-
-- `study.toml`: draft định nghĩa nhiệm vụ, graph/nhãn, split, giả thuyết H1–H3, fairness, provenance và điều kiện không được kết luận.
-- `experiment_registry.csv`: E1–E5, người phụ trách, loại bằng chứng và điều kiện hoàn tất; tất cả còn trạng thái planned.
-- `ablation_registry.csv`: A1–A7, phân biệt ablation chỉ đổi features trên cùng mẫu với thay đổi partition/reference cần chạy lại mọi predictor.
-- `feature_catalog.csv`: từng nhóm feature, window, thời điểm biết tại t và các feature cấm vì leakage.
-- `literature_matrix.csv`: nguồn, phạm vi đã kiểm tra và ý nghĩa với project; cột novelty hiện chưa có bằng chứng xác nhận tính mới.
-
-Mỗi bảng/hình cuối cùng phải truy được về run ID, data/graph/reference version, cấu hình, seed, môi trường, prediction keys và số mẫu loại. Manifest runtime hiện chỉ ghi cấu hình/Python/package và trạng thái started; checksum, Git revision/dirty state, resource metrics và status hoàn tất **chưa triển khai**. Hồ sơ thiết kế không tự tạo ra bảo đảm runtime.
-
-`reports/claim_evidence.csv` nối H1–H3 và novelty với bằng chứng; các hàng hiện đều chưa được kiểm chứng. `reports/contribution_log.csv` là biểu mẫu trống ghi việc thật/đầu ra/review theo người và mốc báo cáo. Không điền lịch sử tham gia hoặc kết quả chưa xảy ra. Hai bảng này giúp chuẩn bị báo cáo quá trình và bảo vệ kết luận, không thay cho điểm danh hoặc đánh giá trực tiếp của giảng viên.
-
-## Tự phản biện trước mỗi mốc báo cáo
-
-| Câu hỏi người chấm có thể hỏi | Bằng chứng cần có để trả lời |
+| Location | Responsibility and implemented state |
 |---|---|
-| Tại sao đây là SNA thay vì chỉ phân loại bảng? | Định nghĩa tương tác, đồ thị dị thể/projection, chất lượng cộng đồng, lineage và đóng góp thông tin mạng |
-| Community có đúng không? | Benchmark có phân hoạch chuẩn; trên Reddit dùng coverage, kích thước, connectivity, stability và diễn giải thận trọng; không gọi subreddit là ground truth |
-| Tracker đúng hay mô hình chỉ học lại lỗi nhãn? | Tracker trên membership chuẩn trước, detection+tracking sau; ví dụ mơ hồ, phân phối nhãn và reference thay thế |
-| Modularity cao đã đủ chưa? | Objective/graph/gamma nhất quán và phân tích nhóm nhỏ, coverage, stability; [resolution-limit paper](https://arxiv.org/abs/physics/0607100) cho thấy giới hạn của tối ưu modularity |
-| Temporal coupling có nhìn thấy tương lai không? | Regression check: thêm snapshot tương lai không đổi C_t đã lưu; audit cutoff trên feature/tracking |
-| HeTCo hơn vì dữ liệu hay chỉ vì mô hình mạnh hơn? | B5 matched-capacity, cùng mẫu/nhãn/budget; A1/A4 và kiểm tra detector tham chiếu khác |
-| Chênh lệch có đáng tin không? | Paired predictions, kết quả từng tháng/lớp, time-block uncertainty và giới hạn khi test chỉ có chín tháng; seed repeats không phải thêm test sets độc lập |
-| Insight có mới và có thể giải thích không? | Đối chiếu related work, vài case community/lineage có bằng chứng định lượng, phân tích lỗi và alternative explanations |
-| Tại sao không đạt giả thuyết? | Báo cáo null/negative results, giới hạn dữ liệu/nhãn và hiệu quả so với mô hình đơn giản; không đổi test sau khi xem điểm |
+| `data/archive.py` | Explicit ZIP allowlist, streaming SHA-256, full member CRC and sampled schema audit |
+| `data/normalize.py` | Full-row validation, UTC cutoff, namespaced record IDs and indexed SQLite metadata |
+| `graphs/audit.py` | Complete corpus-month support and exclusive reply outcomes |
+| `graphs/snapshots.py` | Child-month directed replies, symmetric R, users, isolates and coverage |
+| `graphs/provenance.py` | Cohort month/schema validation, month hashes and protocol-bound references |
+| `detection/leiden.py` | Independent monthly RBConfiguration partitions, seed repeats and diagnostics |
+| `reporting/pilot.py` | Verify recorded artifacts, source-chain hashes, periods, identity and count conservation |
+| `reporting/figures.py` | Eight descriptive figure families, labeled display sampling and PNG/SVG provenance |
+| `evaluation/causality.py` | Explicitly aligned past graph/partition comparisons through a cutoff |
+| `pipelines/preparation.py` | One stage or raw-to-membership orchestration; stops before tracking |
+| `pipelines/core.py` | Planned complete Reddit pipeline, explicitly unfinished |
+| `pipelines/detection_tracking.py` | Planned independent synthetic graph demo |
+| `pipelines/prediction.py` | Planned independent synthetic table demo |
+| `tracking/`, `features/`, `models/`, `benchmarks/` | Responsibility descriptions, not completed algorithms |
 
-Ưu tiên thực nghiệm đủ sức trả lời câu hỏi nghiên cứu: audit/graph đúng, tracker có kiểm chứng, baseline công bằng, dự báo ngoài thời gian, A1/A4 và phân tích lỗi. B6 đắt hoặc các phân tích phụ có thể lùi sau nếu thiếu thời gian. Tuần 1 vẫn ba demo riêng; các mốc giữa/cuối kỳ phải có một câu chuyện nghiên cứu và so sánh trên cùng dữ liệu thật.
+## Notebooks and reporting
 
-Nguồn phương pháp nền: [ConvoKit](https://convokit.cornell.edu/documentation/subreddit.html), [Leiden](https://doi.org/10.1038/s41598-019-41695-z), [GED](https://doi.org/10.1007/s13278-012-0058-8), [notebook execution](https://nbclient.readthedocs.io/en/latest/client.html). Khả năng bài báo của đề tài vẫn cần đánh giá qua related work và kết quả thực tế.
+The three notebook directories support independent pair prototypes. `00_research_plan.ipynb` files are deliberately unfinished templates. `core/01_reddit_pilot.ipynb` is executable with an installed graph/notebook environment: it checks the actual kernel, resolves repository paths, replays verified results or rebuilds from raw, displays diagnostics and exports figures. Follow the setup in README. No `sys.path` modification is allowed.
+
+Keep exploratory prototypes in notebooks until stable. Reusable replay, validation and plotting belong in the package and are behavior-tested independently. Restart and run all cells before handing off; store executed copies/figures in fresh local artifact folders and commit output-free source notebooks. Plots are derived from recorded aggregates, never hardcoded scientific results. Network sampling is display-only; full graph data determine metrics and memberships.
+
+## Input, graph and identity semantics
+
+Normalization excludes future rows before ordinal identity allocation and retains older metadata for parent lookup. Raw author mappings exist only in memory, never on disk. Pseudonyms are local to a normalized run and do not guarantee anonymity. Deleted/removed/unknown/AutoModerator authors are excluded; other bots remain a limitation. Identical duplicates are counted; conflicting duplicates abort. SQLite connections are explicitly closed on Windows.
+
+Replies use child time and point from comment author to parent author. A parent may precede the pilot but must not follow the child. R adds directed weights in both directions and excludes self-loops. Active authors and endpoints can differ; their union defines observed users. Isolates are retained for coverage but not assigned a community.
+
+The corpus audit includes every declared corpus-month, even zero activity. Each comment receives exactly one priority outcome: no pointer → missing parent → excluded child → excluded parent → future parent → self → valid. These sum to comments; legacy incidence counters can overlap. Coverage uses active authors incident to attributed replies divided by active authors in the same corpus-month. Corpus author counts overlap and are not additive.
+
+Leiden runs weighted RBConfiguration with a specified gamma, independent months, predetermined seeds and convergence. Canonical membership is the first seed, not a chosen winner. Empty graphs produce no quality estimate. Modularity, RB objective, connectivity, size and seed ARI have distinct meanings; none validates social truth alone.
+
+Graph protocol/cohort checksums bind all monthly inputs and retain separate per-month hashes. Membership references additionally include identity, detector version, gamma and seed, shared across one cohort's months. Adding a month changes cohort reference without necessarily changing past partitions. Legacy inputs use a distinct protocol/reference; do not join references automatically. Detection inherits source bounds and rejects explicit mismatched intervals before reserving output; create a separate snapshot run for a subset.
+
+The causal-prefix diagnostic requires caller-provided bijective user alignments, compares R/directed_R/users and partitions up to a cutoff under cluster renaming, and ignores later months. Ordinal IDs and node order can differ across runs. Report actual differences rather than changing seeds to obtain a pass. This does not validate unimplemented tracking/features/forecasting.
 
 ## Data contracts v1
 
-Dataclass trong `contracts.py` là giao diện in-memory. Khi viết adapter CSV/Parquet, serialize thành cột tường minh và lưu `schema_version=1` trong metadata. Chưa có adapter hoặc migration dữ liệu ở bộ khung này.
-
-| Record | Field và quy tắc |
+| Record | Invariants |
 |---|---|
-| `SnapshotEdge` | `month`, `source_user_id`, `target_user_id`, `weight`; YYYY-MM, không self-loop, trọng số hữu hạn >0 |
-| `Membership` | `reference_id`, `month`, `community_id`, `user_id`; community ID cục bộ theo tháng |
-| `SampleKey` | `reference_id`, `feature_month`, `community_id`; khóa ghép duy nhất của mẫu dự báo |
-| `TrackingLink` | `source`, `target` là SampleKey; target có thể thiếu, nếu có phải cùng reference và tháng kế tiếp |
-| `CommunitySample` | `key`, `label_month`, `label`, `features`; label_month = feature_month + 1 |
-| `Prediction` | `key`, `label_month`, `model`, `y_true`, `y_pred`; nhãn theo Event |
+| `SnapshotEdge` | YYYY-MM, two distinct endpoints, finite positive weight |
+| `Membership` | reference, month, local community ID, user ID |
+| `SampleKey` | reference + feature month + local community ID |
+| `TrackingLink` | Source/optional target keys; same reference and consecutive months |
+| `CommunitySample` | Feature key, next label month, event and features |
+| `Prediction` | Same sample key/label month, model, truth and prediction |
 
-Sáu mã nhãn: `stable`, `grow`, `shrink`, `merge`, `split`, `dissolve`. Link chưa có target **không tự động chứng minh dissolve**: thuật toán cần xét độ phủ, nhóm nhỏ và tháng kế tiếp thật sự có tồn tại. Không gán dissolve cho tháng cuối thiếu quan sát.
+Events are `stable`, `grow`, `shrink`, `merge`, `split`, `dissolve`. An unmatched link alone does not prove dissolution; check coverage, small groups and whether t+1 was observed. The final month without its successor cannot be labeled dissolve. Cluster names do not establish temporal identity. Split/merge can have multiple links; freeze one sample-label precedence policy before evaluation.
 
-Reference ID cần rõ nghĩa như `leiden-jaccard-v1`; đổi detector/tracker hoặc quy tắc nhãn phải phân biệt bộ tham chiếu. Hai community có cùng ID ở hai tháng không mặc nhiên là cùng nhóm. Split/merge có thể có nhiều TrackingLink; gán một nhãn mẫu theo quy tắc được cố định trước đánh giá.
+Dataclasses validate structure and basic month relations, not feature availability, dataset uniqueness, event validity or leakage. Split **whole label-month groups**, never row-count slices that put one month into multiple sets. Fit preprocessing on train only. Retention t→t+1 is a target-derived quantity; only historical retention t−1→t can be a feature at t. Reddit tracker labels remain proxy references, not social ground truth.
 
-Contracts kiểm tra cấu trúc và quan hệ tháng cơ bản. Chất lượng dữ liệu, thời điểm biết từng feature, tính duy nhất của bảng, sáu sự kiện và chống leakage vẫn cần kiểm chứng khi triển khai. Chia tập theo `label_month`, fit preprocessing chỉ trên train; Reddit tracker labels không phải ground truth xã hội.
+## Config and artifact policy
 
-## Config và artifact
+Strict TOML allows only schema_version, pipeline, project_root, seed, input and output. Paths resolve from the config directory; unknown fields are rejected. Seeds are integers in [0, 2^32); run IDs are 1–64 portable letters/digits/hyphens/underscores and exclude Windows devices and traversal. Core uses an existing Reddit input directory; synthetic pair demos do not need that input.
 
-TOML phải có đúng `schema_version`, `pipeline`, `project_root`, `seed`, `input`, `output`. Không âm thầm bỏ qua field lạ. Mọi path resolve từ thư mục config, không từ cwd/vị trí cài package. Seed là số nguyên [0, 2^32); run ID dài 1–64 ký tự chữ/số/gạch ngang/gạch dưới, không chứa dấu chấm, path separator hoặc tên thiết bị Windows.
+Outputs remain in project artifacts and cannot overlap inputs or data. Validate before creating directories and reserve each run exclusively; even failed runs require a new ID. Preparation checks source status and all declared hashes, then records config/source/environment/Git provenance, stage status, elapsed time and output hashes. Time excludes preflight checks; peak memory is unmeasured (null). Completion through detection does not imply forecasting completion. Other future pipelines must implement their own corresponding provenance.
 
-`core` dùng `input.kind="reddit"` và input directory có sẵn. Hai pipeline khác dùng `synthetic`, có thể không có path vì generator được triển khai trong nhóm; nếu chỉ định path thì phải tồn tại. Đây là policy tuần 1; khi hỗ trợ bảng thật cho prediction, sửa policy có kiểm chứng thay vì đổi tên kind.
+Reporting treats manifests as trusted local inputs and checks changes relative to them; checksums do not authenticate simultaneous replacement of metadata and artifacts. Exports preserve source manifest hashes, graph reference, plotting source/version and sampling parameters. Replay verifies recorded results; it does not claim the current source produced historical artifacts.
 
-Output nằm trong `project_root/artifacts`; path resolve không được chồng lên input hoặc `project_root/data`. Mỗi run ở `<output.root>/<pipeline>/<run_id>/`. Kiểm tra path trước khi tạo thư mục và mkdir độc quyền để không ghi đè. Run đã tồn tại, kể cả thất bại, cần ID mới. Manifest chỉ ghi trạng thái `started`; chưa có trạng thái giả thành công.
+## Research evidence and planned extensions
 
-Pipeline tương lai kiểm tra đủ dependency/stage trước khi tạo run; gọi `create_run_directory`, chạy các bước rồi lưu metrics/log thật. Không import hoặc đọc output nhóm khác để hoàn thành demo tuần 1.
+The supplied rubric allocates A1/A2 50% each and requires paper potential for maximum project credit. Distinguish software correctness, method validation on controlled truth, and out-of-time Reddit results. Passing tests or arranging source does not establish the latter two, novelty or a grade.
 
-## Mở rộng theo thứ tự
+`experiments/study.toml` is a draft task/graph/label/split/hypothesis/fairness design. Experiment E1–E5, ablation A1–A7, feature and literature catalogs are planning records; CLI does not enforce them. `reports/claim_evidence.csv` has unverified claims and `contribution_log.csv` is a blank record of actual work, not attendance evidence. Every final result must trace to data/version/reference/config/seed/environment/prediction keys and exclusions.
 
-1. Tâm–Thanh thêm reader/audit trong data và snapshot/projection trong graphs, detector thư viện tạm, tracking/features và mô hình cơ bản; chưa cần multislice để ghép luồng tối thiểu.
-2. Phúc–Đăng thêm generator mạng chuẩn, Leiden và Jaccard; kiểm chứng tracker riêng rồi toàn luồng.
-3. Trâm–Anh thêm generator bảng, Majority/Persistence/Logistic Regression, split thời gian và metrics.
-4. Ghép với Reddit thật qua contracts; thêm GED, tầng T, HeTCo và đối chứng nâng cao tại module tương ứng.
+| Next component | Evidence required before claiming completion |
+|---|---|
+| Controlled benchmarks | Independent development/evaluation seeds, easy and difficult communities, small groups and all six events |
+| Tracking | True-membership tests first, detector-plus-tracker second; Jaccard versus full importance-based GED; fixed thresholds and precedence |
+| Graph extensions | Explicit heterogeneous versus user-projection meaning, co-thread construction cost and cutoff-safe participants |
+| Features | Source/window/availability for structural, thread and historical membership features; leakage negative controls |
+| Forecasting | B1/B4 first; matched-capacity B5 and proposed model on identical samples, labels and budgets |
+| Evaluation | Whole label-month splits, class/month support, paired predictions, time-block uncertainty and short-test limitations |
+| Novelty/insights | Closest temporal/multiplex forecasting work, quantitative cases, alternative explanations and null results |
 
-Không thêm file thuật toán rỗng cho mọi kế hoạch trước khi có implementation. Mỗi thuật toán có test hành vi phù hợp và dependency trong pyproject. Cấu trúc này giảm sửa lại khi tích hợp, không bảo đảm schema sẽ không bao giờ đổi.
+Research questions ask whether thread context and membership history add value beyond reply structure; novelty is unconfirmed. High modularity can miss small groups, repeatable partitions can suppress real change, and a strong predictor can learn tracker artifacts. Compare alternate reference pipelines separately, report detector/tracker errors and do not tune on official test. Seed repeats are not independent test datasets. Prioritize a validated minimal chain before expensive temporal/consensus methods.
+
+Method starting points: [ConvoKit](https://convokit.cornell.edu/documentation/subreddit.html), [Leiden](https://doi.org/10.1038/s41598-019-41695-z), [GED](https://doi.org/10.1007/s13278-012-0058-8), [modularity resolution limit](https://arxiv.org/abs/physics/0607100). These do not establish project novelty.

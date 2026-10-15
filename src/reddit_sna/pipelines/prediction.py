@@ -1,4 +1,4 @@
-"""Trâm–Anh: synthetic community table → temporal split → baselines → metrics."""
+"""Prediction pipeline: synthetic community table → temporal split → baselines → metrics."""
 
 from reddit_sna.config import RunConfig
 from reddit_sna.pipelines import PipelineNotImplemented

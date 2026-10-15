@@ -1,4 +1,4 @@
-"""Graph definitions, temporal snapshots and user projections (Tâm).
+"""Graph definitions, temporal snapshots and user projections.
 
 Planned responsibilities, not implemented algorithms:
 - Preserve directed reply observations and UTC observation cutoffs.

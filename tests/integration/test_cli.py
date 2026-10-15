@@ -100,12 +100,12 @@ class CliTests(ProjectCase):
             capture_output=True, text=True, encoding="utf-8", timeout=20,
         )
         self.assertEqual(result.returncode, 0, result.stderr)
-        self.assertIn("Tâm–Thanh", result.stdout)
-        self.assertIn("Phúc–Đăng", result.stdout)
+        self.assertIn("Reddit data", result.stdout)
+        self.assertIn("Synthetic graphs", result.stdout)
 
     def test_unicode_config_path_with_legacy_encoding(self):
         path = self.config()
-        unicode_path = path.with_name("dự đoán.toml")
+        unicode_path = path.with_name("forecast-\u03bb.toml")
         path.rename(unicode_path)
         result = subprocess.run(
             [sys.executable, "-m", "reddit_sna", "check", "--config", str(unicode_path)],

@@ -1,4 +1,4 @@
-"""Community tracking: Jaccard (Đăng) and adapted GED (Thanh), not yet implemented.
+"""Community tracking: Jaccard and adapted GED, not yet implemented.
 
 Use explicit TrackingLink records; do not equate cluster IDs across snapshots.
 Keep different tracker reference IDs separate.

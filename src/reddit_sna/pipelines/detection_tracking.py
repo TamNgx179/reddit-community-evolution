@@ -1,4 +1,4 @@
-"""Phúc–Đăng: synthetic dynamic graph → detection/tracking → benchmark metrics."""
+"""Detection/tracking pipeline: synthetic dynamic graph → detection/tracking → benchmark metrics."""
 
 from reddit_sna.config import RunConfig
 from reddit_sna.pipelines import PipelineNotImplemented

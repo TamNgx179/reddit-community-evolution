@@ -14,6 +14,7 @@ class ConfigError(ValueError):
 
 
 def validate_run_id(value: str) -> str:
+    """Validate a portable run identifier, excluding traversal and Windows device names."""
     if not isinstance(value, str) or not re.fullmatch(
         r"[A-Za-z0-9][A-Za-z0-9_-]{0,63}", value
     ):
@@ -38,9 +39,11 @@ class RunConfig:
 
     @property
     def run_directory(self) -> Path:
+        """Return the isolated pipeline/run destination without creating it."""
         return self.output_root / self.pipeline.value / self.run_id
 
     def to_dict(self) -> dict[str, Any]:
+        """Serialize resolved configuration for provenance; this does not execute the pipeline."""
         return {
             "schema_version": SCHEMA_VERSION,
             "config_path": str(self.source),
@@ -101,6 +104,7 @@ def validate_destination(config: RunConfig) -> Path:
 
 
 def load_config(path: Path, *, run_id: str | None = None) -> RunConfig:
+    """Load strict TOML, resolve paths relative to its directory and validate output boundaries."""
     source = path.resolve()
     try:
         with source.open("rb") as handle:
