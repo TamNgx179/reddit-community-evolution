@@ -64,7 +64,8 @@ class PreparationPipelineTests(CorpusCase):
         config = load_config(self.config('core'))
         source = run_preparation(config,corpora=('moderatepolitics',))
         summary = json.loads((source/'snapshots.json').read_text())
-        for field in ('graph_protocol','graph_reference','snapshot_cohort_sha256','start_month','end_month_exclusive'):
+        # A true legacy summary has no ordered-cohort inventory either.
+        for field in ('graph_protocol','graph_reference','snapshot_cohort_sha256','start_month','end_month_exclusive','month_graphs'):
             summary.pop(field)
         (source/'snapshots.json').write_text(json.dumps(summary))
         manifest = json.loads((source/'manifest.json').read_text())

@@ -114,7 +114,7 @@ def build_figures(pilot: dict, *, sample_limit=150, seed=42) -> dict:
     figures["01_data_scope"] = fig
 
     corpora, _, values = corpus_matrix(graphs)
-    fig, ax = plt.subplots(figsize=(9, max(4, len(corpora) * .32)), layout="constrained")
+    fig, ax = plt.subplots(figsize=(max(9, len(months)*1.1+3), max(4, len(corpora) * .32)), layout="constrained")
     image = ax.imshow(np.log1p(values), aspect="auto", cmap="cividis", vmin=0)
     ax.set_xticks(range(len(months)), months)
     ax.set_yticks(range(len(corpora)), corpora)
@@ -212,10 +212,18 @@ def build_figures(pilot: dict, *, sample_limit=150, seed=42) -> dict:
     ax.set_title(f"{sample['month']}: biased BFS display sample\nColors = full-graph communities (palette may repeat)", fontsize=10)
     ax.set_xlabel(caption, fontsize=8); ax.set_xticks([]); ax.set_yticks([])
     figures["08_network_sample"] = fig
+    # Twelve-month figures need more horizontal space than the original quarter.
+    if len(months) > 6:
+        for name in ("03_graph_volume", "04_coverage", "05_reply_outcomes", "06_community_sizes", "07_partition_diagnostics"):
+            figures[name].set_figwidth(15)
+            for axis in figures[name].axes:
+                if axis.get_xscale() == "linear":
+                    axis.tick_params(axis="x", labelrotation=45)
     return figures
 
 
-def export_figures(figures: dict, output: Path, pilot: dict, *, sample_limit=150, seed=42) -> Path:
+def export_figures(figures: dict, output: Path, pilot: dict, *, sample_limit=150, seed=42,
+                   validation_runs=()) -> Path:
     """Reserve a new output directory and export figures plus source provenance.
 
     A started/failed manifest remains if export fails. Existing results are never
@@ -223,9 +231,17 @@ def export_figures(figures: dict, output: Path, pilot: dict, *, sample_limit=150
     """
     if not output.resolve().is_relative_to(pilot["runs"]["detection"].parents[1]):
         raise ValueError("Figure output must stay inside project artifacts")
+    # Additional figures may combine annual analysis and a separately referenced
+    # quarter sensitivity study. Preserve both sources without conflating cohorts.
+    from reddit_sna.reporting.pilot import verified_manifest
+    validation_sources = {}
+    for run in validation_runs:
+        verified_manifest(run, pilot["runs"]["detection"].parents[1])
+        validation_sources[str(run)] = digest_file(run / "manifest.json")
     output.mkdir(parents=True, exist_ok=False)
     manifest = {"status": "started", "source_runs": {k: str(v) for k, v in pilot["runs"].items()},
                 "source_manifest_sha256": {k: digest_file(v / "manifest.json") for k, v in pilot["runs"].items()},
+                "validation_manifest_sha256": validation_sources,
                 "graph_reference": pilot["graphs"]["graph_reference"], "canonical_seed": pilot["detection"]["canonical_seed"],
                 "plotting": {name: version(name) for name in ("matplotlib", "numpy", "igraph")},
                 "source_sha256": {p.name: digest_file(p) for p in Path(__file__).parent.glob("*.py")},

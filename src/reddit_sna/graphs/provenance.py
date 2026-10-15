@@ -4,14 +4,36 @@ import csv
 import hashlib
 import json
 import math
+import re
 from pathlib import Path
 
 from reddit_sna.contracts import next_month
 from reddit_sna.data.archive import digest_file
 
 GRAPH_PROTOCOL = "reply-r-v2"
+ORDERED_GRAPH_PROTOCOL = "reply-r-v3-order1"
 LEGACY_GRAPH_PROTOCOL = "legacy-reply-r-v1"
 EDGE_COLUMNS = ["month", "source_user_id", "target_user_id", "weight"]
+
+
+def ordered_nodes(source: Path, endpoints: set[str], month: str) -> list[str]:
+    """Validate a causal ordering sidecar and return endpoints in stable order.
+
+    Keys hash the smallest retained record identifier authored by that user
+    through the snapshot month. They contain no raw author name. Equal data up
+    to t produces the same order after explicit cross-run user alignment, even
+    if ordinal pseudonyms were allocated differently in another normalized run.
+    """
+    with (source / "node_order.csv").open(encoding="utf-8", newline="") as handle:
+        reader = csv.DictReader(handle)
+        if reader.fieldnames != ["month", "user_id", "order_key"]:
+            raise ValueError("Invalid causal node-order schema")
+        rows = list(reader)
+    users, keys = [r["user_id"] for r in rows], [r["order_key"] for r in rows]
+    if (len(set(users)) != len(users) or set(users) != endpoints or len(set(keys)) != len(keys)
+            or any(r["month"] != month or not re.fullmatch(r"[0-9a-f]{64}", r["order_key"] or "") for r in rows)):
+        raise ValueError("Causal node order must uniquely cover endpoints with valid month/keys")
+    return [r["user_id"] for r in sorted(rows, key=lambda r:r["order_key"])]
 
 
 def snapshot_inventory(directory: Path, *, protocol=GRAPH_PROTOCOL, expected_months=None) -> dict:
@@ -52,8 +74,12 @@ def snapshot_inventory(directory: Path, *, protocol=GRAPH_PROTOCOL, expected_mon
                         or not math.isfinite(weight) or weight <= 0):
                     raise ValueError("R must have unique non-self edges with finite positive weights")
                 seen.add(pair)
+        if protocol == ORDERED_GRAPH_PROTOCOL:
+            ordered_nodes(source, {u for pair in seen for u in pair}, month)
         hashes = {name: digest_file(source / name)
                   for name in ("R.csv", "directed_R.csv", "users.csv") if (source / name).is_file()}
+        if protocol == ORDERED_GRAPH_PROTOCOL:
+            hashes["node_order.csv"] = digest_file(source / "node_order.csv")
         digest = hashlib.sha256(json.dumps(hashes, sort_keys=True).encode()).hexdigest()
         inventory.append({"month": month, "graph_sha256": digest, "files": hashes})
     fingerprint = hashlib.sha256(json.dumps(

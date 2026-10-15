@@ -1,13 +1,14 @@
 """Monthly reply graphs with explicit loss and user-coverage accounting."""
 
 import csv
+import hashlib
 from contextlib import closing
 from pathlib import Path
 
 from reddit_sna.contracts import next_month
 from reddit_sna.data.normalize import open_readonly
 from reddit_sna.graphs.audit import OUTCOMES, VALID_REPLY, corpus_month_audit
-from reddit_sna.graphs.provenance import GRAPH_PROTOCOL, snapshot_inventory
+from reddit_sna.graphs.provenance import ORDERED_GRAPH_PROTOCOL, snapshot_inventory
 
 
 def write_csv(path: Path, columns, rows) -> None:
@@ -75,6 +76,14 @@ def build_snapshots(database: Path, output: Path, start: str, end: str, *, corpo
                       ((month, *row) for row in undirected))
             write_csv(month_dir / "users.csv", ["user_id", "authored_in_month", "has_reply_edge"],
                       ((uid, int(uid in active), int(uid in endpoints)) for uid in sorted(universe)))
+            # Ordinal pseudonyms can change when a later normalization cutoff
+            # allocates users earlier in another archive. Order the detector by
+            # a stable per-user anchor known through this month, not by that ID.
+            anchors = dict(db.execute("""SELECT user_id,MIN(id) FROM records
+                WHERE month<=? AND user_id IS NOT NULL GROUP BY user_id""", (month,)))
+            write_csv(month_dir / "node_order.csv", ["month", "user_id", "order_key"],
+                      ((month, uid, hashlib.sha256(("causal-record-anchor-v1:"+anchors[uid]).encode()).hexdigest())
+                       for uid in sorted(endpoints)))
             summaries.append({"month": month, "graph_id": f"{identity}:R:{month}",
                               "directed_pairs": len(directed), "undirected_edges": len(undirected),
                               "reply_events": sum(row[2] for row in directed),
@@ -97,13 +106,14 @@ def build_snapshots(database: Path, output: Path, start: str, end: str, *, corpo
     write_csv(output / "corpus_month_audit.csv", audit_columns + list(OUTCOMES),
               ([row[c] for c in audit_columns] + [row["reply_outcomes"][c] for c in OUTCOMES]
                for row in corpus_audit))
-    inventory = snapshot_inventory(output)
+    inventory = snapshot_inventory(output, protocol=ORDERED_GRAPH_PROTOCOL)
     for summary, graph in zip(summaries, inventory["month_graphs"]):
         summary["graph_sha256"] = graph["graph_sha256"]
-        summary["graph_id"] = f"{identity}:{GRAPH_PROTOCOL}:{summary['month']}:{graph['graph_sha256']}"
+        summary["graph_id"] = f"{identity}:{ORDERED_GRAPH_PROTOCOL}:{summary['month']}:{graph['graph_sha256']}"
     return {"status": "complete", "schema_version": 2, "identity_scope": identity,
             **inventory, "months": summaries, "declared_corpora": list(corpora),
             "historical_metadata_before_start": {c: historical.get(c, 0) for c in corpora},
+            "node_order_policy": "SHA256(causal-record-anchor-v1: + MIN(record id authored through snapshot month)); canonical edge-index ordering",
             "corpus_month_audit": corpus_audit,
             "audit_policy": {"attribution": "comment's corpus; parent may be outside corpus",
                              "coverage": "active authors in corpus-month incident to valid replies attributed to that corpus / active authors in corpus-month",

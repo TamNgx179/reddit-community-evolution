@@ -9,7 +9,7 @@ from pathlib import Path
 import time
 
 from reddit_sna.graphs.snapshots import write_csv
-from reddit_sna.graphs.provenance import GRAPH_PROTOCOL, snapshot_inventory
+from reddit_sna.graphs.provenance import GRAPH_PROTOCOL, ORDERED_GRAPH_PROTOCOL, ordered_nodes, snapshot_inventory
 
 
 def dependencies():
@@ -42,9 +42,15 @@ def detect_snapshots(snapshot_dir: Path, output: Path, identity_scope: str,
         with (month_path / "R.csv").open(encoding="utf-8", newline="") as handle:
             edges = list(csv.DictReader(handle))
         names = sorted({row[field] for row in edges for field in ("source_user_id", "target_user_id")})
+        if graph_protocol == ORDERED_GRAPH_PROTOCOL:
+            names = ordered_nodes(month_path, set(names), month_path.name)
         index = {uid: i for i, uid in enumerate(names)}
-        graph = ig.Graph(n=len(names), edges=[(index[r["source_user_id"]], index[r["target_user_id"]]) for r in edges], directed=False)
-        weights = [float(r["weight"]) for r in edges]
+        indexed = [(min(index[r["source_user_id"]],index[r["target_user_id"]]),
+                    max(index[r["source_user_id"]],index[r["target_user_id"]]),float(r["weight"])) for r in edges]
+        if graph_protocol == ORDERED_GRAPH_PROTOCOL:
+            indexed.sort()  # Canonical adjacency insertion order as well as vertices.
+        graph = ig.Graph(n=len(names), edges=[(u,v) for u,v,_ in indexed], directed=False)
+        weights = [w for _,_,w in indexed]
         if any(graph.is_loop()) or any(graph.is_multiple()) or any(not math.isfinite(w) or w <= 0 for w in weights):
             raise ValueError("R must have unique non-self edges with finite positive weights")
         month_out = output / month_path.name
@@ -81,6 +87,7 @@ def detect_snapshots(snapshot_dir: Path, output: Path, identity_scope: str,
     return {"status": "complete", "schema_version": 2, **inventory,
             "objective": "RBConfigurationVertexPartition", "gamma": gamma,
             "iterations": "until no improvement", "canonical_seed": seeds[0],
+            "node_order_policy": "causal anchor and canonical edge indices" if graph_protocol == ORDERED_GRAPH_PROTOCOL else "legacy ordinal IDs; cross-run ordering invariance not guaranteed",
             "versions": {"igraph": version("igraph"), "leidenalg": version("leidenalg")},
             "months": results, "forecast_evaluation": "not implemented; handoff to tracking/features pipeline",
             "notes": ["no social ground truth on Reddit", "isolated users not assigned; see users.csv",
