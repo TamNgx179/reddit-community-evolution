@@ -1,0 +1,11 @@
+schema_version = 1
+pipeline = "detection-tracking"
+project_root = ".."
+seed = 42
+
+[input]
+kind = "synthetic"
+
+[output]
+root = "../artifacts"
+run_id = "week1-detection-tracking-001"

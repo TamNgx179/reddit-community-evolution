@@ -1,0 +1,13 @@
+feature,block,observation_window,available_at,baseline_or_ablation_role,leakage_risk,status
+size,structural,current_t,end_of_t,B4_B2_B5_HeTCo,Do not use size_t_plus_1,planned
+density,structural,current_t,end_of_t,B2_B5_HeTCo,State directed_or_undirected_and_weighted_or_unweighted_definition,planned
+reciprocity,structural,directed_replies_in_t,end_of_t,B2_B5_HeTCo,Do not compute from symmetrized_R,planned
+community_age,history,tracked_lineage_through_t,end_of_t,B4_HeTCo,Fix lineage age policy after merge_or_split,planned
+past_growth,history,size_t_vs_size_t_minus_1,end_of_t,B4_HeTCo,Use past tracking only and flag missing history,planned
+retention,membership,members_t_minus_1_to_t,end_of_t,HeTCo_A4,Never calculate retention_t_to_t_plus_1_for_features_at_t,planned
+inflow_outflow,membership,members_t_minus_1_to_t,end_of_t,HeTCo_A4,Fix source lineage aggregation and missing-history policy,planned
+subreddit_entropy,heterogeneous,observed_activity_through_t,end_of_t,HeTCo_A1,Subreddit metadata is context not supervised community ground_truth,planned
+thread_activity,heterogeneous,comments_and_participants_observed_through_t,end_of_t,HeTCo_A1,No complete-thread counts from future months,planned
+size_t_plus_1,forbidden,future_t_plus_1,after_prediction,none,Target leakage,excluded
+event_t_to_t_plus_1,forbidden,future_t_plus_1,after_prediction,none,Label cannot be input feature,excluded
+score_at_collection,forbidden,collection_time,not_verified_at_t,none,Collection score not known at prediction time,excluded

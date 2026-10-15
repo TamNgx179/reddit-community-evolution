@@ -1,0 +1,12 @@
+schema_version = 1
+pipeline = "core"
+project_root = ".."
+seed = 42
+
+[input]
+kind = "reddit"
+path = "../data/raw"
+
+[output]
+root = "../artifacts"
+run_id = "week1-core-001"
