@@ -1,0 +1,6 @@
+experiment_id,purpose,hypothesis,owner,planned_evidence,completion_condition,status
+E1,Validate data and graph semantics,foundation,Tam,graph_audit_and_coverage_by_month,Node and edge semantics plus loss counts and observed cutoffs are traceable,planned
+E2,Separate detection quality and tracker validity,H1,Phuc_Dang,benchmark_partition_scores_and_tracker_scores,True-partition tracker test plus full detection-tracking test with development/evaluation benchmark separation,planned
+E3,Deliberate leakage control inside train,H2,Dang,matched_past_vs_future_training_comparison,Same evaluation rows and training sample count with uncertainty and no official test tuning,planned
+E4,Main out-of-time forecasting,H3,Thanh_Tram_Anh,matched_baseline_hetco_predictions_and_per_month_class_results,Identical sample-label-reference keys and fair budgets plus matched B5 comparison,planned
+E5,Ablation and reference sensitivity,H1_H3,Tam_Thanh_Phuc_Dang_Tram_Anh,paired_ablation_results_and_partition_change_reports,Fixed-reference feature ablations separated from changed-partition experiments,planned

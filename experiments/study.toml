@@ -1,0 +1,86 @@
+# Research design record. NOT a runtime config for `reddit-sna check/run`.
+# The CLI does not load/enforce this file. Algorithm implementations remain pending.
+protocol_version = "0.1-draft"
+status = "draft_not_executed"
+project_type = "research_with_sna_analysis"
+novelty_status = "unverified_pending_literature_review"
+research_question = "Does co-thread context and past membership turnover improve next-month user-community evolution prediction beyond reply-graph structure under a causal temporal protocol?"
+grade_policy = "A2 is 50 percent of course grade; maximum project credit requires paper potential per instructor; no grade guarantee."
+
+[scope]
+time_zone = "UTC"
+study_start_month = "2015-01"
+study_end_month = "2018-09"
+corpus_count = 15
+community_unit = "detected_user_group"
+subreddit_role = "activity_context_not_ground_truth"
+inference_scope = "observed_corpora_only_no_political_causality"
+
+[graph]
+node_types = ["user", "post", "comment", "subreddit"]
+reply_observation = "directed_comment_author_to_parent_author_at_comment_timestamp"
+reply_projection = "undirected_weight_R_uv_equals_directed_count_uv_plus_vu"
+thread_projection = "past_observed_participants_only; weight formula must be frozen on train before evaluation"
+future_thread_participants_allowed = false
+self_loops_allowed = false
+identity_policy = "consistent_user_ids_across_corpora_and_months_no_future_features"
+coverage_denominators = ["active_users", "edge_covered_users", "assigned_users"]
+required_metadata = ["graph_id", "window", "cutoff", "directed", "weight_definition", "node_count", "edge_count", "isolates", "excluded_edges", "source_manifest_hash"]
+projection_budget_policy = "report_thread_size_tail_and_quadratic_pair_cost; freeze_any_cap_or_sampling_on_train_and_audit_it"
+
+[labels]
+forecast_events = ["stable", "grow", "shrink", "merge", "split", "dissolve"]
+forming_policy = "report_as_observed_new_groups_not_a_label_for_a_nonexistent_source_sample"
+final_snapshot_policy = "unlabeled_without_next_month_not_dissolve"
+ged_status = "adaptation_pending; member_importance_and_event_precedence_must_be_documented"
+threshold_selection = "ground_truth_development_benchmarks_and_train_only"
+merge_split_policy = "explicit_deterministic_precedence_fixed_before_evaluation"
+ground_truth_policy = "synthetic_truth_for_tracker_validation; reddit_tracker_labels_are_operational_not_social_truth"
+reference_identity = "version_graph_detector_tracker_thresholds_and_event_rules"
+
+[split]
+unit = "whole_label_month"
+train_label_months = ["2015-02", "2017-06"]
+validation_selection_months = ["2017-07", "2017-09"]
+validation_calibration_months = ["2017-10", "2017-12"]
+test_label_months = ["2018-01", "2018-09"]
+random_row_split_allowed = false
+feature_cutoff = "end_of_feature_month_t"
+label_month = "t_plus_1"
+fit_preprocessing_on = "train_only"
+test_policy = "lock_selection_before_test; no_test_label_refitting"
+pilot_policy = "within_official_train; separate_from_final_test"
+
+[comparison]
+floor = ["B1_majority", "B1_persistence"]
+simple_temporal = "B4_logistic_regression"
+structural_controls = ["B2_random_forest_adaptation", "B5_matched_gradient_boosting"]
+main_comparator = "B5_matched_gradient_boosting"
+required_equalities = ["sample_key_set", "ground_truth_labels", "reference_version", "split", "tuning_budget", "seed_plan"]
+capacity_control = "B5_and_HeTCo_share_estimator_family_and_search_budget"
+detector_bias_control = "repeat_all_forecasters_on_an_Independent_Leiden_reference"
+
+[evaluation]
+partition_benchmark_primary = "AMI_against_true_partition"
+reddit_partition_checks = ["same_graph_objective_quality", "coverage", "community_sizes", "seed_stability", "edge_perturbation_stability"]
+tracker_primary = "macro_f1_against_synthetic_events"
+forecast_primary = "macro_f1"
+forecast_secondary = ["balanced_accuracy", "per_class_precision_recall_f1_support", "confusion_matrix", "per_month_scores"]
+probability_metrics_when_available = ["per_class_PR_AUC_with_explicit_support_and_definition", "multiclass_Brier_with_explicit_definition"]
+missing_class_policy = "report_six_class_and_supported_class_scores_separately_with_zero_division_rule_and_support"
+uncertainty = "paired_time_block_bootstrap_on_matched_predictions; predefine_block_length_and_report_short_test_limits"
+seed_policy = "repeat_predeclared_seeds; do_not_treat_seed_repeats_as_independent_test_months"
+resource_metrics = ["wall_time", "peak_memory", "graph_scale"]
+
+[hypotheses]
+H1 = "temporal_and_consensus_detection_improve_stability_without_hiding_event_changes; evaluate_on_benchmark"
+H2 = "future_information_can_inflate_scores; deliberate_leakage_control_is_train_only"
+H3 = "heterogeneous_context_and_past_membership_dynamics_add_value_beyond_B5"
+H3_proposal_target = "delta_macro_f1_at_least_0.02_and_95pct_paired_CI_above_zero; otherwise_not_supported"
+negative_result_policy = "retain_null_or_negative_findings; do_not_change_labels_test_or_hypotheses_to_improve_scores"
+
+[reproducibility]
+required_per_run = ["run_id", "data_manifest_hash", "graph_and_reference_version", "config_hash", "git_revision_and_dirty_state", "dependency_versions", "seed", "sample_key_hash", "split_counts", "exclusions", "timing", "status"]
+notebook_policy = "clean_kernel_top_to_bottom_fail_on_error; outputs_are_evidence_only_after_real_execution"
+current_manifest_limit = "source_foundation_records_only_started_status_config_package_python; additional_provenance_above_is_not_implemented"
+week_one_policy = "three_independent_pair_demos; no_cross_pair_generated_artifact_dependency"
