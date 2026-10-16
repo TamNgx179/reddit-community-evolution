@@ -1,0 +1,152 @@
+# Theo dõi công việc Phúc — tuần 1
+
+**Nguồn trạng thái chính:** file này. **Owner mọi task PHUC:** Phúc. **Tạo bảng:** 16/10/2026. **Mốc chung nội bộ:** tối 20/10; 21/10 dự phòng, 22/10 báo cáo theo lịch repo.
+
+**Khởi tạo:** 0/36 task triển khai hoàn thành. Việc tạo specs không được tính thành việc đã sinh dữ liệu, chạy test hay benchmark. Detector hiện có là thành phần dùng lại, chưa chứng minh adapter benchmark đã chạy.
+
+## Bảng tổng quan cho thành viên nhóm
+
+| Spec | Phạm vi | Mốc nội bộ năm 2026 | Trạng thái | Task DONE | Đang làm / vướng mắc / bằng chứng |
+|---|---|---|---|---|---|
+| [PHUC-001](001-truth-fixtures/spec.md) | Truth stable/grow và fixture | 16/10 | TODO | 0/6 | Chưa triển khai; bắt đầu T01/T02 |
+| [PHUC-002](002-dynamic-benchmark/spec.md) | Graph và sáu sự kiện | 18/10 | TODO | 0/6 | Có thể làm stable trước, chưa chờ tracker |
+| [PHUC-003](003-leiden-detection/spec.md) | Adapter Leiden | Bộ đầu 17/10; đủ lịch 18/10 | TODO | 0/6 | Dùng detector có sẵn, cần graph nhỏ |
+| [PHUC-004](004-detection-evaluation/spec.md) | AMI và coverage | Bộ đầu 17/10; hoàn thiện 19/10 | TODO | 0/6 | Có thể viết evaluator bằng fixture |
+| [PHUC-005](005-reproducible-runs/spec.md) | Development/evaluation tái lập | 19/10 | TODO | 0/6 | Cần đầu ra 002–004 để nghiệm thu |
+| [PHUC-006](006-handoff-demo/spec.md) | Gói giao và notebook detection | 20/10 | TODO | 0/6 | Phần cá nhân chưa chờ Đăng; ghép chung tách bên dưới |
+
+Đây là bảng khởi tạo, chưa có record triển khai nào. Khi task đổi trạng thái, cập nhật dòng spec tương ứng trong cùng lần sửa. Checklist bên dưới là căn cứ đối chiếu nếu bảng tóm tắt lệch.
+
+## Trạng thái và cách cập nhật
+
+| Trạng thái | Dùng khi | Checkbox |
+|---|---|---|
+| TODO | Chưa bắt đầu, gồm việc có phụ thuộc dự kiến | `[ ]` |
+| DOING | Đang thực hiện, ghi việc tiếp theo | `[ ]` |
+| REVIEW | Có đầu ra, đang chờ review được yêu cầu | `[ ]` |
+| BLOCKED | Task đang làm không thể tiếp tục vì thiếu điều kiện cụ thể | `[ ]` |
+| DONE | Hoàn thành yêu cầu task và có bằng chứng kiểm tra | `[x]` |
+
+- Mỗi dòng có ID duy nhất; `[FRxx]` tham chiếu requirement cùng spec. Ví dụ `PHUC-004-T03 [FR03]` ứng với `PHUC-004-FR03`.
+- Task có nhiều FR phải đáp ứng tất cả. Task DONE nhưng không có record bằng chứng là chưa đủ để nghiệm thu.
+- Cập nhật tại task, bảng tổng quan và ledger trong file này; không sửa trạng thái ở kế hoạch cũ.
+- Chờ tracker chỉ gắn mốc demo chung; không gắn 001–005 BLOCKED vì Đăng chưa làm.
+- Reviewer đề xuất: Đăng cho phần giao diện/detection; chưa có xác nhận nhận review. Không tự ghi review/acceptance thay thành viên.
+
+## Luồng ưu tiên tối nay
+
+```text
+001-T01 -> 001-T02/T03/T04 -> 002-T01 -> 003-T01
+    -> 004-T01/T02/T03 -> một kết quả stable có AMI/coverage
+```
+
+Giao truth stable/grow cho Đăng khi đã kiểm tra được, không chờ luồng đầy đủ. T05/T06 và các spec còn lại hoàn thiện theo lịch. Có task nhỏ chạy được chưa có nghĩa toàn spec DONE.
+
+## PHUC-001
+
+[Đặc tả](001-truth-fixtures/spec.md). Phụ thuộc ngoài: không. Requirement và schema theo [contracts](contracts.md).
+
+- [ ] PHUC-001-T01 [TODO] [FR05] Kiểm tra project interpreter, import và chạy `tests/unit/test_leiden.py`; ghi môi trường/lệnh/pass-skip-error vào ledger của `document/specs/phuc/tasks.md`.
+- [ ] PHUC-001-T02 [TODO] [FR01] Viết kịch bản stable/grow và K trong `src/reddit_sna/benchmarks/scenarios.py`, user nhất quán, đích đổi tên.
+- [ ] PHUC-001-T03 [TODO] [FR02] Viết adapter/validator membership và node trong `src/reddit_sna/benchmarks/io.py`, chặn keys/tháng/reference/user sai.
+- [ ] PHUC-001-T04 [TODO] [FR03] Sinh events/links chuẩn độc lập thuật toán trong `src/reddit_sna/benchmarks/scenarios.py`, gồm K và quy tắc successor.
+- [ ] PHUC-001-T05 [TODO] [FR01,FR02,FR03,FR04] Thêm kiểm tra tập thành viên, nhãn, duplicate và output/tái lập trong `tests/unit/test_synthetic_truth.py`.
+- [ ] PHUC-001-T06 [TODO] [FR04,FR05] Export fixture stable/grow có metadata vào `artifacts/detection-tracking/<run_id>/datasets/`; ghi lệnh đọc độc lập và gói bàn giao vào ledger.
+
+**Nghiệm thu:** tất cả AC của spec có evidence. Đăng đọc/nhận gói được ghi riêng tại mốc chung, không tự suy ra từ export thành công.
+
+## PHUC-002
+
+[Đặc tả](002-dynamic-benchmark/spec.md). Cần schema/truth 001; graph đầu tiên không phải đợi đủ suite hay tracker.
+
+- [ ] PHUC-002-T01 [TODO] [FR01,FR02] Viết sampler graph hai tháng stable seed 11 trong `src/reddit_sna/benchmarks/dynamic.py`, giữ nodes và cạnh hợp lệ.
+- [ ] PHUC-002-T02 [TODO] [FR03] Mở rộng `src/reddit_sna/benchmarks/scenarios.py` đủ shrink/merge/split/dissolve; mọi nguồn gồm K có truth.
+- [ ] PHUC-002-T03 [TODO] [FR01,FR04,FR05] Tạo `configs/benchmark_week1.json` với probabilities, cases, tháng, seed development/evaluation và chính sách ordering/protocol.
+- [ ] PHUC-002-T04 [TODO] [FR02,FR04] Hoàn thiện export R/nodes/truth/metadata/hashes và từ chối overwrite trong `src/reddit_sna/benchmarks/io.py`.
+- [ ] PHUC-002-T05 [TODO] [FR01,FR02,FR03,FR04,FR05] Kiểm tra seed/order, cạnh sai, xác suất biên, six-case truth, nhóm nhỏ/isolate trong `tests/unit/test_dynamic_benchmark.py`.
+- [ ] PHUC-002-T06 [TODO] [FR03,FR04,FR05] Sinh/đọc lại sáu case development vào output mới ở `artifacts/detection-tracking/<run_id>/`; ghi số node/cạnh/nhóm, diagnostic và kết quả đối chiếu tái lập.
+
+**Nghiệm thu:** generator đúng theo kịch bản và contract; không phụ thuộc điểm Leiden có cao hay không.
+
+## PHUC-003
+
+[Đặc tả](003-leiden-detection/spec.md). Cần graph nhỏ 002 để chạy; không cần tracker.
+
+- [ ] PHUC-003-T01 [TODO] [FR01] Tích hợp lời gọi `detect_snapshots` hiện có vào API detection trong `src/reddit_sna/pipelines/detection_tracking.py`, seed 0/gamma 1/protocol synthetic đúng.
+- [ ] PHUC-003-T02 [TODO] [FR02] Đọc lịch seed 0/1/2 cố định từ `configs/benchmark_week1.json`, giữ canonical 0, kiểm tra cấu hình trước output.
+- [ ] PHUC-003-T03 [TODO] [FR03] Lưu `detection.json` và mapping dataset/reference/tháng/seed trong metadata từ `src/reddit_sna/pipelines/detection_tracking.py`.
+- [ ] PHUC-003-T04 [TODO] [FR04] Kiểm tra endpoint-only membership, empty graph, dependency/input lỗi và output đã tồn tại ở adapter trong `src/reddit_sna/pipelines/detection_tracking.py`.
+- [ ] PHUC-003-T05 [TODO] [FR01,FR02,FR03,FR04] Thêm integration graph nhỏ/refs/endpoint/empty/no-overwrite ở `tests/integration/test_synthetic_detection.py`.
+- [ ] PHUC-003-T06 [TODO] [FR05] Chạy development thật với ba seed, lưu paths/diagnostics trong `artifacts/detection-tracking/<run_id>/`; ghi evidence và phân biệt ARI seed với AMI truth.
+
+**Nghiệm thu:** có membership/diagnostics thật trên benchmark, không đánh DONE chỉ vì `leiden.py` đã có từ trước.
+
+## PHUC-004
+
+[Đặc tả](004-detection-evaluation/spec.md). Viết bằng fixture từ 001; nghiệm thu đầu ra thật cần 003.
+
+- [ ] PHUC-004-T01 [TODO] [FR01] Viết xác minh dataset/reference/tháng/duplicate/user và căn vector nhãn bằng user ID trong `src/reddit_sna/evaluation/detection.py`.
+- [ ] PHUC-004-T02 [TODO] [FR02] Tính active/endpoint/assigned/isolate/coverage và số nhóm ở đúng tập so sánh trong `src/reddit_sna/evaluation/detection.py`.
+- [ ] PHUC-004-T03 [TODO] [FR03] Tính AMI và policy missing/degenerate trong `src/reddit_sna/evaluation/detection.py`; khai báo dependency thực dùng tại `pyproject.toml`.
+- [ ] PHUC-004-T04 [TODO] [FR04] Xuất metrics/summary có n hợp lệ/thiếu, canonical riêng và timing đúng phạm vi từ `src/reddit_sna/evaluation/detection.py`.
+- [ ] PHUC-004-T05 [TODO] [FR01,FR02,FR03,FR04] Kiểm tra đổi tên nhóm/thứ tự hàng, duplicate, user thiếu/lạ, isolate và empty/constant trong `tests/unit/test_detection_evaluation.py`.
+- [ ] PHUC-004-T06 [TODO] [FR05] Chạy evaluator trên stable/grow thật, lưu `detection_metrics.csv`/`detection_summary.csv` vào run và ghi tập user chấm, config, versions, kết quả vào ledger.
+
+**Nghiệm thu:** điểm truy ngược được đến user/input và đi kèm coverage; không đặt ngưỡng điểm đẹp làm tiêu chí DONE.
+
+## PHUC-005
+
+[Đặc tả](005-reproducible-runs/spec.md). Nghiệm thu cần 002–004; có thể chuẩn bị config/orchestration trước.
+
+- [ ] PHUC-005-T01 [TODO] [FR01] Hoàn thiện/version lịch case/seed và policy trong `configs/benchmark_week1.json`; kiểm tra development/evaluation không trùng dataset/seed.
+- [ ] PHUC-005-T02 [TODO] [FR02] Hoàn thiện API chạy riêng từ generator đến metrics trong `src/reddit_sna/pipelines/detection_tracking.py`, không yêu cầu tracker và không báo full pipeline complete.
+- [ ] PHUC-005-T03 [TODO] [FR03] Hoàn thiện manifest lifecycle, config/source/output hashes, environment, timing và failed state tại API pipeline, dùng helper `src/reddit_sna/artifacts.py` khi phù hợp.
+- [ ] PHUC-005-T04 [TODO] [FR02,FR03,FR05] Kiểm tra một run nhỏ, failure/no-overwrite và đối chiếu tái lập ở `tests/integration/test_synthetic_benchmark_run.py`; ghi log thật.
+- [ ] PHUC-005-T05 [TODO] [FR01,FR04] Chạy development, lưu config khóa trước evaluation trong `artifacts/detection-tracking/<run_id>/`; ghi thời điểm/nguồn và mọi thay đổi lịch.
+- [ ] PHUC-005-T06 [TODO] [FR04,FR05] Chạy lịch evaluation giữ lại, đối chiếu expected/actual/failed counts và summary trong output mới; ghi 36 dataset/72 snapshot/216 đơn vị hoặc protocol rút gọn được version trước evaluation.
+
+**Nghiệm thu:** evidence development/freeze/evaluation tách biệt; manifest started không phải xong. Không cần artifact Đăng.
+
+## PHUC-006
+
+[Đặc tả](006-handoff-demo/spec.md). Truth có thể giao sớm; phần detection cuối cần 005. Mốc ghép chung bên dưới phụ thuộc Đăng, không tính vào 36 task cá nhân.
+
+- [ ] PHUC-006-T01 [TODO] [FR01] Tạo inventory và consumer độc lập ở `src/reddit_sna/reporting/synthetic_handoff.py`, kiểm tra contract/hash và hành vi ở `tests/unit/test_synthetic_handoff.py`; lưu log thật, không ghi người nhận accepted thay họ.
+- [ ] PHUC-006-T02 [TODO] [FR01,FR03] Viết `document/PHUC-DANG-WEEK1-HANDOFF.md` với schema, dataset/reference, môi trường, cách tái tạo/nhận gói và lệnh/API đã chạy thật.
+- [ ] PHUC-006-T03 [TODO] [FR02] Tạo `notebooks/detection_tracking/01_synthetic_demo.ipynb` import module, hiển thị config, graph/truth/prediction, bảng AMI/coverage/timing có nguồn.
+- [ ] PHUC-006-T04 [TODO] [FR04] Bổ sung phân tích case khó/sai hoặc null finding vào notebook và tài liệu bàn giao, chỉ rõ input/run/giới hạn, không bịa lỗi.
+- [ ] PHUC-006-T05 [TODO] [FR02,FR03] Chạy notebook kernel sạch/output mới, kiểm tra môi trường cài đặt sạch và các gate repo phù hợp; lưu lệnh, pass/skip/error và artifact thực thi.
+- [ ] PHUC-006-T06 [TODO] [FR01,FR04,FR05] Chốt gói phần Phúc, record evidence và phần thiếu trong `document/PHUC-DANG-WEEK1-HANDOFF.md`; cập nhật riêng trạng thái tracker/receipt/demo chung ở file task này.
+
+**Nghiệm thu cá nhân:** Phúc có detection demo và gói giao kiểm tra được. **Nghiệm thu cặp:** chỉ khi các mốc Đăng bên dưới có bằng chứng thật.
+
+## Điều kiện ghép chung với Đăng
+
+Đây là mốc phối hợp dự kiến, không phải xác nhận Đăng đã nhận việc hoặc đã hoàn thành. Không đưa các mốc này vào tỷ lệ task cá nhân Phúc.
+
+| Mốc | Người cung cấp/xác nhận dự kiến | Trạng thái hiện tại | Bằng chứng cần có |
+|---|---|---|---|
+| EXT-D01: Đăng nhận và đọc được fixture truth | Đăng | Chưa có phản hồi ghi nhận | Dataset/reference/path, lệnh đọc và phản hồi người nhận |
+| EXT-D02: Tracker trên truth đủ sáu sự kiện | Đăng | Chưa có artifact bàn giao | Code/config, events/links, tests và F1/support/confusion |
+| EXT-D03: Tracker trên detector và mapping | Đăng, Phúc ghép | Chưa có artifact bàn giao | Mapping/unmatched, predictions và kết quả nguồn chuẩn theo v1 |
+| PAIR-DEMO: chạy hai nhánh A/B từ kernel sạch | Cả hai | Chưa nghiệm thu | Run/notebook, nguồn kết quả, review và giới hạn |
+
+Nếu Phúc đã xong 36 task mà EXT-D02/D03 chưa có, báo “phần detection Phúc hoàn thành, demo cặp chưa hoàn thành”, không đổi PAIR-DEMO thành DONE.
+
+## Ledger bằng chứng
+
+Thêm một dòng khi có tiến triển kiểm tra được; có thể nhiều dòng cho một task. Hiện chưa có record chạy thật.
+
+| Ngày/giờ Asia/Bangkok | Task ID | Code / commit / PR | Lệnh / môi trường | Kết quả và kiểm tra | Run / artifact / hash | Reviewer hoặc người nhận |
+|---|---|---|---|---|---|---|
+| — | — | Chưa có evidence triển khai | Chưa chạy trong lượt tạo specs | Chưa có kết quả benchmark | — | Chưa yêu cầu/xác nhận |
+
+Không yêu cầu đã có commit/PR mới được ghi tiến độ; đường dẫn code thực và lệnh chạy vẫn được dùng. Nếu artifact chỉ có trên máy Phúc, ghi rõ và cung cấp cách tái tạo; không ghi link giả để thành viên tưởng đã truy cập được.
+
+## Blocker và thay đổi
+
+| Task/mốc | Thiếu điều kiện gì | Việc còn làm độc lập được | Người cần phản hồi | Bước mở chặn |
+|---|---|---|---|---|
+| — | Chưa có blocker triển khai được ghi nhận; các task vẫn TODO | Luồng nhỏ trong plan có thể bắt đầu | — | — |
+
+Khi đổi requirement/contract, ghi lý do và cập nhật spec/plan/tasks liên quan; giữ evidence run cũ. Nếu đổi sau khi xem evaluation, ghi rõ ảnh hưởng đến tính giữ lại của bộ đánh giá.

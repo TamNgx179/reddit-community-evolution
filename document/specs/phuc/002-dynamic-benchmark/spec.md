@@ -1,0 +1,39 @@
+# PHUC-002 — Sinh benchmark mạng động sáu sự kiện
+
+**Owner:** Phúc. **Thiết kế:** v1, 16/10/2026. **Phân công:** P02, P05.
+**Tiến độ, hạn và bằng chứng:** [tasks.md](../tasks.md#phuc-002). **Giao diện:** [contracts.md](../contracts.md).
+
+## Mục tiêu và user story
+
+**US1, P1:** Là người chạy detection, tôi có graph theo tháng và ground truth đã biết để đo khả năng khôi phục cộng đồng, không dùng subreddit làm đáp án.
+
+Có thể bắt đầu với stable seed 11; nghiệm thu toàn spec cần sáu case, không bắt đầu bằng toàn bộ corpus Reddit.
+
+## Yêu cầu
+
+- **PHUC-002-FR01:** Sinh cạnh vô hướng theo seed và `p_in/p_out` cấu hình; không dùng detector hoặc điểm evaluation để quyết định truth/cạnh.
+- **PHUC-002-FR02:** R không có self-loop/cạnh trùng, weight hợp lệ; `nodes.csv` giữ mọi node hoạt động, gồm isolate.
+- **PHUC-002-FR03:** Hỗ trợ stable/grow/shrink/merge/split/dissolve và K; biến đổi thành viên đúng contract, events/links chuẩn tương ứng.
+- **PHUC-002-FR04:** Thứ tự user/cạnh cố định, config/seed/observed months/identity scope/hashes được lưu; từ chối ghi đè hoặc input không hợp lệ.
+- **PHUC-002-FR05:** Development và evaluation có dataset/seed riêng; kiểm tra generator bằng case dễ và ít nhất một diagnostic nhóm nhỏ/isolate để nêu giới hạn.
+
+## Điều kiện chấp nhận
+
+| ID | Given / When / Then |
+|---|---|
+| AC01 | Cùng config/seed, hai output mới có cùng dữ liệu graph/truth; không phụ thuộc thứ tự set/dict tùy ý |
+| AC02 | Với sáu case, tất cả nguồn chuẩn gồm K có event/link đúng thiết kế; merge/split bảo toàn các tập thành viên đã định |
+| AC03 | Với p_in=p_out=0 ở diagnostic, R có header nhưng không cạnh, nodes và truth vẫn giữ user hoạt động |
+| AC04 | Với xác suất ngoài [0,1], cạnh/user/tháng sai hoặc output đã tồn tại, báo lỗi trước khi ghi đè dữ liệu |
+| AC05 | Lịch generator seed development/evaluation không trùng; isolate được báo, không tự thêm cạnh hoặc đổi seed vì điểm thấp |
+
+## Phụ thuộc và ngoài phạm vi
+
+Nghiệm thu dựa trên schema/truth của 001. Không cần tracker, Leiden hoặc AMI để xác định generator đúng. Chưa yêu cầu benchmark quy mô lớn, temporal detector, bảo đảm mọi nhóm được Leiden khôi phục hoặc kết quả AMI cao.
+
+## Output và kiểm chứng độc lập
+
+- Module: `benchmarks/dynamic.py`, cấu hình `configs/benchmark_week1.json`; dùng lại scenarios/io từ 001.
+- Artifact: `snapshots/<month>/{R,nodes}.csv`, truth và metadata theo dataset; trường hợp diagnostic đánh dấu riêng.
+- Test: `tests/unit/test_dynamic_benchmark.py`, kiểm tra invariants/tái lập/nhóm nhỏ/isolate và lịch dataset.
+- Evidence: config, seed, số node/cạnh/nhóm/tháng của từng case, hash hoặc lệnh đối chiếu hai lần sinh. Báo diagnostic không phải kết quả Reddit.

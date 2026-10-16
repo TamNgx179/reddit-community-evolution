@@ -89,6 +89,8 @@ reports/                 Selected research reports and evidence templates
 
 Pairs share contracts and reusable modules, not generated inputs/outputs during week one. Individual ownership remains in the administrative [eight-week assignment](PHAN-CONG-SNA-8-TUAN.md). Source filenames describe functions, not people. Promote stable reusable/testable notebook prototypes into the corresponding package module; do not create a parallel code tree per pair or person.
 
+Phúc's week-one [specifications and delivery plan](document/specs/phuc/README.md) break benchmark generation, detection, evaluation and handoff into reviewable deliverables. The [task board](document/specs/phuc/tasks.md) is the status/evidence record for that work; writing these specifications does not establish implementation or completed experiments.
+
 ## Configuration, outputs and verification
 
 All TOML paths, including `project_root`, resolve relative to the TOML directory. `check` validates configuration/paths without reading the corpus or creating research outputs. Core needs an existing Reddit input folder; synthetic configs do not depend on Reddit. `run` remains unfinished. Exit codes are 0 for successful commands, 2 for input/config/path errors and 3 for unimplemented research pipelines. CLI streams are UTF-8, including Unicode filesystem paths.
