@@ -1,6 +1,6 @@
 # Reddit Community Evolution
 
-Research package for detecting, tracking and forecasting changes in Reddit **user communities**. Subreddits are activity contexts, not ground-truth community labels. The implemented `prepare` path is ZIP audit → metadata normalization → monthly reply graphs → Independent Leiden. Tracking, features, forecasting and the other pair demos remain unimplemented; `run` exits with code 3 rather than inventing results.
+Research package for detecting, tracking and forecasting changes in Reddit **user communities**. Subreddits are activity contexts, not ground-truth community labels. The implemented `prepare` path is ZIP audit â†’ metadata normalization â†’ monthly reply graphs â†’ Independent Leiden. Tracking, features, forecasting and the other pair demos remain unimplemented; `run` exits with code 3 rather than inventing results.
 
 ## Install and run
 
@@ -12,7 +12,7 @@ python -m venv .venv
 & .\.venv\Scripts\python.exe -m reddit_sna prepare --config configs/core.toml --run-id reddit-pilot-001
 ```
 
-Each run ID must be new. This scans all 15 ZIPs without extracting/modifying them and runs the January–March 2015 train-only pilot. Outputs are local under `artifacts/core/<run_id>/`. Use `--corpus moderatepolitics` for an explicitly labeled subset smoke test. Linux/macOS use `.venv/bin/python`. Dependencies are declared in `pyproject.toml`; manifests record installed versions.
+Each run ID must be new. This scans all 15 ZIPs without extracting/modifying them and runs the Januaryâ€“March 2015 train-only pilot. Outputs are local under `artifacts/core/<run_id>/`. Use `--corpus moderatepolitics` for an explicitly labeled subset smoke test. Linux/macOS use `.venv/bin/python`. Dependencies are declared in `pyproject.toml`; manifests record installed versions.
 
 Stages can also run separately:
 
@@ -45,7 +45,7 @@ The notebook renders fourteen figure families: the original eight cover data sco
 
 ## Research semantics and limitations
 
-Reply direction is child author → parent author, using child time and requiring parent time ≤ child time. R sums both directions, omits self-replies and excludes unknown/deleted/removed/AutoModerator authors. Other bots are not comprehensively identified. Pre-pilot metadata supports parent lookup; future rows are excluded before allocating pseudonymous user IDs. IDs are valid only within one normalized run; pseudonyms do not guarantee anonymity.
+Reply direction is child author â†’ parent author, using child time and requiring parent time â‰¤ child time. R sums both directions, omits self-replies and excludes unknown/deleted/removed/AutoModerator authors. Other bots are not comprehensively identified. Pre-pilot metadata supports parent lookup; future rows are excluded before allocating pseudonymous user IDs. IDs are valid only within one normalized run; pseudonyms do not guarantee anonymity.
 
 Only users with reply edges receive memberships. Coverage distinguishes active authors, endpoints, parent-only endpoints, observed unions and isolates. Corpus-month audit includes zero-support cells and mutually exclusive reply outcomes summing to comments. Legacy incidence counters can overlap; unique corpus author counts cannot be added as unique network users.
 
@@ -53,7 +53,7 @@ Independent Leiden uses weighted RBConfiguration, gamma 1, seeds 0/1/2 and conve
 
 Graph references bind protocol and cohort contents; membership references additionally bind identity scope, detector version, gamma and seed. Adding a month changes cohort identity; per-month hashes distinguish that from past graph changes. Legacy inputs receive a distinct protocol/reference. Do not join mismatched references automatically. `evaluation.causality.compare_causal_prefix` requires explicit bijective identity alignment and compares past graphs/partitions up to a cutoff; it does not validate unfinished tracking or forecasting.
 
-The supplied grading policy allocates A1/A2 50% each and requires paper potential for maximum project credit. Architecture and passing software tests alone cannot establish novelty or a 9–10 grade. Three-month diagnostics are preparation evidence, not H1–H3 results. See [pilot report](reports/REDDIT-PILOT.md) and [architecture](ARCHITECTURE.md) for evidence limits and next experiments.
+The supplied grading policy allocates A1/A2 50% each and requires paper potential for maximum project credit. Architecture and passing software tests alone cannot establish novelty or a 9â€“10 grade. Three-month diagnostics are preparation evidence, not H1â€“H3 results. See [pilot report](reports/REDDIT-PILOT.md) and [architecture](ARCHITECTURE.md) for evidence limits and next experiments.
 
 ## Structure and independent pair demos
 
@@ -81,9 +81,9 @@ reports/                 Selected research reports and evidence templates
 
 | Pipeline | Independent input and intended output | Config |
 |---|---|---|
-| `core` | Reddit → communities → tracking/features → forecasting evaluation | `configs/core.toml` |
-| `detection-tracking` | Synthetic dynamic networks → detection/tracking evaluation | `configs/detection_tracking.toml` |
-| `prediction` | Synthetic community-month tables → temporal baselines/evaluation | `configs/prediction.toml` |
+| `core` | Reddit â†’ communities â†’ tracking/features â†’ forecasting evaluation | `configs/core.toml` |
+| `detection-tracking` | Synthetic dynamic networks â†’ detection/tracking evaluation | `configs/detection_tracking.toml` |
+| `prediction` | Synthetic community-month tables â†’ temporal baselines/evaluation | `configs/prediction.toml` |
 
 Pairs share contracts and reusable modules, not generated inputs/outputs during week one. Individual ownership remains in the administrative [eight-week assignment](PHAN-CONG-SNA-8-TUAN.md). Source filenames describe functions, not people. Promote stable reusable/testable notebook prototypes into the corresponding package module; do not create a parallel code tree per pair or person.
 
@@ -121,3 +121,11 @@ The automated handoff consumer uses only public CSV/manifest contracts and stand
 New snapshots use **reply-r-v3-order1**. A real aligned experiment exposed an ordering problem in historical v2: January-March graphs agreed across quarter/annual normalization scopes, but partitions changed because ordinal user allocation changed vertex and edge insertion order. New `node_order.csv` keys hash the minimum authored record identifier available **through the snapshot month**, and detection canonicalizes node and edge indices. The sidecar is hash-bound to graph/reference identity; raw author names are never stored in it. Old v2 artifacts remain separate and unchanged. This is an engineering reproducibility correction, not a new community-detection method or a guarantee of social validity.
 
 On a fresh checkout `prepare` generates the ordered protocol directly. The documented raw command creates a new all-stage run; set notebook `DETECTION_RUN` to that run ID and select matching validation IDs. Development replay defaults point to the separately verified immutable ordered runs. A graph/membership handoff now includes `node_order.csv` alongside R/directed_R/users; the canonical membership CSV schema stays unchanged.
+## Tracking and forecasting stage
+
+The `forecast` command now consumes verified graph/membership artifacts and
+produces Jaccard tracking, current-month features, transition pseudo-labels,
+temporal Majority/Logistic Regression baselines, saved models and metrics.
+Install `.[forecast]` and follow [the handoff guide](reports/FORECAST.md).
+A GED adaptation with past-only history features and verified handoff is available; see [the delivery contract](reports/FORECAST-HANDOFF.md). HeTCo remains unfinished. The `run` orchestration
+entrypoint remains scaffold-only; use the explicit `prepare` and `forecast` stages.

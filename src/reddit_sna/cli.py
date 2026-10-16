@@ -34,6 +34,19 @@ def main(argv: list[str] | None = None) -> int:
     )
     subparsers = parser.add_subparsers(dest="command", required=True)
     subparsers.add_parser("pipelines", help="List independent pipelines and implementation status")
+    forecast_parser = subparsers.add_parser("forecast", help="Track verified memberships and evaluate temporal baselines")
+    forecast_parser.add_argument("--graph-run", type=Path, required=True)
+    forecast_parser.add_argument("--detection-run", type=Path, required=True)
+    forecast_parser.add_argument("--artifact-root", type=Path, default=Path("artifacts"))
+    forecast_parser.add_argument("--output", type=Path, required=True)
+    forecast_parser.add_argument("--test-start", required=True, help="First held-out label month, YYYY-MM")
+    forecast_parser.add_argument("--threshold", type=float, default=0.25)
+    forecast_parser.add_argument("--seed", type=int, default=42)
+    forecast_parser.add_argument("--tracker", choices=("jaccard", "ged"), default="jaccard")
+    forecast_parser.add_argument("--alpha", type=float, default=0.5)
+    forecast_parser.add_argument("--beta", type=float, default=0.5)
+    forecast_parser.add_argument("--dissolve", type=float, default=0.1)
+    forecast_parser.add_argument("--history", action="store_true", help="Add past-only lineage features")
     preparation_parser = subparsers.add_parser("prepare", help="Prepare Reddit data, reply graphs and memberships; not full core forecasting")
     preparation_parser.add_argument("--config", type=Path, required=True)
     preparation_parser.add_argument("--run-id")
@@ -59,6 +72,14 @@ def main(argv: list[str] | None = None) -> int:
             print(f"{pipeline.value}: scaffold-only ({description})")
         return 0
     try:
+        if args.command == "forecast":
+            from reddit_sna.pipelines.forecast import run_forecast
+            output = run_forecast(args.graph_run, args.detection_run, args.artifact_root,
+                                  args.output, args.test_start, args.threshold, args.seed,
+                                  tracker=args.tracker, alpha=args.alpha, beta=args.beta,
+                                  dissolve=args.dissolve, history=args.history)
+            print(json.dumps({"forecast_output": str(output)}))
+            return 0
         config = load_config(args.config, run_id=args.run_id)
         if args.command == "prepare":
             from reddit_sna.data.archive import CORPORA
