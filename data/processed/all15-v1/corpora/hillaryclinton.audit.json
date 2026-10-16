@@ -1,0 +1,11 @@
+{
+  "archive": "hillaryclinton.corpus.zip",
+  "sha256": "34f35eda818893dd5c4b9881a66f21d701ecf6ccb5ee2613b562f3d4085bd85f",
+  "bytes": 171824569,
+  "zip_crc_verified": true,
+  "counts": {
+    "raw_records": 1537096,
+    "accepted_records": 1537096
+  },
+  "elapsed_seconds": 58.076
+}

@@ -1,0 +1,11 @@
+{
+  "archive": "PoliticalDiscussion.corpus.zip",
+  "sha256": "f1abcb03d46442bf8da02b0f54f7a5ce71ac88634e6bc941a435cb032ee3b870",
+  "bytes": 801431696,
+  "zip_crc_verified": true,
+  "counts": {
+    "raw_records": 4655894,
+    "accepted_records": 4655894
+  },
+  "elapsed_seconds": 196.893
+}

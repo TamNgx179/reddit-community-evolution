@@ -1,0 +1,533 @@
+{
+  "schema_version": 1,
+  "scope": "Original raw corpus archives and historical processed imports; not canonical v3 research outputs.",
+  "files": [
+    {
+      "path": "data/processed/all15-v1/audit.json",
+      "bytes": 1964,
+      "sha256": "d7207e94db388bc7997687b3ea14e582cee2a6ff462f13a37b51db3802fb7ae9"
+    },
+    {
+      "path": "data/processed/all15-v1/community-pilot/2015-01/partition_seed0.csv",
+      "bytes": 559518,
+      "sha256": "752f5fe5684c3c5edf102c024b6919f85c2ae58b34afe08a026af00e8af58a2a"
+    },
+    {
+      "path": "data/processed/all15-v1/community-pilot/2015-01/partition_seed1.csv",
+      "bytes": 559474,
+      "sha256": "dd778d0d2ee4ff9e10df12db4894469d428b69177c5e0476939c246965ea5af8"
+    },
+    {
+      "path": "data/processed/all15-v1/community-pilot/2015-01/partition_seed2.csv",
+      "bytes": 559476,
+      "sha256": "14d2cd78a38be6cfb1f9477ef0d64269f534292a3960922a233b1dbb8cb73fce"
+    },
+    {
+      "path": "data/processed/all15-v1/community-pilot/2015-01/R_raw.csv",
+      "bytes": 3743389,
+      "sha256": "5df9df59284036a0875f3bbf1f6f40ad48fcd1551c273fb023173701e850455e"
+    },
+    {
+      "path": "data/processed/all15-v1/community-pilot/2015-02/partition_seed0.csv",
+      "bytes": 559824,
+      "sha256": "b9210da233e6dab938c5d37de255a41c52bd53f16c47a5ef2ffe204dfc77a36a"
+    },
+    {
+      "path": "data/processed/all15-v1/community-pilot/2015-02/partition_seed1.csv",
+      "bytes": 559820,
+      "sha256": "84dd93ee25bad877fb6029acfe019dc314eb9e8f7a55cd483ff7efe45d24dbf3"
+    },
+    {
+      "path": "data/processed/all15-v1/community-pilot/2015-02/partition_seed2.csv",
+      "bytes": 559841,
+      "sha256": "0ebdbaa6116b45eed4fc97b075f96f20cc289d103973fbc3d8b14547f4d435f5"
+    },
+    {
+      "path": "data/processed/all15-v1/community-pilot/2015-02/R_raw.csv",
+      "bytes": 3620791,
+      "sha256": "5a7563bc88caf1a92f168b7559082914a149c4100124434c6348cda2c162beec"
+    },
+    {
+      "path": "data/processed/all15-v1/community-pilot/2015-03/partition_seed0.csv",
+      "bytes": 636604,
+      "sha256": "85e769551749d9bd5da44eeb0cec0287a82bf53f95887ef1e85ca85a3bcc4380"
+    },
+    {
+      "path": "data/processed/all15-v1/community-pilot/2015-03/partition_seed1.csv",
+      "bytes": 636579,
+      "sha256": "6c009ecca40b164221ccb3922cae9cebb07e4b44f1d07139ddb331acddbbd74a"
+    },
+    {
+      "path": "data/processed/all15-v1/community-pilot/2015-03/partition_seed2.csv",
+      "bytes": 636595,
+      "sha256": "5996098127010271553c9ca818f38ac2632c2dd3c03397596b5bea9bda311018"
+    },
+    {
+      "path": "data/processed/all15-v1/community-pilot/2015-03/R_raw.csv",
+      "bytes": 4374724,
+      "sha256": "f54131b5513c4d53ba1931229949805249b4f071ca4d8ac5c6026ed1e352b503"
+    },
+    {
+      "path": "data/processed/all15-v1/community-pilot/pilot.json",
+      "bytes": 3808,
+      "sha256": "42ca1d93a24da435e78419eb22890c9905344b68285df3c631f36834ff7122d6"
+    },
+    {
+      "path": "data/processed/all15-v1/corpora/Ask_Politics.audit.json",
+      "bytes": 286,
+      "sha256": "e2b94c639a3d96b3b9f17bd6350ddcb6109df30b329e1b9fa065e3a18b4a09b6"
+    },
+    {
+      "path": "data/processed/all15-v1/corpora/Ask_Politics.parquet",
+      "bytes": 7010605,
+      "sha256": "90a219884cc875979bf9724972854e21dc7a087c06529563b202fbbf7f40aa1e"
+    },
+    {
+      "path": "data/processed/all15-v1/corpora/AskALiberal.audit.json",
+      "bytes": 285,
+      "sha256": "c6626c94d3752c12c39a8ad18719d13445ac096f5c8337fd7057e667e3643de4"
+    },
+    {
+      "path": "data/processed/all15-v1/corpora/AskALiberal.parquet",
+      "bytes": 4419965,
+      "sha256": "f985a2639dabc6bcbe1c2e202806c36ce89eba5ce93b7749d03c90a4356708f1"
+    },
+    {
+      "path": "data/processed/all15-v1/corpora/AskThe_Donald.audit.json",
+      "bytes": 289,
+      "sha256": "ed13b5cfcd371d69321ac9a29684c05ea257b73f29eb8e4be36163ec5e344578"
+    },
+    {
+      "path": "data/processed/all15-v1/corpora/AskThe_Donald.parquet",
+      "bytes": 15642077,
+      "sha256": "c1881d6f99d08e4340a8207bc72413e1cdf6d4d0f4ee5e5b4699271a6af3b929"
+    },
+    {
+      "path": "data/processed/all15-v1/corpora/AskTrumpSupporters.audit.json",
+      "bytes": 296,
+      "sha256": "05061153f50e6439d11514099a2607771ae10d96ef0052125bd2630d9454b10b"
+    },
+    {
+      "path": "data/processed/all15-v1/corpora/AskTrumpSupporters.parquet",
+      "bytes": 32296260,
+      "sha256": "83940dc23d91d5af53bfafcc44765b80bafad6f2eeb7a40c9819bc3d4046cc2a"
+    },
+    {
+      "path": "data/processed/all15-v1/corpora/Conservative.audit.json",
+      "bytes": 291,
+      "sha256": "b9508dc9491c8e93329f212684f362487d660a8d26d91b0fbe99db0130c02424"
+    },
+    {
+      "path": "data/processed/all15-v1/corpora/Conservative.parquet",
+      "bytes": 65412129,
+      "sha256": "964aeaf53a8095a3c3db8ea6613ae64884398330064f74dd7687dbd48528e2d2"
+    },
+    {
+      "path": "data/processed/all15-v1/corpora/democrats.audit.json",
+      "bytes": 284,
+      "sha256": "24b5ba65317a74f2a8648798b50c573b6a731c26dfb7ec510dbe1f7c11316b7a"
+    },
+    {
+      "path": "data/processed/all15-v1/corpora/democrats.parquet",
+      "bytes": 8723347,
+      "sha256": "9cfb71e64e7253b58e9edcc6d796db0b767475d314383fe489773151d843c989"
+    },
+    {
+      "path": "data/processed/all15-v1/corpora/EnoughTrumpSpam.audit.json",
+      "bytes": 293,
+      "sha256": "f3591708db57c64d58b5351b68872a8b7e773badb7183dc00435a851f4993692"
+    },
+    {
+      "path": "data/processed/all15-v1/corpora/EnoughTrumpSpam.parquet",
+      "bytes": 49323641,
+      "sha256": "613c6b606f0346d31ea8ecb994a45333a982f46a67abf6081b5890e296d9b2fa"
+    },
+    {
+      "path": "data/processed/all15-v1/corpora/hillaryclinton.audit.json",
+      "bytes": 292,
+      "sha256": "bcd9174ab503ffd2ef7e3023e1cb61978ab0db3566fa27770663e132200b4746"
+    },
+    {
+      "path": "data/processed/all15-v1/corpora/hillaryclinton.parquet",
+      "bytes": 29104679,
+      "sha256": "3cd5d9b10775e012aecec154cad151fd67da174c287edea2cd0ef30a0aa7e163"
+    },
+    {
+      "path": "data/processed/all15-v1/corpora/moderatepolitics.audit.json",
+      "bytes": 290,
+      "sha256": "13804cac82f1f4776d3d96304ed55a9149cae738a77dbffe207f289c0a18b67f"
+    },
+    {
+      "path": "data/processed/all15-v1/corpora/moderatepolitics.parquet",
+      "bytes": 2903029,
+      "sha256": "3aae251434cd221ca261d02930a790e5ab2ab69b14d0e31dd5b6e1b1c7bbb197"
+    },
+    {
+      "path": "data/processed/all15-v1/corpora/NeutralPolitics.audit.json",
+      "bytes": 290,
+      "sha256": "d5d46d0c6c693932f4137d008d5d6b9079122684ac8f400a784d0997e2db580c"
+    },
+    {
+      "path": "data/processed/all15-v1/corpora/NeutralPolitics.parquet",
+      "bytes": 10024030,
+      "sha256": "72e26f512cc4adaa6cc15e861f717d356c5568422889ce75385efba480c62a43"
+    },
+    {
+      "path": "data/processed/all15-v1/corpora/Political_Revolution.audit.json",
+      "bytes": 295,
+      "sha256": "16e1b4ba451a25d538ed7afcfa4c83d7e41037137cc877a0dee891eabc6c4bd4"
+    },
+    {
+      "path": "data/processed/all15-v1/corpora/Political_Revolution.parquet",
+      "bytes": 12490166,
+      "sha256": "895c758031d0d92a4d044f1b42c91f0e1fead50f819880cecd5740512165e512"
+    },
+    {
+      "path": "data/processed/all15-v1/corpora/PoliticalDiscussion.audit.json",
+      "bytes": 298,
+      "sha256": "d1053a4ff6c2e41161aae1f17e30825d6de2030a63a041b412dced5648b08344"
+    },
+    {
+      "path": "data/processed/all15-v1/corpora/PoliticalDiscussion.parquet",
+      "bytes": 94713530,
+      "sha256": "5047e42179c837d7d79018581c56e6ec5c1ab50a2d3dcaafb42786df3672d720"
+    },
+    {
+      "path": "data/processed/all15-v1/corpora/Republican.audit.json",
+      "bytes": 285,
+      "sha256": "c186288518741602037d124d611a9162a272c480c3ce57c5a83d0d4832398100"
+    },
+    {
+      "path": "data/processed/all15-v1/corpora/Republican.parquet",
+      "bytes": 9815107,
+      "sha256": "bf4db046a90eb1042a7cf045d49f5f875fa8bd722fe7eaf9cf7b78cd9a420f77"
+    },
+    {
+      "path": "data/processed/all15-v1/corpora/SandersForPresident.audit.json",
+      "bytes": 298,
+      "sha256": "936df2448e64cd6624ef164744d9c6902efeaecb99086553616fcfb5ca89ee5e"
+    },
+    {
+      "path": "data/processed/all15-v1/corpora/SandersForPresident.parquet",
+      "bytes": 117785436,
+      "sha256": "c14c6fa2fa3346a4e0bf27e33495495f7e3c28ced804fe94560fdadf9b4548f2"
+    },
+    {
+      "path": "data/processed/all15-v1/corpora/socialism.audit.json",
+      "bytes": 287,
+      "sha256": "f3858a3264b1d317b35d15fb4eab317b96050248ecf7606d4d67c0df2103fcc2"
+    },
+    {
+      "path": "data/processed/all15-v1/corpora/socialism.parquet",
+      "bytes": 32919339,
+      "sha256": "a900132439c4fc9db9383b6cfe468e4ae35bb7c6dd0550f5f0a7611545eec59a"
+    },
+    {
+      "path": "data/processed/all15-v1/manifest.json",
+      "bytes": 4737,
+      "sha256": "bcaa4b9cbae4d350d040ed67a29518dddd2cbd659290cd59da750c5c6c4252ba"
+    },
+    {
+      "path": "data/processed/all15-v1/merged.duckdb.zip",
+      "bytes": 1909565998,
+      "sha256": "fff1673522a88a7e2bc0b84738ffe926b37433bc4f7fa577f485973f309e8268"
+    },
+    {
+      "path": "data/processed/all15-v1/monthly_stats.csv",
+      "bytes": 1555,
+      "sha256": "b771123e215e803d5a2ead9ab9b372c77fc19093c65d3220f7046a828dbd28f5"
+    },
+    {
+      "path": "data/processed/all15-v1/split_reply_stats.csv",
+      "bytes": 66,
+      "sha256": "fca13422cd2a38167b5e3a0b6925ae9fee339567efe2234a13bae52ba4d723e8"
+    },
+    {
+      "path": "data/processed/all15-v1/split_stats.csv",
+      "bytes": 192,
+      "sha256": "bf10eac8dd3c6ad127d5de8f5254a05abb63908b166b20aad21f41da26d16389"
+    },
+    {
+      "path": "data/processed/all15-v1/subreddit_stats.csv",
+      "bytes": 669,
+      "sha256": "be04e2a355a2002299848c741b87013811f235af519fcb8f7f92e2ccf005da9e"
+    },
+    {
+      "path": "data/processed/moderatepolitics-v1/audit.json",
+      "bytes": 2508,
+      "sha256": "f127e29dc840d92128e0838be912199c15180369859d7dcf9151ac928dce72f0"
+    },
+    {
+      "path": "data/processed/moderatepolitics-v1/monthly_stats.csv",
+      "bytes": 1592,
+      "sha256": "03d81a7bc88d7f38db6cb0eace263450831ba4513306dcc8ee8fb0b4717f3c38"
+    },
+    {
+      "path": "data/processed/moderatepolitics-v1/normalized.sqlite",
+      "bytes": 39636992,
+      "sha256": "45f69eb18ca28f931afe5e58a6bc001237ff76db27823d8be936cb978bd0c0ba"
+    },
+    {
+      "path": "data/processed/moderatepolitics-v1/snapshots/2015-01/nodes.csv",
+      "bytes": 6870,
+      "sha256": "c8d9cda4930884b285a56a82b22121cb3d037b4d76cd2a18e112588521393359"
+    },
+    {
+      "path": "data/processed/moderatepolitics-v1/snapshots/2015-01/R_normalized.csv",
+      "bytes": 15234,
+      "sha256": "36d5942c57fdd6abaaf0948bbea1e6730890c94ff9c94b29156a60b6f0898833"
+    },
+    {
+      "path": "data/processed/moderatepolitics-v1/snapshots/2015-01/R_raw.csv",
+      "bytes": 13455,
+      "sha256": "14915c12ddc6ca10879019017a75698fb552ea809bcf3cff2eabde727d64f8fa"
+    },
+    {
+      "path": "data/processed/moderatepolitics-v1/snapshots/2015-01/reply_directed.csv",
+      "bytes": 17312,
+      "sha256": "7bdabf4b40df0af50a435e930e25f15594e6f9d7ee7bccc9552ebd25c679e2c1"
+    },
+    {
+      "path": "data/processed/moderatepolitics-v1/snapshots/2015-01/T_normalized.csv",
+      "bytes": 81412,
+      "sha256": "b6930763aa700cc397cf8737f4072f890502611e1e3b11be3dad516b363afe73"
+    },
+    {
+      "path": "data/processed/moderatepolitics-v1/snapshots/2015-02/nodes.csv",
+      "bytes": 5484,
+      "sha256": "d184462034a4932b1ef1f176c05c0bba28adef7f29fa5da8d1c10aff2619ffbb"
+    },
+    {
+      "path": "data/processed/moderatepolitics-v1/snapshots/2015-02/R_normalized.csv",
+      "bytes": 13897,
+      "sha256": "95577d855d6392b814405899b0b1f86bbc78ea678ef312b2f84ac58b7d0d013f"
+    },
+    {
+      "path": "data/processed/moderatepolitics-v1/snapshots/2015-02/R_raw.csv",
+      "bytes": 12260,
+      "sha256": "8ddbb9e19e0f28f03019d43ddbd793c1be7ac36596e66011d8e54666a3698a21"
+    },
+    {
+      "path": "data/processed/moderatepolitics-v1/snapshots/2015-02/reply_directed.csv",
+      "bytes": 17179,
+      "sha256": "aaa7d3bf42de46d0b8734cdc4fd2b63f81e982a8a24623d22b3f583a4b49f67d"
+    },
+    {
+      "path": "data/processed/moderatepolitics-v1/snapshots/2015-02/T_normalized.csv",
+      "bytes": 58871,
+      "sha256": "fdb897b0638c2bc6d9db85a80004a4efead405004f150f5ec43d8b8efe8122ae"
+    },
+    {
+      "path": "data/processed/moderatepolitics-v1/snapshots/2015-03/nodes.csv",
+      "bytes": 6474,
+      "sha256": "7a4631ef83297145ffbe5527f0045aea057598039472361c5ebadfa50165288c"
+    },
+    {
+      "path": "data/processed/moderatepolitics-v1/snapshots/2015-03/R_normalized.csv",
+      "bytes": 18173,
+      "sha256": "77ac3aceb0594943a3d593e1639438ae55a748fd36c5fc1a498c7b6fc2e17e53"
+    },
+    {
+      "path": "data/processed/moderatepolitics-v1/snapshots/2015-03/R_raw.csv",
+      "bytes": 16119,
+      "sha256": "a72d1c41738fef928fea366df056a7737981b81b6da7ec573a260fffbb92cc5d"
+    },
+    {
+      "path": "data/processed/moderatepolitics-v1/snapshots/2015-03/reply_directed.csv",
+      "bytes": 21173,
+      "sha256": "08d73acbe780c453da9461f384016a46c7675914d57446c6b23f5b8120e4bee5"
+    },
+    {
+      "path": "data/processed/moderatepolitics-v1/snapshots/2015-03/T_normalized.csv",
+      "bytes": 113720,
+      "sha256": "9d193bfd932b13f254d1bf24b1d122696067c469b273f884f70c42fb67c9cc99"
+    },
+    {
+      "path": "data/processed/moderatepolitics-v1/split_stats.csv",
+      "bytes": 243,
+      "sha256": "fd9692a457794da522ebb1f062d2ef5c90508fd89a08cba2c1dfc8ea4213502b"
+    },
+    {
+      "path": "data/processed/moderatepolitics-v2/audit.json",
+      "bytes": 2613,
+      "sha256": "f3c307c1ed28329c56eca994b732589fee9884a283b0e5873dcde7a1c9e0286a"
+    },
+    {
+      "path": "data/processed/moderatepolitics-v2/monthly_stats.csv",
+      "bytes": 1592,
+      "sha256": "03d81a7bc88d7f38db6cb0eace263450831ba4513306dcc8ee8fb0b4717f3c38"
+    },
+    {
+      "path": "data/processed/moderatepolitics-v2/normalized.sqlite",
+      "bytes": 39636992,
+      "sha256": "45f69eb18ca28f931afe5e58a6bc001237ff76db27823d8be936cb978bd0c0ba"
+    },
+    {
+      "path": "data/processed/moderatepolitics-v2/snapshots/2015-01/nodes.csv",
+      "bytes": 6936,
+      "sha256": "777a1267c95d66c456ffa4ba7958e3958b1908ab9d01360cf019bd679a95dc93"
+    },
+    {
+      "path": "data/processed/moderatepolitics-v2/snapshots/2015-01/R_normalized.csv",
+      "bytes": 15234,
+      "sha256": "36d5942c57fdd6abaaf0948bbea1e6730890c94ff9c94b29156a60b6f0898833"
+    },
+    {
+      "path": "data/processed/moderatepolitics-v2/snapshots/2015-01/R_raw.csv",
+      "bytes": 13455,
+      "sha256": "14915c12ddc6ca10879019017a75698fb552ea809bcf3cff2eabde727d64f8fa"
+    },
+    {
+      "path": "data/processed/moderatepolitics-v2/snapshots/2015-01/reply_directed.csv",
+      "bytes": 17312,
+      "sha256": "7bdabf4b40df0af50a435e930e25f15594e6f9d7ee7bccc9552ebd25c679e2c1"
+    },
+    {
+      "path": "data/processed/moderatepolitics-v2/snapshots/2015-01/T_normalized.csv",
+      "bytes": 81412,
+      "sha256": "b6930763aa700cc397cf8737f4072f890502611e1e3b11be3dad516b363afe73"
+    },
+    {
+      "path": "data/processed/moderatepolitics-v2/snapshots/2015-02/nodes.csv",
+      "bytes": 5550,
+      "sha256": "f50ba9fe2735877dfa7bac7fb4d4dde639a37d0b294a07f3fd14371e8efab698"
+    },
+    {
+      "path": "data/processed/moderatepolitics-v2/snapshots/2015-02/R_normalized.csv",
+      "bytes": 13897,
+      "sha256": "95577d855d6392b814405899b0b1f86bbc78ea678ef312b2f84ac58b7d0d013f"
+    },
+    {
+      "path": "data/processed/moderatepolitics-v2/snapshots/2015-02/R_raw.csv",
+      "bytes": 12260,
+      "sha256": "8ddbb9e19e0f28f03019d43ddbd793c1be7ac36596e66011d8e54666a3698a21"
+    },
+    {
+      "path": "data/processed/moderatepolitics-v2/snapshots/2015-02/reply_directed.csv",
+      "bytes": 17179,
+      "sha256": "aaa7d3bf42de46d0b8734cdc4fd2b63f81e982a8a24623d22b3f583a4b49f67d"
+    },
+    {
+      "path": "data/processed/moderatepolitics-v2/snapshots/2015-02/T_normalized.csv",
+      "bytes": 58871,
+      "sha256": "fdb897b0638c2bc6d9db85a80004a4efead405004f150f5ec43d8b8efe8122ae"
+    },
+    {
+      "path": "data/processed/moderatepolitics-v2/snapshots/2015-03/nodes.csv",
+      "bytes": 6474,
+      "sha256": "7a4631ef83297145ffbe5527f0045aea057598039472361c5ebadfa50165288c"
+    },
+    {
+      "path": "data/processed/moderatepolitics-v2/snapshots/2015-03/R_normalized.csv",
+      "bytes": 18173,
+      "sha256": "77ac3aceb0594943a3d593e1639438ae55a748fd36c5fc1a498c7b6fc2e17e53"
+    },
+    {
+      "path": "data/processed/moderatepolitics-v2/snapshots/2015-03/R_raw.csv",
+      "bytes": 16119,
+      "sha256": "a72d1c41738fef928fea366df056a7737981b81b6da7ec573a260fffbb92cc5d"
+    },
+    {
+      "path": "data/processed/moderatepolitics-v2/snapshots/2015-03/reply_directed.csv",
+      "bytes": 21173,
+      "sha256": "08d73acbe780c453da9461f384016a46c7675914d57446c6b23f5b8120e4bee5"
+    },
+    {
+      "path": "data/processed/moderatepolitics-v2/snapshots/2015-03/T_normalized.csv",
+      "bytes": 113720,
+      "sha256": "9d193bfd932b13f254d1bf24b1d122696067c469b273f884f70c42fb67c9cc99"
+    },
+    {
+      "path": "data/processed/moderatepolitics-v2/split_stats.csv",
+      "bytes": 243,
+      "sha256": "fd9692a457794da522ebb1f062d2ef5c90508fd89a08cba2c1dfc8ea4213502b"
+    },
+    {
+      "path": "data/raw/Ask_Politics.corpus.zip",
+      "bytes": 60117163,
+      "sha256": "221b679e1433b61d28dd77899de67cb5f8e46d0a47b9affa448a734695c29d9e"
+    },
+    {
+      "path": "data/raw/AskALiberal.corpus.zip",
+      "bytes": 52226118,
+      "sha256": "d0398399fd7d3319658773354698bc4c20b1ebcabc14e203c8070ea5926aba3a"
+    },
+    {
+      "path": "data/raw/AskThe_Donald.corpus.zip",
+      "bytes": 123915164,
+      "sha256": "4055b1064458cd84b414014b5fec9e51cd2e6a5d6f637bab4a506b126ca4c052"
+    },
+    {
+      "path": "data/raw/AskTrumpSupporters.corpus.zip",
+      "bytes": 281665523,
+      "sha256": "ec2a3aa2bf2f1fba73c4057409fc35358b9899004bc747e78ae9da56a2a78b22"
+    },
+    {
+      "path": "data/raw/Conservative.corpus.zip",
+      "bytes": 412380497,
+      "sha256": "00b82fbe52bdd169cea004c60c651cff5b493caedd8351e9350e2a070803f9e1"
+    },
+    {
+      "path": "data/raw/democrats.corpus.zip",
+      "bytes": 49875161,
+      "sha256": "fbb6679adc63eeabe3fa58bd4a3688312e42d03787bf6afaa1e5782f1adb1ad5"
+    },
+    {
+      "path": "data/raw/EnoughTrumpSpam.corpus.zip",
+      "bytes": 256352613,
+      "sha256": "495acdac87d671d33e1909dbba7b8af9866daf1d30dbe35453f4a61f1af3fcc1"
+    },
+    {
+      "path": "data/raw/hillaryclinton.corpus.zip",
+      "bytes": 171824569,
+      "sha256": "34f35eda818893dd5c4b9881a66f21d701ecf6ccb5ee2613b562f3d4085bd85f"
+    },
+    {
+      "path": "data/raw/moderatepolitics.corpus.zip",
+      "bytes": 27077180,
+      "sha256": "d3518afb68936920f6a259a4e9b3b2a70fe1167b958bc802e1a31aecaea50b8b"
+    },
+    {
+      "path": "data/raw/NeutralPolitics.corpus.zip",
+      "bytes": 87907459,
+      "sha256": "7571fcfecc798d7b9322707cab65f09ceab485dfc63fbc1c9757763dfaa32003"
+    },
+    {
+      "path": "data/raw/Political_Revolution.corpus.zip",
+      "bytes": 75762755,
+      "sha256": "0d55b01adf6188ee70e4880d791ffbd97df0c1da87b5c6747207a314ab1b6aee"
+    },
+    {
+      "path": "data/raw/PoliticalDiscussion.corpus.zip",
+      "bytes": 801431696,
+      "sha256": "f1abcb03d46442bf8da02b0f54f7a5ce71ac88634e6bc941a435cb032ee3b870"
+    },
+    {
+      "path": "data/raw/Republican.corpus.zip",
+      "bytes": 62700424,
+      "sha256": "ec0c7b313b10c1cff2ce97dcaf35f84ec479ff6f4e048933b5ec8871d37bbcc8"
+    },
+    {
+      "path": "data/raw/SandersForPresident.corpus.zip",
+      "bytes": 651018561,
+      "sha256": "49538b5acccac0b8675865d968532a92bce628f68009b5ac24e7d3805f7b652f"
+    },
+    {
+      "path": "data/raw/socialism.corpus.zip",
+      "bytes": 240846380,
+      "sha256": "af3fba89e95cfb5cc31b541e085e3a8887614b7668ef6b7e8cc841c2f356bca4"
+    }
+  ],
+  "unpacked_files": [
+    {
+      "path": "data/processed/all15-v1/merged.duckdb",
+      "archive": "data/processed/all15-v1/merged.duckdb.zip",
+      "bytes": 2447388672,
+      "sha256": "68210f5b58df19f6ef3ed468e293ae6787947ab52a77690fc72b4821bb9db5d1"
+    }
+  ],
+  "excluded": [
+    "data/private/",
+    "artifacts/"
+  ]
+}

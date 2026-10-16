@@ -1,0 +1,81 @@
+{
+  "archive": "moderatepolitics.corpus.zip",
+  "sha256": "d3518afb68936920f6a259a4e9b3b2a70fe1167b958bc802e1a31aecaea50b8b",
+  "archive_bytes": 27077180,
+  "zip_crc_verified": true,
+  "schema_variants": [
+    "old_user_root"
+  ],
+  "raw_timestamp_range_utc": [
+    "2010-11-09T18:37:36+00:00",
+    "2018-10-31T23:48:50+00:00"
+  ],
+  "study_start_inclusive": "2015-01",
+  "study_end_exclusive": "2018-10",
+  "scope": "ONE subreddit only. Not a validation of the 15-subreddit proposal totals.",
+  "totals": {
+    "records": 75553,
+    "posts": 5842,
+    "comments": 69711,
+    "valid_users": 5999,
+    "excluded_author_records": 3535,
+    "reply_events_nonself_valid_authors": 63432,
+    "directed_reply_pairs_monthly": 35633,
+    "user_thread_month_incidence": 32013,
+    "distinct_user_thread_pairs": 31676
+  },
+  "quality": {
+    "raw_lines": 130698,
+    "duplicate_ids": 0,
+    "missing_parent_in_full_archive": 0,
+    "parent_outside_study_window": 37,
+    "parent_later_than_child": 0,
+    "thread_root_missing": 0,
+    "missing_parent_percent_of_comments": 0.0
+  },
+  "snapshot_count": 45,
+  "nonempty_snapshot_count": 45,
+  "pilot_snapshots": [
+    {
+      "month": "2015-01",
+      "authored_users": 104,
+      "active_graph_users": 105,
+      "R_edges": 101,
+      "T_edges_before_pruning": 538,
+      "T_edges_after_pruning": 538,
+      "T_weight_retained_fraction": 1.0,
+      "pair_operations": 547,
+      "elapsed_seconds": 0.02
+    },
+    {
+      "month": "2015-02",
+      "authored_users": 83,
+      "active_graph_users": 84,
+      "R_edges": 92,
+      "T_edges_before_pruning": 389,
+      "T_edges_after_pruning": 389,
+      "T_weight_retained_fraction": 1.0,
+      "pair_operations": 403,
+      "elapsed_seconds": 0.017
+    },
+    {
+      "month": "2015-03",
+      "authored_users": 98,
+      "active_graph_users": 98,
+      "R_edges": 121,
+      "T_edges_before_pruning": 754,
+      "T_edges_after_pruning": 754,
+      "T_weight_retained_fraction": 1.0,
+      "pair_operations": 787,
+      "elapsed_seconds": 0.024
+    }
+  ],
+  "elapsed_seconds": 7.902,
+  "process_peak_working_set_mb": 30.67,
+  "limitations": [
+    "Only AutoModerator and deleted/removed/null authors are excluded, other bots are not yet identified.",
+    "No community detection, event labels, classifier, or 15-subreddit resource benchmark has been run.",
+    "Thread root is an identifier. Thread depth is not estimated here.",
+    "SQLite contains pseudonyms and source record IDs, not text or raw usernames. Keep the HMAC key private."
+  ]
+}

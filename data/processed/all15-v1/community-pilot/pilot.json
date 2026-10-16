@@ -1,0 +1,124 @@
+{
+  "scope": "Independent Leiden on R only, first three train months, gamma=1, seeds=0,1,2",
+  "snapshots": [
+    {
+      "month": "2015-01",
+      "reply_graph_users": 8222,
+      "all_activity_graph_users": 8742,
+      "authored_users": 8686,
+      "R_edges": 28143,
+      "R_user_coverage": 0.9405170441546556,
+      "thread_pair_operations_estimate": 395649.0,
+      "runs": [
+        {
+          "seed": 0,
+          "communities": 132,
+          "groups_at_least_5": 22,
+          "covered_users_groups_at_least_5": 7969,
+          "modularity": 0.6407805673285678,
+          "all_groups_connected": true
+        },
+        {
+          "seed": 1,
+          "communities": 128,
+          "groups_at_least_5": 18,
+          "covered_users_groups_at_least_5": 7974,
+          "modularity": 0.6406848314427728,
+          "all_groups_connected": true
+        },
+        {
+          "seed": 2,
+          "communities": 127,
+          "groups_at_least_5": 19,
+          "covered_users_groups_at_least_5": 7976,
+          "modularity": 0.6418776840951634,
+          "all_groups_connected": true
+        }
+      ],
+      "elapsed_seconds": 9.203
+    },
+    {
+      "month": "2015-02",
+      "reply_graph_users": 8229,
+      "all_activity_graph_users": 8640,
+      "authored_users": 8575,
+      "R_edges": 27221,
+      "R_user_coverage": 0.9524305555555556,
+      "thread_pair_operations_estimate": 402419.0,
+      "runs": [
+        {
+          "seed": 0,
+          "communities": 102,
+          "groups_at_least_5": 15,
+          "covered_users_groups_at_least_5": 8024,
+          "modularity": 0.6728777788643246,
+          "all_groups_connected": true
+        },
+        {
+          "seed": 1,
+          "communities": 102,
+          "groups_at_least_5": 14,
+          "covered_users_groups_at_least_5": 8023,
+          "modularity": 0.673032028532379,
+          "all_groups_connected": true
+        },
+        {
+          "seed": 2,
+          "communities": 106,
+          "groups_at_least_5": 15,
+          "covered_users_groups_at_least_5": 8015,
+          "modularity": 0.6730112602561595,
+          "all_groups_connected": true
+        }
+      ],
+      "elapsed_seconds": 5.54
+    },
+    {
+      "month": "2015-03",
+      "reply_graph_users": 9357,
+      "all_activity_graph_users": 9931,
+      "authored_users": 9839,
+      "R_edges": 32889,
+      "R_user_coverage": 0.9422011881985701,
+      "thread_pair_operations_estimate": 516406.0,
+      "runs": [
+        {
+          "seed": 0,
+          "communities": 115,
+          "groups_at_least_5": 16,
+          "covered_users_groups_at_least_5": 9136,
+          "modularity": 0.65460615624276,
+          "all_groups_connected": true
+        },
+        {
+          "seed": 1,
+          "communities": 114,
+          "groups_at_least_5": 14,
+          "covered_users_groups_at_least_5": 9132,
+          "modularity": 0.6550038267699071,
+          "all_groups_connected": true
+        },
+        {
+          "seed": 2,
+          "communities": 116,
+          "groups_at_least_5": 15,
+          "covered_users_groups_at_least_5": 9129,
+          "modularity": 0.6547979634273259,
+          "all_groups_connected": true
+        }
+      ],
+      "elapsed_seconds": 6.838
+    }
+  ],
+  "versions": {
+    "igraph": "1.0.0",
+    "leidenalg": "0.12.0"
+  },
+  "process_peak_working_set_mb": 1091.37,
+  "limitations": [
+    "Not HeTCo or temporal multiplex, no GED, labels, or classifier.",
+    "Reply-isolated users are not included in R partitions, coverage is explicitly reported.",
+    "These three early train months do not bound costs of peak-activity months.",
+    "No detector parameters were selected using validation/test data."
+  ]
+}

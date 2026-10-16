@@ -1,0 +1,11 @@
+{
+  "archive": "socialism.corpus.zip",
+  "sha256": "af3fba89e95cfb5cc31b541e085e3a8887614b7668ef6b7e8cc841c2f356bca4",
+  "bytes": 240846380,
+  "zip_crc_verified": true,
+  "counts": {
+    "raw_records": 1465759,
+    "accepted_records": 1465759
+  },
+  "elapsed_seconds": 68.133
+}

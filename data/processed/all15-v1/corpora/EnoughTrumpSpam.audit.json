@@ -1,0 +1,11 @@
+{
+  "archive": "EnoughTrumpSpam.corpus.zip",
+  "sha256": "495acdac87d671d33e1909dbba7b8af9866daf1d30dbe35453f4a61f1af3fcc1",
+  "bytes": 256352613,
+  "zip_crc_verified": true,
+  "counts": {
+    "raw_records": 2150620,
+    "accepted_records": 2150620
+  },
+  "elapsed_seconds": 92.522
+}

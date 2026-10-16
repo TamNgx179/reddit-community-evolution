@@ -1,0 +1,11 @@
+{
+  "archive": "NeutralPolitics.corpus.zip",
+  "sha256": "7571fcfecc798d7b9322707cab65f09ceab485dfc63fbc1c9757763dfaa32003",
+  "bytes": 87907459,
+  "zip_crc_verified": true,
+  "counts": {
+    "raw_records": 434685,
+    "accepted_records": 434685
+  },
+  "elapsed_seconds": 20.046
+}

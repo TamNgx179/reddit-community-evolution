@@ -1,0 +1,11 @@
+{
+  "archive": "Political_Revolution.corpus.zip",
+  "sha256": "0d55b01adf6188ee70e4880d791ffbd97df0c1da87b5c6747207a314ab1b6aee",
+  "bytes": 75762755,
+  "zip_crc_verified": true,
+  "counts": {
+    "raw_records": 512757,
+    "accepted_records": 512757
+  },
+  "elapsed_seconds": 21.843
+}

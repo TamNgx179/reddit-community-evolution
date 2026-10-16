@@ -6,6 +6,8 @@ Research package for detecting, tracking and forecasting changes in Reddit **use
 
 Python **3.11+** is required. In PowerShell at the repository root:
 
+First download the binary inputs with `git lfs install` and `git lfs pull`. See [dataset distribution](data/README.md) for selective download, checksums, the compressed legacy database and reproduction instructions.
+
 ```powershell
 python -m venv .venv
 & .\.venv\Scripts\python.exe -m pip install -e '.[graph,notebook]'
@@ -91,7 +93,7 @@ Pairs share contracts and reusable modules, not generated inputs/outputs during 
 
 All TOML paths, including `project_root`, resolve relative to the TOML directory. `check` validates configuration/paths without reading the corpus or creating research outputs. Core needs an existing Reddit input folder; synthetic configs do not depend on Reddit. `run` remains unfinished. Exit codes are 0 for successful commands, 2 for input/config/path errors and 3 for unimplemented research pipelines. CLI streams are UTF-8, including Unicode filesystem paths.
 
-Keep existing raw/processed/private data unchanged. Never commit Reddit inputs, user identifiers, private keys, runtime artifacts or large notebook outputs. Runs cannot overwrite previous runs, overlap inputs or write into `data/`. A `started` manifest is not completion. Preparation records input/output/config/source hashes, Git revision and tracked dirty state, dependency versions, stage status and wall time. Peak memory is not measured and remains null. `complete_through_detection` does not mean forecasting completed.
+Keep existing raw/processed/private data unchanged. The explicitly authorized [dataset release](data/README.md) publishes original raw archives and historical processed imports through Git LFS and regular Git metadata. Private keys, private identity lookup files, runtime artifacts and large notebook outputs remain local. Runs cannot overwrite previous runs, overlap inputs or write into `data/`. A `started` manifest is not completion. Preparation records input/output/config/source hashes, Git revision and tracked dirty state, dependency versions, stage status and wall time. Peak memory is not measured and remains null. `complete_through_detection` does not mean forecasting completed.
 
 ```powershell
 & .\.venv\Scripts\python.exe -m unittest discover -s tests -v

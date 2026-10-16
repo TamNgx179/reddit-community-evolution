@@ -1,0 +1,11 @@
+{
+  "archive": "moderatepolitics.corpus.zip",
+  "sha256": "d3518afb68936920f6a259a4e9b3b2a70fe1167b958bc802e1a31aecaea50b8b",
+  "bytes": 27077180,
+  "zip_crc_verified": true,
+  "counts": {
+    "raw_records": 130698,
+    "accepted_records": 130698
+  },
+  "elapsed_seconds": 5.501
+}

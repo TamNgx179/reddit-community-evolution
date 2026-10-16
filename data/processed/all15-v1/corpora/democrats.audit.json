@@ -1,0 +1,11 @@
+{
+  "archive": "democrats.corpus.zip",
+  "sha256": "fbb6679adc63eeabe3fa58bd4a3688312e42d03787bf6afaa1e5782f1adb1ad5",
+  "bytes": 49875161,
+  "zip_crc_verified": true,
+  "counts": {
+    "raw_records": 369011,
+    "accepted_records": 369011
+  },
+  "elapsed_seconds": 15.414
+}
