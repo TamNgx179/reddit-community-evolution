@@ -2,20 +2,20 @@
 
 **Nguồn trạng thái chính:** file này. **Owner mọi task PHUC:** Phúc. **Tạo bảng:** 16/10/2026. **Mốc chung nội bộ:** tối 20/10; 21/10 dự phòng, 22/10 báo cáo theo lịch repo.
 
-**Khởi tạo:** 0/36 task triển khai hoàn thành. Việc tạo specs không được tính thành việc đã sinh dữ liệu, chạy test hay benchmark. Detector hiện có là thành phần dùng lại, chưa chứng minh adapter benchmark đã chạy.
+**Tiến độ:** 3/36 task triển khai hoàn thành: PHUC-001-T01 (môi trường), T02 (membership chuẩn stable/grow) và T03 (adapter/validator CSV node/membership). Nhãn sự kiện và benchmark graph chưa được triển khai. Detector hiện có là thành phần dùng lại, chưa chứng minh adapter benchmark đã chạy.
 
 ## Bảng tổng quan cho thành viên nhóm
 
 | Spec | Phạm vi | Mốc nội bộ năm 2026 | Trạng thái | Task DONE | Đang làm / vướng mắc / bằng chứng |
 |---|---|---|---|---|---|
-| [PHUC-001](001-truth-fixtures/spec.md) | Truth stable/grow và fixture | 16/10 | TODO | 0/6 | Chưa triển khai; bắt đầu T01/T02 |
+| [PHUC-001](001-truth-fixtures/spec.md) | Truth stable/grow và fixture | 16/10 | DOING | 3/6 | T01–T03 DONE; CSV round-trip đúng, 31 test liên quan pass. Tiếp theo T04. [Bằng chứng T03](evidence/PHUC-001-T03-csv.md) |
 | [PHUC-002](002-dynamic-benchmark/spec.md) | Graph và sáu sự kiện | 18/10 | TODO | 0/6 | Có thể làm stable trước, chưa chờ tracker |
 | [PHUC-003](003-leiden-detection/spec.md) | Adapter Leiden | Bộ đầu 17/10; đủ lịch 18/10 | TODO | 0/6 | Dùng detector có sẵn, cần graph nhỏ |
 | [PHUC-004](004-detection-evaluation/spec.md) | AMI và coverage | Bộ đầu 17/10; hoàn thiện 19/10 | TODO | 0/6 | Có thể viết evaluator bằng fixture |
 | [PHUC-005](005-reproducible-runs/spec.md) | Development/evaluation tái lập | 19/10 | TODO | 0/6 | Cần đầu ra 002–004 để nghiệm thu |
 | [PHUC-006](006-handoff-demo/spec.md) | Gói giao và notebook detection | 20/10 | TODO | 0/6 | Phần cá nhân chưa chờ Đăng; ghép chung tách bên dưới |
 
-Đây là bảng khởi tạo, chưa có record triển khai nào. Khi task đổi trạng thái, cập nhật dòng spec tương ứng trong cùng lần sửa. Checklist bên dưới là căn cứ đối chiếu nếu bảng tóm tắt lệch.
+Bảng được cập nhật cùng checklist và ledger bằng chứng. Khi task đổi trạng thái, cập nhật dòng spec tương ứng trong cùng lần sửa. Checklist bên dưới là căn cứ đối chiếu nếu bảng tóm tắt lệch.
 
 ## Trạng thái và cách cập nhật
 
@@ -46,9 +46,9 @@ Giao truth stable/grow cho Đăng khi đã kiểm tra được, không chờ lu�
 
 [Đặc tả](001-truth-fixtures/spec.md). Phụ thuộc ngoài: không. Requirement và schema theo [contracts](contracts.md).
 
-- [ ] PHUC-001-T01 [TODO] [FR05] Kiểm tra project interpreter, import và chạy `tests/unit/test_leiden.py`; ghi môi trường/lệnh/pass-skip-error vào ledger của `document/specs/phuc/tasks.md`.
-- [ ] PHUC-001-T02 [TODO] [FR01] Viết kịch bản stable/grow và K trong `src/reddit_sna/benchmarks/scenarios.py`, user nhất quán, đích đổi tên.
-- [ ] PHUC-001-T03 [TODO] [FR02] Viết adapter/validator membership và node trong `src/reddit_sna/benchmarks/io.py`, chặn keys/tháng/reference/user sai.
+- [x] PHUC-001-T01 [DONE] [FR05] Kiểm tra project interpreter, import và chạy `tests/unit/test_leiden.py`; ghi môi trường/lệnh/pass-skip-error vào ledger của `document/specs/phuc/tasks.md`.
+- [x] PHUC-001-T02 [DONE] [FR01] Viết kịch bản stable/grow và K trong `src/reddit_sna/benchmarks/scenarios.py`, user nhất quán, đích đổi tên.
+- [x] PHUC-001-T03 [DONE] [FR02] Viết adapter/validator membership và node trong `src/reddit_sna/benchmarks/io.py`, chặn keys/tháng/reference/user sai.
 - [ ] PHUC-001-T04 [TODO] [FR03] Sinh events/links chuẩn độc lập thuật toán trong `src/reddit_sna/benchmarks/scenarios.py`, gồm K và quy tắc successor.
 - [ ] PHUC-001-T05 [TODO] [FR01,FR02,FR03,FR04] Thêm kiểm tra tập thành viên, nhãn, duplicate và output/tái lập trong `tests/unit/test_synthetic_truth.py`.
 - [ ] PHUC-001-T06 [TODO] [FR04,FR05] Export fixture stable/grow có metadata vào `artifacts/detection-tracking/<run_id>/datasets/`; ghi lệnh đọc độc lập và gói bàn giao vào ledger.
@@ -135,11 +135,13 @@ Nếu Phúc đã xong 36 task mà EXT-D02/D03 chưa có, báo “phần detectio
 
 ## Ledger bằng chứng
 
-Thêm một dòng khi có tiến triển kiểm tra được; có thể nhiều dòng cho một task. Hiện chưa có record chạy thật.
+Thêm một dòng khi có tiến triển kiểm tra được; có thể nhiều dòng cho một task. T01 xác minh môi trường, T02 kiểm tra membership chuẩn, T03 xác minh CSV; chưa có kết quả benchmark detection/tracking nghiên cứu.
 
 | Ngày/giờ Asia/Bangkok | Task ID | Code / commit / PR | Lệnh / môi trường | Kết quả và kiểm tra | Run / artifact / hash | Reviewer hoặc người nhận |
 |---|---|---|---|---|---|---|
-| — | — | Chưa có evidence triển khai | Chưa chạy trong lượt tạo specs | Chưa có kết quả benchmark | — | Chưa yêu cầu/xác nhận |
+| 2026-10-16 18:37:02 +07:00 | PHUC-001-T01 | `.gitignore`; source cơ sở `8d135c9`; [bằng chứng](evidence/PHUC-001-T01-environment.md) | Python 3.12.6 `.venv`; editable `[graph,notebook]` + scikit-learn; `pip check`; `python -m unittest tests.unit.test_leiden -v` | Imports/pip check PASS; 3 tests pass, 0 skip/failure/error; unittest 1.124s | `artifacts/environment/phuc-001-t01-001/`; versions, commands, logs/freeze/hashes trong bằng chứng | Tự kiểm tra; chưa có review/acceptance từ Đăng |
+| 2026-10-16 19:15:07 +07:00 | PHUC-001-T02 | `benchmarks/scenarios.py`, `tests/unit/test_synthetic_truth.py`; [bằng chứng](evidence/PHUC-001-T02-memberships.md) | Python 3.12.6; `python -m unittest tests.unit.test_synthetic_truth tests.unit.test_contracts -v`; gọi API hai case | 13/13 pass, 0 skip/failure/error; stable 48 record, grow 54 record; membership chuẩn trong bộ nhớ | `artifacts/verification/phuc-001-t02-001/`; summary, test log, hashes source/test | Tự kiểm tra; chưa có review/acceptance từ Đăng |
+| 2026-10-16 21:09:18 +07:00 | PHUC-001-T03 | `benchmarks/io.py`, `tests/unit/test_synthetic_io.py`; [bằng chứng](evidence/PHUC-001-T03-csv.md) | Python 3.12.6; `python -m unittest tests.unit.test_synthetic_io tests.unit.test_synthetic_truth tests.unit.test_contracts -v`; CSV round-trip hai case | 31/31 pass, 0 skip/failure/error; stable 48 và grow 54 membership đọc lại đúng; chặn dữ liệu sai/no-overwrite | `artifacts/verification/phuc-001-t03-001/`; CSV xác minh, summary, test log và hashes | Tự kiểm tra; chưa có review/acceptance từ Đăng |
 
 Không yêu cầu đã có commit/PR mới được ghi tiến độ; đường dẫn code thực và lệnh chạy vẫn được dùng. Nếu artifact chỉ có trên máy Phúc, ghi rõ và cung cấp cách tái tạo; không ghi link giả để thành viên tưởng đã truy cập được.
 
@@ -147,6 +149,6 @@ Không yêu cầu đã có commit/PR mới được ghi tiến độ; đường 
 
 | Task/mốc | Thiếu điều kiện gì | Việc còn làm độc lập được | Người cần phản hồi | Bước mở chặn |
 |---|---|---|---|---|
-| — | Chưa có blocker triển khai được ghi nhận; các task vẫn TODO | Luồng nhỏ trong plan có thể bắt đầu | — | — |
+| — | Không có blocker đang mở; T01–T03 đã DONE | T04 sinh events/links chuẩn là bước tiếp theo, chưa bắt đầu | — | — |
 
 Khi đổi requirement/contract, ghi lý do và cập nhật spec/plan/tasks liên quan; giữ evidence run cũ. Nếu đổi sau khi xem evaluation, ghi rõ ảnh hưởng đến tính giữ lại của bộ đánh giá.

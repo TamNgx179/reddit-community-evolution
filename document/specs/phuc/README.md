@@ -4,7 +4,7 @@
 
 Đây là bộ đặc tả để Phúc triển khai và các thành viên theo dõi được: đang làm gì, cần tạo ra gì, nghiệm thu thế nào và bằng chứng nằm đâu. Tài liệu được tổ chức sau khi đối chiếu nguồn chính thức trong [research.md](research.md). Định hướng kỹ thuật giữ theo [phân công Phúc–Đăng v1](../../PHAN-CONG-PHUC-DANG-TUAN-1.md).
 
-**Hiện trạng:** mới chuẩn bị specs và task list; chưa thực hiện các task triển khai trong bộ này. Independent Leiden đã có trong repo, nhưng benchmark tổng hợp, evaluator và demo của Phúc vẫn cần triển khai/kiểm chứng.
+**Tiến độ thực tế:** xem [task list và bằng chứng](tasks.md), là nơi cập nhật trạng thái triển khai. Independent Leiden đã có trong repo; việc có sẵn detector hoặc viết xong specs không tự chứng minh benchmark, evaluator hay demo của Phúc đã chạy.
 
 ## Mở file nào
 
