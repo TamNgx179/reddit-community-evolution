@@ -1,6 +1,6 @@
 # Contract dataset và bàn giao Phúc–Đăng v1
 
-**Thiết kế v1:** 16/10/2026. Cụ thể hóa schema trong [phân công cặp](../../PHAN-CONG-PHUC-DANG-TUAN-1.md). Adapter CSV node/membership đã được triển khai ở T03; graph, events/links và gói metadata đầy đủ vẫn thuộc các bước sau. Specs 001–006 dùng chung contract này, không tạo biến thể riêng cho mỗi spec.
+**Thiết kế v1:** 16/10/2026. Cụ thể hóa schema trong [phân công cặp](../../PHAN-CONG-PHUC-DANG-TUAN-1.md). T03 có adapter CSV node/membership; T04 có events/links chuẩn stable/grow trong bộ nhớ. Graph, CSV events/links và gói metadata đầy đủ vẫn thuộc các bước sau. Specs 001–006 dùng chung contract này, không tạo biến thể riêng cho mỗi spec.
 
 ## 1. Định danh và phạm vi
 
@@ -43,6 +43,19 @@ Module: [benchmarks/io.py](../../../src/reddit_sna/benchmarks/io.py).
 - Header phải đúng tên và thứ tự; UTF-8 không BOM, parser strict; từ chối dòng sai số cột, dòng trống và quoting hỏng. ID Unicode/dấu phẩy/dấu nháy hợp lệ được giữ bằng CSV quoting, không tự trim/đổi tên.
 - Writer dùng UTF-8 và newline LF cố định, sort membership theo tháng/community/user, mở file exclusive `x`. Input lỗi về keys/tháng/reference/user bị từ chối trước khi mở file; file đã tồn tại không bị ghi đè.
 - Caller chọn thư mục artifact hợp lệ và tạo parent theo run policy. Các hàm này chưa tạo manifest, events/links hoặc gói bàn giao hoàn chỉnh.
+
+### API truth events/links hiện có
+
+Module: [benchmarks/scenarios.py](../../../src/reddit_sna/benchmarks/scenarios.py).
+
+`build_transitions(scenario, reference_id, start_month="2020-01", observed_months=None)` trả về `PlantedTransitions` với hai tuple `.events` và `.links`. `start_month` và `observed_months` là tham số keyword-only; hiện hỗ trợ `stable/grow`, cùng phạm vi với `build_memberships`.
+
+- Mỗi `TruthEvent` có `source: SampleKey`, `target_month` và `event: Event`. Trong `source`, `reference_id`, `feature_month`, `community_id` lần lượt ánh xạ sang ba cột CSV `reference_id,source_month,source_community_id`.
+- Mỗi link dùng record `TrackingLink` có `.source` và `.target` là `SampleKey`, cùng reference và nối hai tháng liên tiếp. Hai case hiện tại luôn có đích; case dissolve sau này không ghi một link có đích rỗng vào CSV.
+- Hai tháng được coi là quan sát đầy đủ khi `observed_months=None`. Nếu truyền tường minh, phải là iterable không rỗng, không trùng, chỉ chứa các tháng thuộc fixture hai tháng; thứ tự truyền không ảnh hưởng kết quả.
+- Khi chỉ quan sát một trong hai tháng, cả events và links rỗng. Thiếu successor không phải dissolve; tháng cuối không trở thành nguồn. Tháng ngoài fixture bị báo lỗi, không tự tạo thêm dữ liệu.
+- Khi có đủ hai tháng: A→C nhận `stable` hoặc `grow` đúng theo thiết kế case; K→K nhận `stable`. Mỗi nguồn một event, record theo thứ tự A rồi K. Không tính overlap/Jaccard, không gọi detector/tracker và không phân loại từ membership để sinh truth.
+- API này chưa ghi `events.csv`/`links.csv` hoặc metadata. Export/bàn giao hoàn chỉnh thuộc T06 và các bước export tiếp theo; xem [bằng chứng T04](evidence/PHUC-001-T04-transitions.md).
 
 ## 3. Sáu case và nhóm nền
 
