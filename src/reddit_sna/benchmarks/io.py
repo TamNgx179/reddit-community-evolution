@@ -8,12 +8,20 @@ Writers validate before opening a new file and never overwrite existing files.
 
 from collections.abc import Iterable, Mapping
 import csv
+from hashlib import sha256
+from importlib.metadata import version
+import json
 from pathlib import Path
+import platform
 
-from reddit_sna.contracts import Membership, next_month
+from reddit_sna.benchmarks.scenarios import build_memberships, build_transitions
+from reddit_sna.config import validate_run_id
+from reddit_sna.contracts import Membership, SCHEMA_VERSION, next_month
 
 NODE_COLUMNS = ("month", "user_id")
 MEMBERSHIP_COLUMNS = ("reference_id", "month", "community_id", "user_id")
+EVENT_COLUMNS = ("reference_id", "source_month", "source_community_id", "target_month", "event")
+LINK_COLUMNS = ("reference_id", "source_month", "source_community_id", "target_month", "target_community_id")
 
 
 def _checked_users(month: str, user_ids: Iterable[str]) -> tuple[str, ...]:
@@ -147,3 +155,90 @@ def read_memberships(
         expected_reference=expected_reference,
         expected_users_by_month=expected_users_by_month,
     )
+
+
+def export_truth_fixture(
+    destination: Path,
+    *,
+    scenario: str,
+    dataset_id: str,
+    generator_seed: int,
+    start_month: str = "2020-01",
+) -> dict:
+    """Create one complete stable/grow truth dataset in a new directory.
+
+    The parent must exist. Data is read back before metadata is written last.
+    A failed export keeps its partial files, with no complete metadata marker.
+    The seed is provenance reserved for later graph sampling; truth is fixed.
+    """
+    validate_run_id(dataset_id)
+    if type(generator_seed) is not int or not 0 <= generator_seed < 2**32:
+        raise ValueError("generator_seed must be an integer in [0, 2**32)")
+    reference = f"truth-{dataset_id}"
+    memberships = build_memberships(scenario, reference, start_month=start_month)
+    transitions = build_transitions(scenario, reference, start_month=start_month)
+    months = (start_month, next_month(start_month))
+    users = {month: tuple(row.user_id for row in memberships if row.month == month) for month in months}
+    package_version = version("reddit-community-evolution")
+    events = [
+        [row.source.reference_id, row.source.feature_month, row.source.community_id,
+         row.target_month, row.event.value]
+        for row in transitions.events
+    ]
+    links = [
+        [row.source.reference_id, row.source.feature_month, row.source.community_id,
+         row.target.feature_month, row.target.community_id]
+        for row in transitions.links
+    ]
+    destination.mkdir(exist_ok=False)
+    (destination / "truth").mkdir()
+    for month in months:
+        snapshot = destination / "snapshots" / month
+        snapshot.mkdir(parents=True)
+        write_nodes(snapshot / "nodes.csv", month, users[month])
+    expected = dict(expected_reference=reference, expected_users_by_month=users)
+    write_memberships(destination / "truth/membership.csv", memberships, **expected)
+    _write_rows(destination / "truth/events.csv", EVENT_COLUMNS, events)
+    _write_rows(destination / "truth/links.csv", LINK_COLUMNS, links)
+
+    for month in months:
+        if read_nodes(destination / f"snapshots/{month}/nodes.csv", expected_month=month) != users[month]:
+            raise ValueError("exported nodes differ from scenario truth")
+    if read_memberships(destination / "truth/membership.csv", **expected) != memberships:
+        raise ValueError("exported memberships differ from scenario truth")
+    if _read_rows(destination / "truth/events.csv", EVENT_COLUMNS) != events:
+        raise ValueError("exported events differ from scenario truth")
+    if _read_rows(destination / "truth/links.csv", LINK_COLUMNS) != links:
+        raise ValueError("exported links differ from scenario truth")
+
+    files = [f"snapshots/{month}/nodes.csv" for month in months]
+    files += ["truth/membership.csv", "truth/events.csv", "truth/links.csv"]
+    metadata = {
+        "schema_version": SCHEMA_VERSION,
+        "artifact_type": "synthetic-truth-fixture",
+        "status": "complete",
+        "dataset_id": dataset_id,
+        "split": "development",
+        "scenario": scenario,
+        "difficulty": "easy",
+        "identity_scope": dataset_id,
+        "observed_months": list(months),
+        "truth_reference": reference,
+        "detector_references": {},
+        "generator": {
+            "name": "planted-stable-grow", "version": 1,
+            "seed": generator_seed, "seed_used_for_truth": False,
+            "config": {"scenario": scenario, "start_month": start_month,
+                       "source_size": 12, "target_size": 12 if scenario == "stable" else 18,
+                       "background_size": 12},
+        },
+        "environment": {"python_version": platform.python_version(), "package_version": package_version},
+        "counts": {"nodes_by_month": {month: len(users[month]) for month in months},
+                   "memberships": len(memberships), "events": len(events), "links": len(links)},
+        "files": {name: {"sha256": sha256((destination / name).read_bytes()).hexdigest()}
+                  for name in files},
+    }
+    with (destination / "metadata.json").open("x", encoding="utf-8", newline="\n") as handle:
+        json.dump(metadata, handle, ensure_ascii=False, sort_keys=True, indent=2)
+        handle.write("\n")
+    return metadata

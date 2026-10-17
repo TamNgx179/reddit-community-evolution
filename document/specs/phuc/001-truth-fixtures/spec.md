@@ -33,7 +33,8 @@ Chưa cần sinh cạnh hay viết tracker trong spec này. Kiểm tra reference
 
 ## Output và kiểm chứng độc lập
 
-- Module dự kiến: `benchmarks/scenarios.py`, `benchmarks/io.py`; fixture được sinh bằng code, không nhập nhãn dự đoán thủ công.
+- Module: `benchmarks/scenarios.py`, `benchmarks/io.py`, CLI `benchmarks/fixtures.py`; fixture được sinh bằng code, không nhập nhãn dự đoán thủ công.
 - Artifact: `truth/{membership,events,links}.csv`, `metadata.json`, danh sách node/cấu hình theo contract.
 - Test dự kiến: `tests/unit/test_synthetic_truth.py`; kiểm tra tập hợp thành viên, keys, links và tái lập.
 - Evidence task phải có đường dẫn fixture, lệnh sinh/đọc lại và kết quả kiểm tra. Không cần phản hồi Đăng để chứng minh contract tự kiểm tra đã chạy; không tự ghi Đăng accepted.
+- [Hướng dẫn export và đọc độc lập](README.md) dùng config truth riêng và `scripts/read_truth_fixture.py` chỉ phụ thuộc stdlib. Nghiệm thu T06 có [bằng chứng export](../evidence/PHUC-001-T06-export.md).
