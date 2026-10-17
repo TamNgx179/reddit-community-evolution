@@ -1,0 +1,11 @@
+{
+  "archive": "AskTrumpSupporters.corpus.zip",
+  "sha256": "ec2a3aa2bf2f1fba73c4057409fc35358b9899004bc747e78ae9da56a2a78b22",
+  "bytes": 281665523,
+  "zip_crc_verified": true,
+  "counts": {
+    "raw_records": 1646486,
+    "accepted_records": 1646486
+  },
+  "elapsed_seconds": 69.747
+}

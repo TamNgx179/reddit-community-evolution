@@ -1,0 +1,11 @@
+{
+  "archive": "Republican.corpus.zip",
+  "sha256": "ec0c7b313b10c1cff2ce97dcaf35f84ec479ff6f4e048933b5ec8871d37bbcc8",
+  "bytes": 62700424,
+  "zip_crc_verified": true,
+  "counts": {
+    "raw_records": 437944,
+    "accepted_records": 437944
+  },
+  "elapsed_seconds": 19.554
+}

@@ -1,0 +1,8 @@
+# Keep original binary datasets in Git LFS; tables and metadata stay reviewable.
+# Preserve source table/metadata bytes across Windows and Unix checkouts.
+data/raw/** -text
+data/processed/** -text
+data/raw/*.zip filter=lfs diff=lfs merge=lfs -text
+data/processed/**/*.zip filter=lfs diff=lfs merge=lfs -text
+data/processed/**/*.parquet filter=lfs diff=lfs merge=lfs -text
+data/processed/**/*.sqlite filter=lfs diff=lfs merge=lfs -text

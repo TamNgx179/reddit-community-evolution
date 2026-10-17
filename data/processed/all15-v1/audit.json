@@ -1,0 +1,50 @@
+{
+  "scope": "15 selected subreddits, observed records 2015-01 through 2018-09",
+  "totals": {
+    "records": 19731802,
+    "posts": 1163921,
+    "comments": 18567881,
+    "valid_users": 594099,
+    "subreddits": 15,
+    "excluded_author_records": 2644596,
+    "reply_events_nonself_valid_authors": 14766168,
+    "distinct_user_thread_pairs": 9034596,
+    "valid_user_post_edges": 963062,
+    "valid_user_comment_edges": 16124144,
+    "comment_to_post_edges": 5078004,
+    "comment_to_comment_edges": 13489876,
+    "users_in_multiple_subreddits": 181870,
+    "multi_subreddit_users_percent": 30.613,
+    "multi_subreddit_record_percent_of_all_records": 69.073,
+    "test_users_seen_in_train_percent": 42.76,
+    "test_directed_reply_pairs_seen_in_train_percent": 2.55
+  },
+  "quality": {
+    "missing_parent": 1,
+    "comment_without_parent_pointer": 0,
+    "parent_after_child": 127,
+    "parent_before_window": 885,
+    "missing_root": 0,
+    "duplicate_records_removed": 0,
+    "conflicting_ids": 0,
+    "missing_parent_percent_of_comments": 5.385644166935366e-06
+  },
+  "nonempty_snapshots": 45,
+  "elapsed_seconds": 234.664,
+  "process_peak_working_set_mb": 4087.93,
+  "timing_scope": "Current invocation only, verified archive checkpoints may have been reused. Not a full experiment runtime.",
+  "archive_conversion_seconds_sum": 923.565,
+  "raw_records_all_archives": 22853483,
+  "invalid_records_all_archives": 0,
+  "versions": {
+    "duckdb": "1.5.6",
+    "pyarrow": "26.0.0",
+    "orjson": "3.13.0"
+  },
+  "limitations": [
+    "Excluded author definition only covers null/deleted/removed/AutoModerator, not every bot.",
+    "No community event ground truth or prediction evaluation has been produced.",
+    "Schema IDs have explicit t1_/t3_ namespaces. Previous pilot used bare IDs.",
+    "All historical metadata is staged for resolving parents, model inputs must use the study/time-bounded views."
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "archive": "SandersForPresident.corpus.zip",
+  "sha256": "49538b5acccac0b8675865d968532a92bce628f68009b5ac24e7d3805f7b652f",
+  "bytes": 651018561,
+  "zip_crc_verified": true,
+  "counts": {
+    "raw_records": 5159385,
+    "accepted_records": 5159385
+  },
+  "elapsed_seconds": 179.417
+}

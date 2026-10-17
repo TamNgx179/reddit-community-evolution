@@ -1,0 +1,11 @@
+{
+  "archive": "AskThe_Donald.corpus.zip",
+  "sha256": "4055b1064458cd84b414014b5fec9e51cd2e6a5d6f637bab4a506b126ca4c052",
+  "bytes": 123915164,
+  "zip_crc_verified": true,
+  "counts": {
+    "raw_records": 752179,
+    "accepted_records": 752179
+  },
+  "elapsed_seconds": 33.005
+}

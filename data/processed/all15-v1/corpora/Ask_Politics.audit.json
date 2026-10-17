@@ -1,0 +1,11 @@
+{
+  "archive": "Ask_Politics.corpus.zip",
+  "sha256": "221b679e1433b61d28dd77899de67cb5f8e46d0a47b9affa448a734695c29d9e",
+  "bytes": 60117163,
+  "zip_crc_verified": true,
+  "counts": {
+    "raw_records": 288974,
+    "accepted_records": 288974
+  },
+  "elapsed_seconds": 12.99
+}

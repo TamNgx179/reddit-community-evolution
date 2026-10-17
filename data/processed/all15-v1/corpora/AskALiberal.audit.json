@@ -1,0 +1,11 @@
+{
+  "archive": "AskALiberal.corpus.zip",
+  "sha256": "d0398399fd7d3319658773354698bc4c20b1ebcabc14e203c8070ea5926aba3a",
+  "bytes": 52226118,
+  "zip_crc_verified": true,
+  "counts": {
+    "raw_records": 233490,
+    "accepted_records": 233490
+  },
+  "elapsed_seconds": 11.66
+}

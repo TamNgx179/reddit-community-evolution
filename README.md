@@ -6,6 +6,8 @@ Research package for detecting, tracking and forecasting changes in Reddit **use
 
 Python **3.11+** is required. In PowerShell at the repository root:
 
+First download the binary inputs with `git lfs install` and `git lfs pull`. See [dataset distribution](data/README.md) for selective download, checksums, the compressed legacy database and reproduction instructions.
+
 ```powershell
 python -m venv .venv
 & .\.venv\Scripts\python.exe -m pip install -e '.[graph,notebook]'
@@ -41,7 +43,7 @@ Open [01_reddit_pilot.ipynb](notebooks/core/01_reddit_pilot.ipynb), the executab
 
 Default **REPLAY** reads `reddit-2015-ordered-detection-v1` and follows its recorded graph/normalization ancestors, verifying checksums, periods, identities and totals. Edit `DETECTION_RUN` or set `REDDIT_DETECTION_RUN` to select another local run. If no run exists, run the CLI above and select its ID, or set `REBUILD=True` in the notebook to process raw inputs using the same API. Rebuild is slower; replay does not scan raw data again. Use `REDDIT_SNA_PROJECT` only when the kernel's working directory is outside the repository tree.
 
-The notebook renders fourteen figure families: the original eight cover data scope, corpus-month support, graph volume, coverage, exclusive reply outcomes, community sizes, partition diagnostics and a labeled display sample of the network. Six additional figures cover components/density, degree/strength, interaction concentration, predeclared corpus contexts, gamma sensitivity and edge perturbation. All use verified actual artifacts. PNG/SVG exports and a source-linked manifest go to a fresh `artifacts/core/reddit-pilot-figures-<timestamp>/` folder. Save executed copies locally; tracked notebooks have no outputs. Stable replay/plot code lives in `reporting/`, not in duplicated notebook cells. For automated fresh-kernel execution, `nbclient` is included in the notebook extra; configure its working directory as the repository and its kernel as this `.venv` interpreter.
+The notebook renders fourteen figure families: the original eight cover data scope, corpus-month support, graph volume, coverage, exclusive reply outcomes, community sizes, partition diagnostics and a labeled display sample of the network. Six additional figures cover components/density, degree/strength, interaction concentration, predeclared corpus contexts, gamma sensitivity and edge perturbation. All use verified actual artifacts. PNG/SVG exports and a source-linked manifest go to a fresh `artifacts/core/reddit-pilot-figures-<timestamp>/` folder. The pilot notebook includes a reviewed execution snapshot with all ten code cells, tables and fourteen figures visible on GitHub. GitHub renders a static preview; rerun cells in VS Code or Jupyter using the project kernel. Additional executed copies and standalone figure artifacts stay local. Stable replay/plot code lives in `reporting/`, not in duplicated notebook cells. For automated fresh-kernel execution, `nbclient` is included in the notebook extra; configure its working directory as the repository and its kernel as this `.venv` interpreter.
 
 ## Research semantics and limitations
 
@@ -91,7 +93,7 @@ Pairs share contracts and reusable modules, not generated inputs/outputs during 
 
 All TOML paths, including `project_root`, resolve relative to the TOML directory. `check` validates configuration/paths without reading the corpus or creating research outputs. Core needs an existing Reddit input folder; synthetic configs do not depend on Reddit. `run` remains unfinished. Exit codes are 0 for successful commands, 2 for input/config/path errors and 3 for unimplemented research pipelines. CLI streams are UTF-8, including Unicode filesystem paths.
 
-Keep existing raw/processed/private data unchanged. Never commit Reddit inputs, user identifiers, private keys, runtime artifacts or large notebook outputs. Runs cannot overwrite previous runs, overlap inputs or write into `data/`. A `started` manifest is not completion. Preparation records input/output/config/source hashes, Git revision and tracked dirty state, dependency versions, stage status and wall time. Peak memory is not measured and remains null. `complete_through_detection` does not mean forecasting completed.
+Keep existing raw/processed/private data unchanged. The explicitly authorized [dataset release](data/README.md) publishes original raw archives and historical processed imports through Git LFS and regular Git metadata. Private keys, private identity lookup files, standalone runtime artifacts and unreviewed notebook outputs remain local; the pilot notebook includes the explicitly authorized reviewed execution snapshot. Runs cannot overwrite previous runs, overlap inputs or write into `data/`. A `started` manifest is not completion. Preparation records input/output/config/source hashes, Git revision and tracked dirty state, dependency versions, stage status and wall time. Peak memory is not measured and remains null. `complete_through_detection` does not mean forecasting completed.
 
 ```powershell
 & .\.venv\Scripts\python.exe -m unittest discover -s tests -v
@@ -121,6 +123,7 @@ The automated handoff consumer uses only public CSV/manifest contracts and stand
 New snapshots use **reply-r-v3-order1**. A real aligned experiment exposed an ordering problem in historical v2: January-March graphs agreed across quarter/annual normalization scopes, but partitions changed because ordinal user allocation changed vertex and edge insertion order. New `node_order.csv` keys hash the minimum authored record identifier available **through the snapshot month**, and detection canonicalizes node and edge indices. The sidecar is hash-bound to graph/reference identity; raw author names are never stored in it. Old v2 artifacts remain separate and unchanged. This is an engineering reproducibility correction, not a new community-detection method or a guarantee of social validity.
 
 On a fresh checkout `prepare` generates the ordered protocol directly. The documented raw command creates a new all-stage run; set notebook `DETECTION_RUN` to that run ID and select matching validation IDs. Development replay defaults point to the separately verified immutable ordered runs. A graph/membership handoff now includes `node_order.csv` alongside R/directed_R/users; the canonical membership CSV schema stays unchanged.
+
 ## Tracking and forecasting stage
 
 The `forecast` command now consumes verified graph/membership artifacts and

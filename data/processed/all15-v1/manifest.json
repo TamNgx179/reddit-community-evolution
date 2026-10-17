@@ -1,0 +1,167 @@
+[
+  {
+    "archive": "SandersForPresident.corpus.zip",
+    "sha256": "49538b5acccac0b8675865d968532a92bce628f68009b5ac24e7d3805f7b652f",
+    "bytes": 651018561,
+    "zip_crc_verified": true,
+    "counts": {
+      "raw_records": 5159385,
+      "accepted_records": 5159385
+    },
+    "elapsed_seconds": 179.417
+  },
+  {
+    "archive": "PoliticalDiscussion.corpus.zip",
+    "sha256": "f1abcb03d46442bf8da02b0f54f7a5ce71ac88634e6bc941a435cb032ee3b870",
+    "bytes": 801431696,
+    "zip_crc_verified": true,
+    "counts": {
+      "raw_records": 4655894,
+      "accepted_records": 4655894
+    },
+    "elapsed_seconds": 196.893
+  },
+  {
+    "archive": "Conservative.corpus.zip",
+    "sha256": "00b82fbe52bdd169cea004c60c651cff5b493caedd8351e9350e2a070803f9e1",
+    "bytes": 412380497,
+    "zip_crc_verified": true,
+    "counts": {
+      "raw_records": 3078505,
+      "accepted_records": 3078505
+    },
+    "elapsed_seconds": 118.764
+  },
+  {
+    "archive": "EnoughTrumpSpam.corpus.zip",
+    "sha256": "495acdac87d671d33e1909dbba7b8af9866daf1d30dbe35453f4a61f1af3fcc1",
+    "bytes": 256352613,
+    "zip_crc_verified": true,
+    "counts": {
+      "raw_records": 2150620,
+      "accepted_records": 2150620
+    },
+    "elapsed_seconds": 92.522
+  },
+  {
+    "archive": "AskTrumpSupporters.corpus.zip",
+    "sha256": "ec2a3aa2bf2f1fba73c4057409fc35358b9899004bc747e78ae9da56a2a78b22",
+    "bytes": 281665523,
+    "zip_crc_verified": true,
+    "counts": {
+      "raw_records": 1646486,
+      "accepted_records": 1646486
+    },
+    "elapsed_seconds": 69.747
+  },
+  {
+    "archive": "hillaryclinton.corpus.zip",
+    "sha256": "34f35eda818893dd5c4b9881a66f21d701ecf6ccb5ee2613b562f3d4085bd85f",
+    "bytes": 171824569,
+    "zip_crc_verified": true,
+    "counts": {
+      "raw_records": 1537096,
+      "accepted_records": 1537096
+    },
+    "elapsed_seconds": 58.076
+  },
+  {
+    "archive": "socialism.corpus.zip",
+    "sha256": "af3fba89e95cfb5cc31b541e085e3a8887614b7668ef6b7e8cc841c2f356bca4",
+    "bytes": 240846380,
+    "zip_crc_verified": true,
+    "counts": {
+      "raw_records": 1465759,
+      "accepted_records": 1465759
+    },
+    "elapsed_seconds": 68.133
+  },
+  {
+    "archive": "AskThe_Donald.corpus.zip",
+    "sha256": "4055b1064458cd84b414014b5fec9e51cd2e6a5d6f637bab4a506b126ca4c052",
+    "bytes": 123915164,
+    "zip_crc_verified": true,
+    "counts": {
+      "raw_records": 752179,
+      "accepted_records": 752179
+    },
+    "elapsed_seconds": 33.005
+  },
+  {
+    "archive": "Political_Revolution.corpus.zip",
+    "sha256": "0d55b01adf6188ee70e4880d791ffbd97df0c1da87b5c6747207a314ab1b6aee",
+    "bytes": 75762755,
+    "zip_crc_verified": true,
+    "counts": {
+      "raw_records": 512757,
+      "accepted_records": 512757
+    },
+    "elapsed_seconds": 21.843
+  },
+  {
+    "archive": "NeutralPolitics.corpus.zip",
+    "sha256": "7571fcfecc798d7b9322707cab65f09ceab485dfc63fbc1c9757763dfaa32003",
+    "bytes": 87907459,
+    "zip_crc_verified": true,
+    "counts": {
+      "raw_records": 434685,
+      "accepted_records": 434685
+    },
+    "elapsed_seconds": 20.046
+  },
+  {
+    "archive": "democrats.corpus.zip",
+    "sha256": "fbb6679adc63eeabe3fa58bd4a3688312e42d03787bf6afaa1e5782f1adb1ad5",
+    "bytes": 49875161,
+    "zip_crc_verified": true,
+    "counts": {
+      "raw_records": 369011,
+      "accepted_records": 369011
+    },
+    "elapsed_seconds": 15.414
+  },
+  {
+    "archive": "Republican.corpus.zip",
+    "sha256": "ec0c7b313b10c1cff2ce97dcaf35f84ec479ff6f4e048933b5ec8871d37bbcc8",
+    "bytes": 62700424,
+    "zip_crc_verified": true,
+    "counts": {
+      "raw_records": 437944,
+      "accepted_records": 437944
+    },
+    "elapsed_seconds": 19.554
+  },
+  {
+    "archive": "AskALiberal.corpus.zip",
+    "sha256": "d0398399fd7d3319658773354698bc4c20b1ebcabc14e203c8070ea5926aba3a",
+    "bytes": 52226118,
+    "zip_crc_verified": true,
+    "counts": {
+      "raw_records": 233490,
+      "accepted_records": 233490
+    },
+    "elapsed_seconds": 11.66
+  },
+  {
+    "archive": "Ask_Politics.corpus.zip",
+    "sha256": "221b679e1433b61d28dd77899de67cb5f8e46d0a47b9affa448a734695c29d9e",
+    "bytes": 60117163,
+    "zip_crc_verified": true,
+    "counts": {
+      "raw_records": 288974,
+      "accepted_records": 288974
+    },
+    "elapsed_seconds": 12.99
+  },
+  {
+    "archive": "moderatepolitics.corpus.zip",
+    "sha256": "d3518afb68936920f6a259a4e9b3b2a70fe1167b958bc802e1a31aecaea50b8b",
+    "bytes": 27077180,
+    "zip_crc_verified": true,
+    "counts": {
+      "raw_records": 130698,
+      "accepted_records": 130698
+    },
+    "elapsed_seconds": 5.501
+  }
+]

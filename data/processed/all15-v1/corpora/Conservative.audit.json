@@ -1,0 +1,11 @@
+{
+  "archive": "Conservative.corpus.zip",
+  "sha256": "00b82fbe52bdd169cea004c60c651cff5b493caedd8351e9350e2a070803f9e1",
+  "bytes": 412380497,
+  "zip_crc_verified": true,
+  "counts": {
+    "raw_records": 3078505,
+    "accepted_records": 3078505
+  },
+  "elapsed_seconds": 118.764
+}

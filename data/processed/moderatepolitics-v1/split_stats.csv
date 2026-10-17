@@ -1,0 +1,4 @@
+split,start_inclusive,end_exclusive,records,posts,comments,active_users,first_seen_users
+train,2015-01,2017-07,23601,2364,21237,3417,3417
+validation,2017-07,2018-01,15743,1081,14662,1539,928
+test,2018-01,2018-10,36209,2397,33812,2530,1654
