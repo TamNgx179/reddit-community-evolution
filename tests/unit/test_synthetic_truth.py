@@ -1,9 +1,17 @@
 """Behavior checks for planted memberships and algorithm-independent truth."""
 
 from collections import defaultdict
+import csv
+import json
+import os
+from pathlib import Path
+import subprocess
+import sys
+import tempfile
 import unittest
 from unittest.mock import patch
 
+from reddit_sna.benchmarks.io import read_memberships, write_memberships, write_nodes
 from reddit_sna.benchmarks.scenarios import TruthEvent, build_memberships, build_transitions
 from reddit_sna.contracts import Event, SampleKey
 
@@ -209,3 +217,159 @@ class PlantedTransitionTests(unittest.TestCase):
                 TruthEvent(source, "2021-01", label)
         with self.assertRaises(ValueError):
             TruthEvent(None, "2021-01", Event.GROW)
+
+
+class TruthFixtureTests(unittest.TestCase):
+    def setUp(self):
+        temporary = tempfile.TemporaryDirectory(prefix="reddit-truth-fixture-")
+        self.addCleanup(temporary.cleanup)
+        self.root = Path(temporary.name)
+
+    @staticmethod
+    def expected_groups(scenario, source_month="2020-01", target_month="2020-02"):
+        # Independent fixture expectations; never infer coverage from actual rows.
+        original = {f"u{i:03d}" for i in range(1, 13)}
+        background = {f"u{i:03d}" for i in range(101, 113)}
+        newcomers = {f"u{i:03d}" for i in range(13, 19)} if scenario == "grow" else set()
+        return {
+            source_month: {"A": original, "K": background},
+            target_month: {"C": original | newcomers, "K": background},
+        }
+
+    def test_csv_read_independently_matches_exact_members_and_transition_truth(self):
+        for scenario in ("stable", "grow"):
+            for source_month, target_month in (("2020-01", "2020-02"), ("2020-12", "2021-01")):
+                with self.subTest(scenario=scenario, source_month=source_month):
+                    reference = f"truth-{scenario}-fixture"
+                    expected = self.expected_groups(scenario, source_month, target_month)
+                    users = {month: set().union(*groups.values()) for month, groups in expected.items()}
+                    rows = build_memberships(scenario, reference, start_month=source_month)
+                    path = self.root / f"{scenario}-{source_month}-membership.csv"
+                    write_memberships(
+                        path, reversed(rows), expected_reference=reference,
+                        expected_users_by_month=users,
+                    )
+                    # Use stdlib CSV rather than the project's inverse adapter.
+                    with path.open(encoding="utf-8", newline="") as handle:
+                        reader = csv.DictReader(handle)
+                        self.assertEqual(reader.fieldnames, ["reference_id", "month", "community_id", "user_id"])
+                        records = list(reader)
+                    self.assertEqual({row["reference_id"] for row in records}, {reference})
+                    self.assertEqual(len(records), 48 if scenario == "stable" else 54)
+                    keys = {(row["month"], row["user_id"]) for row in records}
+                    self.assertEqual(len(keys), len(records))
+                    actual = defaultdict(lambda: defaultdict(set))
+                    for row in records:
+                        actual[row["month"]][row["community_id"]].add(row["user_id"])
+                    self.assertEqual(actual, expected)
+
+                    for month, expected_users in users.items():
+                        node_path = self.root / f"{scenario}-{month}-nodes.csv"
+                        write_nodes(node_path, month, expected_users)
+                        with node_path.open(encoding="utf-8", newline="") as handle:
+                            reader = csv.DictReader(handle)
+                            self.assertEqual(reader.fieldnames, ["month", "user_id"])
+                            node_rows = list(reader)
+                        self.assertEqual({row["month"] for row in node_rows}, {month})
+                        self.assertEqual([row["user_id"] for row in node_rows], sorted(expected_users))
+
+                    truth = build_transitions(scenario, reference, start_month=source_month)
+                    events = {row.source: row for row in truth.events}
+                    self.assertEqual(len(events), 2)
+                    self.assertEqual(len(truth.events), len(truth.links))
+                    self.assertEqual(
+                        {row.source.community_id for row in truth.events}, set(actual[source_month]),
+                    )
+                    for link in truth.links:
+                        source_users = actual[link.source.feature_month][link.source.community_id]
+                        target_users = actual[link.target.feature_month][link.target.community_id]
+                        event = events[link.source]
+                        self.assertEqual(event.target_month, link.target.feature_month)
+                        if link.source.community_id == "A" and scenario == "grow":
+                            self.assertEqual(event.event, Event.GROW)
+                            self.assertTrue(source_users < target_users)
+                            self.assertEqual(len(target_users - source_users), 6)
+                        else:
+                            self.assertEqual(event.event, Event.STABLE)
+                            self.assertEqual(source_users, target_users)
+
+    def test_corrupted_scenario_csv_is_rejected_without_changing_the_input(self):
+        for scenario in ("stable", "grow"):
+            reference = f"truth-{scenario}-fixture"
+            groups = self.expected_groups(scenario)
+            expected_users = {month: set().union(*partition.values()) for month, partition in groups.items()}
+            rows = build_memberships(scenario, reference)
+            valid = [[row.reference_id, row.month, row.community_id, row.user_id] for row in rows]
+            corruptions = {
+                "duplicate": (valid + [valid[0]], "duplicate membership"),
+                "duplicate_other_group": (valid + [[reference, "2020-01", "K", "u001"]], "duplicate membership"),
+                "missing": (valid[1:], "missing expected users"),
+                "unexpected": ([[reference, "2020-01", "A", "outside-fixture"]] + valid[1:], "unexpected user"),
+                "mixed_reference": ([["other-reference", *valid[0][1:]]] + valid[1:], "reference"),
+                "outside_month": ([[reference, "2020-03", "A", "u001"]] + valid[1:], "declared months"),
+            }
+            for name, (records, message) in corruptions.items():
+                with self.subTest(scenario=scenario, corruption=name):
+                    path = self.root / f"{scenario}-{name}.csv"
+                    with path.open("w", encoding="utf-8", newline="") as handle:
+                        writer = csv.writer(handle, lineterminator="\n")
+                        writer.writerow(["reference_id", "month", "community_id", "user_id"])
+                        writer.writerows(records)
+                    original = path.read_bytes()
+                    with self.assertRaisesRegex(ValueError, message):
+                        read_memberships(
+                            path, expected_reference=reference, expected_users_by_month=expected_users,
+                        )
+                    self.assertEqual(path.read_bytes(), original)
+
+    def test_csv_bytes_and_transition_records_repeat_in_fresh_python_processes(self):
+        script = """
+import json
+from pathlib import Path
+import sys
+from reddit_sna.benchmarks.io import write_memberships, write_nodes
+from reddit_sna.benchmarks.scenarios import build_memberships, build_transitions
+
+output, scenario = Path(sys.argv[1]), sys.argv[2]
+reference = "truth-fresh-process"
+rows = build_memberships(scenario, reference)
+users = {month: {row.user_id for row in rows if row.month == month}
+         for month in ("2020-01", "2020-02")}
+for month, ids in users.items():
+    write_nodes(output / (month + "-nodes.csv"), month, ids)
+write_memberships(output / "membership.csv", rows,
+                  expected_reference=reference, expected_users_by_month=users)
+truth = build_transitions(scenario, reference, observed_months=set(users))
+print(json.dumps({
+    "events": [[e.source.reference_id, e.source.feature_month,
+                e.source.community_id, e.target_month, e.event.value] for e in truth.events],
+    "links": [[l.source.reference_id, l.source.feature_month, l.source.community_id,
+               l.target.feature_month, l.target.community_id] for l in truth.links],
+}))
+"""
+        for scenario in ("stable", "grow"):
+            with self.subTest(scenario=scenario):
+                outputs, truths = [], []
+                for seed in ("0", "137"):
+                    output = self.root / f"{scenario}-hashseed-{seed}"
+                    output.mkdir()
+                    completed = subprocess.run(
+                        [sys.executable, "-c", script, str(output), scenario],
+                        env=dict(os.environ, PYTHONHASHSEED=seed), capture_output=True,
+                        text=True, encoding="utf-8", timeout=30,
+                    )
+                    self.assertEqual(completed.returncode, 0, completed.stderr)
+                    outputs.append({path.name: path.read_bytes() for path in output.iterdir()})
+                    truths.append(json.loads(completed.stdout))
+                self.assertEqual(set(outputs[0]), {"membership.csv", "2020-01-nodes.csv", "2020-02-nodes.csv"})
+                self.assertEqual(outputs[0], outputs[1])
+                self.assertEqual(truths[0], truths[1])
+                expected_event = "grow" if scenario == "grow" else "stable"
+                self.assertEqual(truths[0]["events"], [
+                    ["truth-fresh-process", "2020-01", "A", "2020-02", expected_event],
+                    ["truth-fresh-process", "2020-01", "K", "2020-02", "stable"],
+                ])
+                self.assertEqual(truths[0]["links"], [
+                    ["truth-fresh-process", "2020-01", "A", "2020-02", "C"],
+                    ["truth-fresh-process", "2020-01", "K", "2020-02", "K"],
+                ])
