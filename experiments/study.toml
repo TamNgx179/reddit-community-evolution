@@ -1,6 +1,6 @@
 # Research design record. NOT a runtime config for `reddit-sna check/run`.
 # The CLI does not load/enforce this file. The Reddit data-to-Leiden pilot exists;
-# research experiments, tracking and forecasting remain pending.
+# baseline tracking/forecasting now runs; confirmatory research experiments remain pending.
 protocol_version = "0.1-draft"
 status = "draft_not_executed"
 project_type = "research_with_sna_analysis"
@@ -33,7 +33,7 @@ projection_budget_policy = "report_thread_size_tail_and_quadratic_pair_cost; fre
 forecast_events = ["stable", "grow", "shrink", "merge", "split", "dissolve"]
 forming_policy = "report_as_observed_new_groups_not_a_label_for_a_nonexistent_source_sample"
 final_snapshot_policy = "unlabeled_without_next_month_not_dissolve"
-ged_status = "adaptation_pending; member_importance_and_event_precedence_must_be_documented"
+ged_status = "ged-strength-topology-v1 implemented; importance and ambiguity documented in docs/METHODS.md#forecast-handoff-schema-2; original GED remains planned"
 threshold_selection = "ground_truth_development_benchmarks_and_train_only"
 merge_split_policy = "explicit_deterministic_precedence_fixed_before_evaluation"
 ground_truth_policy = "synthetic_truth_for_tracker_validation; reddit_tracker_labels_are_operational_not_social_truth"
@@ -83,5 +83,5 @@ negative_result_policy = "retain_null_or_negative_findings; do_not_change_labels
 [reproducibility]
 required_per_run = ["run_id", "data_manifest_hash", "graph_and_reference_version", "config_hash", "git_revision_and_dirty_state", "dependency_versions", "seed", "sample_key_hash", "split_counts", "exclusions", "timing", "status"]
 notebook_policy = "clean_kernel_top_to_bottom_fail_on_error; outputs_are_evidence_only_after_real_execution"
-current_manifest_limit = "preparation_records_verified_actual_months_graph_protocol_cohort_and_month_hashes_corpus_month_audit_plus_input_output_config_source_hashes_git_state_versions_status_wall_time; peak_memory_null; sample_keys_splits_forecast_provenance_pending; other_pipeline_helpers_only_record_started_status"
+current_manifest_limit = "preparation_records_verified_actual_months_graph_protocol_cohort_and_month_hashes_corpus_month_audit_plus_input_output_config_source_hashes_git_state_versions_status_wall_time; peak_memory_null; forecast_schema2_records_sample_keys_splits_source_hashes_and_versions; other_pipeline_helpers_only_record_started_status"
 week_one_policy = "three_independent_pair_demos; no_cross_pair_generated_artifact_dependency"

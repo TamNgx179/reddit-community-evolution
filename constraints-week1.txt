@@ -1,0 +1,14 @@
+# Tested Windows Python 3.13.3 scientific/notebook environment, 2026-10-17.
+# A version constraints snapshot, not a complete portable hash lock.
+# Install: python -m pip install -c constraints-week1.txt -e ".[graph,forecast,notebook]"
+igraph==1.0.0
+leidenalg==0.12.0
+numpy==2.5.4
+scipy==1.18.1
+scikit-learn==1.9.1
+joblib==1.6.0
+threadpoolctl==3.7.0
+matplotlib==3.11.2
+nbclient==0.11.0
+nbformat==5.11.1
+ipykernel==7.4.0
