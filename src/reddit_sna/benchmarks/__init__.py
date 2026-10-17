@@ -2,5 +2,6 @@
 
 Separate generation for algorithm development from held-out evaluation seeds.
 Deterministic stable/grow memberships are available in scenarios.py.
-Graph generation, CSV adapters and transition-event generation remain planned.
+Strict node/membership CSV adapters are available in io.py.
+Graph generation and transition-event generation remain planned.
 """
