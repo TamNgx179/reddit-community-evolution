@@ -37,3 +37,4 @@ Nghiệm thu dựa trên schema/truth của 001. Không cần tracker, Leiden ho
 - Artifact: `snapshots/<month>/{R,nodes}.csv`, truth và metadata theo dataset; trường hợp diagnostic đánh dấu riêng.
 - Test: `tests/unit/test_dynamic_benchmark.py`, kiểm tra invariants/tái lập/nhóm nhỏ/isolate và lịch dataset.
 - Evidence: config, seed, số node/cạnh/nhóm/tháng của từng case, hash hoặc lệnh đối chiếu hai lần sinh. Báo diagnostic không phải kết quả Reddit.
+- [Hướng dẫn sampler stable hiện có](README.md) và [bằng chứng T01](../evidence/PHUC-002-T01-stable-graphs.md) ghi bước đầu; chưa đại diện cho nghiệm thu toàn bộ sáu case của spec.

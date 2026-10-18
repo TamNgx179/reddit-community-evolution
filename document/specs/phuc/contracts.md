@@ -1,6 +1,6 @@
 # Contract dataset và bàn giao Phúc–Đăng v1
 
-**Thiết kế v1:** 16/10/2026. Cụ thể hóa schema trong [phân công cặp](../../PHAN-CONG-PHUC-DANG-TUAN-1.md). T03 có adapter CSV node/membership; T04 có events/links chuẩn trong bộ nhớ; T06 export đủ truth stable/grow kèm metadata/hashes và consumer độc lập. Graph và gói kết quả detection/tracking đầy đủ vẫn thuộc các bước sau. Specs 001–006 dùng chung contract này, không tạo biến thể riêng cho mỗi spec.
+**Thiết kế v1:** 16/10/2026. Cụ thể hóa schema trong [phân công cặp](../../PHAN-CONG-PHUC-DANG-TUAN-1.md). PHUC-001 có CSV/truth/export stable/grow và consumer độc lập. PHUC-002-T01 bổ sung sampler graph từ membership; export graph đầy đủ và kết quả detection/tracking vẫn thuộc các bước sau. Specs 001–006 dùng chung contract này, không tạo biến thể riêng cho mỗi spec.
 
 ## 1. Định danh và phạm vi
 
@@ -87,6 +87,15 @@ Mỗi case có nhóm nền K gồm 12 user riêng, ổn định qua hai tháng v
 - Leiden gamma 1, detector seeds `0,1,2`, canonical 0; protocol `synthetic-planted-undirected-v1`.
 - Jaccard 0.30, growth ±10%, split ưu tiên trước merge và mapping theo [quy tắc cặp](../../PHAN-CONG-PHUC-DANG-TUAN-1.md). Chưa thay bằng GED.
 - Không thêm cạnh/sinh lại seed sau khi thấy điểm xấu. Case khó là phần bổ sung có lịch/version riêng.
+
+### Sampler graph hiện có — PHUC-002-T01
+
+`sample_snapshots(memberships, expected_reference=..., expected_users_by_month=..., generator_seed=11, p_in=0.50, p_out=0.02)` trong [dynamic.py](../../../src/reddit_sna/benchmarks/dynamic.py) trả tuple `SampledSnapshot(month, nodes, edges)`; các tham số sau membership là keyword-only. Membership được kiểm tra bằng validator PHUC-001 với user lists độc lập do caller cung cấp.
+
+- Giữ mọi active node, gồm isolate và tháng quan sát rỗng. Mỗi cặp user chỉ xét một lần; cạnh có source < target, weight 1.0. Stable giữ thành viên nhưng lấy mẫu cạnh mới theo tháng.
+- Sampler version 1, RNG protocol `python-random-sequential-months-sorted-pairs-v1`: local `random.Random(seed)`, tháng/user/pair được sort, một draw mỗi cặp kể cả p=0/1. Không gọi tracker/detector hoặc sửa global RNG.
+- Seed int `[0,2**32)`; p_in/p_out là int/float hữu hạn `[0,1]`, không nhận bool. Trước khi lấy mẫu, chặn scope/month/user sai, thiếu user hoặc membership trùng.
+- API này chưa ghi file hay tạo gói graph hoàn chỉnh. [Hướng dẫn sampler](002-dynamic-benchmark/README.md) và [bằng chứng T01](evidence/PHUC-002-T01-stable-graphs.md) phân biệt graph CSV kiểm chứng với adapter export production của T04.
 
 ## 5. Metadata, manifest và metric tối thiểu
 
