@@ -1,6 +1,6 @@
 # Contract dataset và bàn giao Phúc–Đăng v1
 
-**Thiết kế v1:** 16/10/2026. Cụ thể hóa schema trong [phân công cặp](../../PHAN-CONG-PHUC-DANG-TUAN-1.md). PHUC-001 có CSV/truth/export stable/grow và consumer độc lập. PHUC-002-T01 có sampler graph; T02 bổ sung membership/events/links trong bộ nhớ cho đủ sáu tình huống. Export graph/sáu case đầy đủ và kết quả detection/tracking vẫn thuộc các bước sau. Specs 001–006 dùng chung contract này, không tạo biến thể riêng cho mỗi spec.
+**Thiết kế v1:** 16/10/2026. Cụ thể hóa schema trong [phân công cặp](../../PHAN-CONG-PHUC-DANG-TUAN-1.md). PHUC-001 có CSV/truth/export stable/grow và consumer độc lập. PHUC-002-T01–T04 có sampler, truth sáu case, config chung và gói graph/truth kèm hashes; kết quả detection/tracking vẫn thuộc các bước sau. Specs 001–006 dùng chung contract này, không tạo biến thể riêng cho mỗi spec.
 
 ## 1. Định danh và phạm vi
 
@@ -107,6 +107,14 @@ Mỗi case có nhóm nền K gồm 12 user riêng, ổn định qua hai tháng v
 - Detector seeds `0,1,2`, gamma 1.0, canonical 0. Canonical phải là seed đầu tiên; seed detector là các lần chạy lại trên cùng dataset, không phải dataset độc lập.
 - `dataset_schedule(config, split)` tạo tuple record dataset theo thứ tự case rồi seed cấu hình, với ID `dev/eval-<case>-easy-g<seed>` và fields split/scenario/difficulty/generator_seed. Helper chỉ lập lịch, không sinh graph hay ghi output; từ chối split không hợp lệ.
 - Lịch mặc định có 36 dataset, 72 snapshot, 216 đơn vị snapshot×detector-seed **dự kiến**. CLI `python -m reddit_sna.benchmarks.config configs/benchmark_week1.json` chỉ xác minh/in lịch. [Bằng chứng T03](evidence/PHUC-002-T03-benchmark-config.md) phân biệt lịch với mẫu stable development đã chạy; evaluation/freeze thuộc PHUC-005.
+
+### Export graph/truth hiện có — PHUC-002-T04
+
+- `export_graph_dataset(destination, benchmark=..., scenario=..., generator_seed=..., split="development")` trong [io.py](../../../src/reddit_sna/benchmarks/io.py) xuất một dataset theo lịch hợp lệ, parent phải tồn tại, destination mới. Gói có bảy CSV theo schema trên, `benchmark-config.json` và `metadata.json`.
+- `validate_edges`/`write_edges`/`read_edges` nhận `expected_month`, `expected_users` tường minh, không suy ra active users từ cạnh. Endpoint phải source < target, cùng tháng, thuộc user list; chặn duplicate/self-loop/weight sai. Writer sort source/target, weight float, UTF-8/LF, exclusive. CSV rỗng vẫn có header.
+- Metadata artifact type `synthetic-graph-truth`, schema 1, identity/reference/tháng, generator seed/config/protocol, Python/package versions, counts node/cạnh/nhóm/isolate và hash tám file dữ liệu/config. Metadata ghi cuối sau khi đọc lại CSV và config; `detector_references={}`, seed không dùng để sinh truth. Config JSON được serialize canonical, không giữ nguyên whitespace của input.
+- CLI `python -m reddit_sna.benchmarks.graphs --run-id <new-id>` dùng `configs/graph_benchmark.toml` và `configs/benchmark_week1.json`; sinh sáu case tại **một** development seed trong TOML. Run helper dùng boundary `project_root/artifacts`, từ chối run đã tồn tại kể cả rỗng. Không tự chạy evaluation.
+- Manifest `scope="graph-truth"`, chỉ hoàn tất `generation/truth`, hash cả metadata. Khi lỗi giữ output dở dang và ghi failed, không retry vào run cũ. Đây chưa phải manifest/freeze đầy đủ PHUC-005. Artifact local không đi theo Git; [hướng dẫn](002-dynamic-benchmark/README.md) và [bằng chứng T04](evidence/PHUC-002-T04-graph-export.md) ghi cách tái tạo/kiểm chứng. Exporter/consumer PHUC-001 cũ giữ nguyên phạm vi stable/grow.
 
 ## 5. Metadata, manifest và metric tối thiểu
 

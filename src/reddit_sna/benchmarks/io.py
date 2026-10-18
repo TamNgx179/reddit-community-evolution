@@ -16,9 +16,10 @@ import platform
 
 from reddit_sna.benchmarks.scenarios import build_memberships, build_transitions
 from reddit_sna.config import validate_run_id
-from reddit_sna.contracts import Membership, SCHEMA_VERSION, next_month
+from reddit_sna.contracts import Membership, SCHEMA_VERSION, SnapshotEdge, next_month
 
 NODE_COLUMNS = ("month", "user_id")
+EDGE_COLUMNS = ("month", "source_user_id", "target_user_id", "weight")
 MEMBERSHIP_COLUMNS = ("reference_id", "month", "community_id", "user_id")
 EVENT_COLUMNS = ("reference_id", "source_month", "source_community_id", "target_month", "event")
 LINK_COLUMNS = ("reference_id", "source_month", "source_community_id", "target_month", "target_community_id")
@@ -77,6 +78,53 @@ def read_nodes(path: Path, *, expected_month: str) -> tuple[str, ...]:
     if any(month != expected_month for month, _ in rows):
         raise ValueError("node month does not match the expected month")
     return _checked_users(expected_month, (uid for _, uid in rows))
+
+
+def validate_edges(
+    edges: Iterable[SnapshotEdge], *, expected_month: str, expected_users: Iterable[str],
+) -> tuple[SnapshotEdge, ...]:
+    """Require a simple undirected snapshot with canonical endpoints.
+
+    Active users are supplied independently, including isolates. Reversed pairs
+    are rejected rather than silently normalized or combined with duplicates.
+    """
+    users = set(_checked_users(expected_month, expected_users))
+    rows, seen = tuple(edges), set()
+    for row in rows:
+        if not isinstance(row, SnapshotEdge):
+            raise ValueError("edges must contain SnapshotEdge records")
+        if row.month != expected_month:
+            raise ValueError("edge month does not match the expected month")
+        if row.source_user_id >= row.target_user_id:
+            raise ValueError("undirected endpoints must satisfy source < target")
+        if row.source_user_id not in users or row.target_user_id not in users:
+            raise ValueError("edge endpoint is outside the expected users")
+        if type(row.weight) not in (int, float):
+            raise ValueError("edge weight must be a number, not bool")
+        pair = (row.source_user_id, row.target_user_id)
+        if pair in seen:
+            raise ValueError("duplicate undirected edge")
+        seen.add(pair)
+    return tuple(sorted(rows, key=lambda row: (row.source_user_id, row.target_user_id)))
+
+
+def write_edges(
+    path: Path, edges: Iterable[SnapshotEdge], *, expected_month: str, expected_users: Iterable[str],
+) -> None:
+    """Validate before opening a new R.csv; write UTF-8/LF in sorted order."""
+    rows = validate_edges(edges, expected_month=expected_month, expected_users=expected_users)
+    _write_rows(path, EDGE_COLUMNS, (
+        (row.month, row.source_user_id, row.target_user_id, float(row.weight)) for row in rows
+    ))
+
+
+def read_edges(
+    path: Path, *, expected_month: str, expected_users: Iterable[str],
+) -> tuple[SnapshotEdge, ...]:
+    """Read R.csv without inferring the active user list from its endpoints."""
+    rows = (SnapshotEdge(month, source, target, float(weight))
+            for month, source, target, weight in _read_rows(path, EDGE_COLUMNS))
+    return validate_edges(rows, expected_month=expected_month, expected_users=expected_users)
 
 
 def validate_memberships(
@@ -239,6 +287,117 @@ def export_truth_fixture(
                    "memberships": len(memberships), "events": len(events), "links": len(links)},
         "files": {name: {"sha256": sha256((destination / name).read_bytes()).hexdigest()}
                   for name in files},
+    }
+    with (destination / "metadata.json").open("x", encoding="utf-8", newline="\n") as handle:
+        json.dump(metadata, handle, ensure_ascii=False, sort_keys=True, indent=2)
+        handle.write("\n")
+    return metadata
+
+
+def export_graph_dataset(
+    destination: Path, *, benchmark: dict, scenario: str, generator_seed: int,
+    split: str = "development",
+) -> dict:
+    """Export one scheduled graph/truth dataset, writing complete metadata last.
+
+    The parent must exist and the destination must be new, even if empty.
+    Config/selection/sampled records are validated before reserving output.
+    Failed exports retain partial files without complete metadata. This does
+    not run a detector, tracker or evaluation, or freeze the benchmark config.
+    """
+    # Local imports avoid the sampler -> CSV validator -> config import cycle.
+    from reddit_sna.benchmarks.config import dataset_schedule
+    from reddit_sna.benchmarks.dynamic import sample_snapshots
+
+    if type(generator_seed) is not int or not 0 <= generator_seed < 2**32:
+        raise ValueError("generator_seed must be an integer in [0, 2**32)")
+    choices = [item for item in dataset_schedule(benchmark, split)
+               if item["scenario"] == scenario and item["generator_seed"] == generator_seed]
+    if len(choices) != 1:
+        raise ValueError("scenario and generator_seed must belong to the selected split schedule")
+    selected = choices[0]
+    dataset_id = selected["dataset_id"]
+    reference = f"truth-{dataset_id}"
+    months = benchmark["months"]
+    generator = benchmark["generator"]
+    memberships = build_memberships(scenario, reference, start_month=months[0])
+    transitions = build_transitions(scenario, reference, start_month=months[0])
+    # This registry is from trusted planted truth, never an unvalidated input CSV.
+    users = {month: tuple(row.user_id for row in memberships if row.month == month) for month in months}
+    expected = dict(expected_reference=reference, expected_users_by_month=users)
+    snapshots = sample_snapshots(
+        memberships, **expected, generator_seed=generator_seed,
+        p_in=generator["p_in"], p_out=generator["p_out"],
+    )
+    for snapshot in snapshots:
+        validate_edges(snapshot.edges, expected_month=snapshot.month, expected_users=snapshot.nodes)
+    events = [[row.source.reference_id, row.source.feature_month, row.source.community_id,
+               row.target_month, row.event.value] for row in transitions.events]
+    links = [[row.source.reference_id, row.source.feature_month, row.source.community_id,
+              row.target.feature_month, row.target.community_id] for row in transitions.links]
+    package_version = version("reddit-community-evolution")
+    config_text = json.dumps(benchmark, ensure_ascii=False, sort_keys=True, indent=2) + "\n"
+
+    destination.mkdir(exist_ok=False)
+    (destination / "truth").mkdir()
+    for snapshot in snapshots:
+        folder = destination / "snapshots" / snapshot.month
+        folder.mkdir(parents=True)
+        write_nodes(folder / "nodes.csv", snapshot.month, snapshot.nodes)
+        write_edges(folder / "R.csv", snapshot.edges,
+                    expected_month=snapshot.month, expected_users=snapshot.nodes)
+    write_memberships(destination / "truth/membership.csv", memberships, **expected)
+    _write_rows(destination / "truth/events.csv", EVENT_COLUMNS, events)
+    _write_rows(destination / "truth/links.csv", LINK_COLUMNS, links)
+    with (destination / "benchmark-config.json").open("x", encoding="utf-8", newline="\n") as handle:
+        handle.write(config_text)
+
+    for snapshot in snapshots:
+        folder = destination / "snapshots" / snapshot.month
+        if read_nodes(folder / "nodes.csv", expected_month=snapshot.month) != snapshot.nodes:
+            raise ValueError("exported nodes differ from sampled snapshot")
+        if read_edges(folder / "R.csv", expected_month=snapshot.month,
+                      expected_users=snapshot.nodes) != snapshot.edges:
+            raise ValueError("exported edges differ from sampled snapshot")
+    if read_memberships(destination / "truth/membership.csv", **expected) != memberships:
+        raise ValueError("exported memberships differ from scenario truth")
+    if _read_rows(destination / "truth/events.csv", EVENT_COLUMNS) != events:
+        raise ValueError("exported events differ from scenario truth")
+    if _read_rows(destination / "truth/links.csv", LINK_COLUMNS) != links:
+        raise ValueError("exported links differ from scenario truth")
+    if (destination / "benchmark-config.json").read_text(encoding="utf-8") != config_text:
+        raise ValueError("exported config differs from requested benchmark")
+
+    files = sorted(path.relative_to(destination).as_posix()
+                   for path in destination.rglob("*") if path.is_file())
+    metadata = {
+        "schema_version": SCHEMA_VERSION, "artifact_type": "synthetic-graph-truth",
+        "status": "complete", **selected, "identity_scope": dataset_id,
+        "observed_months": list(months), "truth_reference": reference, "detector_references": {},
+        "graph": {"directed": False, "simple": True, "weight": 1.0},
+        "ordering": benchmark["ordering"],
+        "generator": {
+            "name": "planted-six-events", "version": 1, "seed": generator_seed,
+            "seed_used_for_truth": False, "sampler_version": generator["sampler_version"],
+            "rng_protocol": generator["rng_protocol"],
+            "config": {"scenario": scenario, "months": list(months),
+                       "p_in": generator["p_in"], "p_out": generator["p_out"], "weight": 1.0},
+        },
+        "environment": {"python_version": platform.python_version(), "package_version": package_version},
+        "counts": {
+            "nodes_by_month": {s.month: len(s.nodes) for s in snapshots},
+            "edges_by_month": {s.month: len(s.edges) for s in snapshots},
+            "communities_by_month": {
+                month: len({row.community_id for row in memberships if row.month == month}) for month in months
+            },
+            "isolates_by_month": {
+                s.month: len(set(s.nodes) - {uid for edge in s.edges
+                                            for uid in (edge.source_user_id, edge.target_user_id)})
+                for s in snapshots
+            },
+            "memberships": len(memberships), "events": len(events), "links": len(links),
+        },
+        "files": {name: {"sha256": sha256((destination / name).read_bytes()).hexdigest()} for name in files},
     }
     with (destination / "metadata.json").open("x", encoding="utf-8", newline="\n") as handle:
         json.dump(metadata, handle, ensure_ascii=False, sort_keys=True, indent=2)
