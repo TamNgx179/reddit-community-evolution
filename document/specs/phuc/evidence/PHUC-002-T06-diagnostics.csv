@@ -1,0 +1,9 @@
+case_id,split,difficulty,generator_seed,month,nodes,edges,communities,isolates
+zero-edges,development,diagnostic,11,2020-01,4,0,3,4
+zero-edges,development,diagnostic,11,2020-02,4,0,3,4
+small-groups,development,diagnostic,11,2020-01,4,1,3,2
+small-groups,development,diagnostic,11,2020-02,4,1,3,2
+empty-singleton,development,diagnostic,11,2020-01,0,0,0,0
+empty-singleton,development,diagnostic,11,2020-02,1,0,1,1
+singleton-empty,development,diagnostic,11,2020-01,1,0,1,1
+singleton-empty,development,diagnostic,11,2020-02,0,0,0,0

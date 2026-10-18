@@ -1,6 +1,6 @@
 # Benchmark mạng động — Sinh và xuất gói graph/truth
 
-T01 có sampler graph stable; T02 có đáp án chuẩn cho đủ sáu tình huống; T03 đưa tham số và lịch seed vào file cấu hình chung; T04 xuất chúng thành gói CSV/JSON đọc lại được; T05 kiểm tra generator trên cả sáu case và các mẫu rất nhỏ. `membership` là bảng người thuộc nhóm nào; `events` là nhãn thay đổi của nhóm nguồn; `links` cho biết nhóm nguồn nối sang nhóm nào ở tháng sau. Đáp án này dùng để đối chiếu với kết quả tracker sau này.
+T01 có sampler graph stable; T02 có đáp án chuẩn cho đủ sáu tình huống; T03 đưa tham số và lịch seed vào file cấu hình chung; T04 xuất chúng thành gói CSV/JSON đọc lại được; T05 kiểm tra generator trên cả sáu case và các mẫu rất nhỏ; T06 chạy bộ development đầy đủ và đọc lại độc lập. `membership` là bảng người thuộc nhóm nào; `events` là nhãn thay đổi của nhóm nguồn; `links` cho biết nhóm nguồn nối sang nhóm nào ở tháng sau. Đáp án này dùng để đối chiếu với kết quả tracker sau này.
 
 Sampler lấy membership chuẩn từ PHUC-001 rồi xét từng cặp user trong mỗi tháng. Hai user cùng community có xác suất nối cạnh `p_in=0.50`; khác community dùng `p_out=0.02`. Cạnh vô hướng, chỉ ghi một chiều source < target, weight 1.0.
 
@@ -134,7 +134,7 @@ Từ thư mục repo đã cài editable package:
 
 Chọn **run ID mới** mỗi lần chạy. Lệnh dùng [graph_benchmark.toml](../../../../configs/graph_benchmark.toml) để chọn output/namespace và generator seed 11; [benchmark_week1.json](../../../../configs/benchmark_week1.json) cung cấp tham số graph, tháng và lịch sáu case. Có thể chỉ định hai file bằng `--config <TOML>` và `--benchmark-config <JSON>`. Path tương đối của hai tham số CLI tính từ working directory; các path bên trong TOML tính từ thư mục chứa TOML.
 
-TOML seed phải thuộc danh sách generator **development** trong JSON. CLI sinh đúng sáu dataset ở seed đó, không chạy cả ba seed development hoặc dùng seed evaluation. Thành công exit 0, `scope="graph-truth"`; input/output lỗi exit 2.
+TOML seed phải thuộc danh sách generator **development** trong JSON. Mặc định CLI sinh đúng sáu dataset ở seed đó. T06 bổ sung cờ `--all-development-seeds` để chọn toàn bộ seed development trong JSON; cả hai chế độ không chạy evaluation. Thành công exit 0, `scope="graph-truth"`; input/output lỗi exit 2.
 
 Ví dụ output stable:
 
@@ -250,12 +250,42 @@ print(output.resolve())
 
 Ví dụ này lưu input fixture và 5 CSV/case trong folder mới. Gói bằng chứng T05 bổ sung metadata/hashes, đọc lại độc lập và ZIP đã kiểm tra; hai loại output đều chỉ dành cho diagnostic sampler.
 
+## Chạy đủ bộ development và đọc lại độc lập — T06
+
+Sinh sáu case × ba seed development vào một run mới:
+
+```powershell
+& .\.venv\Scripts\python.exe -m reddit_sna.benchmarks.graphs --all-development-seeds --run-id phuc-002-dev-new-001
+& .\.venv\Scripts\python.exe -m reddit_sna.benchmarks.graphs --all-development-seeds --run-id phuc-002-dev-new-002
+```
+
+Cấu hình hiện tại tạo **18 dataset / 36 snapshot / 162 file dataset + manifest** mỗi run. Dataset được duyệt theo case rồi generator seed. Cờ này chọn danh sách `generator.seeds.development`, không nhân dataset theo ba detector seed. TOML seed vẫn phải hợp lệ và thuộc development; trường `selection` trong manifest ghi mode thực tế cùng toàn bộ seed đã chọn, thay vì hiểu một mình `config.seed` là cohort.
+
+[scripts/read_graph_dataset.py](../../../../scripts/read_graph_dataset.py) là consumer chỉ dùng stdlib, chạy được với isolated mode, không import generator/project hoặc thư viện graph:
+
+```powershell
+& .\.venv\Scripts\python.exe -I scripts/read_graph_dataset.py artifacts/detection-tracking/phuc-002-dev-new-001/datasets/dev-split-easy-g12
+```
+
+Thành công exit 0, trả JSON có `verified=true`, ID/split/case/seed và counts thực đọc từ CSV. Reader kiểm tra artifact type/version/status, identity/reference/seed/tháng/config tương ứng, danh mục/hash file, R đúng endpoint/weight/ordering, danh sách người/nhóm và events/links theo thiết kế riêng của đủ sáu case. Nó chặn file sửa sai dù người sửa tính lại hash, chẳng hạn đổi grow thành stable hoặc thêm cạnh trùng. Input không hợp lệ exit 2; reader không sửa file.
+
+Reader không sinh lại cạnh để khẳng định seed tạo ra đúng mẫu; việc đó được đối chiếu bằng hai lần export cùng cấu hình và suite RNG. Consumer này chỉ nhận gói `synthetic-graph-truth` của sáu case easy; truth fixture PHUC-001 và diagnostic tiny dùng kiểm tra riêng.
+
+[Bằng chứng T06](../evidence/PHUC-002-T06-development.md) ghi hai run nghiệm thu thật `phuc-002-t06-001` và `phuc-002-t06-002`, số file/đọc lại/tái lập, config/source hashes, diagnostic và ZIP đã lưu. Bảng tổng hợp nhỏ đã đưa vào Git để thành viên khác theo dõi mà không cần tải toàn bộ artifact:
+
+- [36 dòng snapshot development](../evidence/PHUC-002-T06-development-snapshots.csv): node/cạnh/nhóm/isolate theo dataset, tháng và seed.
+- [8 dòng diagnostic](../evidence/PHUC-002-T06-diagnostics.csv): bốn mẫu tiny × hai tháng, có difficulty diagnostic riêng.
+
+Đầu ra graph đầy đủ ở `artifacts/detection-tracking/phuc-002-t06-001/`; run `-002` là bộ đối chiếu. Log/readback JSON, bảng counts, input config copy, hai bộ diagnostic CSV và bằng chứng nằm trong `artifacts/verification/phuc-002-t06-001/`. ZIP cùng tên ở thư mục verification đóng cả hai run và phần bằng chứng để tiện nhận gói; artifact local không tự đi theo Git.
+
+Đây là nghiệm thu **generator development**. Metadata detector references vẫn rỗng; không có Leiden/AMI/tracker, không sinh evaluation hay freeze cấu hình evaluation ở bước này. Các snapshot diagnostic được báo riêng, không gộp vào 36 snapshot easy.
+
 ## Kiểm tra và phạm vi
 
 ```powershell
-& .\.venv\Scripts\python.exe -m unittest tests.unit.test_graph_export tests.integration.test_graph_export tests.unit.test_benchmark_config tests.unit.test_synthetic_truth tests.unit.test_dynamic_benchmark tests.unit.test_synthetic_io tests.unit.test_contracts tests.unit.test_truth_fixture_export tests.integration.test_truth_fixtures -v
+& .\.venv\Scripts\python.exe -m unittest tests.integration.test_graph_reader tests.integration.test_graph_export tests.unit.test_dynamic_benchmark tests.unit.test_graph_export tests.unit.test_benchmark_config tests.unit.test_synthetic_truth tests.unit.test_synthetic_io tests.unit.test_contracts tests.unit.test_truth_fixture_export tests.integration.test_truth_fixtures -v
 ```
 
-Suite liên quan hiện **100/100 pass**, trong đó generator có 18 test. [Bằng chứng T05](../evidence/PHUC-002-T05-generator-tests.md) ghi kết quả, dữ liệu tiny và đối chiếu output cũ; [T04](../evidence/PHUC-002-T04-graph-export.md) giữ lượt 92 test và các gói sáu case. [T03](../evidence/PHUC-002-T03-benchmark-config.md), [T02](../evidence/PHUC-002-T02-six-event-truth.md), [T01](../evidence/PHUC-002-T01-stable-graphs.md) giữ lịch sử kiểm tra trước đó.
+Suite hiện **105/105 pass**. T06 bổ sung 5 test integration cho chế độ full development và consumer độc lập; kết quả ghi trong [bằng chứng T06](../evidence/PHUC-002-T06-development.md). [T05](../evidence/PHUC-002-T05-generator-tests.md) giữ lượt 100 test, generator 18 test và dữ liệu tiny; [T04](../evidence/PHUC-002-T04-graph-export.md) giữ lượt 92 test và các gói sáu case. [T03](../evidence/PHUC-002-T03-benchmark-config.md), [T02](../evidence/PHUC-002-T02-six-event-truth.md), [T01](../evidence/PHUC-002-T01-stable-graphs.md) giữ lịch sử kiểm tra trước đó.
 
-T01–T05 có sampler, truth sáu case, cấu hình/lịch chung, exporter và suite generator/diagnostic. **T06** còn nghiệm thu benchmark development cùng diagnostic/báo cáo tái lập đầy đủ; test và mẫu tiny của T05 chưa thay thế lượt đó. Chưa có kết quả Leiden/AMI/tracker trên benchmark đầy đủ.
+Sau nghiệm thu T06, PHUC-002 hoàn tất phần generator/benchmark development. Bước tiếp theo **PHUC-003-T01** tích hợp detector Leiden có sẵn với graph này. Bộ evaluation và freeze/provenance toàn luồng vẫn thuộc PHUC-005; không suy ra điểm detection/tracking từ việc generator pass.

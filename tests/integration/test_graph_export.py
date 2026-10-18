@@ -108,6 +108,10 @@ class GraphRunTests(ProjectCase):
         for item in invalid:
             with self.subTest(config=item), self.assertRaises(ValueError):
                 export_development_graphs(item, benchmark)
+            with self.subTest(config=item, all_seeds=True), self.assertRaises(ValueError):
+                export_development_graphs(item, benchmark, all_development_seeds=True)
+        with self.assertRaisesRegex(ValueError, "must be bool"):
+            export_development_graphs(config, benchmark, all_development_seeds=1)
         benchmark["generator"]["p_out"] = 2
         benchmark_path.write_text(json.dumps(benchmark), encoding="utf-8")
         before = self.files(self.root)
@@ -120,3 +124,54 @@ class GraphRunTests(ProjectCase):
         self.assertIn("p_out", result.stderr)
         self.assertFalse((self.root / "artifacts").exists())
         self.assertEqual(self.files(self.root), before)
+
+    def test_all_development_seeds_cli_exports_exactly_the_full_dev_schedule(self):
+        config, benchmark = self.setup_configs()
+        result = subprocess.run(
+            [sys.executable, "-m", "reddit_sna.benchmarks.graphs", "--config", str(config),
+             "--benchmark-config", str(benchmark), "--run-id", "all-dev", "--all-development-seeds"],
+            cwd=self.root, capture_output=True, text=True, encoding="utf-8", timeout=30,
+        )
+        self.assertEqual(result.returncode, 0, result.stderr)
+        run = Path(json.loads(result.stdout)["run_directory"])
+        manifest = json.loads((run / "manifest.json").read_text(encoding="utf-8"))
+        expected = [f"dev-{case}-easy-g{seed}" for case in ("stable", "grow", "shrink", "merge", "split", "dissolve")
+                    for seed in (11, 12, 13)]
+        self.assertEqual(manifest["datasets"], expected)
+        self.assertEqual(manifest["selection"], {"mode": "all-development-seeds", "generator_seeds": [11, 12, 13]})
+        self.assertEqual(manifest["completed_stages"], ["generation", "truth"])
+        self.assertEqual(len(manifest["files"]), 162)
+        reader = Path(__file__).resolve().parents[2] / "scripts/read_graph_dataset.py"
+        for dataset_id in expected:
+            read = subprocess.run([sys.executable, "-I", str(reader), str(run / "datasets" / dataset_id)],
+                                  cwd=self.root, capture_output=True, text=True, encoding="utf-8", timeout=20)
+            self.assertEqual(read.returncode, 0, read.stderr)
+            summary = json.loads(read.stdout)
+            self.assertIs(summary["verified"], True)
+            self.assertEqual(summary["dataset_id"], dataset_id)
+            self.assertEqual(summary["split"], "development")
+        for name, info in manifest["files"].items():
+            self.assertEqual(sha256((run / name).read_bytes()).hexdigest(), info["sha256"])
+
+    def test_all_seed_failure_preserves_the_completed_seed_and_failed_manifest(self):
+        config_path, benchmark_path = self.setup_configs()
+        config = load_config(config_path)
+        benchmark = load_benchmark_config(benchmark_path)
+        calls = []
+
+        def fail_second_seed(destination, **kwargs):
+            calls.append(kwargs["generator_seed"])
+            if kwargs["generator_seed"] == 12:
+                raise OSError("simulated second seed failure")
+            return export_graph_dataset(destination, **kwargs)
+
+        with patch("reddit_sna.benchmarks.graphs.export_graph_dataset", side_effect=fail_second_seed):
+            with self.assertRaisesRegex(OSError, "second seed"):
+                export_development_graphs(config, benchmark, all_development_seeds=True)
+        manifest = json.loads((config.run_directory / "manifest.json").read_text(encoding="utf-8"))
+        self.assertEqual(calls, [11, 12])
+        self.assertEqual(manifest["datasets"], ["dev-stable-easy-g11"])
+        self.assertEqual(manifest["selection"]["generator_seeds"], [11, 12, 13])
+        self.assertEqual(manifest["status"], "failed")
+        self.assertEqual(manifest["completed_stages"], [])
+        self.assertTrue((config.run_directory / "datasets/dev-stable-easy-g11/metadata.json").is_file())

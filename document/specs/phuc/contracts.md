@@ -1,6 +1,6 @@
 # Contract dataset và bàn giao Phúc–Đăng v1
 
-**Thiết kế v1:** 16/10/2026. Cụ thể hóa schema trong [phân công cặp](../../PHAN-CONG-PHUC-DANG-TUAN-1.md). PHUC-001 có CSV/truth/export stable/grow và consumer độc lập. PHUC-002-T01–T05 có sampler, truth sáu case, config chung, gói graph/truth kèm hashes và suite generator/tiny diagnostics; kết quả detection/tracking vẫn thuộc các bước sau. Specs 001–006 dùng chung contract này, không tạo biến thể riêng cho mỗi spec.
+**Thiết kế v1:** 16/10/2026. Cụ thể hóa schema trong [phân công cặp](../../PHAN-CONG-PHUC-DANG-TUAN-1.md). PHUC-001 có CSV/truth/export stable/grow và consumer độc lập. PHUC-002 đã có sampler/truth sáu case, config, gói graph/truth, tests/diagnostics và full development 18 dataset đọc lại độc lập; kết quả detection/tracking vẫn thuộc các bước sau. Specs 001–006 dùng chung contract này, không tạo biến thể riêng cho mỗi spec.
 
 ## 1. Định danh và phạm vi
 
@@ -114,6 +114,7 @@ Mỗi case có nhóm nền K gồm 12 user riêng, ổn định qua hai tháng v
 - `validate_edges`/`write_edges`/`read_edges` nhận `expected_month`, `expected_users` tường minh, không suy ra active users từ cạnh. Endpoint phải source < target, cùng tháng, thuộc user list; chặn duplicate/self-loop/weight sai. Writer sort source/target, weight float, UTF-8/LF, exclusive. CSV rỗng vẫn có header.
 - Metadata artifact type `synthetic-graph-truth`, schema 1, identity/reference/tháng, generator seed/config/protocol, Python/package versions, counts node/cạnh/nhóm/isolate và hash tám file dữ liệu/config. Metadata ghi cuối sau khi đọc lại CSV và config; `detector_references={}`, seed không dùng để sinh truth. Config JSON được serialize canonical, không giữ nguyên whitespace của input.
 - CLI `python -m reddit_sna.benchmarks.graphs --run-id <new-id>` dùng `configs/graph_benchmark.toml` và `configs/benchmark_week1.json`; sinh sáu case tại **một** development seed trong TOML. Run helper dùng boundary `project_root/artifacts`, từ chối run đã tồn tại kể cả rỗng. Không tự chạy evaluation.
+- T06 thêm `--all-development-seeds`, lấy đủ lịch JSON development (hiện 18 dataset/36 snapshot), không dùng evaluation hoặc nhân dataset theo detector seed. `manifest.selection` ghi mode và actual generator seeds; TOML seed vẫn phải thuộc development. `python -I scripts/read_graph_dataset.py <dataset-dir>` đọc stdlib độc lập đủ sáu case, kiểm tra hashes/schema/invariants/tập người và nhãn/link; không sinh lại cạnh, không sửa file. Thành công exit 0 JSON verified, lỗi exit 2. [Bằng chứng T06](evidence/PHUC-002-T06-development.md) và CSV tổng hợp trong Git ghi nghiệm thu generator, diagnostic và ZIP local.
 - Manifest `scope="graph-truth"`, chỉ hoàn tất `generation/truth`, hash cả metadata. Khi lỗi giữ output dở dang và ghi failed, không retry vào run cũ. Đây chưa phải manifest/freeze đầy đủ PHUC-005. Artifact local không đi theo Git; [hướng dẫn](002-dynamic-benchmark/README.md) và [bằng chứng T04](evidence/PHUC-002-T04-graph-export.md) ghi cách tái tạo/kiểm chứng. Exporter/consumer PHUC-001 cũ giữ nguyên phạm vi stable/grow.
 
 ### Fixture diagnostic sampler — PHUC-002-T05
