@@ -8,3 +8,4 @@
 2026-10-17,week1,Tram,Unit tests: test_community_table (20) + test_majority_persistence (12) + test_logistic_regression (9) + test_samples_mini_fixture (6),tests/unit/,,,pending_review
 2026-10-17,week1,Tram,Integration test: test_prediction_pipeline (6),tests/integration/test_prediction_pipeline.py,,,pending_review
 2026-10-17,week1,Tram,M6 Progress log,reports/tram/progress.md,,,pending_review
+2026-10-18,week1,Lan,"M6 Evaluation: temporal splits, sample validation, leakage checks, metrics, confusion matrices, pipeline integration, tests and reports",src/reddit_sna/evaluation/metrics.py;src/reddit_sna/evaluation/sample_checks.py;src/reddit_sna/evaluation/splits.py;src/reddit_sna/pipelines/prediction.py;tests/unit/;tests/fixtures/prediction/samples_leaky.csv;reports/anh/progress.md;reports/prediction-week1/,lan-eval-final-20261018,,pending_review

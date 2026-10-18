@@ -46,6 +46,19 @@ from reddit_sna.models.majority_persistence import (
     predict_persistence,
 )
 
+from reddit_sna.evaluation.metrics import (
+    confusion_matrices,
+    evaluate_predictions,
+)
+from reddit_sna.evaluation.sample_checks import (
+    assert_samples_ok,
+    check_samples,
+)
+from reddit_sna.evaluation.splits import (
+    assign_temporal_split,
+    summarize_split,
+)
+
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -222,28 +235,126 @@ def _validate_predictions(pred_df: pd.DataFrame) -> None:
 
 
 # ---------------------------------------------------------------------------
-# Stage: evaluation stub (Lan Anh owns _stage_evaluation)
+# Stage: evaluation (Lan Anh owns _stage_evaluation)
 # ---------------------------------------------------------------------------
 
-def _stage_evaluation(run_dir: Path, table: pd.DataFrame,
-                      split: pd.DataFrame, predictions: pd.DataFrame) -> None:
-    """Stub: Lan Anh implements this stage in her branch.
+def _dataframe_to_markdown(df: pd.DataFrame) -> str:
+    """Convert a DataFrame to a Markdown table without extra dependencies."""
 
-    When Anh's branch is merged, replace this stub with the real call to:
-        evaluation.splits.assign_temporal_split
-        evaluation.sample_checks.check_samples / assert_samples_ok
-        evaluation.metrics.evaluate_predictions / confusion_matrices
-    """
-    # Stub writes a placeholder note so the pipeline run completes
-    notes = (
-        "# Evaluation\n\n"
-        "Stub: Lan Anh's _stage_evaluation not yet merged.\n"
-        "data_kind: synthetic\n"
-        "table_schema: prediction-table-v1\n"
+    def escape_cell(value: object) -> str:
+        text = str(value)
+        text = text.replace("\\", "\\\\")
+        text = text.replace("|", "\\|")
+        text = text.replace("\r\n", "\n").replace("\r", "\n")
+        text = text.replace("\n", "<br>")
+        return text
+
+    columns = [escape_cell(column) for column in df.columns]
+    rows = [
+        [escape_cell(value) for value in row]
+        for row in df.itertuples(index=False, name=None)
+    ]
+
+    lines = [
+        "| " + " | ".join(columns) + " |",
+        "| " + " | ".join(["---"] * len(columns)) + " |",
+    ]
+    lines.extend(
+        "| " + " | ".join(row) + " |"
+        for row in rows
     )
-    (run_dir / "evaluation_notes.md").write_text(notes, encoding="utf-8")
-    print("  [evaluation] stub wrote evaluation_notes.md (Lan Anh's stage pending merge)")
+    return "\n".join(lines)
 
+
+def _stage_evaluation(
+    run_dir: Path,
+    table: pd.DataFrame,
+    catalog: pd.DataFrame,
+    split: pd.DataFrame,
+    predictions: pd.DataFrame,
+) -> None:
+    """Validate samples and write temporal evaluation outputs."""
+    assert_samples_ok(check_samples(table, catalog, split))
+
+    # Reuse the split created in Stage 2.
+    temporal_split = split.copy()
+
+    # Validate all predictions against the canonical split.
+    # Metrics are calculated separately for each available split.
+    evaluation_predictions = predictions.copy()
+
+    results = evaluate_predictions(evaluation_predictions, temporal_split)
+    matrices = confusion_matrices(evaluation_predictions, temporal_split)
+
+    metrics = results["metrics"]
+    per_class = results["per_class"]
+
+    _write_csv(
+        run_dir / "metrics.csv",
+        metrics.to_dict(orient="records"),
+        list(metrics.columns),
+    )
+    _write_csv(
+        run_dir / "per_class.csv",
+        per_class.to_dict(orient="records"),
+        list(per_class.columns),
+    )
+
+    for (model_name, split_name), matrix in matrices.items():
+        safe_model_name = str(model_name).replace("/", "_").replace("\\", "_")
+        matrix_path = run_dir / f"confusion_{safe_model_name}_{split_name}.csv"
+        matrix.to_csv(matrix_path, index=True, index_label="y_true")
+
+    # Document classes with no true examples in each model/split group.
+    missing_class_rows = per_class.loc[per_class["support"] == 0]
+    if missing_class_rows.empty:
+        missing_class_text = "No classes have zero true support."
+    else:
+        missing_class_text = _dataframe_to_markdown(
+            missing_class_rows[["model", "split", "label", "support"]]
+        )
+
+    notes = [
+        "# Evaluation notes",
+        "",
+        "- data_kind: synthetic",
+        "- table_schema: prediction-table-v1",
+        f"- labelled_samples: {len(temporal_split)}",
+        f"- prediction_rows: {len(evaluation_predictions)}",
+        "- macro_f1: average F1 over classes present in y_true; zero_division=0",
+        "- macro_f1_six: average F1 over all six Event classes; zero_division=0",
+        "- balanced_accuracy: mean recall over classes present in y_true",
+        "- Predictions are matched to the temporal split by sample key.",
+        "- Rows without a matching split key are rejected.",
+        "",
+        "## Classes with zero true support",
+        "",
+        missing_class_text,
+        "",
+        "## Metrics",
+        "",
+        _dataframe_to_markdown(metrics),
+        "",
+        "## Per-class metrics",
+        "",
+        _dataframe_to_markdown(per_class),
+        "",
+        "## Confusion matrices",
+        "",
+        "Each `confusion_<model>_<split>.csv` contains a six-class matrix.",
+        "",
+    ]
+
+    (run_dir / "evaluation_notes.md").write_text(
+        "\n".join(notes),
+        encoding="utf-8",
+    )
+
+    print(
+        "  [evaluation] completed: "
+        f"{len(evaluation_predictions)} prediction rows, "
+        f"{len(metrics)} model/split metric rows"
+    )
 
 # ---------------------------------------------------------------------------
 # Main run
@@ -262,11 +373,24 @@ def run(config: RunConfig) -> Path:
         table, catalog = _stage_table(run_dir, config.seed)
         stage_status["table"] = "complete"
 
-        # Stage 2: TEMPORARY basic split (replace by Anh's assign_temporal_split once merged)
-        split = _basic_temporal_split(table)
-        _write_csv(run_dir / "split.csv",
-                   split.to_dict(orient="records"),
-                   list(split.columns))
+        # Stage 2: temporal split for evaluation
+        assert_samples_ok(check_samples(table, catalog))
+
+        split = assign_temporal_split(table)
+
+        assert_samples_ok(check_samples(table, catalog, split))
+        split_summary = summarize_split(table, split)
+
+        _write_csv(
+            run_dir / "split.csv",
+            split.to_dict(orient="records"),
+            list(split.columns),
+        )
+        _write_csv(
+            run_dir / "split_summary.csv",
+            split_summary.to_dict(orient="records"),
+            list(split_summary.columns),
+        )
         stage_status["split"] = "complete"
 
         # Stage 3: baselines (Tram)
@@ -274,17 +398,16 @@ def run(config: RunConfig) -> Path:
         stage_status["baselines"] = "complete"
 
         # Stage 4: evaluation (Anh)
-        _stage_evaluation(run_dir, table, split, predictions)
-        stage_status["evaluation"] = "complete_stub"
+        _stage_evaluation(run_dir, table, catalog, split, predictions)
+        stage_status["evaluation"] = "complete"
 
     except Exception as exc:
         stage_status.setdefault("failed_at", str(exc))
         _write_manifest(run_dir, config, start_time, stage_status, status="failed")
         raise
 
-    # Evaluation stage is still a stub (Lan Anh's branch not yet merged).
-    # Use "complete_through_baselines" per ARCHITECTURE policy — never claim
-    # "complete" when a downstream stage is unfinished.
+    # Evaluation is implemented; other planned models/features remain unfinished.
+    # Keep the overall status aligned with the project's completion policy.
     _write_manifest(run_dir, config, start_time, stage_status,
                     status="complete_through_baselines")
     print(f"\n[prediction] Pipeline complete_through_baselines -> {run_dir}")
@@ -338,7 +461,6 @@ def _write_manifest(run_dir: Path, config: RunConfig, start_time: datetime,
         "unimplemented": [
             "B2_random_forest (Phuc)", "B5_gradient_boosting (Phuc)",
             "HeTCo (Thanh)", "real Reddit features (Thanh)",
-            "Lan_Anh_evaluation_stage",
         ],
     }
 
