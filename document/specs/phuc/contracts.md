@@ -151,7 +151,15 @@ Default có 18 dataset/36 snapshot/108 membership, mỗi dataset giữ layout/sc
 - `load_aligned_detection(source, detection, detector_seed=0)`: nhận hai **dataset directory** PHUC-002/003, kiểm tra identity/config/lịch/tháng/seed, relative paths/hashes và graph cohort/mapping trước khi đọc membership. Chỉ hỗ trợ lịch tuần 1 gamma 1, seed 0/1/2. Giữ hai reference riêng; đường dẫn tuyệt đối producer không dùng để tìm input sau relocation.
 - `AlignedDetection.snapshots` chứa `AlignedSnapshot`: `active_user_ids` đi cùng `truth_labels_all`; `user_ids` endpoint đi cùng `truth_labels` và `predicted_labels`. Các tuple sort theo user ID; tháng endpoint rỗng vẫn hiện diện với vector rỗng. Không bỏ isolate khỏi tập active.
 
-API trong bộ nhớ dựa vào scope/reference/user maps caller cung cấp; API file bổ sung xác minh dataset/metadata/hash. Hai API chưa tính AMI/coverage/số nhóm hoặc ghi metric. Loader chỉ đối chiếu hash diagnostics, chưa đánh giá nội dung timing. [Hướng dẫn và ví dụ](004-detection-evaluation/README.md), [bằng chứng T01](evidence/PHUC-004-T01-alignment.md); T02–T06 vẫn cần hoàn thiện spec.
+API trong bộ nhớ dựa vào scope/reference/user maps caller cung cấp; API file bổ sung xác minh dataset/metadata/hash. Hai API này chuẩn bị vector; hàm đếm T02 bên dưới dùng kết quả của chúng. Loader chỉ đối chiếu hash diagnostics, chưa đánh giá nội dung timing. [Hướng dẫn và ví dụ](004-detection-evaluation/README.md), [bằng chứng T01](evidence/PHUC-004-T01-alignment.md).
+
+### Counts và coverage — PHUC-004-T02
+
+`count_snapshot(snapshot: AlignedSnapshot) -> DetectionCounts` trong module evaluation trên trả `month`, `active_nodes`, `endpoint_nodes`, `assigned_nodes`, `isolated_nodes`, `coverage`, `coverage_status`, `true_communities_all_nodes`, `true_communities_scored_nodes`, `predicted_communities`. Kiểm tra vector lengths/ID/tập người và truth mapping trước khi đếm, kể cả record được tự dựng.
+
+- Assigned phải bằng endpoint theo T01; isolate = active - endpoint. Coverage = assigned/active, giữ isolate trong mẫu số. Active > 0 nhưng endpoint = 0 cho coverage 0.0/status `defined`; active = 0 cho coverage None/status `no_active_users` (JSON null/CSV trống).
+- Số nhóm truth trên toàn active và trên scored users được tính riêng; predicted groups chỉ trên endpoint. Tập rỗng cho group count 0; partition constant/singleton vẫn có counts hợp lệ, policy AMI riêng ở T03.
+- Mỗi record là một snapshot của một dataset/seed; caller giữ context/reference ở `AlignedDetection`, không cộng seed/tháng thành số người độc lập. T02 chưa xuất summary/timing hoặc AMI; CSV kiểm chứng development và diagnostic có scope riêng. [Bằng chứng T02](evidence/PHUC-004-T02-counts.md).
 
 ## 5. Metadata, manifest và metric tối thiểu
 

@@ -1,9 +1,10 @@
 """Detection input alignment, before any AMI or coverage calculation."""
 
+from dataclasses import replace
 import unittest
 
 from reddit_sna.contracts import Membership
-from reddit_sna.evaluation.detection import align_memberships
+from reddit_sna.evaluation.detection import align_memberships, count_snapshot
 
 
 class DetectionAlignmentTests(unittest.TestCase):
@@ -113,3 +114,82 @@ class DetectionAlignmentTests(unittest.TestCase):
                                    active_users_by_month={"2020-01": iter(["u02", "isolated", "u01"])},
                                    endpoint_users_by_month={"2020-01": iter(["u02", "u01"])})
         self.assertEqual(actual, original)
+
+
+class DetectionCountTests(unittest.TestCase):
+    def setUp(self):
+        DetectionAlignmentTests.setUp(self)
+
+    def frame(self):
+        frame, = align_memberships(self.truth, self.predicted, **self.options)
+        return frame
+
+    def test_isolate_stays_in_denominator_and_all_truth_group_count(self):
+        counts = count_snapshot(self.frame())
+        self.assertEqual((counts.active_nodes, counts.endpoint_nodes, counts.assigned_nodes, counts.isolated_nodes), (3, 2, 2, 1))
+        self.assertAlmostEqual(counts.coverage, 2 / 3)
+        self.assertEqual(counts.coverage_status, "defined")
+        self.assertEqual((counts.true_communities_all_nodes, counts.true_communities_scored_nodes, counts.predicted_communities), (3, 2, 2))
+
+    def test_full_coverage_and_group_counts_ignore_row_order_and_group_names(self):
+        options = {**self.options, "active_users_by_month": self.options["endpoint_users_by_month"]}
+        truth = [row for row in self.truth if row.user_id != "isolated"]
+        original, = align_memberships(truth, self.predicted, **options)
+        renamed = [Membership(row.reference_id, row.month, "renamed-" + row.community_id, row.user_id)
+                   for row in reversed(self.predicted)]
+        reordered, = align_memberships(reversed(truth), renamed, **options)
+        self.assertEqual(count_snapshot(original), count_snapshot(reordered))
+        self.assertEqual(count_snapshot(original).coverage, 1.0)
+        self.assertEqual(count_snapshot(original).isolated_nodes, 0)
+
+    def test_all_isolates_have_zero_coverage_but_empty_population_is_undefined(self):
+        frames = align_memberships([Membership("truth", "2020-01", "A", "alone")], [],
+                                   truth_reference="truth", detector_reference="detector",
+                                   active_users_by_month={"2020-01": ["alone"], "2020-02": []},
+                                   endpoint_users_by_month={"2020-01": [], "2020-02": []})
+        isolated, empty = [count_snapshot(frame) for frame in frames]
+        self.assertEqual((isolated.active_nodes, isolated.endpoint_nodes, isolated.assigned_nodes, isolated.isolated_nodes), (1, 0, 0, 1))
+        self.assertEqual((isolated.coverage, isolated.coverage_status), (0.0, "defined"))
+        self.assertEqual((isolated.true_communities_all_nodes, isolated.true_communities_scored_nodes, isolated.predicted_communities), (1, 0, 0))
+        self.assertEqual((empty.active_nodes, empty.endpoint_nodes, empty.assigned_nodes, empty.isolated_nodes), (0, 0, 0, 0))
+        self.assertEqual((empty.coverage, empty.coverage_status), (None, "no_active_users"))
+        self.assertEqual((empty.true_communities_all_nodes, empty.true_communities_scored_nodes, empty.predicted_communities), (0, 0, 0))
+
+    def test_singleton_and_constant_partitions_still_have_defined_counts(self):
+        for users in (("u01",), ("u01", "u02")):
+            with self.subTest(users=users):
+                frame, = align_memberships([Membership("truth", "2020-01", "A", user) for user in users],
+                                           [Membership("detector", "2020-01", "x", user) for user in users],
+                                           truth_reference="truth", detector_reference="detector",
+                                           active_users_by_month={"2020-01": users}, endpoint_users_by_month={"2020-01": users})
+                counts = count_snapshot(frame)
+                self.assertEqual(counts.coverage, 1.0)
+                self.assertEqual(counts.assigned_nodes, len(users))
+                self.assertEqual((counts.true_communities_all_nodes, counts.true_communities_scored_nodes, counts.predicted_communities), (1, 1, 1))
+
+    def test_same_users_in_two_months_are_counted_per_snapshot(self):
+        frames = align_memberships(
+            [Membership("truth", month, group, user) for month, group, user in (
+                ("2020-01", "A", "u01"), ("2020-01", "B", "u02"), ("2020-02", "C", "u01"), ("2020-02", "C", "u02"))],
+            [Membership("detector", month, group, user) for month, group, user in (
+                ("2020-01", "x", "u01"), ("2020-01", "y", "u02"), ("2020-02", "x", "u01"), ("2020-02", "x", "u02"))],
+            truth_reference="truth", detector_reference="detector",
+            active_users_by_month={month: ["u01", "u02"] for month in ("2020-01", "2020-02")},
+            endpoint_users_by_month={month: ["u01", "u02"] for month in ("2020-01", "2020-02")})
+        counts = [count_snapshot(frame) for frame in frames]
+        self.assertEqual([row.month for row in counts], ["2020-01", "2020-02"])
+        self.assertEqual([row.active_nodes for row in counts], [2, 2])
+        self.assertEqual([row.true_communities_all_nodes for row in counts], [2, 1])
+        self.assertEqual([row.predicted_communities for row in counts], [2, 1])
+
+    def test_manually_malformed_aligned_snapshots_are_rejected_before_counting(self):
+        frame = self.frame()
+        invalid = [None, replace(frame, month="2020-13"), replace(frame, user_ids=("u01", "u01")),
+                   replace(frame, user_ids=("u02", "u01")), replace(frame, predicted_labels=("x",)),
+                   replace(frame, truth_labels_all=("K", "A")), replace(frame, user_ids=("u01", "outside")),
+                   replace(frame, truth_labels=("B", "A")), replace(frame, predicted_labels=("", "x")),
+                   replace(frame, user_ids=("", "u02")), replace(frame, predicted_labels=(True, "x")),
+                   replace(frame, active_user_ids=list(frame.active_user_ids))]
+        for value in invalid:
+            with self.subTest(value=value), self.assertRaises(ValueError):
+                count_snapshot(value)

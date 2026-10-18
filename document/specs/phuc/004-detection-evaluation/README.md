@@ -1,4 +1,4 @@
-# PHUC-004 — Đọc và căn nhãn trước khi đánh giá
+# PHUC-004 — Căn nhãn, đếm người và coverage
 
 T01 bổ sung [evaluation/detection.py](../../../../src/reddit_sna/evaluation/detection.py). Đầu vào là truth của PHUC-002 và membership Leiden đã lưu của PHUC-003. Hàm đọc kiểm tra hai gói thuộc cùng dataset, cùng graph và đúng tháng/seed, rồi ghép nhãn chuẩn với nhãn dự đoán theo **cùng user ID**.
 
@@ -56,7 +56,40 @@ Các record là frozen dataclass với tuple. Một user có thể lặp ở hai
 
 Nếu chỉ có record trong bộ nhớ, gọi `align_memberships(truth, predictions, truth_reference=..., detector_reference=..., active_users_by_month=..., endpoint_users_by_month=...)`. Truth/predictions là iterable `Membership`; caller phải cung cấp tập active và endpoint độc lập từ dữ liệu quan sát. Hàm trả tuple `AlignedSnapshot`, không xác minh metadata/dataset khi caller không truyền gói file. Xem [unit tests](../../../../tests/unit/test_detection_evaluation.py) để biết ví dụ fixture.
 
-Tháng quan sát không có cạnh vẫn có snapshot với ba vector chấm rỗng; truth của isolate được giữ. T01 chưa gán điểm hoặc quyết định policy AMI cho trường hợp này.
+Tháng quan sát không có cạnh vẫn có snapshot với ba vector chấm rỗng; truth của isolate được giữ. Policy AMI thuộc T03.
+
+## Đếm người, coverage và số nhóm — T02
+
+Sau khi có `result` từ ví dụ ở trên:
+
+```python
+from dataclasses import asdict
+from reddit_sna.evaluation.detection import count_snapshot
+
+for snapshot in result.snapshots:
+    print(asdict(count_snapshot(snapshot)))
+```
+
+`count_snapshot(AlignedSnapshot)` trả frozen dataclass `DetectionCounts` cho **một tháng của một dataset/seed**. Hàm kiểm tra lại vector lengths, ID duy nhất/đã sort, tập endpoint thuộc active và truth của cùng người phải khớp giữa hai tập. Record tự dựng bị sai sẽ báo `ValueError` trước khi đếm. Metadata/reference được xác minh ở loader T01.
+
+| Field | Cách tính / ý nghĩa |
+|---|---|
+| `month` | Giữ tháng của snapshot |
+| `active_nodes` | Số user trong `nodes.csv`, gồm cả isolate |
+| `endpoint_nodes` | Số user xuất hiện ở ít nhất một đầu cạnh R |
+| `assigned_nodes` | Số nhãn dự đoán; sau xác minh phải bằng endpoint |
+| `isolated_nodes` | `active_nodes - endpoint_nodes` |
+| `coverage` | `assigned_nodes / active_nodes`; là tỉ lệ 0–1, nhân 100 để hiển thị phần trăm |
+| `coverage_status` | `defined` nếu active > 0; `no_active_users` nếu active = 0 |
+| `true_communities_all_nodes` | Số nhãn truth khác nhau trên toàn bộ active |
+| `true_communities_scored_nodes` | Số nhãn truth khác nhau trên endpoint được chấm |
+| `predicted_communities` | Số nhãn detector khác nhau trên endpoint |
+
+Ví dụ 3 active, trong đó 2 người thuộc A có cạnh và 1 người thuộc K bị isolate: assigned = endpoint = 2, isolate = 1, coverage = **2/3**. Số nhóm truth toàn bộ = **2**, nhóm truth được chấm = **1**. Vì vậy phải giữ riêng hai số nhóm này.
+
+Nếu active > 0 nhưng không có cạnh, coverage = **0.0**, status `defined`, số nhóm được chấm/predicted = 0. Nếu active = 0, coverage = **None** (JSON null / CSV trống), status `no_active_users`, các counts = 0. Singleton hoặc partition chỉ có một nhóm vẫn có counts xác định; policy đánh giá chất lượng partition ở T03.
+
+T02 chỉ trả counts, chưa tạo exporter metric/summary production. Bảng kiểm chứng development/diagnostic được lưu riêng, có dataset/seed/reference và đường dẫn input; xem [evidence T02](../evidence/PHUC-004-T02-counts.md). Coverage 100% chỉ nói detector đã gán đủ người, chưa chứng minh nhãn cộng đồng đúng; AMI sẽ đánh giá phần đó.
 
 ## Kiểm tra và phần tiếp theo
 
@@ -67,4 +100,4 @@ Tháng quan sát không có cạnh vẫn có snapshot với ba vector chấm r�
 
 Integration tests tạo input bằng Leiden thật, cần extra `[graph]` theo hướng dẫn cài đặt repo. Các unit tests căn nhãn không cần thư viện graph. [Evidence T01](../evidence/PHUC-004-T01-alignment.md) lưu lệnh, số liệu kiểm chứng và vị trí output/ZIP local; CSV ví dụ và bảng tóm tắt nhỏ có trong Git.
 
-**T02 tiếp theo:** đếm active/endpoint/assigned/isolate, coverage và số nhóm trên đúng tập người. **T03:** AMI và policy missing/degenerate cùng dependency. T01 chưa xuất `detection_metrics.csv`/summary metric, chưa chạy tập evaluation hoặc tracker; các task còn lại giữ TODO.
+**T01/T02 đã triển khai:** căn nhãn, đếm người/nhóm và coverage; bằng chứng mới có 20 test liên quan. **Tiếp theo T03:** AMI và policy missing/degenerate cùng dependency. `detection_metrics.csv`/summary/timing production thuộc T04; tập evaluation và tracker còn ở các phần việc riêng.

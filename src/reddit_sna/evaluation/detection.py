@@ -1,6 +1,7 @@
 """Verify synthetic truth/detector inputs and align labels by user ID.
 
-This module does not yet calculate AMI, coverage, summaries or timing metrics.
+This module aligns labels and calculates node coverage/community counts.
+AMI, aggregate summaries and timing metrics remain separate steps.
 Community names are preserved; aligning users is not community matching.
 """
 
@@ -13,7 +14,7 @@ from pathlib import Path
 from reddit_sna.benchmarks.config import GRAPH_PROTOCOL, dataset_schedule, load_benchmark_config
 from reddit_sna.benchmarks.io import read_edges, read_memberships, read_nodes, validate_memberships
 from reddit_sna.config import validate_run_id
-from reddit_sna.contracts import Membership
+from reddit_sna.contracts import Membership, next_month
 from reddit_sna.graphs.provenance import snapshot_inventory
 
 
@@ -42,9 +43,58 @@ class AlignedDetection:
     snapshots: tuple[AlignedSnapshot, ...]
 
 
+@dataclass(frozen=True)
+class DetectionCounts:
+    month: str
+    active_nodes: int
+    endpoint_nodes: int
+    assigned_nodes: int
+    isolated_nodes: int
+    coverage: float | None
+    coverage_status: str
+    true_communities_all_nodes: int
+    true_communities_scored_nodes: int
+    predicted_communities: int
+
+
 def _require(condition, message):
     if not condition:
         raise ValueError(message)
+
+
+def count_snapshot(snapshot: AlignedSnapshot) -> DetectionCounts:
+    """Count one verified frame; coverage uses all active users, not endpoints.
+
+    A positive active population with no edges has coverage 0. Empty active
+    populations have coverage None and status no_active_users. Group counts
+    remain defined for empty/constant partitions; this function does not score
+    partition quality or combine different months/seeds into independent units.
+    """
+    _require(isinstance(snapshot, AlignedSnapshot), "an AlignedSnapshot is required")
+    next_month(snapshot.month)
+    for users in (snapshot.active_user_ids, snapshot.user_ids):
+        _require(isinstance(users, tuple) and all(isinstance(user, str) and user.strip() for user in users),
+                 "aligned user IDs must be tuples of nonempty strings")
+        _require(users == tuple(sorted(set(users))), "aligned user IDs must be sorted and unique")
+    for labels in (snapshot.truth_labels_all, snapshot.truth_labels, snapshot.predicted_labels):
+        _require(isinstance(labels, tuple) and all(isinstance(label, str) and label.strip() for label in labels),
+                 "aligned labels must be tuples of nonempty strings")
+    _require(len(snapshot.active_user_ids) == len(snapshot.truth_labels_all)
+             and len(snapshot.user_ids) == len(snapshot.truth_labels) == len(snapshot.predicted_labels),
+             "aligned user/label vector lengths must match")
+    active_truth = dict(zip(snapshot.active_user_ids, snapshot.truth_labels_all, strict=True))
+    _require(set(snapshot.user_ids) <= active_truth.keys(), "scored user is outside active users")
+    _require(snapshot.truth_labels == tuple(active_truth[user] for user in snapshot.user_ids),
+             "scored truth must match all-active truth by user ID")
+    active, endpoints, assigned = len(snapshot.active_user_ids), len(snapshot.user_ids), len(snapshot.predicted_labels)
+    return DetectionCounts(
+        month=snapshot.month, active_nodes=active, endpoint_nodes=endpoints, assigned_nodes=assigned,
+        isolated_nodes=active - endpoints, coverage=assigned / active if active else None,
+        coverage_status="defined" if active else "no_active_users",
+        true_communities_all_nodes=len(set(snapshot.truth_labels_all)),
+        true_communities_scored_nodes=len(set(snapshot.truth_labels)),
+        predicted_communities=len(set(snapshot.predicted_labels)),
+    )
 
 
 def _users_by_month(value):

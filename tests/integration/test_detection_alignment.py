@@ -1,5 +1,6 @@
 """Read persisted graph/truth and Leiden packages for identity-safe alignment."""
 
+import csv
 from hashlib import sha256
 import importlib.util
 import json
@@ -9,7 +10,7 @@ import unittest
 
 from reddit_sna.benchmarks.config import load_benchmark_config
 from reddit_sna.benchmarks.io import export_graph_dataset
-from reddit_sna.evaluation.detection import load_aligned_detection
+from reddit_sna.evaluation.detection import count_snapshot, load_aligned_detection
 from reddit_sna.pipelines.detection_tracking import export_synthetic_detection
 from tests.support import ProjectCase
 
@@ -18,10 +19,12 @@ ROOT = Path(__file__).resolve().parents[2]
 
 @unittest.skipUnless(importlib.util.find_spec("igraph") and importlib.util.find_spec("leidenalg"), "install [graph] for alignment fixtures")
 class DetectionPackageAlignmentTests(ProjectCase):
-    def pair(self, *, zero_edges=False):
+    def pair(self, *, zero_edges=False, isolate_fixture=False):
         benchmark = load_benchmark_config(ROOT / "configs/benchmark_week1.json")
         if zero_edges:
             benchmark["generator"].update(p_in=0, p_out=0)
+        if isolate_fixture:
+            benchmark["generator"].update(p_in=0.05, p_out=0)
         source, predicted = self.root / "source", self.root / "detected"
         export_graph_dataset(source, benchmark=benchmark, scenario="stable", generator_seed=11)
         export_synthetic_detection(source, predicted)
@@ -133,3 +136,34 @@ class DetectionPackageAlignmentTests(ProjectCase):
             self.assertEqual(frame.user_ids, ())
             self.assertEqual(frame.truth_labels, ())
             self.assertEqual(frame.predicted_labels, ())
+            counts = count_snapshot(frame)
+            self.assertEqual((counts.active_nodes, counts.endpoint_nodes, counts.assigned_nodes, counts.isolated_nodes), (24, 0, 0, 24))
+            self.assertEqual((counts.coverage, counts.coverage_status), (0.0, "defined"))
+            self.assertEqual((counts.true_communities_all_nodes, counts.true_communities_scored_nodes, counts.predicted_communities), (2, 0, 0))
+
+    def test_counts_match_saved_csvs_for_real_detection_with_isolates(self):
+        source, predicted = self.pair(isolate_fixture=True)
+        def rows(path):
+            with path.open(encoding="utf-8", newline="") as handle:
+                return list(csv.DictReader(handle))
+        truth = rows(source / "truth/membership.csv")
+        for seed in (0, 1, 2):
+            result = load_aligned_detection(source, predicted, detector_seed=seed)
+            for frame in result.snapshots:
+                month = frame.month
+                active = rows(source / f"snapshots/{month}/nodes.csv")
+                edges = rows(source / f"snapshots/{month}/R.csv")
+                assigned = rows(predicted / f"memberships/{month}/membership-seed{seed}.csv")
+                endpoints = {row[key] for row in edges for key in ("source_user_id", "target_user_id")}
+                counts = count_snapshot(frame)
+                self.assertEqual(counts.active_nodes, len(active))
+                self.assertEqual(counts.endpoint_nodes, len(endpoints))
+                self.assertEqual(counts.assigned_nodes, len(assigned))
+                self.assertEqual(counts.isolated_nodes, len(active) - len(endpoints))
+                self.assertGreater(counts.isolated_nodes, 0)
+                self.assertGreater(counts.assigned_nodes, 0)
+                self.assertEqual(counts.coverage, len(assigned) / len(active))
+                self.assertLess(counts.coverage, 1)
+                self.assertEqual(counts.true_communities_all_nodes, len({row["community_id"] for row in truth if row["month"] == month}))
+                self.assertEqual(counts.true_communities_scored_nodes, len({row["community_id"] for row in truth if row["month"] == month and row["user_id"] in endpoints}))
+                self.assertEqual(counts.predicted_communities, len({row["community_id"] for row in assigned}))

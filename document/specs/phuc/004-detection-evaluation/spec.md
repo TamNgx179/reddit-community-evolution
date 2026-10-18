@@ -3,7 +3,7 @@
 **Owner:** Phúc. **Thiết kế:** v1, 16/10/2026. **Phân công:** P04.
 **Tiến độ, hạn và bằng chứng:** [tasks.md](../tasks.md#phuc-004). **Giao diện:** [contracts.md](../contracts.md).
 
-**Triển khai hiện tại:** T01 DONE — kiểm tra identity/keys/hash/cohort và căn hai vector theo user ID; [hướng dẫn](README.md), [bằng chứng và output](../evidence/PHUC-004-T01-alignment.md). PHUC-004 đang làm 1/6 task; coverage, AMI/policy và metric export còn ở T02–T06.
+**Triển khai hiện tại:** T01/T02 DONE — kiểm tra identity/keys/hash/cohort, căn vector theo user ID và đếm active/endpoint/assigned/isolate, coverage/status cùng số nhóm trên hai tập người. [Hướng dẫn](README.md), [bằng chứng T01](../evidence/PHUC-004-T01-alignment.md), [bằng chứng T02 và output](../evidence/PHUC-004-T02-counts.md). PHUC-004 đang làm 2/6 task; AMI/policy và metric export còn ở T03–T06.
 
 ## Mục tiêu và user story
 
