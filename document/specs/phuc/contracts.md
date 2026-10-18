@@ -143,6 +143,16 @@ T05 nghiệm thu integration/AC01–05; T06 thêm [batch command](../../../scrip
 
 Default có 18 dataset/36 snapshot/108 membership, mỗi dataset giữ layout/schema như API. Top run có `benchmark-config.json`, `manifest.json`, `datasets/<dataset-id>/...`; 164 file/run. Hai lượt T06 giữ 108 CSV giống byte; ARI seed thay đổi ở 7/36 snapshot được ghi nguyên kết quả, canonical vẫn 0. Timing CSV một dòng mỗi tháng/run cho cả ba seed, không nhân bản thành timing mỗi seed. [Bằng chứng T06](evidence/PHUC-003-T06-development.md) và CSV trong Git chốt FR05; chưa tính AMI hoặc thực hiện evaluation/freeze PHUC-005.
 
+### Căn nhãn đánh giá hiện có — PHUC-004-T01
+
+[evaluation/detection.py](../../../src/reddit_sna/evaluation/detection.py) có hai API chỉ đọc/chuẩn bị input:
+
+- `align_memberships(truth, predictions, truth_reference=..., detector_reference=..., active_users_by_month=..., endpoint_users_by_month=...)`: xác minh truth bằng đúng tập active và prediction bằng đúng tập endpoint độc lập; chặn duplicate/user thiếu/lạ/sai tháng/reference rồi sort hai vector nhãn theo cùng `(month, user_id)`. Không ghép community theo tên hoặc theo vị trí CSV.
+- `load_aligned_detection(source, detection, detector_seed=0)`: nhận hai **dataset directory** PHUC-002/003, kiểm tra identity/config/lịch/tháng/seed, relative paths/hashes và graph cohort/mapping trước khi đọc membership. Chỉ hỗ trợ lịch tuần 1 gamma 1, seed 0/1/2. Giữ hai reference riêng; đường dẫn tuyệt đối producer không dùng để tìm input sau relocation.
+- `AlignedDetection.snapshots` chứa `AlignedSnapshot`: `active_user_ids` đi cùng `truth_labels_all`; `user_ids` endpoint đi cùng `truth_labels` và `predicted_labels`. Các tuple sort theo user ID; tháng endpoint rỗng vẫn hiện diện với vector rỗng. Không bỏ isolate khỏi tập active.
+
+API trong bộ nhớ dựa vào scope/reference/user maps caller cung cấp; API file bổ sung xác minh dataset/metadata/hash. Hai API chưa tính AMI/coverage/số nhóm hoặc ghi metric. Loader chỉ đối chiếu hash diagnostics, chưa đánh giá nội dung timing. [Hướng dẫn và ví dụ](004-detection-evaluation/README.md), [bằng chứng T01](evidence/PHUC-004-T01-alignment.md); T02–T06 vẫn cần hoàn thiện spec.
+
 ## 5. Metadata, manifest và metric tối thiểu
 
 `metadata.json` của mỗi dataset: schema version, dataset ID, split, scenario, difficulty, generator config/seed, observed months, identity scope, truth reference, detector references khi đã có, relative paths và hashes file đã hoàn thành.

@@ -3,6 +3,8 @@
 **Owner:** Phúc. **Thiết kế:** v1, 16/10/2026. **Phân công:** P04.
 **Tiến độ, hạn và bằng chứng:** [tasks.md](../tasks.md#phuc-004). **Giao diện:** [contracts.md](../contracts.md).
 
+**Triển khai hiện tại:** T01 DONE — kiểm tra identity/keys/hash/cohort và căn hai vector theo user ID; [hướng dẫn](README.md), [bằng chứng và output](../evidence/PHUC-004-T01-alignment.md). PHUC-004 đang làm 1/6 task; coverage, AMI/policy và metric export còn ở T02–T06.
+
 ## Mục tiêu và user story
 
 **US1, P1:** Là thành viên nhóm, tôi xem được detector khôi phục nhóm chuẩn đến đâu, đang chấm trên bao nhiêu user và chi phí chạy là gì; không bị nhầm điểm cao với dữ liệu bị bỏ sót.
