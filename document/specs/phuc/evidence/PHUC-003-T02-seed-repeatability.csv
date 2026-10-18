@@ -1,0 +1,7 @@
+dataset_id,month,seed_a,seed_b,ari,purpose
+dev-stable-easy-g11,2020-01,0,1,0.9999999999999998,seed_repeatability_not_ground_truth_accuracy
+dev-stable-easy-g11,2020-01,0,2,0.9999999999999998,seed_repeatability_not_ground_truth_accuracy
+dev-stable-easy-g11,2020-01,1,2,0.9999999999999998,seed_repeatability_not_ground_truth_accuracy
+dev-stable-easy-g11,2020-02,0,1,0.9999999999999998,seed_repeatability_not_ground_truth_accuracy
+dev-stable-easy-g11,2020-02,0,2,0.9999999999999998,seed_repeatability_not_ground_truth_accuracy
+dev-stable-easy-g11,2020-02,1,2,0.9999999999999998,seed_repeatability_not_ground_truth_accuracy

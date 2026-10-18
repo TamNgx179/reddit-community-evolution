@@ -1,0 +1,7 @@
+dataset_id,month,detector_seed,gamma,is_canonical,active_nodes,assigned_nodes,isolates,predicted_communities,predicted_sizes,status,reference_id
+dev-stable-easy-g11,2020-01,0,1.0,true,24,24,0,2,12;12,complete,dev-stable-easy-g11:synthetic-planted-undirected-v1:62fcdd92206d1be05370c24d4816326671cb5568642432aa806cf503f42a5853:leiden-rb-v2-gamma1-seed0
+dev-stable-easy-g11,2020-01,1,1.0,false,24,24,0,2,12;12,complete,dev-stable-easy-g11:synthetic-planted-undirected-v1:62fcdd92206d1be05370c24d4816326671cb5568642432aa806cf503f42a5853:leiden-rb-v2-gamma1-seed1
+dev-stable-easy-g11,2020-01,2,1.0,false,24,24,0,2,12;12,complete,dev-stable-easy-g11:synthetic-planted-undirected-v1:62fcdd92206d1be05370c24d4816326671cb5568642432aa806cf503f42a5853:leiden-rb-v2-gamma1-seed2
+dev-stable-easy-g11,2020-02,0,1.0,true,24,24,0,2,12;12,complete,dev-stable-easy-g11:synthetic-planted-undirected-v1:62fcdd92206d1be05370c24d4816326671cb5568642432aa806cf503f42a5853:leiden-rb-v2-gamma1-seed0
+dev-stable-easy-g11,2020-02,1,1.0,false,24,24,0,2,12;12,complete,dev-stable-easy-g11:synthetic-planted-undirected-v1:62fcdd92206d1be05370c24d4816326671cb5568642432aa806cf503f42a5853:leiden-rb-v2-gamma1-seed1
+dev-stable-easy-g11,2020-02,2,1.0,false,24,24,0,2,12;12,complete,dev-stable-easy-g11:synthetic-planted-undirected-v1:62fcdd92206d1be05370c24d4816326671cb5568642432aa806cf503f42a5853:leiden-rb-v2-gamma1-seed2

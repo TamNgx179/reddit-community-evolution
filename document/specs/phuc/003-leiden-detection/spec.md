@@ -38,3 +38,4 @@ Cần ít nhất graph stable của 002 để chạy đầu tiên; có thể vi�
 - Test dự kiến: `tests/integration/test_synthetic_detection.py`, gọi thật graph nhỏ, kiểm tra refs/endpoint/empty/output cũ.
 - Evidence: lệnh/API, run/dataset ID, paths và diagnostics thực tế. Modularity/seed ARI chỉ là diagnostics, không phải độ đúng xã hội hay accuracy dự báo.
 - T01 đã có [API/hướng dẫn](README.md) và [bằng chứng](../evidence/PHUC-003-T01-leiden-adapter.md): gọi detector thật seed 0/gamma 1 trên stable, 57 test liên quan pass, membership/diagnostics/ZIP đã lưu. Đây là bước đầu; lịch ba seed, mapping/persistence và nghiệm thu toàn spec vẫn thuộc T02–T06.
+- T02 đã có [bằng chứng lịch detector](../evidence/PHUC-003-T02-detector-schedule.md): đọc runtime config, chạy 0/1/2/canonical 0, 61 test liên quan pass, sáu membership mỗi run và seed ARI được lưu. T03–T06 còn persistence/mapping, bộ lỗi/dependency và nghiệm thu cohort đầy đủ.

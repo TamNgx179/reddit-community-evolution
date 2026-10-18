@@ -13,10 +13,16 @@ from reddit_sna.detection.leiden import dependencies, detect_snapshots
 from reddit_sna.pipelines import PipelineNotImplemented
 
 
-def detect_synthetic_dataset(source: Path, output: Path) -> dict:
-    """Detect one verified dataset at seed 0 / gamma 1 without reading truth.
+def detect_synthetic_dataset(
+    source: Path, output: Path, *, benchmark_config: Path | None = None,
+) -> dict:
+    """Detect one verified dataset using the fixed week-one detector schedule.
 
     Read metadata/config and graph/node CSVs, never truth membership or labels.
+    An explicit benchmark_config selects the runtime detector configuration;
+    otherwise use the source dataset's archived benchmark-config.json. Graph
+    recipe fields must match the source. Week one requires seeds 0/1/2 in that
+    order, gamma 1 and canonical 0; never select a seed by partition quality.
     Parent of output must exist; output must be new and outside the source.
     Validate detector membership against exact R endpoints, then publish UTF-8
     LF CSVs in the new output folder. Return the detector diagnostics with
@@ -60,8 +66,16 @@ def detect_synthetic_dataset(source: Path, output: Path) -> dict:
         raise ValueError("dataset ID must match its scenario and configured split/seed")
     if meta["graph"] != {"directed": False, "simple": True, "weight": 1.0}:
         raise ValueError("a simple undirected unit-weight synthetic graph is required")
-    if benchmark["detector"]["gamma"] != 1 or benchmark["detector"]["canonical_seed"] != 0:
-        raise ValueError("initial synthetic adapter requires gamma 1 and canonical seed 0")
+    detector_config_path = benchmark_config.resolve() if benchmark_config is not None else benchmark_path
+    detector_config_hash = sha256(detector_config_path.read_bytes()).hexdigest()
+    runtime = load_benchmark_config(detector_config_path)
+    if ({key: value for key, value in runtime.items() if key != "detector"}
+            != {key: value for key, value in benchmark.items() if key != "detector"}):
+        raise ValueError("runtime graph recipe must match the source dataset config")
+    detector = runtime["detector"]
+    seeds, gamma, canonical = tuple(detector["seeds"]), float(detector["gamma"]), detector["canonical_seed"]
+    if seeds != (0, 1, 2) or gamma != 1.0 or canonical != 0:
+        raise ValueError("week-one detector requires seeds [0, 1, 2], gamma 1 and canonical seed 0")
     files.extend(f"snapshots/{month}/{name}.csv" for month in months for name in ("R", "nodes"))
     input_hashes = {}
     for name in files:
@@ -90,46 +104,57 @@ def detect_synthetic_dataset(source: Path, output: Path) -> dict:
         scratch = Path(temporary) / "memberships"
         result = detect_snapshots(
             source / "snapshots", scratch, meta["identity_scope"],
-            seeds=(0,), gamma=1.0, graph_protocol=GRAPH_PROTOCOL, expected_months=months,
+            seeds=seeds, gamma=gamma, graph_protocol=GRAPH_PROTOCOL, expected_months=months,
         )
-        validated, references = {}, set()
+        validated, references = {}, {seed: set() for seed in seeds}
         if (result["graph_protocol"] != GRAPH_PROTOCOL or result["actual_months"] != months
-                or result["canonical_seed"] != 0 or result["gamma"] != 1.0
+                or result["canonical_seed"] != canonical or result["gamma"] != gamma
                 or [row["month"] for row in result["months"]] != months):
             raise ValueError("detector returned a different synthetic cohort/config")
         for info in result["months"]:
             month = info["month"]
-            if len(info["runs"]) != 1 or info["runs"][0]["seed"] != 0:
-                raise ValueError("initial synthetic adapter requires exactly seed 0")
-            run = info["runs"][0]
-            reference = run["reference_id"]
-            rows = read_memberships(scratch / month / "membership-seed0.csv",
-                                    expected_reference=reference, expected_users_by_month={month: endpoints[month]})
-            if (reference == meta["truth_reference"] or not reference.startswith(dataset_id + ":")
-                    or run["assigned_users"] != len(endpoints[month])):
-                raise ValueError("detector reference or endpoint count mismatch")
-            references.add(reference)
-            validated[month] = (reference, rows)
-        if len(references) != 1:
-            raise ValueError("one detector seed must share one reference across observed months")
+            if [run["seed"] for run in info["runs"]] != list(seeds):
+                raise ValueError("detector runs must preserve the configured seed order")
+            validated[month] = []
+            for run in info["runs"]:
+                seed, reference = run["seed"], run["reference_id"]
+                rows = read_memberships(scratch / month / f"membership-seed{seed}.csv",
+                                        expected_reference=reference, expected_users_by_month={month: endpoints[month]})
+                if (reference == meta["truth_reference"]
+                        or not reference.startswith(f"{dataset_id}:{result['graph_reference']}:")
+                        or not reference.endswith(f"-gamma{gamma:g}-seed{seed}")
+                        or run["assigned_users"] != len(endpoints[month])):
+                    raise ValueError("detector reference or endpoint count mismatch")
+                references[seed].add(reference)
+                validated[month].append((seed, reference, rows))
+        if (any(len(refs) != 1 for refs in references.values())
+                or len(set().union(*references.values())) != len(seeds)):
+            raise ValueError("each seed needs one distinct reference shared across observed months")
         # Detect any source mutation before publishing the validated files.
         if any(sha256((source / name).read_bytes()).hexdigest() != digest for name, digest in input_hashes.items()):
             raise ValueError("source graph changed during detection")
+        if sha256(detector_config_path.read_bytes()).hexdigest() != detector_config_hash:
+            raise ValueError("runtime detector config changed during detection")
         output.mkdir(exist_ok=False)
-        for month, (reference, rows) in validated.items():
+        for month, runs in validated.items():
             (output / month).mkdir()
-            write_memberships(output / month / "membership-seed0.csv", rows,
-                              expected_reference=reference, expected_users_by_month={month: endpoints[month]})
+            for seed, reference, rows in runs:
+                write_memberships(output / month / f"membership-seed{seed}.csv", rows,
+                                  expected_reference=reference, expected_users_by_month={month: endpoints[month]})
     return {
         **result, "dataset_id": dataset_id, "identity_scope": meta["identity_scope"],
         "input_kind": "synthetic", "source_files": {name: {"sha256": digest} for name, digest in input_hashes.items()},
         "active_nodes_by_month": {month: len(users) for month, users in active.items()},
         "isolates_by_month": {month: len(set(active[month]) - endpoints[month]) for month in months},
         "membership_schema_version": 1, "membership_order": "month,community_id,user_id",
+        "detector_seeds": list(seeds),
+        "detector_config": {"source": str(detector_config_path), "sha256": detector_config_hash,
+                            "selection_policy": "configured first seed; no score selection"},
         "node_order_policy": "lexicographic synthetic user IDs and validated lexicographic edge insertion order",
         "notes": ["synthetic graph; planted labels are not detector input",
                   "isolated users not assigned; see source nodes.csv",
-                  "initial seed 0 only; no cross-seed ARI or AMI ground-truth evaluation"],
+                  "seed-pair ARI measures repeatability, not AMI ground-truth accuracy",
+                  "canonical seed is fixed to configured first seed 0, regardless of quality scores"],
     }
 
 
