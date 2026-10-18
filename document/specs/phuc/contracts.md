@@ -177,7 +177,7 @@ API trong bộ nhớ dựa vào scope/reference/user maps caller cung cấp; API
 - Summary group theo `(split,scenario,difficulty,gamma,detector_seed)` và thêm mức `all_scenarios` trong cùng split/difficulty/gamma/seed. Mỗi seed riêng; canonical 0, diagnostic 1/2. Đơn vị là dataset-month, AMI mean không trọng số theo user, dùng dòng `ok`; all_scenarios mean trên các dòng hợp lệ, không trên case means. Giữ n_datasets/n_rows/n_valid/n_missing, missing status/reason counts, coverage support; all-null mean để trống. User support là số quan sát qua dòng.
 - Timing detection lấy một lần mỗi dataset-tháng cho cả ba seed từ diagnostics đã hash/kiểm tra context. Timing evaluation/compute/CSV mới đo với scope rõ, generation/peak memory null. Report metadata scope `detection-evaluation-only`, completed stage chỉ evaluation; full-run lifecycle/freeze vẫn thuộc PHUC-005.
 
-[Hướng dẫn schema/cách đọc](004-detection-evaluation/README.md), [bằng chứng T04](evidence/PHUC-004-T04-export.md) và CSV/timing nhỏ trong Git ghi kết quả export thực tế. T05/T06 giữ mốc nghiệm thu tổng thể.
+[Hướng dẫn schema/cách đọc](004-detection-evaluation/README.md), [bằng chứng T04](evidence/PHUC-004-T04-export.md) và CSV/timing nhỏ trong Git ghi kết quả export thực tế. [T05](evidence/PHUC-004-T05-invariants.md) kiểm chứng AC01–05: full repo 286/286 test pass, gồm 48 test evaluator; chặn membership sai dù hash đúng và giữ report chưa hoàn tất khi lỗi công bố metadata cuối. T06 còn mốc nghiệm thu stable/grow.
 
 ## 5. Metadata, manifest và metric tối thiểu
 

@@ -181,7 +181,7 @@ Timing có phạm vi cụ thể:
 
 Input được kiểm tra/recheck trước khi tạo output; output không được chồng lên input. Metadata complete được publish cuối qua file pending. Lỗi khi ghi report giữ các file dở dang và `failure.json` nếu ghi được, chưa có complete metadata; dùng output ID mới khi chạy lại. Metadata report chỉ có `scope=detection-evaluation-only`/stage evaluation, không báo toàn bộ pipeline đã hoàn tất. Manifest của luồng đầy đủ thuộc PHUC-005.
 
-[Bằng chứng T04](../evidence/PHUC-004-T04-export.md) có hai lượt development, CSV nhỏ theo Git, vị trí gói local và ZIP/consumer để đọc lại sau relocation. T05/T06 còn phần kiểm tra/nghiệm thu tổng thể của spec.
+[Bằng chứng T04](../evidence/PHUC-004-T04-export.md) có hai lượt development, CSV nhỏ theo Git, vị trí gói local và ZIP/consumer để đọc lại sau relocation. [Bằng chứng T05](../evidence/PHUC-004-T05-invariants.md) và [CSV AC01–05](../evidence/PHUC-004-T05-acceptance-matrix.csv) nối tiêu chí với test đã chạy. T06 còn mốc nghiệm thu stable/grow có truy vết input/config/version.
 
 ## Kiểm tra và phần tiếp theo
 
@@ -192,4 +192,4 @@ Input được kiểm tra/recheck trước khi tạo output; output không đư�
 
 Integration tests tạo input bằng Leiden thật, cần extra `[graph]` theo hướng dẫn cài đặt repo; test chấm AMI cần thêm `[evaluation]`. Các unit tests căn nhãn/counts/null policy không cần thư viện graph. [Evidence T01](../evidence/PHUC-004-T01-alignment.md) giữ bằng chứng alignment và giới hạn lượt discover lịch sử; từng task mới ghi rõ test đã chạy.
 
-**T01–T04 đã triển khai:** căn nhãn, counts/coverage, AMI/policy và exporter metrics/summary/timing; 44 test liên quan đã được kiểm chứng. **Tiếp theo T05:** kiểm tra tổng hợp các invariants/điều kiện chấp nhận; T06 nghiệm thu stable/grow. Tập evaluation và tracker còn ở các phần việc riêng.
+**T01–T05 đã triển khai:** căn nhãn, counts/coverage, AMI/policy, exporter metrics/summary/timing và kiểm tra tổng hợp các điều kiện nghiệm thu. T05 chạy full suite **286/286 pass**, gồm **48 test evaluator**, 0 skip; AC01–05 pass với 16 ánh xạ test trong CSV. Bốn test mới chặn membership CSV sai dù đã rehash, phân biệt ARI seed với AMI truth và kiểm tra lỗi công bố metadata cuối. Log/CSV/ZIP đã lưu theo evidence T05. **Tiếp theo T06:** nghiệm thu stable/grow. Tập evaluation giữ lại và tracker còn ở các phần việc riêng.

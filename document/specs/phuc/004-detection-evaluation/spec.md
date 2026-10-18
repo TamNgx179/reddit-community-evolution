@@ -3,7 +3,7 @@
 **Owner:** Phúc. **Thiết kế:** v1, 16/10/2026. **Phân công:** P04.
 **Tiến độ, hạn và bằng chứng:** [tasks.md](../tasks.md#phuc-004). **Giao diện:** [contracts.md](../contracts.md).
 
-**Triển khai hiện tại:** T01–T04 DONE — xác minh/căn nhãn, counts/coverage, AMI/policy và exporter metrics/summary có support/canonical/timing đúng scope. [Hướng dẫn](README.md), [T01](../evidence/PHUC-004-T01-alignment.md), [T02](../evidence/PHUC-004-T02-counts.md), [T03](../evidence/PHUC-004-T03-ami.md), [bằng chứng T04/output](../evidence/PHUC-004-T04-export.md). PHUC-004 đang làm 4/6 task; T05/T06 còn kiểm tra/nghiệm thu tổng thể.
+**Triển khai hiện tại:** T01–T05 DONE — xác minh/căn nhãn, counts/coverage, AMI/policy, exporter metrics/summary và kiểm tra các điều kiện nghiệm thu. [Hướng dẫn](README.md), [T01](../evidence/PHUC-004-T01-alignment.md), [T02](../evidence/PHUC-004-T02-counts.md), [T03](../evidence/PHUC-004-T03-ami.md), [T04/output](../evidence/PHUC-004-T04-export.md), [T05/AC01–05](../evidence/PHUC-004-T05-invariants.md). Full repo 286/286 test pass, gồm 48 test evaluator. PHUC-004 đang làm 5/6 task; T06 còn nghiệm thu stable/grow có truy vết input/config/version.
 
 ## Mục tiêu và user story
 

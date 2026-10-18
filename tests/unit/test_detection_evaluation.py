@@ -271,6 +271,17 @@ class AMIPolicyTests(unittest.TestCase):
 
 @unittest.skipUnless(importlib.util.find_spec("sklearn"), "install [evaluation] for AMI scoring tests")
 class AMIScoringTests(unittest.TestCase):
+    def test_identical_detector_runs_can_agree_while_both_disagree_with_truth(self):
+        from sklearn.metrics import adjusted_rand_score
+        truth, first, second = tuple("AABB"), tuple("xyxy"), tuple("pqpq")
+        self.assertAlmostEqual(float(adjusted_rand_score(first, second)), 1.0)
+        for predicted in (first, second):
+            with self.subTest(predicted=predicted):
+                result = score_snapshot(ami_frame(truth, predicted))
+                self.assertEqual(result.ami_status, "ok")
+                self.assertAlmostEqual(result.ami, -0.5, places=12)
+        self.assertAlmostEqual(score_snapshot(ami_frame(truth, tuple("xxyy"))).ami, 1.0)
+
     def test_nontrivial_perfect_partition_returns_one(self):
         result = score_snapshot(ami_frame(tuple("AABB"), tuple("yyxx")))
         self.assertAlmostEqual(result.ami, 1.0, places=12)

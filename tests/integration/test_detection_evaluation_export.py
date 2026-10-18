@@ -20,10 +20,12 @@ ROOT = Path(__file__).resolve().parents[2]
 
 @unittest.skipUnless(all(importlib.util.find_spec(name) for name in ("igraph", "leidenalg", "sklearn")), "install [graph,evaluation] for report fixtures")
 class DetectionReportExportTests(ProjectCase):
-    def pair(self, scenario="stable", *, zero=False):
+    def pair(self, scenario="stable", *, zero=False, isolates=False):
         config = load_benchmark_config(ROOT / "configs/benchmark_week1.json")
         if zero:
             config["generator"].update(p_in=0, p_out=0)
+        if isolates:
+            config["generator"].update(p_in=0.05, p_out=0)
         source, detected = self.root / (scenario + "-source"), self.root / (scenario + "-detected")
         export_graph_dataset(source, benchmark=config, scenario=scenario, generator_seed=11)
         export_synthetic_detection(source, detected)
@@ -37,6 +39,90 @@ class DetectionReportExportTests(ProjectCase):
     @staticmethod
     def files(directory):
         return {p.relative_to(directory).as_posix(): p.read_bytes() for p in directory.rglob("*") if p.is_file()}
+
+    @staticmethod
+    def write_rows(path, rows):
+        with path.open("w", encoding="utf-8", newline="") as handle:
+            writer = csv.DictWriter(handle, fieldnames=list(rows[0]), lineterminator="\n")
+            writer.writeheader()
+            writer.writerows(rows)
+
+    def test_rehashed_prediction_csv_still_rejects_duplicate_missing_unknown_and_isolate_users(self):
+        source, detected = self.pair(isolates=True)
+        relative = "memberships/2020-01/membership-seed0.csv"
+        path, meta_path = detected / relative, detected / "metadata.json"
+        original_rows, original_meta = self.rows(path), json.loads(meta_path.read_text())
+        active = {row["user_id"] for row in self.rows(source / "snapshots/2020-01/nodes.csv")}
+        assigned = {row["user_id"] for row in original_rows}
+        self.assertTrue(assigned and active - assigned, "fixture needs endpoints and isolates")
+        cases = {
+            "duplicate": (original_rows + original_rows[:1], "duplicate membership"),
+            "missing": (original_rows[1:], "missing expected users"),
+            "unknown": (original_rows + [{**original_rows[0], "user_id": "outside"}], "unexpected user"),
+            "isolate": (original_rows + [{**original_rows[0], "user_id": sorted(active - assigned)[0]}], "unexpected user"),
+        }
+        for case, (rows, reason) in cases.items():
+            self.write_rows(path, rows)
+            meta = json.loads(json.dumps(original_meta))
+            digest = sha256(path.read_bytes()).hexdigest()
+            meta["files"][relative]["sha256"] = digest
+            for entry in meta["memberships"]:
+                if entry["path"] == relative:
+                    entry["sha256"] = digest
+            meta_path.write_text(json.dumps(meta), encoding="utf-8")
+            before = [self.files(source), self.files(detected)]
+            output = self.root / case
+            with self.subTest(case=case), self.assertRaisesRegex(ValueError, reason):
+                export_detection_evaluation([(source, detected)], output)
+            self.assertFalse(output.exists())
+            self.assertEqual([self.files(source), self.files(detected)], before)
+
+    def test_rehashed_truth_csv_still_rejects_duplicate_missing_and_unknown_users(self):
+        source, detected = self.pair()
+        relative = "truth/membership.csv"
+        path = source / relative
+        source_meta_path, detected_meta_path = source / "metadata.json", detected / "metadata.json"
+        original_rows = self.rows(path)
+        original_source_meta = json.loads(source_meta_path.read_text())
+        original_detected_meta = json.loads(detected_meta_path.read_text())
+        cases = {
+            "duplicate": (original_rows + original_rows[:1], "duplicate membership"),
+            "missing": (original_rows[1:], "missing expected users"),
+            "unknown": (original_rows + [{**original_rows[0], "user_id": "outside"}], "unexpected user"),
+        }
+        for case, (rows, reason) in cases.items():
+            self.write_rows(path, rows)
+            source_meta = json.loads(json.dumps(original_source_meta))
+            source_meta["files"][relative]["sha256"] = sha256(path.read_bytes()).hexdigest()
+            source_meta_path.write_text(json.dumps(source_meta), encoding="utf-8")
+            detected_meta = json.loads(json.dumps(original_detected_meta))
+            detected_meta["source"]["files"]["metadata.json"]["sha256"] = sha256(source_meta_path.read_bytes()).hexdigest()
+            detected_meta_path.write_text(json.dumps(detected_meta), encoding="utf-8")
+            before = [self.files(source), self.files(detected)]
+            output = self.root / case
+            with self.subTest(case=case), self.assertRaisesRegex(ValueError, reason):
+                export_detection_evaluation([(source, detected)], output)
+            self.assertFalse(output.exists())
+            self.assertEqual([self.files(source), self.files(detected)], before)
+
+    def test_final_metadata_rename_failure_does_not_publish_a_complete_report(self):
+        pair, output = self.pair(), self.root / "unpublished"
+        original_rename = Path.rename
+        def fail_publishing(path, target):
+            if path.name == "metadata.pending.json":
+                raise OSError("final publication failure")
+            return original_rename(path, target)
+        with patch.object(Path, "rename", autospec=True, side_effect=fail_publishing), self.assertRaisesRegex(OSError, "final publication failure"):
+            export_detection_evaluation([pair], output)
+        self.assertFalse((output / "metadata.json").exists())
+        self.assertEqual(json.loads((output / "failure.json").read_text())["status"], "failed")
+        pending = json.loads((output / "metadata.pending.json").read_text())
+        for name, info in pending["files"].items():
+            self.assertEqual(sha256((output / name).read_bytes()).hexdigest(), info["sha256"])
+        before = self.files(output)
+        with self.assertRaises(ValueError):
+            export_detection_evaluation([pair], output)
+        self.assertEqual(self.files(output), before)
 
     def test_two_datasets_write_metrics_summary_policy_timing_and_verified_provenance(self):
         pairs = [self.pair("stable"), self.pair("grow")]
