@@ -137,6 +137,8 @@ Metadata lưu dataset/identity/split/scenario/generator seed, observed months, t
 
 `files` hash tám file khác, không tự hash metadata. Output paths tương đối với gói detection; graph/nodes và `source.files` tương đối với dataset nguồn. Path tuyệt đối source/runtime chỉ ghi provenance, không dùng để tìm CSV khi gói đã chuyển chỗ. Người nhận cần gói graph/truth tương ứng để kiểm tra endpoint/AMI; gói detection không chứa lại các file nguồn. Công thức generator/difficulty có trong bản config và source metadata được hash. Xem [README/cách đọc](003-leiden-detection/README.md), [T01](evidence/PHUC-003-T01-leiden-adapter.md), [T02](evidence/PHUC-003-T02-detector-schedule.md), [T03](evidence/PHUC-003-T03-detection-package.md).
 
+T04 kiểm tra rõ cấu trúc metadata bắt buộc, hash entries và counts int không âm theo đúng tháng (không nhận bool), truth reference theo dataset. Đối chiếu diagnostics với graph/CSV thật: assigned/endpoints, số nhóm/sizes, status/quality hữu hạn khi có cạnh, null quality/connectivity và ARI rỗng khi không có cạnh. Seed ARI không rỗng có đủ ba cặp, hữu hạn và trong [-1,1] với tolerance 1e-12. Thiếu dependency báo cài `[graph]`; lỗi input/backend/source thay đổi không xuất output cuối; output có sẵn không bị ghi đè. Mixed-isolate/zero-edge fixtures với probabilities riêng chỉ là diagnostics, không thêm vào cohort hay thành kết quả AMI. Xem [bằng chứng T04](evidence/PHUC-003-T04-adapter-errors.md).
+
 ## 5. Metadata, manifest và metric tối thiểu
 
 `metadata.json` của mỗi dataset: schema version, dataset ID, split, scenario, difficulty, generator config/seed, observed months, identity scope, truth reference, detector references khi đã có, relative paths và hashes file đã hoàn thành.

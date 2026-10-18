@@ -1,0 +1,21 @@
+case,api,status,exception,message,source_unchanged,old_output_unchanged
+missing-igraph,detect_synthetic_dataset,rejected_without_overwrite,ValueError,Leiden dependencies missing; install the project with [graph],True,True
+missing-leidenalg,detect_synthetic_dataset,rejected_without_overwrite,ValueError,Leiden dependencies missing; install the project with [graph],True,True
+existing-directory,detect_synthetic_dataset,rejected_without_overwrite,FileExistsError,detection output already exists: C:\Users\MSi\reddit-community-evolution\artifacts\verification\phuc-003-t04-001\fault-probes\detect_synthetic_dataset-old-directory,True,True
+existing-file,detect_synthetic_dataset,rejected_without_overwrite,FileExistsError,detection output already exists: C:\Users\MSi\reddit-community-evolution\artifacts\verification\phuc-003-t04-001\fault-probes\detect_synthetic_dataset-old-file,True,True
+missing-user,detect_synthetic_dataset,rejected_without_overwrite,ValueError,memberships are missing expected users,True,True
+extra-user,detect_synthetic_dataset,rejected_without_overwrite,ValueError,membership contains an unexpected user,True,True
+duplicate-user,detect_synthetic_dataset,rejected_without_overwrite,ValueError,duplicate membership for a user in one month,True,True
+backend-failure,detect_synthetic_dataset,rejected_without_overwrite,RuntimeError,injected failure after backend wrote scratch files,True,True
+empty-quality,detect_synthetic_dataset,rejected_without_overwrite,ValueError,empty graph must have no partition quality or connectivity claim,True,True
+source-hash-mismatch,detect_synthetic_dataset,rejected_without_overwrite,ValueError,source SHA-256 mismatch: snapshots/2020-01/R.csv,True,True
+missing-igraph,export_synthetic_detection,rejected_without_overwrite,ValueError,Leiden dependencies missing; install the project with [graph],True,True
+missing-leidenalg,export_synthetic_detection,rejected_without_overwrite,ValueError,Leiden dependencies missing; install the project with [graph],True,True
+existing-directory,export_synthetic_detection,rejected_without_overwrite,FileExistsError,detection output already exists: C:\Users\MSi\reddit-community-evolution\artifacts\verification\phuc-003-t04-001\fault-probes\export_synthetic_detection-old-directory,True,True
+existing-file,export_synthetic_detection,rejected_without_overwrite,FileExistsError,detection output already exists: C:\Users\MSi\reddit-community-evolution\artifacts\verification\phuc-003-t04-001\fault-probes\export_synthetic_detection-old-file,True,True
+missing-user,export_synthetic_detection,rejected_without_overwrite,ValueError,memberships are missing expected users,True,True
+extra-user,export_synthetic_detection,rejected_without_overwrite,ValueError,membership contains an unexpected user,True,True
+duplicate-user,export_synthetic_detection,rejected_without_overwrite,ValueError,duplicate membership for a user in one month,True,True
+backend-failure,export_synthetic_detection,rejected_without_overwrite,RuntimeError,injected failure after backend wrote scratch files,True,True
+empty-quality,export_synthetic_detection,rejected_without_overwrite,ValueError,empty graph must have no partition quality or connectivity claim,True,True
+source-hash-mismatch,export_synthetic_detection,rejected_without_overwrite,ValueError,source SHA-256 mismatch: snapshots/2020-01/R.csv,True,True

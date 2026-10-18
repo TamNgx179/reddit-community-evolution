@@ -97,12 +97,28 @@ for entry in meta["memberships"]:
 
 Thuật toán Leiden và quy tắc graph Reddit không bị sửa để phục vụ giả lập. Wrapper dùng source CSV canonical và protocol synthetic riêng; chỉ xuất membership đã kiểm tra. Full `run` detection–tracking vẫn báo chưa triển khai, vì tracker/evaluator chưa được nối.
 
+## Khi input hoặc môi trường có lỗi — T04
+
+Adapter kiểm tra membership với đúng tập endpoint R, không lấy giao để bỏ user sai. CSV thiếu/thừa/trùng người, tháng/reference/header sai đều bị từ chối trước output cuối. Số nhóm và sizes trong diagnostics phải khớp CSV; node/edge counts phải khớp nguồn. Graph có cạnh cần status complete và quality hữu hạn; graph rỗng cần quality/connectivity null và ARI rỗng. Seed ARI graph không rỗng phải có đủ ba cặp, hữu hạn trong [-1,1] với tolerance số thực 1e-12, không sửa raw value.
+
+| Trường hợp | API báo lỗi / cách xử lý |
+|---|---|
+| Thiếu igraph hoặc leidenalg | `ValueError` có hướng dẫn cài project `[graph]`; không gỡ/cài lại package khi chỉ kiểm chứng giả lập lỗi |
+| Metadata sai cấu trúc/thiếu field, files/hash/counts sai, truth reference lệch dataset | `ValueError` rõ nguyên nhân; sửa hoặc tái tạo source theo exporter graph |
+| CSV nguồn sai hoặc SHA-256 không khớp | `ValueError`; không chỉnh hash chỉ để bỏ qua lỗi trên dữ liệu thật |
+| File nguồn thiếu | `FileNotFoundError` kèm path; cung cấp lại input đầy đủ |
+| Output tồn tại, kể cả thư mục rỗng hoặc file | `FileExistsError`; chọn output mới, không tự xóa kết quả cũ |
+| Source/config thay đổi trong khi detector chạy | `ValueError`; không xuất kết quả từ các phiên bản nguồn lẫn nhau |
+| Backend lỗi sau khi đã ghi file tạm | Giữ nguyên lỗi backend, dọn scratch bằng context manager, không xuất output cuối hoặc sửa run cũ |
+
+Isolate là người có trong nodes.csv nhưng không có cạnh R. Ví dụ diagnostic riêng `p_in=0.05, p_out=0` giữ đủ 24 active users mỗi tháng; chỉ endpoint có membership, số còn lại ghi rõ trong metadata. Đây là kiểm tra adapter với cấu hình riêng, không thêm vào cohort development mặc định và không đánh giá AMI trên tập giao tùy ý.
+
 ## Kiểm tra và phần tiếp theo
 
 ```powershell
 & .\.venv\Scripts\python.exe -m unittest tests.integration.test_synthetic_detection tests.unit.test_leiden tests.unit.test_synthetic_io tests.unit.test_contracts tests.unit.test_graph_export tests.unit.test_benchmark_config tests.integration.test_cli -v
 ```
 
-Suite hiện **66/66 test liên quan pass**. T03 thêm năm test xuất gói: diagnostics/config/mapping và đọc sau khi copy, empty mapping, output cũ/overlap/parent lỗi, lỗi ghi metadata và source metadata đổi trước publish. [Bằng chứng T03](../evidence/PHUC-003-T03-detection-package.md) ghi hai gói stable 9 file, sáu membership tái lập, ba lượt đọc stdlib độc lập gồm gói relocated và ZIP đã lưu. [T02](../evidence/PHUC-003-T02-detector-schedule.md) giữ lượt lịch sử 61 test/ba seed; [T01](../evidence/PHUC-003-T01-leiden-adapter.md) giữ 57 test/một seed. Test hiện có chưa thay thế nghiệm thu đầy đủ của T04/T05.
+Suite hiện **73/73 test liên quan pass**. T04 thêm bảy test cho dependency thiếu, metadata/graph lỗi, membership bị sửa sai, diagnostics mâu thuẫn, mixed isolates, backend lỗi sau khi ghi scratch và source/runtime đổi trong lúc chạy. [Bằng chứng T04](../evidence/PHUC-003-T04-adapter-errors.md) có ba gói diagnostic, consumer độc lập, 20 fault checks và output/log/ZIP đã lưu. [T03](../evidence/PHUC-003-T03-detection-package.md) giữ lượt xuất gói 66 test/relocated copy; [T02](../evidence/PHUC-003-T02-detector-schedule.md) giữ 61 test/ba seed; [T01](../evidence/PHUC-003-T01-leiden-adapter.md) giữ 57 test/một seed.
 
-Tiếp theo **PHUC-003-T04** rà soát đầy đủ endpoint/empty/dependency/input lỗi/output cũ ở adapter và exporter. T05/T06 còn nghiệm thu integration và lượt development đủ cohort. AMI/coverage evaluator thuộc PHUC-004; không cần chờ tracker của Đăng để tiếp tục.
+Tiếp theo **PHUC-003-T05** nghiệm thu integration graph nhỏ/refs/endpoint/empty/no-overwrite và liên kết các gate với yêu cầu toàn adapter. T06 còn lượt development đủ cohort. AMI/coverage evaluator thuộc PHUC-004; không cần chờ tracker của Đăng để tiếp tục.

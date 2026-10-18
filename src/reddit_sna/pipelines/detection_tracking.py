@@ -1,9 +1,11 @@
 """Synthetic detection API; full tracking/evaluation pipeline remains unfinished."""
 
+from collections import Counter
 import csv
 from hashlib import sha256
 from importlib.metadata import version
 import json
+import math
 from pathlib import Path
 import platform
 from tempfile import TemporaryDirectory
@@ -48,24 +50,45 @@ def detect_synthetic_dataset(
     _check_detection_output(source, output)
     metadata_bytes = (source / "metadata.json").read_bytes()
     meta = json.loads(metadata_bytes.decode("utf-8"))
+    required = {"schema_version", "artifact_type", "status", "dataset_id", "identity_scope", "observed_months",
+                "split", "scenario", "generator_seed", "truth_reference", "graph", "counts", "files"}
+    if not isinstance(meta, dict) or not required.issubset(meta):
+        raise ValueError("source metadata must be an object with all required graph dataset fields")
     if (type(meta.get("schema_version")) is not int or meta["schema_version"] != 1
             or meta.get("artifact_type") != "synthetic-graph-truth" or meta.get("status") != "complete"):
         raise ValueError("a complete synthetic graph dataset with schema 1 is required")
     dataset_id = validate_run_id(meta["dataset_id"])
     if meta["identity_scope"] != dataset_id:
         raise ValueError("dataset identity scope mismatch")
+    if meta["truth_reference"] != f"truth-{dataset_id}":
+        raise ValueError("source truth reference must match its dataset ID")
+    if not isinstance(meta["files"], dict) or not isinstance(meta["counts"], dict):
+        raise ValueError("source files and counts must be metadata objects")
+
+    def expected_digest(name):
+        info = meta["files"].get(name)
+        if (not isinstance(info, dict) or not isinstance(info.get("sha256"), str)
+                or len(info["sha256"]) != 64 or any(c not in "0123456789abcdef" for c in info["sha256"])):
+            raise ValueError(f"source metadata requires a SHA-256 for {name}")
+        return info["sha256"]
+
     months = meta["observed_months"]
     files = ["benchmark-config.json"]
     # Validate months before using their values as relative paths.
     benchmark_path = (source / "benchmark-config.json").resolve()
     if not benchmark_path.is_relative_to(source):
         raise ValueError("source config escapes dataset")
-    expected_hash = meta["files"].get("benchmark-config.json", {}).get("sha256")
+    expected_hash = expected_digest("benchmark-config.json")
     if sha256(benchmark_path.read_bytes()).hexdigest() != expected_hash:
         raise ValueError("source SHA-256 mismatch: benchmark-config.json")
     benchmark = load_benchmark_config(benchmark_path)
     if months != benchmark["months"]:
         raise ValueError("observed months must match the synthetic benchmark config")
+    for kind in ("nodes_by_month", "edges_by_month"):
+        counts = meta["counts"].get(kind)
+        if (not isinstance(counts, dict) or set(counts) != set(months)
+                or any(type(n) is not int or n < 0 for n in counts.values())):
+            raise ValueError(f"source {kind} must contain nonnegative integer counts for every observed month")
     split, scenario, generator_seed = meta["split"], meta["scenario"], meta["generator_seed"]
     if (split not in ("development", "evaluation") or scenario not in benchmark["scenarios"]
             or type(generator_seed) is not int or generator_seed not in benchmark["generator"]["seeds"][split]
@@ -90,7 +113,7 @@ def detect_synthetic_dataset(
         if not path.is_relative_to(source):
             raise ValueError("source graph file escapes dataset")
         digest = sha256(path.read_bytes()).hexdigest()
-        if digest != meta["files"].get(name, {}).get("sha256"):
+        if digest != expected_digest(name):
             raise ValueError(f"source SHA-256 mismatch: {name}")
         input_hashes[name] = digest
     active, endpoints = {}, {}
@@ -120,6 +143,14 @@ def detect_synthetic_dataset(
             raise ValueError("detector returned a different synthetic cohort/config")
         for info in result["months"]:
             month = info["month"]
+            if (info["nodes_with_edges"] != len(endpoints[month])
+                    or info["edges"] != meta["counts"]["edges_by_month"][month]):
+                raise ValueError("detector graph counts do not match source endpoints/edges")
+            stability = info["seed_pair_ARI"]
+            if (not isinstance(stability, list) or len(stability) != (3 if endpoints[month] else 0)
+                    or any(type(value) not in (int, float) or not math.isfinite(value)
+                           or not -1 - 1e-12 <= value <= 1 + 1e-12 for value in stability)):
+                raise ValueError("detector seed ARI must describe the three pairs, or be empty for an empty graph")
             if [run["seed"] for run in info["runs"]] != list(seeds):
                 raise ValueError("detector runs must preserve the configured seed order")
             validated[month] = []
@@ -132,6 +163,17 @@ def detect_synthetic_dataset(
                         or not reference.endswith(f"-gamma{gamma:g}-seed{seed}")
                         or run["assigned_users"] != len(endpoints[month])):
                     raise ValueError("detector reference or endpoint count mismatch")
+                sizes = sorted(Counter(row.community_id for row in rows).values())
+                if run["sizes"] != sizes or run["communities"] != len(sizes):
+                    raise ValueError("detector community counts/sizes do not match membership CSV")
+                quality = (run["modularity"], run["rb_objective"])
+                if endpoints[month]:
+                    if (run["status"] != "complete"
+                            or any(type(value) not in (int, float) or not math.isfinite(value) for value in quality)):
+                        raise ValueError("nonempty detector membership requires complete status and finite quality")
+                elif (run["status"] != "empty_graph_no_partition" or any(value is not None for value in quality)
+                      or run["all_communities_connected"] is not None):
+                    raise ValueError("empty graph must have no partition quality or connectivity claim")
                 references[seed].add(reference)
                 validated[month].append((seed, reference, rows))
         if (any(len(refs) != 1 for refs in references.values())
