@@ -276,6 +276,11 @@ def _stage_evaluation(
     """Validate samples and write temporal evaluation outputs."""
     assert_samples_ok(check_samples(table, catalog, split))
 
+    # Count rows excluded because they have no label.
+    unlabeled_dropped = int(
+        (table["label"].isna() | (table["label"] == "")).sum()
+    )
+
     # Reuse the split created in Stage 2.
     temporal_split = split.copy()
 
@@ -320,6 +325,7 @@ def _stage_evaluation(
         "- data_kind: synthetic",
         "- table_schema: prediction-table-v1",
         f"- labelled_samples: {len(temporal_split)}",
+        f"- unlabeled_dropped: {unlabeled_dropped}",
         f"- prediction_rows: {len(evaluation_predictions)}",
         "- macro_f1: average F1 over classes present in y_true; zero_division=0",
         "- macro_f1_six: average F1 over all six Event classes; zero_division=0",
