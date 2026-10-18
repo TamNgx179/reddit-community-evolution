@@ -153,6 +153,8 @@ Không yêu cầu đã có commit/PR mới được ghi tiến độ; đường 
 
 T05 đã commit/push `9aba275` trên cùng nhánh T04. Đọc bản T04/T05/T06 tại [nhánh triển khai truth](https://github.com/TamNgx179/reddit-community-evolution/tree/feat/phuc-001-ground-truth-events). Commit ghi task ID; task board và evidence đi cùng thay đổi kiểm tra. [Hướng dẫn T06](001-truth-fixtures/README.md) chỉ cách tái tạo/nhận gói vì artifact local không nằm trong Git.
 
+**Git/review ngày 18/10:** T06 đã commit/push `223cf0c`. Đã mở [PR #6 — hoàn thiện truth/export T04–T06](https://github.com/TamNgx179/reddit-community-evolution/pull/6), base `feat/phuc-001-membership-csv` của PR #5 để review riêng phần T04–T06. Thứ tự phụ thuộc: #2 → #5 → #6; chuyển base sang `main` sau khi các PR trước được merge và đồng bộ nếu cần. PR #6 có lệnh tái tạo, kết quả 75 test đã chạy và giới hạn phạm vi truth; chưa merge.
+
 ## Blocker và thay đổi
 
 | Task/mốc | Thiếu điều kiện gì | Việc còn làm độc lập được | Người cần phản hồi | Bước mở chặn |
