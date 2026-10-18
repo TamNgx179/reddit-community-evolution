@@ -1,6 +1,6 @@
 # Contract dataset và bàn giao Phúc–Đăng v1
 
-**Thiết kế v1:** 16/10/2026. Cụ thể hóa schema trong [phân công cặp](../../PHAN-CONG-PHUC-DANG-TUAN-1.md). PHUC-001 có CSV/truth/export stable/grow và consumer độc lập. PHUC-002-T01 bổ sung sampler graph từ membership; export graph đầy đủ và kết quả detection/tracking vẫn thuộc các bước sau. Specs 001–006 dùng chung contract này, không tạo biến thể riêng cho mỗi spec.
+**Thiết kế v1:** 16/10/2026. Cụ thể hóa schema trong [phân công cặp](../../PHAN-CONG-PHUC-DANG-TUAN-1.md). PHUC-001 có CSV/truth/export stable/grow và consumer độc lập. PHUC-002-T01 có sampler graph; T02 bổ sung membership/events/links trong bộ nhớ cho đủ sáu tình huống. Export graph/sáu case đầy đủ và kết quả detection/tracking vẫn thuộc các bước sau. Specs 001–006 dùng chung contract này, không tạo biến thể riêng cho mỗi spec.
 
 ## 1. Định danh và phạm vi
 
@@ -48,18 +48,19 @@ Module: [benchmarks/io.py](../../../src/reddit_sna/benchmarks/io.py).
 
 Module: [benchmarks/scenarios.py](../../../src/reddit_sna/benchmarks/scenarios.py).
 
-`build_transitions(scenario, reference_id, start_month="2020-01", observed_months=None)` trả về `PlantedTransitions` với hai tuple `.events` và `.links`. `start_month` và `observed_months` là tham số keyword-only; hiện hỗ trợ `stable/grow`, cùng phạm vi với `build_memberships`.
+`build_transitions(scenario, reference_id, start_month="2020-01", observed_months=None)` trả về `PlantedTransitions` với hai tuple `.events` và `.links`. `start_month` và `observed_months` là tham số keyword-only; hiện hỗ trợ đủ `stable/grow/shrink/merge/split/dissolve`, cùng phạm vi với `build_memberships`. Hằng `SCENARIOS` công bố thứ tự sáu case này.
 
 - Mỗi `TruthEvent` có `source: SampleKey`, `target_month` và `event: Event`. Trong `source`, `reference_id`, `feature_month`, `community_id` lần lượt ánh xạ sang ba cột CSV `reference_id,source_month,source_community_id`.
-- Mỗi link dùng record `TrackingLink` có `.source` và `.target` là `SampleKey`, cùng reference và nối hai tháng liên tiếp. Hai case hiện tại luôn có đích; case dissolve sau này không ghi một link có đích rỗng vào CSV.
+- Mỗi link dùng record `TrackingLink` có `.source` và `.target` là `SampleKey`, cùng reference và nối hai tháng liên tiếp. Truth chỉ tạo link có đích thật: split có hai link từ A; dissolve không tạo link cho A, không tạo record đích rỗng.
 - Hai tháng được coi là quan sát đầy đủ khi `observed_months=None`. Nếu truyền tường minh, phải là iterable không rỗng, không trùng, chỉ chứa các tháng thuộc fixture hai tháng; thứ tự truyền không ảnh hưởng kết quả.
 - Khi chỉ quan sát một trong hai tháng, cả events và links rỗng. Thiếu successor không phải dissolve; tháng cuối không trở thành nguồn. Tháng ngoài fixture bị báo lỗi, không tự tạo thêm dữ liệu.
-- Khi có đủ hai tháng: A→C nhận `stable` hoặc `grow` đúng theo thiết kế case; K→K nhận `stable`. Mỗi nguồn một event, record theo thứ tự A rồi K. Không tính overlap/Jaccard, không gọi detector/tracker và không phân loại từ membership để sinh truth.
+- Khi có đủ hai tháng, mỗi nguồn có đúng một event theo thiết kế ở bảng sáu case bên dưới; mọi nguồn gồm K được gán nhãn. Merge gán A và B mỗi nguồn một `merge`; split gán A một `split` với hai links; dissolve gán A một `dissolve` với không link, K vẫn stable. Records được sort theo source/target. Không tính overlap/Jaccard, không gọi detector/tracker và không phân loại từ membership để sinh truth.
 - API `build_transitions` chỉ sinh records trong bộ nhớ; T06 dùng exporter bên dưới để ghi CSV và metadata. Xem [bằng chứng T04](evidence/PHUC-001-T04-transitions.md).
 
 ### Export fixture truth và consumer độc lập
 
 - `export_truth_fixture(destination, scenario=..., dataset_id=..., generator_seed=..., start_month="2020-01")` trong [io.py](../../../src/reddit_sna/benchmarks/io.py) tạo một thư mục dataset mới, trả metadata. Thư mục cha phải tồn tại; dataset/run ID dùng quy tắc portable hiện có; seed là int trong `[0, 2**32)`, không nhận bool.
+- Exporter/CLI/consumer PHUC-001 hiện vẫn chỉ hỗ trợ stable/grow. Bốn case mới chỉ có API truth trong bộ nhớ; exporter từ chối trước khi tạo output để tránh ghi metadata stable/grow cho case khác. T04 sẽ mở rộng gói graph/truth/metadata đủ sáu case.
 - Export ghi hai node CSV và ba bảng truth; đọc lại CSV rồi mới ghi `metadata.json` với config/version/seed, tháng quan sát, reference/identity scope, counts và SHA-256 năm CSV. `seed_used_for_truth=false` thể hiện truth cố định theo thiết kế.
 - `export_truth_fixtures(config, start_month="2020-01")` trong [fixtures.py](../../../src/reddit_sna/benchmarks/fixtures.py) dùng `RunConfig`/quy tắc output an toàn hiện có, tạo hai dataset stable/grow trong run mới. [Config truth](../../../configs/truth_fixtures.toml) dùng seed 11; đây là cấu hình cho bước fixture, chưa thay cấu hình benchmark sáu case.
 - Manifest có `scope="truth-fixtures"`, trạng thái started/failed/complete và `completed_stages=["truth"]` khi thành công. Hash trong manifest phủ cả metadata. Không tự coi gói này là full detection/tracking đã hoàn thành.

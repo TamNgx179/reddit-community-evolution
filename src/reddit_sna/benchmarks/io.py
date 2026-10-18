@@ -171,6 +171,8 @@ def export_truth_fixture(
     A failed export keeps its partial files, with no complete metadata marker.
     The seed is provenance reserved for later graph sampling; truth is fixed.
     """
+    if scenario not in ("stable", "grow"):
+        raise ValueError("truth fixture export currently supports only stable/grow")
     validate_run_id(dataset_id)
     if type(generator_seed) is not int or not 0 <= generator_seed < 2**32:
         raise ValueError("generator_seed must be an integer in [0, 2**32)")

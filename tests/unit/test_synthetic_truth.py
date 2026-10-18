@@ -12,7 +12,7 @@ import unittest
 from unittest.mock import patch
 
 from reddit_sna.benchmarks.io import read_memberships, write_memberships, write_nodes
-from reddit_sna.benchmarks.scenarios import TruthEvent, build_memberships, build_transitions
+from reddit_sna.benchmarks.scenarios import SCENARIOS, TruthEvent, build_memberships, build_transitions
 from reddit_sna.contracts import Event, SampleKey
 
 
@@ -82,7 +82,7 @@ class PlantedMembershipTests(unittest.TestCase):
         self.assertTrue(groups["2020-12"]["A"] < groups["2021-01"]["C"])
 
     def test_unsupported_scenario_is_rejected_instead_of_fabricating_memberships(self):
-        for scenario in ("merge", "shrink", "", None):
+        for scenario in ("forming", "unknown", "", None):
             with self.subTest(scenario=scenario), self.assertRaises(ValueError):
                 build_memberships(scenario, "truth-invalid")
 
@@ -196,7 +196,7 @@ class PlantedTransitionTests(unittest.TestCase):
                 build_transitions("stable", "truth-invalid", observed_months=observed)
 
     def test_invalid_scenario_reference_or_start_month_cannot_produce_truth(self):
-        for scenario in ("merge", "shrink", "", None):
+        for scenario in ("forming", "unknown", "", None):
             with self.subTest(scenario=scenario), self.assertRaises(ValueError):
                 build_transitions(scenario, "truth-invalid")
         for reference in ("", " ", None):
@@ -217,6 +217,128 @@ class PlantedTransitionTests(unittest.TestCase):
                 TruthEvent(source, "2021-01", label)
         with self.assertRaises(ValueError):
             TruthEvent(None, "2021-01", Event.GROW)
+
+
+class SixEventScenarioTests(unittest.TestCase):
+    def setUp(self):
+        self.reference = "truth-six-events"
+        self.main12 = {f"u{i:03d}" for i in range(1, 13)}
+        self.other12 = {f"u{i:03d}" for i in range(13, 25)}
+        self.main18 = {f"u{i:03d}" for i in range(1, 19)}
+        self.background = {f"u{i:03d}" for i in range(101, 113)}
+        self.expected = {
+            "stable": ({"A": self.main12}, {"C": self.main12}),
+            "grow": ({"A": self.main12}, {"C": self.main18}),
+            "shrink": ({"A": self.main18}, {"C": self.main12}),
+            "merge": ({"A": self.main12, "B": self.other12}, {"C": self.main12 | self.other12}),
+            "split": ({"A": self.main12 | self.other12}, {"B": self.main12, "C": self.other12}),
+            "dissolve": ({"A": self.main12}, {}),
+        }
+
+    def test_all_six_memberships_match_independent_exact_populations(self):
+        self.assertEqual(SCENARIOS, ("stable", "grow", "shrink", "merge", "split", "dissolve"))
+        for scenario, (source, target) in self.expected.items():
+            with self.subTest(scenario=scenario):
+                rows = build_memberships(scenario, self.reference)
+                expected = {
+                    "2020-01": dict(source, K=self.background),
+                    "2020-02": dict(target, K=self.background),
+                }
+                self.assertEqual(partitions(rows), expected)
+                self.assertEqual(len({(row.month, row.user_id) for row in rows}), len(rows))
+                self.assertEqual({row.reference_id for row in rows}, {self.reference})
+                # K must stay separate from every main group in both months.
+                for groups in expected.values():
+                    self.assertTrue(all(users.isdisjoint(self.background)
+                                        for key, users in groups.items() if key != "K"))
+
+    def test_every_source_has_one_expected_event_and_exact_target_links(self):
+        expected = {
+            "stable": ({"A": Event.STABLE}, (("A", "C"),)),
+            "grow": ({"A": Event.GROW}, (("A", "C"),)),
+            "shrink": ({"A": Event.SHRINK}, (("A", "C"),)),
+            "merge": ({"A": Event.MERGE, "B": Event.MERGE}, (("A", "C"), ("B", "C"))),
+            "split": ({"A": Event.SPLIT}, (("A", "B"), ("A", "C"))),
+            "dissolve": ({"A": Event.DISSOLVE}, ()),
+        }
+        for scenario, (main_labels, main_links) in expected.items():
+            with self.subTest(scenario=scenario):
+                groups = partitions(build_memberships(scenario, self.reference))
+                truth = build_transitions(scenario, self.reference)
+                labels = dict(main_labels, K=Event.STABLE)
+                self.assertEqual(len(truth.events), len(labels))
+                self.assertEqual({event.source.community_id: event.event for event in truth.events}, labels)
+                self.assertEqual({event.source.community_id for event in truth.events}, set(groups["2020-01"]))
+                self.assertEqual([(link.source.community_id, link.target.community_id) for link in truth.links],
+                                 list(main_links) + [("K", "K")])
+                self.assertEqual(len(set(truth.links)), len(truth.links))
+                for event in truth.events:
+                    self.assertEqual(event.source.reference_id, self.reference)
+                    self.assertEqual(event.source.feature_month, "2020-01")
+                    self.assertEqual(event.target_month, "2020-02")
+                for link in truth.links:
+                    self.assertIsNotNone(link.target)
+                    self.assertEqual(link.target.reference_id, self.reference)
+                    self.assertEqual(link.target.feature_month, "2020-02")
+                    self.assertIn(link.target.community_id, groups["2020-02"])
+
+    def test_merge_and_split_conserve_members_and_shrink_dissolve_remove_them(self):
+        merged = partitions(build_memberships("merge", self.reference))
+        self.assertTrue(merged["2020-01"]["A"].isdisjoint(merged["2020-01"]["B"]))
+        self.assertEqual(merged["2020-02"]["C"], merged["2020-01"]["A"] | merged["2020-01"]["B"])
+        split = partitions(build_memberships("split", self.reference))
+        self.assertTrue(split["2020-02"]["B"].isdisjoint(split["2020-02"]["C"]))
+        self.assertEqual(split["2020-01"]["A"], split["2020-02"]["B"] | split["2020-02"]["C"])
+        shrunk = partitions(build_memberships("shrink", self.reference))
+        removed = shrunk["2020-01"]["A"] - shrunk["2020-02"]["C"]
+        self.assertEqual(len(removed), 6)
+        self.assertTrue(removed.isdisjoint(set().union(*shrunk["2020-02"].values())))
+        dissolved = partitions(build_memberships("dissolve", self.reference))
+        self.assertEqual(set(dissolved["2020-02"]), {"K"})
+        self.assertTrue(dissolved["2020-01"]["A"].isdisjoint(dissolved["2020-02"]["K"]))
+
+    def test_no_scenario_labels_the_final_month_or_unobserved_successor(self):
+        for scenario in SCENARIOS:
+            with self.subTest(scenario=scenario):
+                full = build_transitions(scenario, self.reference)
+                self.assertEqual({event.source.feature_month for event in full.events}, {"2020-01"})
+                for month in ("2020-01", "2020-02"):
+                    partial = build_transitions(scenario, self.reference, observed_months=[month])
+                    self.assertEqual(partial.events, ())
+                    self.assertEqual(partial.links, ())
+
+    def test_all_scenarios_repeat_in_canonical_order_and_cross_year_boundary(self):
+        for scenario in SCENARIOS:
+            with self.subTest(scenario=scenario):
+                rows = build_memberships(scenario, self.reference, start_month="2020-12")
+                truth = build_transitions(scenario, self.reference, start_month="2020-12")
+                build_memberships("grow", "another-reference")
+                self.assertEqual(build_memberships(scenario, self.reference, start_month="2020-12"), rows)
+                self.assertEqual(build_transitions(scenario, self.reference, start_month="2020-12"), truth)
+                self.assertEqual({row.month for row in rows}, {"2020-12", "2021-01"})
+                keys = [(row.month, row.community_id, row.user_id) for row in rows]
+                self.assertEqual(keys, sorted(keys))
+                source_ids = [event.source.community_id for event in truth.events]
+                self.assertEqual(source_ids, sorted(set(source_ids)))
+                pairs = [(link.source.community_id, link.target.community_id) for link in truth.links]
+                self.assertEqual(pairs, sorted(pairs))
+                self.assertTrue(all(event.source.feature_month == "2020-12" and event.target_month == "2021-01"
+                                    for event in truth.events))
+
+    def test_six_scenario_truth_feeds_sampler_with_exact_active_nodes(self):
+        from reddit_sna.benchmarks.dynamic import sample_snapshots
+
+        for scenario, (source, target) in self.expected.items():
+            with self.subTest(scenario=scenario):
+                users = {"2020-01": self.background.union(*source.values()),
+                         "2020-02": self.background.union(*target.values())}
+                snapshots = sample_snapshots(
+                    build_memberships(scenario, self.reference), expected_reference=self.reference,
+                    expected_users_by_month=users, p_in=0, p_out=0,
+                )
+                for snapshot in snapshots:
+                    self.assertEqual(snapshot.nodes, tuple(sorted(users[snapshot.month])))
+                    self.assertEqual(snapshot.edges, ())
 
 
 class TruthFixtureTests(unittest.TestCase):

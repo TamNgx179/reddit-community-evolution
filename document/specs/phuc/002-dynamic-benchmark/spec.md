@@ -38,3 +38,4 @@ Nghiệm thu dựa trên schema/truth của 001. Không cần tracker, Leiden ho
 - Test: `tests/unit/test_dynamic_benchmark.py`, kiểm tra invariants/tái lập/nhóm nhỏ/isolate và lịch dataset.
 - Evidence: config, seed, số node/cạnh/nhóm/tháng của từng case, hash hoặc lệnh đối chiếu hai lần sinh. Báo diagnostic không phải kết quả Reddit.
 - [Hướng dẫn sampler stable hiện có](README.md) và [bằng chứng T01](../evidence/PHUC-002-T01-stable-graphs.md) ghi bước đầu; chưa đại diện cho nghiệm thu toàn bộ sáu case của spec.
+- [Bằng chứng T02](../evidence/PHUC-002-T02-six-event-truth.md) xác minh membership/events/links đủ sáu case trong bộ nhớ; export graph/metadata và lịch evaluation vẫn thuộc các task sau.

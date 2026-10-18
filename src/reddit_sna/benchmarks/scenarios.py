@@ -1,4 +1,4 @@
-"""Planted memberships and transitions for the stable and grow scenarios.
+"""Planted memberships and transitions for the six week-one event scenarios.
 
 Truth comes from the scenario design, independently of graph edges, detectors,
 trackers and overlap thresholds. CSV export is handled separately.
@@ -8,6 +8,8 @@ from collections.abc import Iterable
 from dataclasses import dataclass
 
 from reddit_sna.contracts import Event, Membership, SampleKey, TrackingLink, next_month
+
+SCENARIOS = ("stable", "grow", "shrink", "merge", "split", "dissolve")
 
 
 @dataclass(frozen=True)
@@ -33,7 +35,7 @@ class TruthEvent:
 
 @dataclass(frozen=True)
 class PlantedTransitions:
-    """Events and source-to-target links, ordered by source then target key."""
+    """One event per source, with zero or more links; ordered by source/target."""
 
     events: tuple[TruthEvent, ...]
     links: tuple[TrackingLink, ...]
@@ -42,10 +44,32 @@ class PlantedTransitions:
 def _scenario_months(
     scenario: str, reference_id: str, start_month: str,
 ) -> tuple[str, str]:
-    if scenario not in ("stable", "grow"):
-        raise ValueError("scenario must be 'stable' or 'grow'")
+    if scenario not in SCENARIOS:
+        raise ValueError(f"scenario must be one of: {', '.join(SCENARIOS)}")
     source = SampleKey(reference_id, start_month, "A")
     return source.feature_month, next_month(source.feature_month)
+
+
+def _scenario_definition(scenario: str):
+    """Declare populations and labels together, before graph/tracker execution."""
+    main24 = tuple(f"u{i:03d}" for i in range(1, 25))
+    main12, main18, other12 = main24[:12], main24[:18], main24[12:]
+    background = ("K", tuple(f"u{i:03d}" for i in range(101, 113)))
+    definitions = {
+        "stable": ((("A", main12),), (("C", main12),),
+                   (("A", ("C",), Event.STABLE),)),
+        "grow": ((("A", main12),), (("C", main18),),
+                 (("A", ("C",), Event.GROW),)),
+        "shrink": ((("A", main18),), (("C", main12),),
+                   (("A", ("C",), Event.SHRINK),)),
+        "merge": ((("A", main12), ("B", other12)), (("C", main24),),
+                  (("A", ("C",), Event.MERGE), ("B", ("C",), Event.MERGE))),
+        "split": ((("A", main24),), (("B", main12), ("C", other12)),
+                  (("A", ("B", "C"), Event.SPLIT),)),
+        "dissolve": ((("A", main12),), (), (("A", (), Event.DISSOLVE),)),
+    }
+    source, target, transitions = definitions[scenario]
+    return source + (background,), target + (background,), transitions + (("K", ("K",), Event.STABLE),)
 
 
 def build_memberships(
@@ -56,22 +80,17 @@ def build_memberships(
 ) -> tuple[Membership, ...]:
     """Return a two-month planted partition scoped to the caller's reference.
 
-    Both scenarios start with 12 users in A and 12 disjoint background users
-    in K. Next month the main group is called C: stable keeps A's exact users,
-    while grow retains all of them and adds six new users. K stays unchanged.
+    Stable/grow/shrink have A -> C with 12 -> 12, 12 -> 18 and 18 -> 12
+    members. Merge combines A12 + B12 -> C24; split divides A24 -> B12 + C12.
+    Dissolve removes A12 and its users from next month's active population.
+    Every case has 12 disjoint background users in K, unchanged in both months.
 
     User IDs are synthetic and local to this dataset/reference. Records are
     ordered by month, community and user; no random seed or file I/O is used.
     """
     start_month, target_month = _scenario_months(scenario, reference_id, start_month)
-    source_users = tuple(f"u{i:03d}" for i in range(1, 13))
-    target_size = 12 if scenario == "stable" else 18
-    target_users = tuple(f"u{i:03d}" for i in range(1, target_size + 1))
-    background_users = tuple(f"u{i:03d}" for i in range(101, 113))
-    snapshots = (
-        (start_month, (("A", source_users), ("K", background_users))),
-        (target_month, (("C", target_users), ("K", background_users))),
-    )
+    source_groups, target_groups, _ = _scenario_definition(scenario)
+    snapshots = ((start_month, source_groups), (target_month, target_groups))
     return tuple(
         Membership(reference_id, month, community_id, user_id)
         for month, communities in snapshots
@@ -93,8 +112,9 @@ def build_transitions(
     must be a nonempty, duplicate-free subset of those two months. Observing
     only one month yields no events or links, including no dissolve label.
 
-    A -> C has the scenario's stable/grow label and K -> K is always stable.
-    These declarations do not inspect memberships or run a tracking algorithm.
+    Each observed source has one label, including both sources in a merge.
+    Split has one event with two links; dissolve has an event without a link.
+    K -> K is always stable. Declarations do not inspect memberships or run a tracker.
     The final month has no observed successor and never becomes a source.
     """
     source_month, target_month = _scenario_months(scenario, reference_id, start_month)
@@ -121,11 +141,12 @@ def build_transitions(
     if observed != fixture_months:
         return PlantedTransitions(events=(), links=())
 
-    planned = (("A", "C", Event(scenario)), ("K", "K", Event.STABLE))
+    _, _, planned = _scenario_definition(scenario)
     events, links = [], []
-    for source_id, target_id, event in planned:
+    for source_id, target_ids, event in planned:
         source = SampleKey(reference_id, source_month, source_id)
-        target = SampleKey(reference_id, target_month, target_id)
         events.append(TruthEvent(source, target_month, event))
-        links.append(TrackingLink(source, target))
+        for target_id in target_ids:
+            target = SampleKey(reference_id, target_month, target_id)
+            links.append(TrackingLink(source, target))
     return PlantedTransitions(events=tuple(events), links=tuple(links))

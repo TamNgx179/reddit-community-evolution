@@ -70,7 +70,8 @@ class TruthFixtureExportTests(unittest.TestCase):
     def test_invalid_arguments_create_no_output(self):
         invalid = [dict(generator_seed=seed) for seed in (-1, True, 2**32, "11")]
         invalid += [dict(dataset_id=value) for value in ("../escape", "CON", "", "name/child")]
-        invalid += [dict(scenario="merge"), dict(start_month="2020-13")]
+        invalid += [dict(scenario=scenario) for scenario in ("shrink", "merge", "split", "dissolve")]
+        invalid += [dict(start_month="2020-13")]
         for index, overrides in enumerate(invalid):
             with self.subTest(overrides=overrides), self.assertRaises(ValueError):
                 self.export(f"invalid-{index}", **overrides)
