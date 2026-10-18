@@ -156,7 +156,7 @@ T05 đã commit/push `9aba275` trên cùng nhánh T04. Đọc bản T04/T05/T06 
 
 **Git/review ngày 18/10:** T06 đã commit/push `223cf0c`. Đã mở [PR #6 — hoàn thiện truth/export T04–T06](https://github.com/TamNgx179/reddit-community-evolution/pull/6), base `feat/phuc-001-membership-csv` của PR #5 để review riêng phần T04–T06. Thứ tự phụ thuộc: #2 → #5 → #6; chuyển base sang `main` sau khi các PR trước được merge và đồng bộ nếu cần. PR #6 có lệnh tái tạo, kết quả 75 test đã chạy và giới hạn phạm vi truth; chưa merge.
 
-PHUC-002 triển khai trên nhánh riêng `feat/phuc-002-stable-graphs`, tách khỏi phạm vi PR #6. T01 có [hướng dẫn sampler](002-dynamic-benchmark/README.md); CSV graph hiện ở artifact kiểm chứng local, adapter export graph đầy đủ vẫn là T04.
+PHUC-002 triển khai trên nhánh riêng `feat/phuc-002-stable-graphs`, tách khỏi phạm vi PR #6. T01 đã commit/push `2926c3b` và mở [PR #7 — stable graph sampler PHUC-002-T01](https://github.com/TamNgx179/reddit-community-evolution/pull/7), base là nhánh của PR #6; chưa merge. T01 có [hướng dẫn sampler](002-dynamic-benchmark/README.md); CSV graph hiện ở artifact kiểm chứng local, adapter export graph đầy đủ vẫn là T04.
 
 ## Blocker và thay đổi
 
