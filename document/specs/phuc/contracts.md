@@ -98,6 +98,16 @@ Mỗi case có nhóm nền K gồm 12 user riêng, ổn định qua hai tháng v
 - Seed int `[0,2**32)`; p_in/p_out là int/float hữu hạn `[0,1]`, không nhận bool. Trước khi lấy mẫu, chặn scope/month/user sai, thiếu user hoặc membership trùng.
 - API này chưa ghi file hay tạo gói graph hoàn chỉnh. [Hướng dẫn sampler](002-dynamic-benchmark/README.md) và [bằng chứng T01](evidence/PHUC-002-T01-stable-graphs.md) phân biệt graph CSV kiểm chứng với adapter export production của T04.
 
+### Cấu hình benchmark hiện có — PHUC-002-T03
+
+[benchmark_week1.json](../../../configs/benchmark_week1.json) lưu schema v1, graph protocol, hai tháng, sáu case easy, probabilities/weight, sampler/RNG version, generator seeds theo split, detector gamma/seeds/canonical và ordering. [benchmarks/config.py](../../../src/reddit_sna/benchmarks/config.py) đọc JSON riêng; TOML `RunConfig` hiện có không đổi.
+
+- `load_benchmark_config(path)` đọc UTF-8, từ chối JSON key trùng/số không chuẩn và kiểm tra schema/giá trị. `validate_benchmark_config(config)` kiểm tra object không sửa input. Chỉ hỗ trợ đúng protocol/ordering đã triển khai; không âm thầm bỏ khóa lạ hoặc giá trị chưa hỗ trợ.
+- Development generator seeds `11,12,13`, evaluation `101,102,103`; hai tập không được trùng. Mỗi danh sách seed không rỗng, duy nhất, đúng kiểu int `[0,2**32)`, không nhận bool.
+- Detector seeds `0,1,2`, gamma 1.0, canonical 0. Canonical phải là seed đầu tiên; seed detector là các lần chạy lại trên cùng dataset, không phải dataset độc lập.
+- `dataset_schedule(config, split)` tạo tuple record dataset theo thứ tự case rồi seed cấu hình, với ID `dev/eval-<case>-easy-g<seed>` và fields split/scenario/difficulty/generator_seed. Helper chỉ lập lịch, không sinh graph hay ghi output; từ chối split không hợp lệ.
+- Lịch mặc định có 36 dataset, 72 snapshot, 216 đơn vị snapshot×detector-seed **dự kiến**. CLI `python -m reddit_sna.benchmarks.config configs/benchmark_week1.json` chỉ xác minh/in lịch. [Bằng chứng T03](evidence/PHUC-002-T03-benchmark-config.md) phân biệt lịch với mẫu stable development đã chạy; evaluation/freeze thuộc PHUC-005.
+
 ## 5. Metadata, manifest và metric tối thiểu
 
 `metadata.json` của mỗi dataset: schema version, dataset ID, split, scenario, difficulty, generator config/seed, observed months, identity scope, truth reference, detector references khi đã có, relative paths và hashes file đã hoàn thành.
