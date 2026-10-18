@@ -1,6 +1,6 @@
 # Contract dataset và bàn giao Phúc–Đăng v1
 
-**Thiết kế v1:** 16/10/2026. Cụ thể hóa schema trong [phân công cặp](../../PHAN-CONG-PHUC-DANG-TUAN-1.md). PHUC-001 có CSV/truth/export stable/grow và consumer độc lập. PHUC-002 đã có sampler/truth sáu case, config, gói graph/truth, tests/diagnostics và full development 18 dataset đọc lại độc lập. PHUC-003-T01/T02 có prototype Leiden lịch 0/1/2 trên stable, canonical 0; mapping chính thức, AMI/tracking và nghiệm thu đầy đủ còn ở các bước sau. Specs 001–006 dùng chung contract này, không tạo biến thể riêng cho mỗi spec.
+**Thiết kế v1:** 16/10/2026. Cụ thể hóa schema trong [phân công cặp](../../PHAN-CONG-PHUC-DANG-TUAN-1.md). PHUC-001 có CSV/truth/export stable/grow và consumer độc lập. PHUC-002 đã có sampler/truth sáu case, config, gói graph/truth, tests/diagnostics và full development 18 dataset đọc lại độc lập. PHUC-003-T01/T02/T03 có Leiden lịch 0/1/2, canonical 0 và gói detection/metadata mapping trên stable; AMI/tracking và nghiệm thu đầy đủ còn ở các bước sau. Specs 001–006 dùng chung contract này, không tạo biến thể riêng cho mỗi spec.
 
 ## 1. Định danh và phạm vi
 
@@ -123,13 +123,19 @@ Mỗi case có nhóm nền K gồm 12 user riêng, ổn định qua hai tháng v
 
 CSV node/edge/membership dùng schema chung, luôn giữ observed months và mọi active user, kể cả không có cạnh. Artifact local của T05 mang type `synthetic-sampler-diagnostic`, scope generator-only, difficulty diagnostic, config/seed/identity/counts và hashes; không có events/links, không tự suy ra dissolve và không đại diện cho gói benchmark đã nghiệm thu. Xem [bằng chứng](evidence/PHUC-002-T05-generator-tests.md) và [ví dụ lưu CSV](002-dynamic-benchmark/README.md#kiểm-tra-generator-và-lưu-mẫu-nhỏ--t05). Đây là version fixture riêng, không nới validator JSON benchmark easy v1.
 
-### API detection và lịch seed — PHUC-003-T01/T02
+### API detection, lịch seed và gói kết quả — PHUC-003-T01/T02/T03
 
 `detect_synthetic_dataset(source, output, benchmark_config=None)` trong [pipeline](../../../src/reddit_sna/pipelines/detection_tracking.py) nhận một dataset đã xuất, kiểm tra config/metadata/identity/tháng/hashes R/nodes, gọi detector hiện có với protocol synthetic. T01 là lượt lịch sử seed 0; từ T02 API chạy lịch 0/1/2 đọc từ JSON, gamma 1.0/canonical 0. Không đọc truth membership/events/links để partition; source chỉ cần phần graph và metadata/config tương ứng. Lượt T01/T02 dùng stable development, chưa chạy evaluation.
 
 Truyền `benchmark_config=Path("configs/benchmark_week1.json")` để chọn runtime config; không truyền thì dùng bản archived trong source. Graph recipe phải khớp source, mục detector đọc từ runtime; adapter tuần 1 từ chối lịch khác `[0,1,2]`, gamma khác 1 hoặc canonical khác 0 trước output. Dict trả về ghi path/hash runtime và policy canonical là seed đầu, không chọn theo score. Mỗi seed có reference riêng, shared qua tháng; chặn run đảo thứ tự hoặc ref lẫn seed.
 
-Membership phủ đúng endpoint R, UTF-8/LF canonical, output mới ngoài source. Isolate không được gán; R rỗng cho ba file header-only, chất lượng null và ARI rỗng. Dict có versions/input hashes/active/isolate counts; diagnostics schema 2, membership schema 1. ARI theo cặp (0,1)/(0,2)/(1,2) đo repeatability, không phải AMI truth. Caller kiểm chứng lưu `prototype-detection.json` và manifest scope prototype; T03 còn persistence/mapping chính thức, full pipeline chưa hoàn thành. Xem [README](003-leiden-detection/README.md), [T01](evidence/PHUC-003-T01-leiden-adapter.md), [T02](evidence/PHUC-003-T02-detector-schedule.md).
+Membership phủ đúng endpoint R, UTF-8/LF canonical, output mới ngoài source. Isolate không được gán; R rỗng cho ba file header-only, chất lượng null và ARI rỗng. Dict có versions/input hashes/active/isolate counts; diagnostics schema 2, membership schema 1. ARI theo cặp (0,1)/(0,2)/(1,2) đo repeatability, không phải AMI truth. Gói/manifest prototype T01/T02 cũ giữ nguyên. Full pipeline chưa hoàn thành.
+
+T03 thêm `export_synthetic_detection(source, output, *, benchmark_config=None) -> dict` trong cùng module, gọi API detection và trả metadata của gói mới. Gói gồm sáu `memberships/<month>/membership-seed*.csv`, `detection.json` (toàn bộ diagnostics), `detector-config.json` (runtime JSON đúng byte), `metadata.json` schema 1/type `synthetic-detection`, scope/completed stage chỉ `detection`. Output parent phải tồn tại, output phải mới kể cả không nhận thư mục rỗng. Chuẩn bị trong thư mục tạm; metadata được chuyển cuối, không sửa source hoặc ghi đè kết quả cũ. Nếu lỗi I/O ở bước publish, giữ phần output dở dang và dùng đường dẫn mới để chạy lại.
+
+Metadata lưu dataset/identity/split/scenario/generator seed, observed months, truth reference, graph protocol/cohort fingerprint, detector seeds/gamma/canonical/versions và source hashes gồm metadata/config/R/nodes (sáu file, không đọc CSV truth). `detector_references` map string seed -> reference; `memberships` có một entry mỗi tháng/seed với path/hash, dataset/identity/reference/canonical, graph/nodes source paths, graph fingerprint, active/assigned/isolate/status; có entry ngay cả CSV rỗng. Đây là mapping nguồn file, chưa phải matching nhóm detector với nhóm truth.
+
+`files` hash tám file khác, không tự hash metadata. Output paths tương đối với gói detection; graph/nodes và `source.files` tương đối với dataset nguồn. Path tuyệt đối source/runtime chỉ ghi provenance, không dùng để tìm CSV khi gói đã chuyển chỗ. Người nhận cần gói graph/truth tương ứng để kiểm tra endpoint/AMI; gói detection không chứa lại các file nguồn. Công thức generator/difficulty có trong bản config và source metadata được hash. Xem [README/cách đọc](003-leiden-detection/README.md), [T01](evidence/PHUC-003-T01-leiden-adapter.md), [T02](evidence/PHUC-003-T02-detector-schedule.md), [T03](evidence/PHUC-003-T03-detection-package.md).
 
 ## 5. Metadata, manifest và metric tối thiểu
 

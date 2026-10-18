@@ -13,7 +13,8 @@ from unittest.mock import patch
 from reddit_sna.benchmarks.config import GRAPH_PROTOCOL, load_benchmark_config
 from reddit_sna.benchmarks.io import export_graph_dataset, read_edges, read_memberships, read_nodes
 from reddit_sna.detection.leiden import detect_snapshots as leiden_backend
-from reddit_sna.pipelines.detection_tracking import detect_synthetic_dataset
+from reddit_sna.pipelines.detection_tracking import detect_synthetic_dataset, export_synthetic_detection
+from reddit_sna.pipelines.detection_tracking import _write_detection_json
 from tests.support import ProjectCase
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -53,7 +54,8 @@ class SyntheticDetectionTests(ProjectCase):
         self.assertEqual(result["detector_seeds"], [0, 1, 2])
         self.assertEqual(result["membership_schema_version"], 1)
         self.assertEqual(set(result["versions"]), {"igraph", "leidenalg"})
-        self.assertEqual(len(result["source_files"]), 5)
+        self.assertEqual(len(result["source_files"]), 6)
+        self.assertEqual(result["source_files"]["metadata.json"]["sha256"], sha256(before["metadata.json"]).hexdigest())
         self.assertFalse(any(name.startswith("truth/") for name in result["source_files"]))
         references = {seed: set() for seed in (0, 1, 2)}
         for info in result["months"]:
@@ -213,3 +215,155 @@ class SyntheticDetectionTests(ProjectCase):
                 with self.subTest(kind=kind), self.assertRaises(ValueError):
                     detect_synthetic_dataset(source, output)
             self.assertFalse(output.exists())
+
+    def test_export_persists_diagnostics_config_and_portable_month_seed_mapping_without_truth(self):
+        original = self.source(detector_seeds=[0])
+        source = self.root / "graph only"
+        shutil.copytree(original, source, ignore=shutil.ignore_patterns("truth"))
+        runtime = ROOT / "configs/benchmark_week1.json"
+        before, config_bytes = self.files(source), runtime.read_bytes()
+        output = self.root / "detection package"
+        metadata = export_synthetic_detection(source, output, benchmark_config=runtime)
+        self.assertEqual(json.loads((output / "metadata.json").read_text(encoding="utf-8")), metadata)
+        self.assertEqual(self.files(source), before)
+        self.assertEqual(runtime.read_bytes(), config_bytes)
+        self.assertEqual(metadata["artifact_type"], "synthetic-detection")
+        self.assertEqual(metadata["scope"], "detection")
+        self.assertEqual(metadata["completed_stages"], ["detection"])
+        self.assertEqual(metadata["schema_version"], 1)
+        self.assertEqual(metadata["diagnostics_schema_version"], 2)
+        self.assertEqual(metadata["membership_schema_version"], 1)
+        self.assertEqual(metadata["split"], "development")
+        self.assertEqual(metadata["scenario"], "stable")
+        self.assertEqual(metadata["generator_seed"], 11)
+        self.assertEqual(metadata["truth_reference"], "truth-dev-stable-easy-g11")
+        self.assertEqual(metadata["source"]["directory"], str(source.resolve()))
+        self.assertEqual(len(metadata["source"]["files"]), 6)
+        for name, info in metadata["source"]["files"].items():
+            self.assertEqual(info["sha256"], sha256(before[name]).hexdigest())
+        detector = metadata["detector"]
+        self.assertEqual(detector["seeds"], [0, 1, 2])
+        self.assertEqual(detector["canonical_seed"], 0)
+        self.assertEqual(detector["gamma"], 1.0)
+        self.assertEqual((output / detector["config_file"]).read_bytes(), config_bytes)
+        self.assertEqual(detector["config_sha256"], sha256(config_bytes).hexdigest())
+        diagnostics = json.loads((output / metadata["diagnostics_file"]).read_text(encoding="utf-8"))
+        self.assertEqual(diagnostics["versions"], detector["versions"])
+        self.assertEqual(set(detector["versions"]), {"igraph", "leidenalg"})
+        self.assertTrue(all(isinstance(v, str) and v for v in detector["versions"].values()))
+        self.assertEqual(diagnostics["source_files"], metadata["source"]["files"])
+        self.assertEqual(diagnostics["source_dataset"], str(source.resolve()))
+        self.assertEqual(diagnostics["detector_config"]["source"], str(runtime.resolve()))
+        self.assertEqual(metadata["snapshot_cohort_sha256"], diagnostics["snapshot_cohort_sha256"])
+        self.assertEqual(metadata["graph_protocol"], GRAPH_PROTOCOL)
+        self.assertEqual(len(metadata["memberships"]), 6)
+        self.assertEqual([(m["month"], m["seed"]) for m in metadata["memberships"]],
+                         [(m, s) for m in metadata["observed_months"] for s in (0, 1, 2)])
+        self.assertEqual(len(set(metadata["detector_references"].values())), 3)
+        self.assertEqual(set(metadata["files"]), set(self.files(output)) - {"metadata.json"})
+        self.assertEqual(len(metadata["files"]), 8)
+        for info in metadata["memberships"]:
+            self.assertEqual(info["dataset_id"], metadata["dataset_id"])
+            self.assertEqual(info["identity_scope"], metadata["identity_scope"])
+            self.assertEqual(info["canonical"], info["seed"] == 0)
+            self.assertEqual(info["reference_id"], metadata["detector_references"][str(info["seed"])])
+            self.assertEqual(info["sha256"], metadata["files"][info["path"]]["sha256"])
+            self.assertEqual(info["graph_file"], f"snapshots/{info['month']}/R.csv")
+            self.assertEqual(info["nodes_file"], f"snapshots/{info['month']}/nodes.csv")
+            month = next(m for m in diagnostics["months"] if m["month"] == info["month"])
+            self.assertEqual(info["graph_sha256"], month["graph_sha256"])
+            with (source / info["graph_file"]).open(encoding="utf-8", newline="") as handle:
+                endpoints = {row[key] for row in csv.DictReader(handle)
+                             for key in ("source_user_id", "target_user_id")}
+            with (output / info["path"]).open(encoding="utf-8", newline="") as handle:
+                reader = csv.DictReader(handle)
+                self.assertEqual(reader.fieldnames, ["reference_id", "month", "community_id", "user_id"])
+                rows = list(reader)
+            self.assertEqual({r["user_id"] for r in rows}, endpoints)
+            self.assertEqual(len(rows), info["assigned_users"])
+            self.assertEqual({r["reference_id"] for r in rows}, {info["reference_id"]})
+            self.assertEqual({r["month"] for r in rows}, {info["month"]})
+            self.assertEqual(info["active_nodes"], info["assigned_users"] + info["isolates"])
+        for name in ("detection.json", "metadata.json"):
+            self.assertNotIn(b"\r", (output / name).read_bytes())
+        # A recipient can resolve every output entry after moving just the package.
+        moved = self.root / "recipient copy"
+        shutil.copytree(output, moved)
+        relocated = json.loads((moved / "metadata.json").read_text(encoding="utf-8"))
+        for name, info in relocated["files"].items():
+            self.assertFalse(Path(name).is_absolute())
+            self.assertNotIn("..", Path(name).parts)
+            self.assertEqual(sha256((moved / name).read_bytes()).hexdigest(), info["sha256"])
+
+    def test_export_empty_memberships_keep_reference_and_isolate_mapping(self):
+        source = self.source(zero_edges=True)
+        output = self.root / "empty-package"
+        meta = export_synthetic_detection(source, output)
+        diagnostics = json.loads((output / "detection.json").read_text(encoding="utf-8"))
+        self.assertEqual(len(meta["memberships"]), 6)
+        for info in meta["memberships"]:
+            self.assertEqual(info["active_nodes"], 24)
+            self.assertEqual(info["assigned_users"], 0)
+            self.assertEqual(info["isolates"], 24)
+            self.assertEqual(info["status"], "empty_graph_no_partition")
+            self.assertEqual(info["reference_id"], meta["detector_references"][str(info["seed"])])
+            self.assertEqual((output / info["path"]).read_bytes(), b"reference_id,month,community_id,user_id\n")
+        for month in diagnostics["months"]:
+            self.assertEqual(month["seed_pair_ARI"], [])
+            self.assertTrue(all(run["modularity"] is None and run["rb_objective"] is None
+                                for run in month["runs"]))
+
+    def test_export_refuses_existing_or_overlapping_output_before_detection(self):
+        source = self.source()
+        existing = self.root / "old-package"
+        existing.mkdir()
+        (existing / "metadata.json").write_bytes(b"preserve old result")
+        empty = self.root / "empty-old-package"
+        empty.mkdir()
+        before_source, before_output = self.files(source), self.files(existing)
+        with patch("reddit_sna.pipelines.detection_tracking.detect_synthetic_dataset") as detector:
+            for output in (existing, empty):
+                with self.subTest(output=output), self.assertRaises(FileExistsError):
+                    export_synthetic_detection(source, output)
+            for output in (source, source / "new-child", self.root):
+                with self.subTest(output=output), self.assertRaisesRegex(ValueError, "overlap"):
+                    export_synthetic_detection(source, output)
+            with self.assertRaisesRegex(ValueError, "parent"):
+                export_synthetic_detection(source, self.root / "missing-parent/result")
+            detector.assert_not_called()
+        self.assertEqual(self.files(source), before_source)
+        self.assertEqual(self.files(existing), before_output)
+        self.assertEqual(list(empty.iterdir()), [])
+
+    def test_export_serialization_failure_never_publishes_complete_metadata(self):
+        source = self.source()
+        before = self.files(source)
+
+        def fail_metadata(path, value):
+            if path.name == "metadata.json":
+                raise OSError("injected metadata write failure")
+            _write_detection_json(path, value)
+
+        output = self.root / "failed-package"
+        with patch("reddit_sna.pipelines.detection_tracking._write_detection_json", side_effect=fail_metadata):
+            with self.assertRaisesRegex(OSError, "injected metadata"):
+                export_synthetic_detection(source, output)
+        self.assertFalse(output.exists())
+        self.assertEqual(self.files(source), before)
+        self.assertFalse(list(self.root.glob("synthetic-detection-export-*")))
+
+    def test_export_rechecks_source_metadata_before_publishing_mapping(self):
+        source = self.source()
+        metadata = source / "metadata.json"
+        original = metadata.read_bytes()
+
+        def mutate_after_detection(path, value):
+            _write_detection_json(path, value)
+            if path.name == "detection.json":
+                metadata.write_bytes(original + b"\n")
+
+        output = self.root / "changed-source-package"
+        with patch("reddit_sna.pipelines.detection_tracking._write_detection_json", side_effect=mutate_after_detection):
+            with self.assertRaisesRegex(ValueError, "changed before export"):
+                export_synthetic_detection(source, output)
+        self.assertFalse(output.exists())

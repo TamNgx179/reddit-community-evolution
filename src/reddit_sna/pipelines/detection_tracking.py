@@ -2,8 +2,10 @@
 
 import csv
 from hashlib import sha256
+from importlib.metadata import version
 import json
 from pathlib import Path
+import platform
 from tempfile import TemporaryDirectory
 
 from reddit_sna.benchmarks.config import GRAPH_PROTOCOL, load_benchmark_config
@@ -11,6 +13,15 @@ from reddit_sna.benchmarks.io import read_edges, read_memberships, read_nodes, w
 from reddit_sna.config import RunConfig, validate_run_id
 from reddit_sna.detection.leiden import dependencies, detect_snapshots
 from reddit_sna.pipelines import PipelineNotImplemented
+
+
+def _check_detection_output(source: Path, output: Path) -> None:
+    if output.is_relative_to(source) or source.is_relative_to(output):
+        raise ValueError("detection output must not overlap its source dataset")
+    if output.exists():
+        raise FileExistsError(f"detection output already exists: {output}")
+    if not output.parent.is_dir():
+        raise ValueError("detection output parent must already exist")
 
 
 def detect_synthetic_dataset(
@@ -26,21 +37,17 @@ def detect_synthetic_dataset(
     Parent of output must exist; output must be new and outside the source.
     Validate detector membership against exact R endpoints, then publish UTF-8
     LF CSVs in the new output folder. Return the detector diagnostics with
-    synthetic provenance and active/isolate counts; persistence of the full
-    dataset/reference mapping is a later adapter task.
+    synthetic provenance and active/isolate counts. Use export_synthetic_detection
+    to persist these diagnostics and a dataset/reference/file mapping together.
 
     Temporary raw detector files retain the shared detector's original format.
     Only validated canonical memberships are written to the final directory.
     No tracker, AMI, seed selection by score or full-pipeline completion occurs.
     """
     source, output = source.resolve(), output.resolve()
-    if output.is_relative_to(source) or source.is_relative_to(output):
-        raise ValueError("detection output must not overlap its source dataset")
-    if output.exists():
-        raise FileExistsError(f"detection output already exists: {output}")
-    if not output.parent.is_dir():
-        raise ValueError("detection output parent must already exist")
-    meta = json.loads((source / "metadata.json").read_text(encoding="utf-8"))
+    _check_detection_output(source, output)
+    metadata_bytes = (source / "metadata.json").read_bytes()
+    meta = json.loads(metadata_bytes.decode("utf-8"))
     if (type(meta.get("schema_version")) is not int or meta["schema_version"] != 1
             or meta.get("artifact_type") != "synthetic-graph-truth" or meta.get("status") != "complete"):
         raise ValueError("a complete synthetic graph dataset with schema 1 is required")
@@ -77,7 +84,7 @@ def detect_synthetic_dataset(
     if seeds != (0, 1, 2) or gamma != 1.0 or canonical != 0:
         raise ValueError("week-one detector requires seeds [0, 1, 2], gamma 1 and canonical seed 0")
     files.extend(f"snapshots/{month}/{name}.csv" for month in months for name in ("R", "nodes"))
-    input_hashes = {}
+    input_hashes = {"metadata.json": sha256(metadata_bytes).hexdigest()}
     for name in files:
         path = (source / name).resolve()
         if not path.is_relative_to(source):
@@ -143,6 +150,8 @@ def detect_synthetic_dataset(
                                   expected_reference=reference, expected_users_by_month={month: endpoints[month]})
     return {
         **result, "dataset_id": dataset_id, "identity_scope": meta["identity_scope"],
+        "source_dataset": str(source), "split": split, "scenario": scenario,
+        "generator_seed": generator_seed, "truth_reference": meta["truth_reference"],
         "input_kind": "synthetic", "source_files": {name: {"sha256": digest} for name, digest in input_hashes.items()},
         "active_nodes_by_month": {month: len(users) for month, users in active.items()},
         "isolates_by_month": {month: len(set(active[month]) - endpoints[month]) for month in months},
@@ -156,6 +165,85 @@ def detect_synthetic_dataset(
                   "seed-pair ARI measures repeatability, not AMI ground-truth accuracy",
                   "canonical seed is fixed to configured first seed 0, regardless of quality scores"],
     }
+
+
+def _write_detection_json(path: Path, value: dict) -> None:
+    with path.open("x", encoding="utf-8", newline="\n") as handle:
+        json.dump(value, handle, ensure_ascii=False, sort_keys=True, indent=2, allow_nan=False)
+        handle.write("\n")
+
+
+def export_synthetic_detection(
+    source: Path, output: Path, *, benchmark_config: Path | None = None,
+) -> dict:
+    """Export one new detection dataset, returning its schema-1 metadata.
+
+    Keep the membership-only API intact. Stage validated memberships, the full
+    diagnostics dictionary and an exact runtime config copy before reserving
+    output. Metadata maps each dataset/month/seed/reference to a relative CSV
+    and its hash, including empty CSVs. Write complete metadata last; never
+    overwrite an old output or modify source graph/truth metadata. This is only
+    detection, not a full run manifest, community tracking or AMI evaluation.
+    """
+    source, output = source.resolve(), output.resolve()
+    _check_detection_output(source, output)
+    with TemporaryDirectory(prefix="synthetic-detection-export-", dir=output.parent) as temporary:
+        stage = Path(temporary)
+        diagnostics = detect_synthetic_dataset(source, stage / "memberships", benchmark_config=benchmark_config)
+        config = diagnostics["detector_config"]
+        config_bytes = Path(config["source"]).read_bytes()
+        if sha256(config_bytes).hexdigest() != config["sha256"]:
+            raise ValueError("runtime detector config changed before export")
+        with (stage / "detector-config.json").open("xb") as handle:
+            handle.write(config_bytes)
+        _write_detection_json(stage / "detection.json", diagnostics)
+        memberships = []
+        for info in diagnostics["months"]:
+            month = info["month"]
+            for run in info["runs"]:
+                name = f"memberships/{month}/membership-seed{run['seed']}.csv"
+                memberships.append({
+                    "dataset_id": diagnostics["dataset_id"], "identity_scope": diagnostics["identity_scope"],
+                    "month": month, "seed": run["seed"], "reference_id": run["reference_id"],
+                    "canonical": run["seed"] == diagnostics["canonical_seed"],
+                    "path": name, "sha256": sha256((stage / name).read_bytes()).hexdigest(),
+                    "graph_file": f"snapshots/{month}/R.csv", "nodes_file": f"snapshots/{month}/nodes.csv",
+                    "graph_sha256": info["graph_sha256"], "status": run["status"],
+                    "active_nodes": diagnostics["active_nodes_by_month"][month],
+                    "assigned_users": run["assigned_users"], "isolates": diagnostics["isolates_by_month"][month],
+                })
+        metadata = {
+            "schema_version": 1, "artifact_type": "synthetic-detection", "status": "complete",
+            "scope": "detection", "completed_stages": ["detection"],
+            "dataset_id": diagnostics["dataset_id"], "identity_scope": diagnostics["identity_scope"],
+            "split": diagnostics["split"], "scenario": diagnostics["scenario"],
+            "generator_seed": diagnostics["generator_seed"], "truth_reference": diagnostics["truth_reference"],
+            "observed_months": diagnostics["actual_months"], "graph_protocol": diagnostics["graph_protocol"],
+            "graph_reference": diagnostics["graph_reference"],
+            "snapshot_cohort_sha256": diagnostics["snapshot_cohort_sha256"],
+            "membership_schema_version": 1, "diagnostics_schema_version": diagnostics["schema_version"],
+            "diagnostics_file": "detection.json", "memberships": memberships,
+            "detector_references": {str(run["seed"]): run["reference_id"]
+                                    for run in diagnostics["months"][0]["runs"]},
+            "detector": {"seeds": diagnostics["detector_seeds"], "gamma": diagnostics["gamma"],
+                         "canonical_seed": diagnostics["canonical_seed"], "config_file": "detector-config.json",
+                         "config_sha256": config["sha256"], "selection_policy": config["selection_policy"],
+                         "versions": diagnostics["versions"]},
+            "source": {"directory": str(source), "files": diagnostics["source_files"]},
+            "environment": {"python_version": platform.python_version(),
+                            "package_version": version("reddit-community-evolution")},
+            "files": {path.relative_to(stage).as_posix(): {"sha256": sha256(path.read_bytes()).hexdigest()}
+                      for path in sorted(stage.rglob("*")) if path.is_file()},
+        }
+        # Recheck source provenance after preparing the package, before publishing.
+        if any(sha256((source / name).read_bytes()).hexdigest() != item["sha256"]
+               for name, item in diagnostics["source_files"].items()):
+            raise ValueError("source graph or metadata changed before export")
+        _write_detection_json(stage / "metadata.json", metadata)
+        output.mkdir(exist_ok=False)
+        for name in ("memberships", "detector-config.json", "detection.json", "metadata.json"):
+            (stage / name).rename(output / name)
+    return metadata
 
 
 def run(config: RunConfig) -> None:
