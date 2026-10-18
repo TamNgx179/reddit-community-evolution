@@ -169,6 +169,16 @@ API trong bộ nhớ dựa vào scope/reference/user maps caller cung cấp; API
 - User/key/length/reference lỗi vẫn bị từ chối qua T01/T02, không lấy giao hoặc điền metric mặc định. Thiếu sklearn báo cách cài `.[evaluation]`; lỗi dependency/backend khác và metric không hữu hạn được báo lỗi. Isolate không vào vector AMI, vẫn ở mẫu số coverage.
 - Lưu `dict(AMI_POLICY)` và hash trước lượt chấm, ghi sklearn version và giữ hàng null/status/reason. Quality summary T04 chỉ tổng hợp `ok` nhưng phải báo n thiếu/reason/canonical riêng; T03 chưa triển khai exporter/summary/timing production. Xem [hướng dẫn](004-detection-evaluation/README.md), [policy JSON](evidence/PHUC-004-T03-ami-policy.json), [bằng chứng T03](evidence/PHUC-004-T03-ami.md).
 
+### Export evaluation report — PHUC-004-T04
+
+`export_detection_evaluation(pairs, output) -> dict` nhận iterable các `(source_dataset_dir, detection_dataset_dir)` có ID duy nhất, chạy loader/counts/AMI cho cả seed 0/1/2 và ghi report mới. CLI `python -m reddit_sna.evaluation.detection --pair SOURCE DETECTION [--pair ...] --output NEW_DIR`. Parent phải tồn tại; output không được có sẵn hoặc chồng lên input.
+
+- Report có `detection_metrics.csv`, `detection_summary.csv`, `ami-policy.json`, `timing.json`, `metadata.json`. Metrics key `(dataset_id,month,detector_seed)` giữ context/reference/canonical/counts/coverage/AMI/status/reason/support/version. Input file hashes được kiểm tra/recheck, complete metadata publish cuối; lỗi I/O giữ partial/failure.json khi có thể, chưa báo complete.
+- Summary group theo `(split,scenario,difficulty,gamma,detector_seed)` và thêm mức `all_scenarios` trong cùng split/difficulty/gamma/seed. Mỗi seed riêng; canonical 0, diagnostic 1/2. Đơn vị là dataset-month, AMI mean không trọng số theo user, dùng dòng `ok`; all_scenarios mean trên các dòng hợp lệ, không trên case means. Giữ n_datasets/n_rows/n_valid/n_missing, missing status/reason counts, coverage support; all-null mean để trống. User support là số quan sát qua dòng.
+- Timing detection lấy một lần mỗi dataset-tháng cho cả ba seed từ diagnostics đã hash/kiểm tra context. Timing evaluation/compute/CSV mới đo với scope rõ, generation/peak memory null. Report metadata scope `detection-evaluation-only`, completed stage chỉ evaluation; full-run lifecycle/freeze vẫn thuộc PHUC-005.
+
+[Hướng dẫn schema/cách đọc](004-detection-evaluation/README.md), [bằng chứng T04](evidence/PHUC-004-T04-export.md) và CSV/timing nhỏ trong Git ghi kết quả export thực tế. T05/T06 giữ mốc nghiệm thu tổng thể.
+
 ## 5. Metadata, manifest và metric tối thiểu
 
 `metadata.json` của mỗi dataset: schema version, dataset ID, split, scenario, difficulty, generator config/seed, observed months, identity scope, truth reference, detector references khi đã có, relative paths và hashes file đã hoàn thành.

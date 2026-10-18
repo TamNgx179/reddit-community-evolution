@@ -3,7 +3,7 @@
 **Owner:** Phúc. **Thiết kế:** v1, 16/10/2026. **Phân công:** P04.
 **Tiến độ, hạn và bằng chứng:** [tasks.md](../tasks.md#phuc-004). **Giao diện:** [contracts.md](../contracts.md).
 
-**Triển khai hiện tại:** T01/T02/T03 DONE — xác minh/căn nhãn, counts/coverage và AMI bằng sklearn với policy `synthetic-ami-v1`, null/status/reason rõ. [Hướng dẫn](README.md), [T01](../evidence/PHUC-004-T01-alignment.md), [T02](../evidence/PHUC-004-T02-counts.md), [bằng chứng T03/output/policy](../evidence/PHUC-004-T03-ami.md). PHUC-004 đang làm 3/6 task; exporter metrics/summary/timing và nghiệm thu tổng thể còn ở T04–T06.
+**Triển khai hiện tại:** T01–T04 DONE — xác minh/căn nhãn, counts/coverage, AMI/policy và exporter metrics/summary có support/canonical/timing đúng scope. [Hướng dẫn](README.md), [T01](../evidence/PHUC-004-T01-alignment.md), [T02](../evidence/PHUC-004-T02-counts.md), [T03](../evidence/PHUC-004-T03-ami.md), [bằng chứng T04/output](../evidence/PHUC-004-T04-export.md). PHUC-004 đang làm 4/6 task; T05/T06 còn kiểm tra/nghiệm thu tổng thể.
 
 ## Mục tiêu và user story
 
@@ -37,5 +37,5 @@ Schema từ 001; nghiệm thu integration cần output 003. Không cần tracker
 
 - Module: `src/reddit_sna/evaluation/detection.py`; dependency trong `pyproject.toml` khi dùng.
 - Artifact: `detection_metrics.csv`, `detection_summary.csv`, timing/status JSON và config policy.
-- Test: `tests/unit/test_detection_evaluation.py`, meaningful cases căn user, đổi nhãn, lỗi keys, coverage và dữ liệu không đủ.
+- Test: `tests/unit/test_detection_evaluation.py`, `test_detection_summary.py` và integration alignment/export; meaningful cases căn user, đổi nhãn, lỗi keys, coverage, dữ liệu không đủ, units/support/timing và persistence.
 - Evidence: bảng thực tế stable/grow, tập user chấm, version scikit-learn và lệnh đã chạy. Mọi kết quả là benchmark tổng hợp.

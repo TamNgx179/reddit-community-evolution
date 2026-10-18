@@ -129,17 +129,67 @@ Policy cố định **`synthetic-ami-v1`** trong immutable mapping `AMI_POLICY`;
 
 Nếu cả hai phía có cờ, reason nối bằng dấu phẩy theo thứ tự truth rồi prediction. None khi xuất JSON là null, khi xuất CSV là ô trống. Ví dụ `AABB` và `xxyy` có AMI 1; `AABB` và `xyxy` có AMI ≈ -0.5; `AAAA` và `xxxx` được policy để null với hai cờ constant.
 
-Việc loại constant/all-singletons khỏi hàng có điểm là **quy tắc đánh giá của đồ án**, không phải hạn chế của thư viện. Các trường hợp đó vẫn giữ counts/coverage và trạng thái trong output. Summary chất lượng sau này chỉ tổng hợp hàng `ami_status=ok`, đồng thời phải báo số hàng thiếu và lý do; T04 sẽ thực hiện exporter/summary. Policy được version trong Git và lưu hash/bản sao trước lượt chấm development; việc freeze cấu hình cho tập evaluation thuộc PHUC-005.
+Việc loại constant/all-singletons khỏi hàng có điểm là **quy tắc đánh giá của đồ án**, không phải hạn chế của thư viện. Các trường hợp đó vẫn giữ counts/coverage và trạng thái trong output. Summary T04 chỉ tổng hợp hàng `ami_status=ok`, đồng thời báo số hàng thiếu và lý do. Policy được version trong Git và lưu hash/bản sao trước lượt chấm development; việc freeze cấu hình cho tập evaluation thuộc PHUC-005.
 
 [Bằng chứng T03](../evidence/PHUC-004-T03-ami.md) lưu kết quả theo từng snapshot/seed, policy, versions và consumer đọc CSV gọi thẳng sklearn, không import project. Đây là chấm benchmark tổng hợp; chưa chạy tập evaluation hoặc tracker.
+
+## Xuất metrics, summary và timing — T04
+
+Tại thư mục gốc repo, dùng source graph/truth và detection đã có. Mỗi `--pair` là hai **dataset directory**, output là thư mục mới có parent tồn tại:
+
+```powershell
+& .\.venv\Scripts\python.exe -m reddit_sna.evaluation.detection `
+  --pair artifacts/detection-tracking/phuc-002-t06-001/datasets/dev-stable-easy-g11 `
+         artifacts/detection-tracking/phuc-003-t06-001/datasets/dev-stable-easy-g11 `
+  --output artifacts/detection-tracking/phuc-004-demo-new
+```
+
+Thêm các `--pair SOURCE DETECTION` trước `--output` để gộp nhiều dataset. ID trong cùng report phải duy nhất; các fixture diagnostic có cùng ID nhưng graph khác cần report riêng. Source phải có đủ file đã kê khai trong metadata; nếu chưa có input local, tái tạo theo PHUC-002/003 hoặc nhận ZIP thực tế. Lệnh này dùng lại graph và membership, chỉ thực hiện evaluation; output có sẵn bị từ chối kể cả thư mục rỗng. CLI thành công exit 0/in tóm tắt JSON; lỗi input, dependency hoặc I/O exit 2.
+
+API tương ứng:
+
+```python
+from pathlib import Path
+from reddit_sna.evaluation.detection import export_detection_evaluation
+
+meta = export_detection_evaluation(
+    [(Path("<source-dataset-dir>"), Path("<detection-dataset-dir>"))],
+    Path("artifacts/detection-tracking/<new-report-id>"),
+)
+print(meta["metric_rows"], meta["summary_rows"])
+```
+
+Report thành công có năm file:
+
+| File | Dùng để làm gì |
+|---|---|
+| `detection_metrics.csv` | Một dòng mỗi dataset/tháng/seed, gồm context/reference, canonical, counts/coverage, AMI/status/reason/policy/support và sklearn version |
+| `detection_summary.csv` | Trung bình/support theo từng seed, ở mức scenario và all_scenarios; giữ split/difficulty/gamma riêng |
+| `ami-policy.json` | Bản sao policy đã áp dụng |
+| `timing.json` | Timing nguồn detection và timing evaluation/export mới, kèm scope; generation/peak memory null khi chưa đo |
+| `metadata.json` | Status/scope/versions, summary policy, input paths/hashes, evaluator source hash và hash bốn file trên |
+
+Trong summary, `aggregation_unit=dataset-month`. Seed 0 có `seed_role=canonical`, seed 1/2 là `diagnostic`; không có hàng gộp ba seed. `ami_mean/min/max` dùng các dòng `ok`, mỗi dòng một trọng số, **không trọng số theo số người**. `all_scenarios` là trung bình trên các dòng dataset-tháng hợp lệ của mọi case, không phải trung bình các case mean. `n_rows`, `n_datasets`, `n_ami_valid/missing`, ba counts trạng thái thiếu và JSON `ami_missing_reasons` giúp đọc đúng support. Nếu không có dòng hợp lệ, mean/min/max để trống.
+
+`coverage_mean` là trung bình các coverage đã xác định, kèm `n_coverage_valid/missing`; coverage 0.0 vẫn được tính, coverage None bị loại khỏi mean và được đếm thiếu. `n_scored_user_observations`/`n_active_user_observations` cộng số người qua các dòng; user lặp qua tháng nên đây là số quan sát, không phải số người duy nhất hoặc mẫu thống kê độc lập.
+
+Timing có phạm vi cụ thể:
+
+- `detection_wall_seconds`: tổng `wall_seconds` đã lưu trong diagnostics, **một lần mỗi dataset-tháng cho cả ba seed**; `detection_by_month` giữ source SHA-256. Không đo lại detector hoặc biến thời gian tháng thành thời gian riêng từng seed.
+- `evaluation_wall_seconds`: đo mới từ preflight/input verification/loading đến counts/AMI/summary, trước khi ghi output. `evaluation_compute_wall_seconds` chỉ cộng các lời gọi counts/AMI, có thể gồm startup backend trong lần gọi đầu.
+- `csv_export_wall_seconds`: ghi policy và hai CSV; không gồm ghi timing/metadata. `generation_wall_seconds` và `peak_memory_bytes` null vì evaluator không đo chúng. Đơn vị thời gian là giây.
+
+Input được kiểm tra/recheck trước khi tạo output; output không được chồng lên input. Metadata complete được publish cuối qua file pending. Lỗi khi ghi report giữ các file dở dang và `failure.json` nếu ghi được, chưa có complete metadata; dùng output ID mới khi chạy lại. Metadata report chỉ có `scope=detection-evaluation-only`/stage evaluation, không báo toàn bộ pipeline đã hoàn tất. Manifest của luồng đầy đủ thuộc PHUC-005.
+
+[Bằng chứng T04](../evidence/PHUC-004-T04-export.md) có hai lượt development, CSV nhỏ theo Git, vị trí gói local và ZIP/consumer để đọc lại sau relocation. T05/T06 còn phần kiểm tra/nghiệm thu tổng thể của spec.
 
 ## Kiểm tra và phần tiếp theo
 
 ```powershell
-& .\.venv\Scripts\python.exe -m unittest tests.unit.test_detection_evaluation tests.integration.test_detection_alignment -v
+& .\.venv\Scripts\python.exe -m unittest tests.unit.test_detection_evaluation tests.unit.test_detection_summary tests.integration.test_detection_alignment tests.integration.test_detection_evaluation_export -v
 & .\.venv\Scripts\python.exe -m unittest discover -s tests -v
 ```
 
 Integration tests tạo input bằng Leiden thật, cần extra `[graph]` theo hướng dẫn cài đặt repo; test chấm AMI cần thêm `[evaluation]`. Các unit tests căn nhãn/counts/null policy không cần thư viện graph. [Evidence T01](../evidence/PHUC-004-T01-alignment.md) giữ bằng chứng alignment và giới hạn lượt discover lịch sử; từng task mới ghi rõ test đã chạy.
 
-**T01/T02/T03 đã triển khai:** căn nhãn, counts/coverage và AMI/policy; 32 test liên quan đã được kiểm chứng. **Tiếp theo T04:** xuất `detection_metrics.csv`/summary cùng support/canonical/timing đúng phạm vi. Tập evaluation và tracker còn ở các phần việc riêng.
+**T01–T04 đã triển khai:** căn nhãn, counts/coverage, AMI/policy và exporter metrics/summary/timing; 44 test liên quan đã được kiểm chứng. **Tiếp theo T05:** kiểm tra tổng hợp các invariants/điều kiện chấp nhận; T06 nghiệm thu stable/grow. Tập evaluation và tracker còn ở các phần việc riêng.

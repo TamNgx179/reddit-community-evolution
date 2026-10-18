@@ -1,0 +1,484 @@
+{
+  "csv_export_scope": "policy and both CSV writes; excludes timing and metadata writes",
+  "csv_export_wall_seconds": 0.016973899997537956,
+  "detection_by_month": [
+    {
+      "dataset_id": "dev-dissolve-easy-g11",
+      "detector_seeds": [
+        0,
+        1,
+        2
+      ],
+      "month": "2020-01",
+      "scope": "all configured seeds for one observed month",
+      "source_file": "detection.json",
+      "source_sha256": "5cb3230237d9d6321b3eace515db9c2b47f02c80a46a3e084c9cbe96e73bcf79",
+      "wall_seconds": 0.01267950001056306
+    },
+    {
+      "dataset_id": "dev-dissolve-easy-g11",
+      "detector_seeds": [
+        0,
+        1,
+        2
+      ],
+      "month": "2020-02",
+      "scope": "all configured seeds for one observed month",
+      "source_file": "detection.json",
+      "source_sha256": "5cb3230237d9d6321b3eace515db9c2b47f02c80a46a3e084c9cbe96e73bcf79",
+      "wall_seconds": 0.007950100000016391
+    },
+    {
+      "dataset_id": "dev-dissolve-easy-g12",
+      "detector_seeds": [
+        0,
+        1,
+        2
+      ],
+      "month": "2020-01",
+      "scope": "all configured seeds for one observed month",
+      "source_file": "detection.json",
+      "source_sha256": "b9c6ebd34b15cbc944e404f9f6ab51eccab4ada1e2e36e4e5d2e71889b9f238f",
+      "wall_seconds": 0.00674870001967065
+    },
+    {
+      "dataset_id": "dev-dissolve-easy-g12",
+      "detector_seeds": [
+        0,
+        1,
+        2
+      ],
+      "month": "2020-02",
+      "scope": "all configured seeds for one observed month",
+      "source_file": "detection.json",
+      "source_sha256": "b9c6ebd34b15cbc944e404f9f6ab51eccab4ada1e2e36e4e5d2e71889b9f238f",
+      "wall_seconds": 0.008000900008482859
+    },
+    {
+      "dataset_id": "dev-dissolve-easy-g13",
+      "detector_seeds": [
+        0,
+        1,
+        2
+      ],
+      "month": "2020-01",
+      "scope": "all configured seeds for one observed month",
+      "source_file": "detection.json",
+      "source_sha256": "8fd26c960ddfe2151f32a84e630cd4d2486b52c26b453096789e2d92fdd99a3e",
+      "wall_seconds": 0.008463900012429804
+    },
+    {
+      "dataset_id": "dev-dissolve-easy-g13",
+      "detector_seeds": [
+        0,
+        1,
+        2
+      ],
+      "month": "2020-02",
+      "scope": "all configured seeds for one observed month",
+      "source_file": "detection.json",
+      "source_sha256": "8fd26c960ddfe2151f32a84e630cd4d2486b52c26b453096789e2d92fdd99a3e",
+      "wall_seconds": 0.007106599980033934
+    },
+    {
+      "dataset_id": "dev-grow-easy-g11",
+      "detector_seeds": [
+        0,
+        1,
+        2
+      ],
+      "month": "2020-01",
+      "scope": "all configured seeds for one observed month",
+      "source_file": "detection.json",
+      "source_sha256": "ca9ee183be067c663fbe818cdcacda29841cc4dbd5dce942e3e39574770ba2cd",
+      "wall_seconds": 0.009437500004423782
+    },
+    {
+      "dataset_id": "dev-grow-easy-g11",
+      "detector_seeds": [
+        0,
+        1,
+        2
+      ],
+      "month": "2020-02",
+      "scope": "all configured seeds for one observed month",
+      "source_file": "detection.json",
+      "source_sha256": "ca9ee183be067c663fbe818cdcacda29841cc4dbd5dce942e3e39574770ba2cd",
+      "wall_seconds": 0.016702799999620765
+    },
+    {
+      "dataset_id": "dev-grow-easy-g12",
+      "detector_seeds": [
+        0,
+        1,
+        2
+      ],
+      "month": "2020-01",
+      "scope": "all configured seeds for one observed month",
+      "source_file": "detection.json",
+      "source_sha256": "cb933b1f883dac4d42b4fcbc37ad9db76286364bb3ac7378da041dbff2ede0ab",
+      "wall_seconds": 0.01833609997993335
+    },
+    {
+      "dataset_id": "dev-grow-easy-g12",
+      "detector_seeds": [
+        0,
+        1,
+        2
+      ],
+      "month": "2020-02",
+      "scope": "all configured seeds for one observed month",
+      "source_file": "detection.json",
+      "source_sha256": "cb933b1f883dac4d42b4fcbc37ad9db76286364bb3ac7378da041dbff2ede0ab",
+      "wall_seconds": 0.01618209999287501
+    },
+    {
+      "dataset_id": "dev-grow-easy-g13",
+      "detector_seeds": [
+        0,
+        1,
+        2
+      ],
+      "month": "2020-01",
+      "scope": "all configured seeds for one observed month",
+      "source_file": "detection.json",
+      "source_sha256": "bb104262675425bea672e613b0eec0669f5cffb8d014af819f138c6a1cdd7f5b",
+      "wall_seconds": 0.010041000001365319
+    },
+    {
+      "dataset_id": "dev-grow-easy-g13",
+      "detector_seeds": [
+        0,
+        1,
+        2
+      ],
+      "month": "2020-02",
+      "scope": "all configured seeds for one observed month",
+      "source_file": "detection.json",
+      "source_sha256": "bb104262675425bea672e613b0eec0669f5cffb8d014af819f138c6a1cdd7f5b",
+      "wall_seconds": 0.012944200017955154
+    },
+    {
+      "dataset_id": "dev-merge-easy-g11",
+      "detector_seeds": [
+        0,
+        1,
+        2
+      ],
+      "month": "2020-01",
+      "scope": "all configured seeds for one observed month",
+      "source_file": "detection.json",
+      "source_sha256": "7b55ff570e05881e5118deae3d7daa6bf17b8517155650a711e96f0a4433b455",
+      "wall_seconds": 0.008235999994212762
+    },
+    {
+      "dataset_id": "dev-merge-easy-g11",
+      "detector_seeds": [
+        0,
+        1,
+        2
+      ],
+      "month": "2020-02",
+      "scope": "all configured seeds for one observed month",
+      "source_file": "detection.json",
+      "source_sha256": "7b55ff570e05881e5118deae3d7daa6bf17b8517155650a711e96f0a4433b455",
+      "wall_seconds": 0.008846300013829023
+    },
+    {
+      "dataset_id": "dev-merge-easy-g12",
+      "detector_seeds": [
+        0,
+        1,
+        2
+      ],
+      "month": "2020-01",
+      "scope": "all configured seeds for one observed month",
+      "source_file": "detection.json",
+      "source_sha256": "9473d2cbe9549cddc06c10062048f16ec0a77a0c3d7b0ff09a9d724cd9b34dc1",
+      "wall_seconds": 0.02044749999186024
+    },
+    {
+      "dataset_id": "dev-merge-easy-g12",
+      "detector_seeds": [
+        0,
+        1,
+        2
+      ],
+      "month": "2020-02",
+      "scope": "all configured seeds for one observed month",
+      "source_file": "detection.json",
+      "source_sha256": "9473d2cbe9549cddc06c10062048f16ec0a77a0c3d7b0ff09a9d724cd9b34dc1",
+      "wall_seconds": 0.0163394000264816
+    },
+    {
+      "dataset_id": "dev-merge-easy-g13",
+      "detector_seeds": [
+        0,
+        1,
+        2
+      ],
+      "month": "2020-01",
+      "scope": "all configured seeds for one observed month",
+      "source_file": "detection.json",
+      "source_sha256": "2d60af00381261d6fc0b09cd051fd2426a43558ace53a669400515bb85ee3ec8",
+      "wall_seconds": 0.015386299986857921
+    },
+    {
+      "dataset_id": "dev-merge-easy-g13",
+      "detector_seeds": [
+        0,
+        1,
+        2
+      ],
+      "month": "2020-02",
+      "scope": "all configured seeds for one observed month",
+      "source_file": "detection.json",
+      "source_sha256": "2d60af00381261d6fc0b09cd051fd2426a43558ace53a669400515bb85ee3ec8",
+      "wall_seconds": 0.020946200005710125
+    },
+    {
+      "dataset_id": "dev-shrink-easy-g11",
+      "detector_seeds": [
+        0,
+        1,
+        2
+      ],
+      "month": "2020-01",
+      "scope": "all configured seeds for one observed month",
+      "source_file": "detection.json",
+      "source_sha256": "2947eab28217e562d3a069ebc33204362296b267b029dba4c29bbff2b9f6e80f",
+      "wall_seconds": 0.009757499996339902
+    },
+    {
+      "dataset_id": "dev-shrink-easy-g11",
+      "detector_seeds": [
+        0,
+        1,
+        2
+      ],
+      "month": "2020-02",
+      "scope": "all configured seeds for one observed month",
+      "source_file": "detection.json",
+      "source_sha256": "2947eab28217e562d3a069ebc33204362296b267b029dba4c29bbff2b9f6e80f",
+      "wall_seconds": 0.010689199989428744
+    },
+    {
+      "dataset_id": "dev-shrink-easy-g12",
+      "detector_seeds": [
+        0,
+        1,
+        2
+      ],
+      "month": "2020-01",
+      "scope": "all configured seeds for one observed month",
+      "source_file": "detection.json",
+      "source_sha256": "166e187e02838cdb69251b5f2a60f10bae8025a61d5d787e2cc49435a4c709de",
+      "wall_seconds": 0.008184600010281429
+    },
+    {
+      "dataset_id": "dev-shrink-easy-g12",
+      "detector_seeds": [
+        0,
+        1,
+        2
+      ],
+      "month": "2020-02",
+      "scope": "all configured seeds for one observed month",
+      "source_file": "detection.json",
+      "source_sha256": "166e187e02838cdb69251b5f2a60f10bae8025a61d5d787e2cc49435a4c709de",
+      "wall_seconds": 0.007807200017850846
+    },
+    {
+      "dataset_id": "dev-shrink-easy-g13",
+      "detector_seeds": [
+        0,
+        1,
+        2
+      ],
+      "month": "2020-01",
+      "scope": "all configured seeds for one observed month",
+      "source_file": "detection.json",
+      "source_sha256": "b975654f3cf5a397d6fc982daafa7e2f049df64afaacbc1fd35dc9529d1575c1",
+      "wall_seconds": 0.011908099986612797
+    },
+    {
+      "dataset_id": "dev-shrink-easy-g13",
+      "detector_seeds": [
+        0,
+        1,
+        2
+      ],
+      "month": "2020-02",
+      "scope": "all configured seeds for one observed month",
+      "source_file": "detection.json",
+      "source_sha256": "b975654f3cf5a397d6fc982daafa7e2f049df64afaacbc1fd35dc9529d1575c1",
+      "wall_seconds": 0.00913260001107119
+    },
+    {
+      "dataset_id": "dev-split-easy-g11",
+      "detector_seeds": [
+        0,
+        1,
+        2
+      ],
+      "month": "2020-01",
+      "scope": "all configured seeds for one observed month",
+      "source_file": "detection.json",
+      "source_sha256": "0435fb0bc8941c6584e3bcfe60b326b4e8e56ad685a1e5268778660a3b9718f6",
+      "wall_seconds": 0.015556599973933771
+    },
+    {
+      "dataset_id": "dev-split-easy-g11",
+      "detector_seeds": [
+        0,
+        1,
+        2
+      ],
+      "month": "2020-02",
+      "scope": "all configured seeds for one observed month",
+      "source_file": "detection.json",
+      "source_sha256": "0435fb0bc8941c6584e3bcfe60b326b4e8e56ad685a1e5268778660a3b9718f6",
+      "wall_seconds": 0.01074009999865666
+    },
+    {
+      "dataset_id": "dev-split-easy-g12",
+      "detector_seeds": [
+        0,
+        1,
+        2
+      ],
+      "month": "2020-01",
+      "scope": "all configured seeds for one observed month",
+      "source_file": "detection.json",
+      "source_sha256": "bbe303dc3021c094f38fa3521aec9942220a5f9118d4c921ade5c06e6e3b5cb7",
+      "wall_seconds": 0.015781699999934062
+    },
+    {
+      "dataset_id": "dev-split-easy-g12",
+      "detector_seeds": [
+        0,
+        1,
+        2
+      ],
+      "month": "2020-02",
+      "scope": "all configured seeds for one observed month",
+      "source_file": "detection.json",
+      "source_sha256": "bbe303dc3021c094f38fa3521aec9942220a5f9118d4c921ade5c06e6e3b5cb7",
+      "wall_seconds": 0.02896080000209622
+    },
+    {
+      "dataset_id": "dev-split-easy-g13",
+      "detector_seeds": [
+        0,
+        1,
+        2
+      ],
+      "month": "2020-01",
+      "scope": "all configured seeds for one observed month",
+      "source_file": "detection.json",
+      "source_sha256": "1c844e3eebcea2469c0f5dfbd3fba05618e90fc786177159c94f993f26db0b56",
+      "wall_seconds": 0.014331200014567003
+    },
+    {
+      "dataset_id": "dev-split-easy-g13",
+      "detector_seeds": [
+        0,
+        1,
+        2
+      ],
+      "month": "2020-02",
+      "scope": "all configured seeds for one observed month",
+      "source_file": "detection.json",
+      "source_sha256": "1c844e3eebcea2469c0f5dfbd3fba05618e90fc786177159c94f993f26db0b56",
+      "wall_seconds": 0.021046799985924736
+    },
+    {
+      "dataset_id": "dev-stable-easy-g11",
+      "detector_seeds": [
+        0,
+        1,
+        2
+      ],
+      "month": "2020-01",
+      "scope": "all configured seeds for one observed month",
+      "source_file": "detection.json",
+      "source_sha256": "75c2b2ad1b287b08b7fd0c69da118d8f6feedc87e15b65ce4660521a3b4cbe39",
+      "wall_seconds": 0.010774599999422207
+    },
+    {
+      "dataset_id": "dev-stable-easy-g11",
+      "detector_seeds": [
+        0,
+        1,
+        2
+      ],
+      "month": "2020-02",
+      "scope": "all configured seeds for one observed month",
+      "source_file": "detection.json",
+      "source_sha256": "75c2b2ad1b287b08b7fd0c69da118d8f6feedc87e15b65ce4660521a3b4cbe39",
+      "wall_seconds": 0.00951639999402687
+    },
+    {
+      "dataset_id": "dev-stable-easy-g12",
+      "detector_seeds": [
+        0,
+        1,
+        2
+      ],
+      "month": "2020-01",
+      "scope": "all configured seeds for one observed month",
+      "source_file": "detection.json",
+      "source_sha256": "05a641901266986e0e66ce5fad04cbb72d6637beb39f7c5f5d96ef99ec553cb3",
+      "wall_seconds": 0.008641899999929592
+    },
+    {
+      "dataset_id": "dev-stable-easy-g12",
+      "detector_seeds": [
+        0,
+        1,
+        2
+      ],
+      "month": "2020-02",
+      "scope": "all configured seeds for one observed month",
+      "source_file": "detection.json",
+      "source_sha256": "05a641901266986e0e66ce5fad04cbb72d6637beb39f7c5f5d96ef99ec553cb3",
+      "wall_seconds": 0.012379699997836724
+    },
+    {
+      "dataset_id": "dev-stable-easy-g13",
+      "detector_seeds": [
+        0,
+        1,
+        2
+      ],
+      "month": "2020-01",
+      "scope": "all configured seeds for one observed month",
+      "source_file": "detection.json",
+      "source_sha256": "c0483e1c413bc5501b0a2d5627df92eaaa81f13beb2bd9c58d2edc5516777175",
+      "wall_seconds": 0.019273299985798076
+    },
+    {
+      "dataset_id": "dev-stable-easy-g13",
+      "detector_seeds": [
+        0,
+        1,
+        2
+      ],
+      "month": "2020-02",
+      "scope": "all configured seeds for one observed month",
+      "source_file": "detection.json",
+      "source_sha256": "c0483e1c413bc5501b0a2d5627df92eaaa81f13beb2bd9c58d2edc5516777175",
+      "wall_seconds": 0.015286999987438321
+    }
+  ],
+  "detection_scope": "sum of stored per-month timings over all three seeds; not rerun or measured per seed",
+  "detection_wall_seconds": 0.4645643999974709,
+  "evaluation_compute_scope": "counts and AMI calls only, over all rows",
+  "evaluation_compute_wall_seconds": 2.8529200998600572,
+  "evaluation_scope": "preflight/input verification and loading, counts/AMI for all seeds and summary; excludes output writes",
+  "evaluation_wall_seconds": 6.54213489999529,
+  "generation_scope": "not measured by evaluator",
+  "generation_wall_seconds": null,
+  "peak_memory_bytes": null,
+  "peak_memory_scope": "not measured"
+}

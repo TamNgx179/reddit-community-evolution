@@ -1,16 +1,22 @@
 """Verify synthetic truth/detector inputs and align labels by user ID.
 
-This module aligns labels, counts coverage and scores AMI under a fixed policy.
-Aggregate summaries and timing metrics remain separate steps.
+Align labels, count coverage, score AMI and export auditable evaluation reports.
 Community names are preserved; aligning users is not community matching.
 """
 
 from collections.abc import Iterable, Mapping
-from dataclasses import dataclass
+from collections import Counter
+import csv
+from dataclasses import asdict, dataclass
+from datetime import datetime, timezone
 from hashlib import sha256
+from importlib.metadata import PackageNotFoundError, version
 import json
 from math import isfinite
 from pathlib import Path
+import platform
+from statistics import fmean
+from time import perf_counter
 from types import MappingProxyType
 
 from reddit_sna.benchmarks.config import GRAPH_PROTOCOL, dataset_schedule, load_benchmark_config
@@ -36,6 +42,16 @@ AMI_POLICY = MappingProxyType({
     "nonfinite_score": "raise",
     "negative_scores": "preserve",
     "quality_summary_eligibility": "ami_status=ok",
+})
+
+SUMMARY_POLICY = MappingProxyType({
+    "aggregation_unit": "dataset-month separately per detector seed",
+    "ami_aggregation": "unweighted mean of rows with ami_status=ok",
+    "coverage_aggregation": "unweighted mean of rows with defined coverage",
+    "canonical_seed": 0,
+    "pool_detector_seeds": False,
+    "missing_ami": "exclude from mean; retain support, status and combined reason counts",
+    "user_support": "user observations across rows, not distinct people",
 })
 
 
@@ -355,3 +371,234 @@ def load_aligned_detection(source: Path, detection: Path, *, detector_seed: int 
                                 active_users_by_month=active, endpoint_users_by_month=endpoints)
     return AlignedDetection(**expected[0], identity_scope=dataset_id, detector_seed=detector_seed, gamma=float(detector["gamma"]),
                             truth_reference=truth_reference, detector_reference=references[str(detector_seed)], snapshots=aligned)
+
+
+def _summary_rows(metrics):
+    groups = {}
+    for row in metrics:
+        for level in ("scenario", "all_scenarios"):
+            key = (level, row["split"], row["scenario"] if level == "scenario" else "",
+                   row["difficulty"], row["gamma"], row["detector_seed"])
+            groups.setdefault(key, []).append(row)
+    summaries = []
+    for (level, split, scenario, difficulty, gamma, seed), rows in sorted(groups.items()):
+        valid = [row["ami"] for row in rows if row["ami_status"] == "ok"]
+        coverage = [row["coverage"] for row in rows if row["coverage"] is not None]
+        statuses = Counter(row["ami_status"] for row in rows)
+        reasons = Counter(row["ami_reason"] for row in rows if row["ami_status"] != "ok")
+        summaries.append({
+            "aggregation_level": level, "split": split, "scenario": scenario, "difficulty": difficulty,
+            "gamma": gamma, "detector_seed": seed, "seed_role": "canonical" if seed == 0 else "diagnostic",
+            "aggregation_unit": "dataset-month", "ami_aggregation": SUMMARY_POLICY["ami_aggregation"],
+            "coverage_aggregation": SUMMARY_POLICY["coverage_aggregation"],
+            "n_datasets": len({row["dataset_id"] for row in rows}), "n_rows": len(rows),
+            "n_ami_valid": len(valid), "n_ami_missing": len(rows) - len(valid),
+            "n_empty_scored": statuses["empty_scored"], "n_insufficient_users": statuses["insufficient_users"],
+            "n_degenerate_partition": statuses["degenerate_partition"],
+            "ami_missing_reasons": json.dumps(dict(sorted(reasons.items())), sort_keys=True, separators=(",", ":")),
+            "ami_mean": fmean(valid) if valid else None, "ami_min": min(valid) if valid else None,
+            "ami_max": max(valid) if valid else None,
+            "n_coverage_valid": len(coverage), "n_coverage_missing": len(rows) - len(coverage),
+            "coverage_mean": fmean(coverage) if coverage else None,
+            "n_scored_user_observations": sum(row["n_scored_users"] for row in rows),
+            "n_active_user_observations": sum(row["active_nodes"] for row in rows),
+        })
+    return summaries
+
+
+def _report_input_files(directory, artifact_type):
+    meta = _metadata(directory, artifact_type)
+    declared = _object(meta.get("files"), "input files")
+    files = {name: sha256(_checked_file(directory, name, declared).read_bytes()).hexdigest() for name in declared}
+    files["metadata.json"] = sha256((directory / "metadata.json").read_bytes()).hexdigest()
+    # These optional sidecars also contribute to snapshot_inventory fingerprints.
+    months = meta.get("observed_months")
+    _require(isinstance(months, list) and bool(months) and all(isinstance(month, str) for month in months),
+             "input observed_months must be a nonempty month list")
+    for month in months:
+        next_month(month)
+        for name in ("directed_R.csv", "users.csv", "node_order.csv"):
+            relative = f"snapshots/{month}/{name}"
+            path = (directory / relative).resolve()
+            _require(path.is_relative_to(directory), "input sidecar escapes its dataset")
+            if path.is_file():
+                files[relative] = sha256(path.read_bytes()).hexdigest()
+    return meta, dict(sorted(files.items()))
+
+
+def _stored_detection_timings(directory, meta, aligned):
+    diagnostics = _object(json.loads((directory / "detection.json").read_text(encoding="utf-8"),
+                                     object_pairs_hook=_unique_object), "detection diagnostics")
+    months = [frame.month for frame in aligned.snapshots]
+    _require(type(diagnostics.get("schema_version")) is int and diagnostics["schema_version"] == 2
+             and diagnostics.get("dataset_id") == diagnostics.get("identity_scope") == aligned.dataset_id
+             and diagnostics.get("graph_reference") == meta["graph_reference"]
+             and diagnostics.get("actual_months") == months
+             and isinstance(diagnostics.get("detector_seeds"), list)
+             and all(type(seed) is int for seed in diagnostics["detector_seeds"])
+             and diagnostics["detector_seeds"] == [0, 1, 2]
+             and type(diagnostics.get("canonical_seed")) is int and diagnostics["canonical_seed"] == 0,
+             "stored timing diagnostics identity/schedule mismatch")
+    entries = diagnostics.get("months")
+    _require(isinstance(entries, list) and all(isinstance(row, dict) for row in entries)
+             and [row.get("month") for row in entries] == months, "stored timing months must match observed snapshots")
+    result = []
+    frames = {frame.month: frame for frame in aligned.snapshots}
+    graph_hashes = {row["month"]: row["graph_sha256"] for row in meta["memberships"] if row["seed"] == 0}
+    for row in entries:
+        seconds, runs = row.get("wall_seconds"), row.get("runs")
+        _require(type(seconds) in (int, float) and isfinite(seconds) and seconds >= 0,
+                 "stored detection wall_seconds must be finite and nonnegative")
+        expected_status = "complete" if frames[row["month"]].user_ids else "empty_graph_no_partition"
+        _require(isinstance(runs, list) and len(runs) == 3 and all(isinstance(run, dict) for run in runs)
+                 and all(type(run.get("seed")) is int for run in runs)
+                 and [run["seed"] for run in runs] == [0, 1, 2]
+                 and row.get("graph_sha256") == graph_hashes[row["month"]]
+                 and all(run.get("reference_id") == meta["detector_references"][str(run["seed"])]
+                         and run.get("status") == expected_status for run in runs),
+                 "stored timing must cover the three configured seed references")
+        result.append({"dataset_id": aligned.dataset_id, "month": row["month"], "detector_seeds": [0, 1, 2],
+                       "wall_seconds": seconds, "scope": "all configured seeds for one observed month",
+                       "source_file": "detection.json", "source_sha256": meta["files"]["detection.json"]["sha256"]})
+    return result
+
+
+def _write_report_json(path, value):
+    with path.open("x", encoding="utf-8", newline="\n") as handle:
+        json.dump(value, handle, ensure_ascii=False, indent=2, sort_keys=True, allow_nan=False)
+        handle.write("\n")
+
+
+def _write_report_csv(path, rows):
+    with path.open("x", encoding="utf-8", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=list(rows[0]), lineterminator="\n")
+        writer.writeheader()
+        writer.writerows(rows)
+
+
+def export_detection_evaluation(pairs: Iterable[tuple[Path, Path]], output: Path) -> dict:
+    """Export one new report for unique PHUC-002/003 dataset pairs.
+
+    Load and score all configured seeds, retain null rows and summarize each
+    seed independently. Stored detection timing is copied once per dataset-month;
+    it is not a fresh measurement or a separate measurement for each seed.
+    Validate and recheck inputs before reserving output. A publication I/O error
+    leaves partial files with failure.json; complete metadata is written last.
+    """
+    started = datetime.now(timezone.utc).isoformat()
+    start = perf_counter()
+    _require(not isinstance(pairs, (str, bytes, Path)), "pairs must be an iterable of source/detection path pairs")
+    pairs = tuple(pairs)
+    _require(bool(pairs), "at least one source/detection dataset pair is required")
+    output = Path(output).resolve()
+    _require(output.parent.is_dir() and not output.exists(), "output parent must exist and report directory must be new")
+    normalized = []
+    for pair in pairs:
+        _require(isinstance(pair, (tuple, list)) and len(pair) == 2
+                 and all(isinstance(path, (str, Path)) for path in pair), "each pair must contain source and detection paths")
+        source, detected = (Path(path).resolve() for path in pair)
+        for directory in (source, detected):
+            _require(directory.is_dir(), "input dataset directory does not exist")
+            _require(not output.is_relative_to(directory) and not directory.is_relative_to(output),
+                     "report output must not overlap either input dataset")
+        normalized.append((source, detected))
+    versions = {"python": platform.python_version()}
+    for package in ("reddit-community-evolution", "scikit-learn", "numpy", "scipy"):
+        try:
+            versions[package] = version(package)
+        except PackageNotFoundError:
+            versions[package] = None
+    metrics, timings, inputs, identities = [], [], [], set()
+    compute_seconds = 0.0
+    for source, detected in normalized:
+        source_meta, source_files = _report_input_files(source, "synthetic-graph-truth")
+        detected_meta, detected_files = _report_input_files(detected, "synthetic-detection")
+        dataset_id = validate_run_id(source_meta.get("dataset_id"))
+        _require(dataset_id not in identities, "duplicate dataset_id in report; keep different cohorts in separate reports")
+        identities.add(dataset_id)
+        for seed in (0, 1, 2):
+            aligned = load_aligned_detection(source, detected, detector_seed=seed)
+            for frame in aligned.snapshots:
+                compute_start = perf_counter()
+                counts, score = count_snapshot(frame), score_snapshot(frame)
+                compute_seconds += perf_counter() - compute_start
+                metrics.append({
+                    "dataset_id": aligned.dataset_id, "identity_scope": aligned.identity_scope, "split": aligned.split,
+                    "scenario": aligned.scenario, "difficulty": aligned.difficulty, "generator_seed": aligned.generator_seed,
+                    "month": frame.month, "detector_seed": seed, "gamma": aligned.gamma, "canonical": seed == 0,
+                    "truth_reference": aligned.truth_reference, "detector_reference": aligned.detector_reference,
+                    **asdict(counts), **asdict(score), "sklearn_version": versions["scikit-learn"],
+                })
+            if seed == 0:
+                timings.extend(_stored_detection_timings(detected, detected_meta, aligned))
+        inputs.append({"dataset_id": dataset_id, "source_directory": str(source), "detection_directory": str(detected),
+                       "source_files": source_files, "detection_files": detected_files,
+                       "detector_versions": detected_meta["detector"]["versions"]})
+    metrics.sort(key=lambda row: (row["dataset_id"], row["month"], row["detector_seed"]))
+    summaries = _summary_rows(metrics)
+    for (source, detected), entry in zip(normalized, inputs, strict=True):
+        _require(_report_input_files(source, "synthetic-graph-truth")[1] == entry["source_files"]
+                 and _report_input_files(detected, "synthetic-detection")[1] == entry["detection_files"],
+                 "evaluation inputs changed while preparing the report")
+    evaluation_seconds = perf_counter() - start
+    output.mkdir(exist_ok=False)
+    try:
+        export_start = perf_counter()
+        _write_report_json(output / "ami-policy.json", dict(AMI_POLICY))
+        _write_report_csv(output / "detection_metrics.csv", metrics)
+        _write_report_csv(output / "detection_summary.csv", summaries)
+        timing = {
+            "generation_wall_seconds": None, "generation_scope": "not measured by evaluator",
+            "detection_wall_seconds": sum(row["wall_seconds"] for row in timings),
+            "detection_scope": "sum of stored per-month timings over all three seeds; not rerun or measured per seed",
+            "detection_by_month": sorted(timings, key=lambda row: (row["dataset_id"], row["month"])),
+            "evaluation_wall_seconds": evaluation_seconds,
+            "evaluation_scope": "preflight/input verification and loading, counts/AMI for all seeds and summary; excludes output writes",
+            "evaluation_compute_wall_seconds": compute_seconds,
+            "evaluation_compute_scope": "counts and AMI calls only, over all rows",
+            "csv_export_wall_seconds": perf_counter() - export_start,
+            "csv_export_scope": "policy and both CSV writes; excludes timing and metadata writes",
+            "peak_memory_bytes": None, "peak_memory_scope": "not measured",
+        }
+        _write_report_json(output / "timing.json", timing)
+        files = {name: {"sha256": sha256((output / name).read_bytes()).hexdigest()} for name in (
+            "ami-policy.json", "detection_metrics.csv", "detection_summary.csv", "timing.json")}
+        meta = {"schema_version": 1, "artifact_type": "synthetic-detection-evaluation", "status": "complete",
+                "scope": "detection-evaluation-only", "completed_stages": ["evaluation"],
+                "created_at": started, "finished_at": datetime.now(timezone.utc).isoformat(),
+                "dataset_count": len(inputs), "metric_rows": len(metrics), "summary_rows": len(summaries),
+                "ami_valid_rows": sum(row["ami_status"] == "ok" for row in metrics),
+                "ami_missing_rows": sum(row["ami_status"] != "ok" for row in metrics),
+                "metric_key": ["dataset_id", "month", "detector_seed"], "detector_seeds": [0, 1, 2],
+                "canonical_seed": 0, "summary_policy": dict(SUMMARY_POLICY), "ami_policy": dict(AMI_POLICY),
+                "versions": versions, "evaluator_source_sha256": sha256(Path(__file__).read_bytes()).hexdigest(),
+                "inputs": sorted(inputs, key=lambda row: row["dataset_id"]), "files": files}
+        _write_report_json(output / "metadata.pending.json", meta)
+        (output / "metadata.pending.json").rename(output / "metadata.json")
+        return meta
+    except Exception as exc:
+        try:
+            _write_report_json(output / "failure.json", {"status": "failed", "scope": "detection-evaluation-only",
+                                                       "error_type": type(exc).__name__, "message": str(exc)})
+        except OSError:
+            pass
+        raise
+
+
+def main(argv=None):
+    import argparse
+    parser = argparse.ArgumentParser(description="Export synthetic detection metrics and per-seed summaries to a new directory.")
+    parser.add_argument("--pair", nargs=2, action="append", required=True, type=Path, metavar=("SOURCE", "DETECTION"))
+    parser.add_argument("--output", required=True, type=Path)
+    args = parser.parse_args(argv)
+    try:
+        meta = export_detection_evaluation(args.pair, args.output)
+    except (ValueError, OSError, ImportError) as exc:
+        parser.exit(2, f"evaluation error: {exc}\n")
+    print(json.dumps({"status": meta["status"], "datasets": meta["dataset_count"], "metric_rows": meta["metric_rows"],
+                      "summary_rows": meta["summary_rows"], "output": str(args.output.resolve())}, sort_keys=True))
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
