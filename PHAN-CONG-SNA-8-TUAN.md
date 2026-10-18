@@ -12,7 +12,7 @@ A1 thi lý thuyết 50%; A2 đồ án 50%. Điểm tối đa của đồ án đ�
 
 Mỗi cặp dùng notebook `00_research_plan.ipynb` của mình để ghi câu hỏi, đầu vào, protocol, đối chứng, kết quả có artifact và phần phản biện. Các notebook hiện là template chưa thực thi. Hồ sơ `experiments/` đang draft/planned và chưa được CLI enforce; đây là quy ước thiết kế chung, không tạo phụ thuộc output giữa các nhóm tuần 1.
 
-Các mốc giữa/cuối kỳ cần kiểm chứng graph/coverage, tracker trên ground truth, split theo toàn tháng nhãn, đối chứng cùng mẫu/nhãn/budget, ablation có mục tiêu và phân tích lỗi/giới hạn. Test phần mềm không thay cho bằng chứng SNA. Xem ARCHITECTURE.md để biết thành phần source và câu hỏi cần bảo vệ.
+Các mốc giữa/cuối kỳ cần kiểm chứng graph/coverage, tracker trên ground truth, split theo toàn tháng nhãn, đối chứng cùng mẫu/nhãn/budget, ablation có mục tiêu và phân tích lỗi/giới hạn. Test phần mềm không thay cho bằng chứng SNA. Xem docs/METHODS.md để biết thành phần source và câu hỏi cần bảo vệ.
 ## 1. Phần việc sở hữu
 
 | Người | Trách nhiệm chính |
@@ -31,7 +31,7 @@ Tâm–Thanh giữ core. Phúc và Đăng nhận thêm phần triển khai/tính
 ```text
 reddit-community-evolution/
 ├── README.md
-├── ARCHITECTURE.md             # Ranh giới module, contracts và quyền sở hữu
+├── docs/                      # METHODS, RUNBOOK, RESULTS, LABEL_REVIEW
 ├── pyproject.toml              # Package và dependencies
 ├── .gitignore
 ├── configs/                    # Cấu hình runtime ba nhóm
@@ -61,12 +61,12 @@ reddit-community-evolution/
 │   ├── unit/
 │   ├── integration/
 │   └── fixtures/               # Dữ liệu tổng hợp nhỏ
-├── data/                       # Dataset hiện có, không commit
+├── data/                       # Dataset đã duyệt qua Git/LFS; khóa riêng giữ local
 ├── artifacts/                  # Output riêng <pipeline>/<run_id>, không commit
-└── reports/                    # Bảng/hình/báo cáo được chọn để bàn giao
+└── reports/                    # Bảng claim/evidence và đóng góp dạng CSV
 ```
 
-Source chia theo chức năng để dùng lại khi tích hợp; mỗi nhóm có pipeline, config và output riêng, không phụ thuộc artifact nhóm khác trong tuần 1. Mỗi nhóm có thể phát triển và demo bằng notebook riêng, chạy lại được từ kernel sạch theo thứ tự cell. Logic đã ổn định hoặc cần dùng lại chuyển vào src/reddit_sna; notebook import lại, không copy source. Demo notebook đủ input đến evaluation được chấp nhận trong phạm vi nhóm; CLI tiếp tục phục vụ tự động hóa và tích hợp. Thêm thuật toán vào module tương ứng, không tạo cây proposed/baseline hoặc thư mục source theo tên người. Tâm tạo repository, mời năm thành viên còn lại và hướng dẫn cài đặt. Không đưa corpus gốc, tên user, khóa băm, môi trường `.venv` hoặc artifact lớn lên GitHub.
+Source chia theo chức năng để dùng lại khi tích hợp; mỗi nhóm có pipeline, config và output riêng, không phụ thuộc artifact nhóm khác trong tuần 1. Mỗi nhóm có thể phát triển và demo bằng notebook riêng, chạy lại được từ kernel sạch theo thứ tự cell. Logic đã ổn định hoặc cần dùng lại chuyển vào src/reddit_sna; notebook import lại, không copy source. Demo notebook đủ input đến evaluation được chấp nhận trong phạm vi nhóm; CLI tiếp tục phục vụ tự động hóa và tích hợp. Thêm thuật toán vào module tương ứng, không tạo cây proposed/baseline hoặc thư mục source theo tên người. Tâm tạo repository, mời năm thành viên còn lại và hướng dẫn cài đặt. Theo quyết định công bố dữ liệu sau đó của chủ repo, 15 corpus gốc và processed lịch sử đã được đưa lên Git/LFS kèm checksum. Khóa riêng, bảng ánh xạ danh tính, `.venv`, artifact runtime và bộ mẫu chấm nhãn vẫn giữ local.
 
 ## 2. Ranh giới công việc và cách làm song song
 
@@ -107,7 +107,7 @@ Mỗi nhóm hoàn thành một prototype từ đầu vào riêng đến kết qu
 
 | Thành viên | Nhiệm vụ riêng | Đầu ra cá nhân |
 |---|---|---|
-| **Tâm** | Đã chuẩn bị sẵn bộ dataset Reddit gồm 15 corpus và các script xử lý ban đầu. Tạo repository GitHub cho đề tài, viết mô tả repo, mời năm thành viên còn lại và phân quyền cộng tác. Dựng cấu trúc thư mục, thiết lập .gitignore để loại dữ liệu gốc và file riêng tư, khai báo thư viện/môi trường và viết README hướng dẫn cài đặt, chạy demo, quy tắc đặt nhánh và gửi pull request. Rà soát dữ liệu đã có, tổ chức thư mục và manifest. Chọn phạm vi pilot nhỏ gồm các tháng liên tiếp trong train, chạy chuẩn hóa và dựng mạng trả lời R. Dùng thư viện Independent Leiden để tạo community tạm cho chính prototype core. Chốt giao diện nội bộ với Thanh, viết lệnh chạy và ghép đường chạy của nhóm. | Repository GitHub đã mời thành viên, cấu trúc thư mục, .gitignore, cấu hình môi trường/thư viện, README cộng tác và chạy demo; manifest pilot, snapshot thật, membership tạm và cấu hình detector. |
+| **Tâm** | Đã chuẩn bị sẵn bộ dataset Reddit gồm 15 corpus và các script xử lý ban đầu. Tạo repository GitHub cho đề tài, viết mô tả repo, mời năm thành viên còn lại và phân quyền cộng tác. Dựng cấu trúc thư mục, thiết lập chính sách quản lý dữ liệu và file riêng tư; dataset đã được chủ repo duyệt công bố qua Git/LFS, khai báo thư viện/môi trường và viết README hướng dẫn cài đặt, chạy demo, quy tắc đặt nhánh và gửi pull request. Rà soát dữ liệu đã có, tổ chức thư mục và manifest. Chọn phạm vi pilot nhỏ gồm các tháng liên tiếp trong train, chạy chuẩn hóa và dựng mạng trả lời R. Dùng thư viện Independent Leiden để tạo community tạm cho chính prototype core. Chốt giao diện nội bộ với Thanh, viết lệnh chạy và ghép đường chạy của nhóm. | Repository GitHub đã mời thành viên, cấu trúc thư mục, .gitignore, cấu hình môi trường/thư viện, README cộng tác và chạy demo; manifest pilot, snapshot thật, membership tạm và cấu hình detector. |
 | **Thanh** | Nhận membership từ Tâm, triển khai tracking tối thiểu và bảng đặc trưng community. Ưu tiên GED bản đầu; nếu chưa hoàn thành, dùng quy tắc overlap/Jaccard được ghi rõ để giữ đường chạy thông suốt. Tạo nhãn chuyển tiếp t→t+1, features chỉ dùng thông tin đến t. Chạy một mô hình dự báo cơ bản và tính chỉ số bằng thư viện có sẵn trên phần giữ lại theo thời gian trong pilot. Ghi rõ phần nào của GED/HeTCo chưa triển khai. | Tracker, bảng features/nhãn, mô hình cơ bản, predictions, macro-F1 và confusion matrix của prototype core. |
 
 **Giới hạn tuần 1:** detector tạm và mô hình cơ bản giúp kiểm tra luồng core. Chưa bắt buộc hoàn thành tầng T, multislice, consensus hoặc HeTCo đầy đủ. Không gọi mô hình cơ bản là HeTCo hoàn chỉnh. Tâm–Thanh tự làm phần detection và đánh giá tối thiểu bằng thư viện; Phúc–Đăng và Trâm–Anh vẫn phát triển phần chuyên trách riêng để tích hợp sau.
@@ -276,3 +276,16 @@ Cả sáu người diễn tập và giải thích được phần mình. Không 
 - [ ] **Từng người:** trình bày code và đầu ra phụ trách; ghi rõ dữ liệu thật/giả lập, phần chưa hoàn thành và chưa dùng test chính thức.
 
 Ba prototype độc lập là đầu ra tuần 1. Pipeline Reddit tích hợp toàn project tiếp tục từ tuần 2; điểm trên dữ liệu tổng hợp chỉ dùng kiểm chứng module, không thay thế kết quả Reddit.
+
+## Nghiệm thu prototype core tuần 1 — cập nhật 17/10
+
+- [x] Tâm: audit/manifest, snapshot R và Independent Leiden trên Reddit thật; giao diện membership được forecast tiêu thụ.
+- [x] Thanh: Jaccard/GED thích nghi, features/nhãn, split theo tháng nhãn, Majority/Logistic Regression, predictions và evaluation.
+- [x] Kiểm chứng độc lập tại main aa110ac: 148/148 tests pass; forecast thật tái lập đúng báo cáo; model lưu ra dự đoán lại đúng file predictions.
+- [x] Chủ repo xác nhận đã mời đủ năm thành viên; việc nhận lời mời/quyền thực tế chưa được audit độc lập.
+- [x] Bản bàn giao mới được chạy xác nhận: raw → evaluation thành công; 161/161 tests pass không skip; hai notebook 10/10 và 7/7 cell, tổng 20 biểu đồ; bộ review có 31 trường hợp với 62 hàng chấm trống. Chi tiết ở `docs/RESULTS.md#final-delivery-verification`.
+- [ ] Hai người rà soát nhãn độc lập và xử lý bất đồng; bộ mẫu được chuẩn bị không đồng nghĩa nhãn đã được xác nhận.
+- [ ] Xác nhận kỳ đánh giá tiếp theo chưa từng xem, khóa protocol trước khi chạy; không dùng điểm 2015 như test xác nhận mới.
+- [ ] Nhóm tập trình bày, đi học và báo cáo ngày 22/10; dàn ý slide không phải bằng chứng đã thuyết trình.
+
+Lệnh demo và nội dung trình bày ở `docs/RUNBOOK.md` và `docs/RESULTS.md#presentation-outline`. Các hạn chế về ground truth, lớp thiếu và coverage phải được trình bày cùng điểm số. HeTCo đầy đủ và detector đề xuất thuộc các tuần sau, không phải thiếu sót bắt buộc của baseline tuần 1.

@@ -27,7 +27,8 @@ class CliTests(ProjectCase):
         self.assertIn("check", help_result.stdout)
         listing = self.cli("pipelines")
         self.assertEqual(listing.returncode, 0, listing.stderr)
-        self.assertIn("core: scaffold-only", listing.stdout)
+        self.assertIn("core: prepare/forecast/week1 implemented", listing.stdout)
+        self.assertIn("generic run remains planned", listing.stdout)
         self.assertIn("detection-tracking: scaffold-only", listing.stdout)
         self.assertIn("prediction: scaffold-only", listing.stdout)
 
@@ -36,7 +37,8 @@ class CliTests(ProjectCase):
         self.assertEqual(result.returncode, 0, result.stderr)
         output = json.loads(result.stdout)
         self.assertEqual(output["pipeline"], "core")
-        self.assertEqual(output["pipeline_status"], "scaffold-only")
+        self.assertEqual(output["pipeline_status"], "prepare_forecast_week1_available")
+        self.assertEqual(output["generic_run_status"], "scaffold-only")
         self.assertEqual(Path(output["input"]["path"]), self.marker.parent.resolve())
         self.assertFalse((self.root / "artifacts").exists())
 

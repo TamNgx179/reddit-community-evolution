@@ -129,6 +129,6 @@ class PreparationPipelineTests(CorpusCase):
         result = run_preparation(config, corpora=("moderatepolitics",))
         manifest = json.loads((result / "manifest.json").read_text())
         self.assertEqual(manifest["completed_stages"], ["audit", "normalize", "snapshots", "detect"])
-        self.assertEqual(manifest["forecast_status"], "not_implemented")
+        self.assertEqual(manifest["forecast_status"], "not_run_by_preparation")
         self.assertTrue((result / "memberships/2015-01/membership-seed0.csv").is_file())
         self.assertFalse((result / "predictions.csv").exists())
