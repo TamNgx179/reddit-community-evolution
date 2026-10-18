@@ -2,7 +2,7 @@
 
 **Nguồn trạng thái chính:** file này. **Owner mọi task PHUC:** Phúc. **Tạo bảng:** 16/10/2026. **Mốc chung nội bộ:** tối 20/10; 21/10 dự phòng, 22/10 báo cáo theo lịch repo.
 
-**Tiến độ:** 12/36 task triển khai hoàn thành: PHUC-001 và PHUC-002 đã DONE toàn bộ. Generator có 18 dataset development / 36 snapshot đã sinh và đọc lại độc lập; hai run khớp 162 file dataset, kèm diagnostic, báo cáo CSV trong Git và artifact/ZIP local. Tiếp theo PHUC-003-T01 tích hợp detector; chưa có kết quả Leiden/AMI hoặc evaluation.
+**Tiến độ:** 13/36 task triển khai hoàn thành: PHUC-001/002 DONE toàn bộ, PHUC-003-T01 DONE. Có API Leiden seed 0/gamma 1 đã chạy stable thật: mỗi tháng gán 24 endpoint thành hai nhóm 12/12; hai run khớp membership, output/log/ZIP và CSV báo cáo đã lưu. Tiếp theo PHUC-003-T02 chạy lịch detector 0/1/2; chưa tính AMI hoặc chạy evaluation.
 
 ## Bảng tổng quan cho thành viên nhóm
 
@@ -10,7 +10,7 @@
 |---|---|---|---|---|---|
 | [PHUC-001](001-truth-fixtures/spec.md) | Truth stable/grow và fixture | 16/10 | DONE | 6/6 | 75 test liên quan pass; 2 run export/đọc độc lập, 12 file dataset giống byte, giữ output cũ. [Bằng chứng T06](evidence/PHUC-001-T06-export.md) |
 | [PHUC-002](002-dynamic-benchmark/spec.md) | Graph và sáu sự kiện | 18/10 | DONE | 6/6 | 105 test liên quan pass; full development 18 dataset/36 snapshot mỗi run, 162 file giống byte, 36 reader pass; 4 diagnostic × 2 bộ khớp 24 file; báo cáo CSV/ZIP đã lưu, AC01–05 pass. [Bằng chứng T06](evidence/PHUC-002-T06-development.md) |
-| [PHUC-003](003-leiden-detection/spec.md) | Adapter Leiden | Bộ đầu 17/10; đủ lịch 18/10 | TODO | 0/6 | Dùng detector có sẵn, cần graph nhỏ |
+| [PHUC-003](003-leiden-detection/spec.md) | Adapter Leiden | Bộ đầu 17/10; đủ lịch 18/10 | DOING | 1/6 | T01 DONE; 57 test liên quan pass, stable seed detector 0/gamma 1 có 24 assigned/2 nhóm 12/12 mỗi tháng; 2 file membership giữa hai run giống byte, CSV/log/ZIP đã lưu. Tiếp theo T02. [Bằng chứng T01](evidence/PHUC-003-T01-leiden-adapter.md) |
 | [PHUC-004](004-detection-evaluation/spec.md) | AMI và coverage | Bộ đầu 17/10; hoàn thiện 19/10 | TODO | 0/6 | Có thể viết evaluator bằng fixture |
 | [PHUC-005](005-reproducible-runs/spec.md) | Development/evaluation tái lập | 19/10 | TODO | 0/6 | Cần đầu ra 002–004 để nghiệm thu |
 | [PHUC-006](006-handoff-demo/spec.md) | Gói giao và notebook detection | 20/10 | TODO | 0/6 | Phần cá nhân chưa chờ Đăng; ghép chung tách bên dưới |
@@ -75,7 +75,7 @@ Giao truth stable/grow cho Đăng khi đã kiểm tra được, không chờ lu�
 
 [Đặc tả](003-leiden-detection/spec.md). Cần graph nhỏ 002 để chạy; không cần tracker.
 
-- [ ] PHUC-003-T01 [TODO] [FR01] Tích hợp lời gọi `detect_snapshots` hiện có vào API detection trong `src/reddit_sna/pipelines/detection_tracking.py`, seed 0/gamma 1/protocol synthetic đúng.
+- [x] PHUC-003-T01 [DONE] [FR01] Tích hợp lời gọi `detect_snapshots` hiện có vào API detection trong `src/reddit_sna/pipelines/detection_tracking.py`, seed 0/gamma 1/protocol synthetic đúng.
 - [ ] PHUC-003-T02 [TODO] [FR02] Đọc lịch seed 0/1/2 cố định từ `configs/benchmark_week1.json`, giữ canonical 0, kiểm tra cấu hình trước output.
 - [ ] PHUC-003-T03 [TODO] [FR03] Lưu `detection.json` và mapping dataset/reference/tháng/seed trong metadata từ `src/reddit_sna/pipelines/detection_tracking.py`.
 - [ ] PHUC-003-T04 [TODO] [FR04] Kiểm tra endpoint-only membership, empty graph, dependency/input lỗi và output đã tồn tại ở adapter trong `src/reddit_sna/pipelines/detection_tracking.py`.
@@ -154,6 +154,7 @@ Thêm một dòng khi có tiến triển kiểm tra được; có thể nhiều 
 | 2026-10-18 15:47:24 +07:00 | PHUC-002-T04 | CSV cạnh/export trong `benchmarks/io.py`, CLI `benchmarks/graphs.py`, TOML graph, test unit/integration; source cơ sở `5274b04` + T04; [bằng chứng](evidence/PHUC-002-T04-graph-export.md) | Python 3.12.6; suite graph export/config/truth/dynamic/CSV/contracts/legacy export; hai process hash seed 0/137, consumer stdlib riêng | 92/92 pass, 0 skip/failure/error; 6 dataset/12 snapshot mỗi run, 54 file dataset giống byte; 12 gói đọc lại; repeat exit 2 giữ output, legacy và config nguồn không đổi; unittest 26.859s | `artifacts/detection-tracking/phuc-002-t04-001/` và `-002/`; log/runner/config copy/counts/source/output hashes ở `artifacts/verification/phuc-002-t04-001/` | Tự kiểm tra exporter; chưa nghiệm thu diagnostic T05/T06, chưa chạy evaluation/Leiden/AMI/tracker |
 | 2026-10-18 16:01:47 +07:00 | PHUC-002-T05 | `tests/unit/test_dynamic_benchmark.py`, fixture tiny version 1; source cơ sở `9c18322` + T05; [bằng chứng](evidence/PHUC-002-T05-generator-tests.md) | Python 3.12.6; suite dynamic/graph export/config/truth/CSV/contracts/legacy export; test đủ sáu case, ba dev seed, bốn probability corners và hai process hash seed | 100/100 pass, 0 skip/failure/error; generator 18 test; hai bộ 4 diagnostic/8 snapshot, 24 file giống byte, đọc stdlib 8 gói; giữ 136 output cũ; unittest 15.502s | `artifacts/verification/phuc-002-t05-001/` có CSV/log/config/metadata/hashes, ZIP cùng tên bên ngoài 55 file đã kiểm tra; guide smoke ở `phuc-002-t05-guide-001/` | Tự kiểm tra; chưa nghiệm thu lượt development T06, không sinh evaluation hoặc chạy Leiden/AMI/tracker |
 | 2026-10-18 16:24:48 +07:00 | PHUC-002-T06 | Full-development CLI, reader stdlib độc lập, integration tests, CSV kết quả; source cơ sở `c154564` + T06; [bằng chứng](evidence/PHUC-002-T06-development.md) | Python 3.12.6; suite 10 module liên quan, hai export hash seed 0/137 và 36 reader isolated; 4 diagnostic sinh/đọc riêng | 105/105 pass, 0 skip/failure/error; mỗi run 18 dataset/36 snapshot, 162 file dataset giống byte; 4 diagnostic × 2 bộ khớp 24 file; repeat exit 2, giữ 136 output cũ; AC01–05 pass; unittest 41.666s | `artifacts/detection-tracking/phuc-002-t06-001/` và `-002/`; evidence ở `artifacts/verification/phuc-002-t06-001/`, ZIP 424 file đã mở lại; CSV tổng hợp version trong `document/specs/phuc/evidence/` | Tự nghiệm thu generator; chưa có xác nhận nhận gói từ Đăng, không sinh evaluation/Leiden/AMI/tracker |
+| 2026-10-18 17:31:54 +07:00 | PHUC-003-T01 | `pipelines/detection_tracking.py`, 4 integration test, CSV kết quả; source cơ sở `38ea2d1` + T01; [bằng chứng](evidence/PHUC-003-T01-leiden-adapter.md) | Python 3.12.6, igraph 1.0.0/leidenalg 0.12.0; suite adapter/Leiden/CSV/contracts/export/config/CLI; stable T06 qua hai process seed detector 0/gamma 1 | 57/57 pass, 0 skip/failure/error; hai tháng 24 assigned/2 nhóm 12/12, đúng endpoint; 2 CSV giữa hai run giống byte, đọc stdlib 4 CSV; không dùng truth labels; giữ 462 file output cũ; unittest 25.912s | `artifacts/detection-tracking/phuc-003-t01-001/` và `-002/`; proof ở `artifacts/verification/phuc-003-t01-001/`, ZIP 25 file đã mở lại; CSV tổng hợp version trong evidence | Tự kiểm tra T01; lịch ba seed/mapping/evaluator chưa nghiệm thu, chưa dùng evaluation/AMI/tracker |
 
 Không yêu cầu đã có commit/PR mới được ghi tiến độ; đường dẫn code thực và lệnh chạy vẫn được dùng. Nếu artifact chỉ có trên máy Phúc, ghi rõ và cung cấp cách tái tạo; không ghi link giả để thành viên tưởng đã truy cập được.
 
@@ -163,12 +164,14 @@ T05 đã commit/push `9aba275` trên cùng nhánh T04. Đọc bản T04/T05/T06 
 
 **Git/review ngày 18/10:** T06 đã commit/push `223cf0c`. Đã mở [PR #6 — hoàn thiện truth/export T04–T06](https://github.com/TamNgx179/reddit-community-evolution/pull/6), base `feat/phuc-001-membership-csv` của PR #5 để review riêng phần T04–T06. Thứ tự phụ thuộc: #2 → #5 → #6; chuyển base sang `main` sau khi các PR trước được merge và đồng bộ nếu cần. PR #6 có lệnh tái tạo, kết quả 75 test đã chạy và giới hạn phạm vi truth; chưa merge.
 
-PHUC-002 triển khai trên nhánh riêng `feat/phuc-002-stable-graphs`, tách khỏi phạm vi PR #6. T01 đã commit/push `2926c3b`, T02 `93437d7`, T03 `5274b04`, T04 `9c18322`, T05 `c154564`. [PR #7 — hoàn thiện generator development PHUC-002-T01–T06](https://github.com/TamNgx179/reddit-community-evolution/pull/7) dùng base là nhánh của PR #6; T06 tiếp tục trên cùng nhánh, commit/push cùng reader, task board/evidence và CSV tổng hợp, cập nhật mô tả PR theo phạm vi thực tế. [Hướng dẫn](002-dynamic-benchmark/README.md) có lệnh full development và đọc độc lập; artifact/ZIP local không nằm trong Git. PR chưa merge.
+PHUC-002 triển khai trên nhánh riêng `feat/phuc-002-stable-graphs`, tách khỏi phạm vi PR #6. T01 đã commit/push `2926c3b`, T02 `93437d7`, T03 `5274b04`, T04 `9c18322`, T05 `c154564`, T06 `38ea2d1`. [PR #7 — hoàn thiện generator development PHUC-002-T01–T06](https://github.com/TamNgx179/reddit-community-evolution/pull/7) dùng base là nhánh của PR #6; reader, task board/evidence và CSV tổng hợp đi cùng implementation. [Hướng dẫn](002-dynamic-benchmark/README.md) có lệnh full development và đọc độc lập; artifact/ZIP local không nằm trong Git. PR chưa merge.
+
+PHUC-003 bắt đầu trên [nhánh adapter riêng](https://github.com/TamNgx179/reddit-community-evolution/tree/feat/phuc-003-leiden-adapter), base từ nhánh PR #7 để review phần mới mà không trộn với generator. T01 commit/push cùng test, task board/evidence và [CSV kết quả](evidence/PHUC-003-T01-stable-detection.csv). [Hướng dẫn API](003-leiden-detection/README.md) có cách replay và lưu output; full `run` detection–tracking vẫn chưa hoàn tất.
 
 ## Blocker và thay đổi
 
 | Task/mốc | Thiếu điều kiện gì | Việc còn làm độc lập được | Người cần phản hồi | Bước mở chặn |
 |---|---|---|---|---|
-| — | Không có blocker đang mở; PHUC-001/002 đã DONE | PHUC-003-T01: tích hợp detector Leiden có sẵn với benchmark graph, chưa bắt đầu; không cần chờ Đăng | — | — |
+| — | Không có blocker đang mở; PHUC-001/002 và PHUC-003-T01 đã DONE | PHUC-003-T02: đọc/chạy lịch detector seeds 0/1/2 từ JSON, giữ canonical 0; chưa bắt đầu, không cần chờ Đăng | — | — |
 
 Khi đổi requirement/contract, ghi lý do và cập nhật spec/plan/tasks liên quan; giữ evidence run cũ. Nếu đổi sau khi xem evaluation, ghi rõ ảnh hưởng đến tính giữ lại của bộ đánh giá.
