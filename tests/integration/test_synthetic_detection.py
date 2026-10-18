@@ -4,9 +4,12 @@ from copy import deepcopy
 import csv
 from hashlib import sha256
 import importlib.util
+from itertools import combinations
 import json
+import os
 from pathlib import Path
 import shutil
+import subprocess
 import sys
 import unittest
 from unittest.mock import patch
@@ -24,7 +27,7 @@ ROOT = Path(__file__).resolve().parents[2]
 @unittest.skipUnless(importlib.util.find_spec("leidenalg") and importlib.util.find_spec("igraph"),
                      "install [graph] for synthetic Leiden integration")
 class SyntheticDetectionTests(ProjectCase):
-    def source(self, name="source", *, zero_edges=False, detector_seeds=None, probabilities=None):
+    def source(self, name="source", *, zero_edges=False, detector_seeds=None, probabilities=None, scenario="stable"):
         benchmark = load_benchmark_config(ROOT / "configs/benchmark_week1.json")
         if zero_edges:
             benchmark["generator"].update(p_in=0, p_out=0)
@@ -33,7 +36,7 @@ class SyntheticDetectionTests(ProjectCase):
         if detector_seeds is not None:
             benchmark["detector"]["seeds"] = detector_seeds
         source = self.root / name
-        export_graph_dataset(source, benchmark=benchmark, scenario="stable", generator_seed=11)
+        export_graph_dataset(source, benchmark=benchmark, scenario=scenario, generator_seed=11)
         return source
 
     @staticmethod
@@ -570,3 +573,127 @@ class SyntheticDetectionTests(ProjectCase):
                             api(source, output, benchmark_config=runtime)
                     self.assertFalse(output.exists())
                 path.write_bytes(original)
+
+    def test_known_disconnected_cliques_are_recovered_end_to_end_for_every_month_and_seed(self):
+        original = self.source(probabilities=(1, 0))
+        source = self.root / "cliques graph only"
+        shutil.copytree(original, source, ignore=shutil.ignore_patterns("truth"))
+        before = self.files(source)
+        # Independent expected groups; do not derive the answer from detector or truth CSVs.
+        groups = (frozenset(f"u{i:03d}" for i in range(1, 13)),
+                  frozenset(f"u{i:03d}" for i in range(101, 113)))
+        expected_pairs = {pair for group in groups for pair in combinations(sorted(group), 2)}
+        output = self.root / "known-clique-package"
+        meta = export_synthetic_detection(source, output)
+        diag = json.loads((output / "detection.json").read_text(encoding="utf-8"))
+        self.assertEqual(meta["detector"]["seeds"], [0, 1, 2])
+        self.assertEqual(meta["detector"]["canonical_seed"], 0)
+        self.assertEqual(len(meta["memberships"]), 6)
+        for month in meta["observed_months"]:
+            with (source / f"snapshots/{month}/R.csv").open(encoding="utf-8", newline="") as handle:
+                pairs = {(r["source_user_id"], r["target_user_id"]) for r in csv.DictReader(handle)}
+            self.assertEqual(pairs, expected_pairs)
+            self.assertEqual(len(pairs), 132)
+        for entry in meta["memberships"]:
+            with (output / entry["path"]).open(encoding="utf-8", newline="") as handle:
+                reader = csv.DictReader(handle)
+                self.assertEqual(reader.fieldnames, ["reference_id", "month", "community_id", "user_id"])
+                rows = list(reader)
+            actual = {}
+            for row in rows:
+                actual.setdefault(row["community_id"], set()).add(row["user_id"])
+                self.assertEqual(row["month"], entry["month"])
+                self.assertEqual(row["reference_id"], entry["reference_id"])
+            self.assertEqual({frozenset(users) for users in actual.values()}, set(groups))
+            self.assertEqual(len(rows), 24)
+            self.assertEqual(entry["active_nodes"], 24)
+            self.assertEqual(entry["isolates"], 0)
+            self.assertEqual(entry["canonical"], entry["seed"] == 0)
+            run = next(run for month in diag["months"] if month["month"] == entry["month"]
+                       for run in month["runs"] if run["seed"] == entry["seed"])
+            self.assertEqual(run["sizes"], [12, 12])
+            self.assertTrue(run["all_communities_connected"])
+        for name, info in meta["files"].items():
+            self.assertEqual(sha256((output / name).read_bytes()).hexdigest(), info["sha256"])
+        self.assertEqual(self.files(source), before)
+        self.assertFalse((source / "truth").exists())
+
+    def test_empty_observed_snapshot_is_valid_but_missing_snapshot_is_rejected(self):
+        source = self.source(zero_edges=True)
+        before = self.files(source)
+        complete = self.root / "observed-empty"
+        meta = export_synthetic_detection(source, complete)
+        self.assertEqual(meta["observed_months"], ["2020-01", "2020-02"])
+        self.assertEqual(len(meta["memberships"]), 6)
+        self.assertTrue(all(row["status"] == "empty_graph_no_partition" for row in meta["memberships"]))
+        self.assertEqual(self.files(source), before)
+        # Hide an entire observed month in this temporary fixture, without deleting it.
+        (source / "snapshots/2020-02").rename(source / "withheld-observed-month")
+        incomplete = self.files(source)
+        before_output = self.files(complete)
+        for api in (detect_synthetic_dataset, export_synthetic_detection):
+            destination = self.root / ("missing-month-" + api.__name__)
+            with self.subTest(api=api.__name__), self.assertRaises(FileNotFoundError):
+                api(source, destination)
+            self.assertFalse(destination.exists())
+            self.assertEqual(self.files(source), incomplete)
+            self.assertEqual(self.files(complete), before_output)
+
+    def test_references_bind_whole_cohort_when_first_month_graph_is_shared(self):
+        stable = self.source("stable", probabilities=(1, 0))
+        grow = self.source("grow", probabilities=(1, 0), scenario="grow")
+        first = export_synthetic_detection(stable, self.root / "stable-detection")
+        second = export_synthetic_detection(grow, self.root / "grow-detection")
+        self.assertEqual((stable / "snapshots/2020-01/R.csv").read_bytes(),
+                         (grow / "snapshots/2020-01/R.csv").read_bytes())
+        self.assertNotEqual((stable / "snapshots/2020-02/R.csv").read_bytes(),
+                            (grow / "snapshots/2020-02/R.csv").read_bytes())
+        self.assertNotEqual(first["graph_reference"], second["graph_reference"])
+        self.assertNotEqual(first["snapshot_cohort_sha256"], second["snapshot_cohort_sha256"])
+        self.assertEqual(first["memberships"][0]["graph_sha256"], second["memberships"][0]["graph_sha256"])
+        for meta in (first, second):
+            for seed in (0, 1, 2):
+                entries = [m for m in meta["memberships"] if m["seed"] == seed]
+                self.assertEqual(len(entries), 2)
+                self.assertEqual({row["reference_id"] for row in entries}, {meta["detector_references"][str(seed)]})
+                self.assertTrue(all(row["dataset_id"] == meta["dataset_id"] for row in entries))
+
+    def test_fresh_process_relocation_and_decoy_truth_preserve_memberships_and_old_package(self):
+        original = self.source(probabilities=(1, 0))
+        graph_only = self.root / "graph only"
+        moved = self.root / "moved graph with decoy truth"
+        shutil.copytree(original, graph_only, ignore=shutil.ignore_patterns("truth"))
+        shutil.copytree(graph_only, moved)
+        (moved / "truth").mkdir()
+        for name in ("membership", "events", "links"):
+            (moved / "truth" / f"{name}.csv").write_bytes(b"deliberately invalid decoy,not detector input\n")
+        original_inputs, moved_inputs = self.files(graph_only), self.files(moved)
+        script = (
+            "import json,sys; from pathlib import Path; "
+            "from reddit_sna.pipelines.detection_tracking import export_synthetic_detection; "
+            "m=export_synthetic_detection(Path(sys.argv[1]),Path(sys.argv[2])); "
+            "print(json.dumps({'dataset_id':m['dataset_id'],'canonical_seed':m['detector']['canonical_seed']}))"
+        )
+        outputs = [self.root / "process-zero", self.root / "process-137"]
+        for source, output, hash_seed in zip((graph_only, moved), outputs, ("0", "137")):
+            completed = subprocess.run([sys.executable, "-c", script, str(source), str(output)],
+                                       cwd=ROOT, env={**os.environ, "PYTHONHASHSEED": hash_seed},
+                                       capture_output=True, text=True, encoding="utf-8", timeout=30)
+            self.assertEqual(completed.returncode, 0, completed.stderr)
+            self.assertEqual(json.loads(completed.stdout), {"dataset_id": "dev-stable-easy-g11", "canonical_seed": 0})
+        metas = [json.loads((output / "metadata.json").read_text(encoding="utf-8")) for output in outputs]
+        self.assertEqual(metas[0]["graph_reference"], metas[1]["graph_reference"])
+        self.assertEqual(metas[0]["detector_references"], metas[1]["detector_references"])
+        self.assertEqual(metas[0]["source"]["files"], metas[1]["source"]["files"])
+        for entry in metas[0]["memberships"]:
+            name = entry["path"]
+            self.assertEqual((outputs[0] / name).read_bytes(), (outputs[1] / name).read_bytes())
+        complete_before = self.files(outputs[0])
+        repeated = subprocess.run([sys.executable, "-c", script, str(graph_only), str(outputs[0])], cwd=ROOT,
+                                  capture_output=True, text=True, encoding="utf-8", timeout=30)
+        self.assertNotEqual(repeated.returncode, 0)
+        self.assertIn("FileExistsError", repeated.stderr)
+        self.assertEqual(self.files(outputs[0]), complete_before)
+        self.assertEqual(self.files(graph_only), original_inputs)
+        self.assertEqual(self.files(moved), moved_inputs)
+        self.assertFalse(any(name.startswith("truth/") for name in metas[1]["source"]["files"]))

@@ -113,12 +113,28 @@ Adapter kiểm tra membership với đúng tập endpoint R, không lấy giao �
 
 Isolate là người có trong nodes.csv nhưng không có cạnh R. Ví dụ diagnostic riêng `p_in=0.05, p_out=0` giữ đủ 24 active users mỗi tháng; chỉ endpoint có membership, số còn lại ghi rõ trong metadata. Đây là kiểm tra adapter với cấu hình riêng, không thêm vào cohort development mặc định và không đánh giá AMI trên tập giao tùy ý.
 
+## Kiểm thử tích hợp — T05
+
+Bốn test T05 chạy detector thật, thêm kiểm tra hành vi đầu cuối vào các test lỗi của T04:
+
+- Hai clique rời nhau, mỗi clique 12 người, config riêng p_in=1/p_out=0. Kiểm tra chính xác 132 cạnh/tháng và partition gồm hai tập user đã khai báo độc lập, qua đủ hai tháng × ba seed. So sánh tập thành viên, không phụ thuộc tên `c0`/`c1`; không đọc CSV truth làm đáp án của detector.
+- Hai tháng R rỗng được quan sát hợp lệ có đủ mapping; nếu một thư mục tháng bị thiếu, cả hai API phải từ chối thay vì coi là tháng rỗng.
+- Stable và grow có graph tháng đầu giống byte nhưng tháng sau khác nhau: graph reference của toàn cohort phải khác, mỗi seed vẫn giữ reference nhất quán qua tháng trong dataset riêng.
+- Hai process mới có `PYTHONHASHSEED=0/137`, input chuyển vị trí và thêm ba CSV truth giả không hợp lệ: membership/reference phải giữ nguyên. Thử chạy lại vào gói complete để xác minh không ghi đè bất kỳ file nào.
+
+Các cấu hình 1/0 và 0/0 là diagnostic riêng để kiểm tra đáp án biết trước, không thay công thức 0.50/0.02 của cohort development. Không có AMI hoặc tracker trong gate này.
+
 ## Kiểm tra và phần tiếp theo
 
 ```powershell
-& .\.venv\Scripts\python.exe -m unittest tests.integration.test_synthetic_detection tests.unit.test_leiden tests.unit.test_synthetic_io tests.unit.test_contracts tests.unit.test_graph_export tests.unit.test_benchmark_config tests.integration.test_cli -v
+& .\.venv\Scripts\python.exe -m unittest tests.integration.test_synthetic_detection -v
+& .\.venv\Scripts\python.exe -m unittest discover -s tests -v
 ```
 
-Suite hiện **73/73 test liên quan pass**. T04 thêm bảy test cho dependency thiếu, metadata/graph lỗi, membership bị sửa sai, diagnostics mâu thuẫn, mixed isolates, backend lỗi sau khi ghi scratch và source/runtime đổi trong lúc chạy. [Bằng chứng T04](../evidence/PHUC-003-T04-adapter-errors.md) có ba gói diagnostic, consumer độc lập, 20 fault checks và output/log/ZIP đã lưu. [T03](../evidence/PHUC-003-T03-detection-package.md) giữ lượt xuất gói 66 test/relocated copy; [T02](../evidence/PHUC-003-T02-detector-schedule.md) giữ 61 test/ba seed; [T01](../evidence/PHUC-003-T01-leiden-adapter.md) giữ 57 test/một seed.
+T05 đã chạy **24/24 test adapter** và **234/234 test toàn repo**, không skip/failure/error. Tests tự sinh fixture trong thư mục tạm, không cần artifact local hoặc dữ liệu Reddit để chạy. Cần cài `[graph]`; nếu test adapter bị skip vì thiếu dependency thì chưa đạt gate T05. Không đổi source runtime, thuật toán hoặc dependencies trong task này.
 
-Tiếp theo **PHUC-003-T05** nghiệm thu integration graph nhỏ/refs/endpoint/empty/no-overwrite và liên kết các gate với yêu cầu toàn adapter. T06 còn lượt development đủ cohort. AMI/coverage evaluator thuộc PHUC-004; không cần chờ tracker của Đăng để tiếp tục.
+[Bằng chứng T05](../evidence/PHUC-003-T05-integration.md) và [CSV gate AC01–AC05](../evidence/PHUC-003-T05-acceptance-gates.csv) nối từng điều kiện chấp nhận với tên test đã pass. Bốn gói kiểm chứng có 24 membership được reader stdlib kiểm tra và so partition với các tập người khai báo độc lập; CSV/ZIP đã lưu. Đây là nghiệm thu integration FR01–FR04; không thay lượt development thật FR05.
+
+Các lượt lịch sử giữ nguyên: [T04](../evidence/PHUC-003-T04-adapter-errors.md) có 73 test liên quan/20 fault checks; [T03](../evidence/PHUC-003-T03-detection-package.md) có 66 test/relocated copy; [T02](../evidence/PHUC-003-T02-detector-schedule.md) có 61 test/ba seed; [T01](../evidence/PHUC-003-T01-leiden-adapter.md) có 57 test/một seed.
+
+Tiếp theo **PHUC-003-T06** chạy đủ cohort development với ba detector seed, lưu diagnostics/paths/evidence theo lịch mặc định. AMI/coverage evaluator thuộc PHUC-004; không cần chờ tracker của Đăng để tiếp tục.
