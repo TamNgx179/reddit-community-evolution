@@ -2,6 +2,7 @@
 
 **Owner:** Phúc. **Thiết kế:** v1, 16/10/2026. **Phân công:** P03.
 **Tiến độ, hạn và bằng chứng:** [tasks.md](../tasks.md#phuc-003). **Giao diện:** [contracts.md](../contracts.md).
+**Trạng thái triển khai:** DONE, 6/6 task; nghiệm thu kỹ thuật detection/development, chưa phải AMI/tracker hoặc receipt từ Đăng.
 
 ## Mục tiêu và user story
 
@@ -42,3 +43,4 @@ Cần ít nhất graph stable của 002 để chạy đầu tiên; có thể vi�
 - T03 đã có [gói detection và bằng chứng](../evidence/PHUC-003-T03-detection-package.md): exporter lưu diagnostics/config/metadata và mapping dataset–tháng–seed–reference/path/hash; 66 test liên quan pass, hai gói stable và gói relocated đọc lại bằng stdlib. Mapping này định danh file, chưa matching cộng đồng truth/prediction. T04–T06 còn bộ lỗi/dependency và nghiệm thu integration/cohort đầy đủ.
 - T04 đã có [bằng chứng lỗi/isolate](../evidence/PHUC-003-T04-adapter-errors.md): kiểm tra metadata/graph/CSV/diagnostics nhất quán, dependency thiếu và lỗi backend/source đổi; 73 test liên quan pass, ba gói diagnostic đọc độc lập và 20 fault checks giữ input/output cũ. T05/T06 còn nghiệm thu integration và cohort đầy đủ; không dùng diagnostic probabilities riêng để thay cohort mặc định.
 - T05 đã có [bằng chứng integration](../evidence/PHUC-003-T05-integration.md) và [matrix AC01–AC05](../evidence/PHUC-003-T05-acceptance-gates.csv): thêm bốn test đầu cuối, 24 test adapter và 234 test repo pass; bốn gói fixture đọc độc lập và đối chiếu 24 partition, giữ output cũ. FR01–FR04 có gate kiểm chứng; **T06/FR05 còn lượt development đủ cohort**, toàn spec chưa DONE.
+- T06 đã có [bằng chứng full development](../evidence/PHUC-003-T06-development.md): batch command gọi adapter hiện có, 238 test repo pass; hai run 18 dataset/36 snapshot/108 membership mỗi run, 108 CSV tái lập, 36 reader độc lập/216 CSV và 216 ARI checks pass. Config mặc định/canonical giữ nguyên; 7/36 snapshot khác partition giữa seed được lưu, không loại case. **FR01–FR05 và 6 task đã nghiệm thu kỹ thuật; PHUC-003 DONE**. AMI, evaluation, full orchestration/freeze và tracker còn ở spec khác.

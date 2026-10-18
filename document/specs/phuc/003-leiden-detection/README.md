@@ -2,6 +2,8 @@
 
 **T01** nối graph benchmark với `detect_snapshots` có sẵn; **T02** đọc và chạy đủ detector seeds 0/1/2 từ cấu hình, giữ canonical 0; **T03** xuất membership, diagnostics, config và metadata mapping thành một gói. Đầu vào là các cạnh quan hệ theo tháng; đầu ra là bảng mỗi người được detector gán vào nhóm nào. Thuật toán tự tìm nhóm từ graph, không đọc membership/events/links chuẩn để tạo kết quả.
 
+**PHUC-003 đã DONE cả 6 task.** T04/T05 kiểm tra lỗi và integration; T06 chạy đủ development mặc định qua hai process, mỗi run có 18 dataset/36 snapshot/108 membership. Toàn repo 238 test pass; output, diagnostics và bằng chứng đã lưu. Đây là hoàn thành bước detection; AMI/tracking/full pipeline còn riêng.
+
 ## API và cách chạy
 
 API nằm trong [pipelines/detection_tracking.py](../../../../src/reddit_sna/pipelines/detection_tracking.py):
@@ -124,17 +126,53 @@ Bốn test T05 chạy detector thật, thêm kiểm tra hành vi đầu cuối v
 
 Các cấu hình 1/0 và 0/0 là diagnostic riêng để kiểm tra đáp án biết trước, không thay công thức 0.50/0.02 của cohort development. Không có AMI hoặc tracker trong gate này.
 
+## Chạy đủ development — T06
+
+[Lệnh chạy](../../../../scripts/run_development_detection.py) dùng lại gói graph/truth đã xuất ở PHUC-002, không sinh lại graph hoặc đọc CSV truth để partition. [TOML riêng](../../../../configs/detection_development.toml) có seed 0 với vai trò canonical detector; lịch generator/detector đầy đủ đọc từ JSON benchmark.
+
+```powershell
+& .\.venv\Scripts\python.exe scripts/run_development_detection.py --source-run artifacts/detection-tracking/phuc-002-t06-001 --run-id phuc-003-development-demo
+```
+
+Chọn run ID mới mỗi lần. Nếu source chưa có ở máy clone repo, chạy [PHUC-002 full development](../002-dynamic-benchmark/README.md#chạy-đủ-bộ-development-và-đọc-lại-độc-lập--t06) rồi thay `--source-run`. Có thể truyền `--config` và `--benchmark-config`; runner yêu cầu namespace synthetic/detection-tracking, TOML seed trùng canonical 0 và lịch detector `[0,1,2]`/gamma 1. Gói nguồn phải complete và có đúng toàn bộ danh sách development trong JSON; thiếu/thừa dataset hoặc hash graph/config/metadata không khớp thì từ chối trước output.
+
+Config mặc định cho **6 case × 3 generator seed = 18 dataset**, **36 snapshot**, **108 membership CSV**. Ba detector seed là ba lần chạy trên cùng graph, không phải ba dataset độc lập. CLI không chọn evaluation hoặc seed tốt nhất và không sửa cấu hình theo kết quả.
+
+Output mới:
+
+```text
+artifacts/detection-tracking/<run-id>/
+  manifest.json
+  benchmark-config.json
+  datasets/<dataset-id>/
+    memberships/<month>/membership-seed0.csv
+    memberships/<month>/membership-seed1.csv
+    memberships/<month>/membership-seed2.csv
+    detection.json
+    detector-config.json
+    metadata.json
+```
+
+Manifest có scope `development-detection`, lịch/expected counts, config/source/code/output hashes, Git revision và trạng thái working tree khi chạy, Python/package versions và timing; dependency versions ở metadata/diagnostics từng dataset. `complete` chỉ nghĩa bước detection hoàn thành, `completed_stages=["detection"]`. Nếu lỗi, giữ gói đã xong/output dở dang, ghi `failed`, dataset đang lỗi và exception; không resume/ghi đè run cũ. CLI thành công exit 0; lỗi input/config/I/O exit 2. Lỗi backend bất ngờ vẫn ghi failed rồi truyền lỗi ra, không tạo kết quả thay thế. Full pipeline `reddit_sna run` và PHUC-005 chưa được báo hoàn tất.
+
+Để dùng đoạn đọc/hash/chọn canonical ở trên cho một dataset trong batch, đặt `root = Path("artifacts/detection-tracking/<run-id>/datasets/<dataset-id>")`. Metadata từng dataset giữ nguyên schema của API một dataset.
+
+Lượt thực T06: `phuc-003-t06-001/` và `phuc-003-t06-002/`, cả 108 membership giống byte giữa hai run; 36 reader stdlib kiểm tra 216 CSV. ARI giữa seed trung bình 0.941167, nhỏ nhất 0.502139; 7/36 snapshot có partition khác nhau giữa seed. Không đổi canonical hoặc loại case/seed vì kết quả khác nhau. Xem [bằng chứng](../evidence/PHUC-003-T06-development.md), [detection 108 dòng](../evidence/PHUC-003-T06-development-detection.csv), [seed ARI 108 dòng](../evidence/PHUC-003-T06-seed-repeatability.csv) và [timing tháng](../evidence/PHUC-003-T06-month-timings.csv). Đây là repeatability trong 36 snapshot của 18 dataset, không phải AMI hoặc 108 dataset độc lập.
+
 ## Kiểm tra và phần tiếp theo
 
 ```powershell
 & .\.venv\Scripts\python.exe -m unittest tests.integration.test_synthetic_detection -v
+& .\.venv\Scripts\python.exe -m unittest tests.integration.test_development_detection -v
 & .\.venv\Scripts\python.exe -m unittest discover -s tests -v
 ```
 
 T05 đã chạy **24/24 test adapter** và **234/234 test toàn repo**, không skip/failure/error. Tests tự sinh fixture trong thư mục tạm, không cần artifact local hoặc dữ liệu Reddit để chạy. Cần cài `[graph]`; nếu test adapter bị skip vì thiếu dependency thì chưa đạt gate T05. Không đổi source runtime, thuật toán hoặc dependencies trong task này.
 
+T06 thêm **4 test runner**: đủ lịch development/scope detection-only, CLI không ghi đè và từ chối source thiếu dataset, failed manifest giữ output đã xong/dở dang, config/overlap/source hash lỗi bị chặn trước output. Cả 4 pass; chạy lại full repo đạt **238/238 pass**, không skip/failure/error. Thuật toán/adapter per-dataset và dependencies không đổi ở T06; chỉ thêm batch command/config cùng tests.
+
 [Bằng chứng T05](../evidence/PHUC-003-T05-integration.md) và [CSV gate AC01–AC05](../evidence/PHUC-003-T05-acceptance-gates.csv) nối từng điều kiện chấp nhận với tên test đã pass. Bốn gói kiểm chứng có 24 membership được reader stdlib kiểm tra và so partition với các tập người khai báo độc lập; CSV/ZIP đã lưu. Đây là nghiệm thu integration FR01–FR04; không thay lượt development thật FR05.
 
 Các lượt lịch sử giữ nguyên: [T04](../evidence/PHUC-003-T04-adapter-errors.md) có 73 test liên quan/20 fault checks; [T03](../evidence/PHUC-003-T03-detection-package.md) có 66 test/relocated copy; [T02](../evidence/PHUC-003-T02-detector-schedule.md) có 61 test/ba seed; [T01](../evidence/PHUC-003-T01-leiden-adapter.md) có 57 test/một seed.
 
-Tiếp theo **PHUC-003-T06** chạy đủ cohort development với ba detector seed, lưu diagnostics/paths/evidence theo lịch mặc định. AMI/coverage evaluator thuộc PHUC-004; không cần chờ tracker của Đăng để tiếp tục.
+Tiếp theo **PHUC-004-T01** xác minh dataset/reference/tháng/user và căn nhãn theo cùng user ID trước khi đánh giá AMI/coverage. Chưa có điểm AMI trong các bảng T06 và không cần chờ tracker của Đăng để làm evaluator.
