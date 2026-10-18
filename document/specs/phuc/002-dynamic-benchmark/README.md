@@ -1,6 +1,6 @@
 # Benchmark mạng động — Sinh và xuất gói graph/truth
 
-T01 có sampler graph stable; T02 có đáp án chuẩn cho đủ sáu tình huống; T03 đưa tham số và lịch seed vào file cấu hình chung; T04 xuất chúng thành gói CSV/JSON đọc lại được. `membership` là bảng người thuộc nhóm nào; `events` là nhãn thay đổi của nhóm nguồn; `links` cho biết nhóm nguồn nối sang nhóm nào ở tháng sau. Đáp án này dùng để đối chiếu với kết quả tracker sau này.
+T01 có sampler graph stable; T02 có đáp án chuẩn cho đủ sáu tình huống; T03 đưa tham số và lịch seed vào file cấu hình chung; T04 xuất chúng thành gói CSV/JSON đọc lại được; T05 kiểm tra generator trên cả sáu case và các mẫu rất nhỏ. `membership` là bảng người thuộc nhóm nào; `events` là nhãn thay đổi của nhóm nguồn; `links` cho biết nhóm nguồn nối sang nhóm nào ở tháng sau. Đáp án này dùng để đối chiếu với kết quả tracker sau này.
 
 Sampler lấy membership chuẩn từ PHUC-001 rồi xét từng cặp user trong mỗi tháng. Hai user cùng community có xác suất nối cạnh `p_in=0.50`; khác community dùng `p_out=0.02`. Cạnh vô hướng, chỉ ghi một chiều source < target, weight 1.0.
 
@@ -188,12 +188,74 @@ truth = read_memberships(destination / "truth/membership.csv",
 
 Gói chỉ có ở máy chạy vì `artifacts/` bị Git ignore. Thành viên nhóm chạy lệnh trên để tái tạo hoặc nhận nguyên thư mục run. Consumer độc lập `scripts/read_truth_fixture.py` dành cho gói PHUC-001 cũ, không nhận artifact type graph/truth mới. [Bằng chứng T04](../evidence/PHUC-002-T04-graph-export.md) ghi cách kiểm tra bằng stdlib riêng cùng các gói đã đo.
 
+## Kiểm tra generator và lưu mẫu nhỏ — T05
+
+[test_dynamic_benchmark.py](../../../../tests/unit/test_dynamic_benchmark.py) hiện có **18 test**. T05 thêm 8 test và mở rộng test khác process từ stable sang đủ sáu case. Kiểm tra ba development seed 11/12/13, cùng seed tái lập, đổi seed giữ truth nhưng đổi graph trên các fixture cố định, đảo/shuffle input không đổi graph, đủ bốn cặp xác suất 0/1, biên seed 0/2³²−1 và từ chối registry sai trước khi tạo RNG. Thay p_in không dịch random draw của cặp khác nhóm, thay p_out không dịch draw của cặp cùng nhóm.
+
+[dynamic_diagnostics.json](../../../../tests/fixtures/dynamic_diagnostics.json) là fixture test version riêng `tiny-sampler-diagnostics-v1`, **không phải JSON benchmark easy hoặc bộ evaluation**. Nó khai báo tập người/nhóm trước khi sample và counts mong đợi:
+
+| Mẫu | Nodes tháng 1→2 | Cạnh tháng 1→2 | Isolate tháng 1→2 | Ý nghĩa |
+|---|---|---|---|---|
+| `zero-edges` | 4→4 | 0→0 | 4→4 | p_in=p_out=0 vẫn giữ đủ node/membership |
+| `small-groups` | 4→4 | 1→1 | 2→2 | Nhóm a/b nối một cạnh; k và s là hai nhóm singleton, giữ cô lập |
+| `empty-singleton` | 0→1 | 0→0 | 0→1 | Tháng đầu quan sát rỗng; tháng sau có một người |
+| `singleton-empty` | 1→0 | 0→0 | 1→0 | Tháng sau quan sát rỗng vẫn được giữ tường minh |
+
+Fixture này chỉ kiểm tra sampler/node/membership, không sinh nhãn events/links cho các case tiny. Không tự gán dissolve hoặc coi thiếu cạnh là mất người. Đây là nhóm nhỏ có chủ ý để kiểm tra giới hạn, không khẳng định detector khôi phục được chúng.
+
+Chạy riêng suite generator:
+
+```powershell
+& .\.venv\Scripts\python.exe -m unittest tests.unit.test_dynamic_benchmark -v
+```
+
+T05 đã lưu **hai bộ diagnostic CSV + metadata**, log đầy đủ, CSV từng test, bảng counts, config copy, hashes và ZIP ở `artifacts/verification/phuc-002-t05-001/` và `phuc-002-t05-001.zip`. Đây là artifact local bị Git ignore. Xem [bằng chứng T05](../evidence/PHUC-002-T05-generator-tests.md) để biết chính xác file và lượt đã chạy.
+
+Thành viên khác muốn **giữ lại CSV mẫu** sau khi thử, chạy đoạn dưới từ repo và chọn folder mới. Đây là ví dụ xuất fixture, không phải CLI benchmark sáu case:
+
+```powershell
+@'
+import json
+from pathlib import Path
+from reddit_sna.benchmarks.dynamic import sample_snapshots
+from reddit_sna.benchmarks.io import write_edges, write_memberships, write_nodes
+from reddit_sna.contracts import Membership
+
+fixture_path = Path("tests/fixtures/dynamic_diagnostics.json")
+fixture = json.loads(fixture_path.read_text(encoding="utf-8"))
+output = Path("artifacts/verification/my-tiny-diagnostics-001")
+output.mkdir(parents=True, exist_ok=False)
+(output / "fixture.json").write_bytes(fixture_path.read_bytes())
+for case in fixture["cases"]:
+    folder = output / case["case_id"]
+    folder.mkdir()
+    reference = "truth-diagnostic-" + case["case_id"]
+    groups = case["groups_by_month"]
+    users = {m: [u for ids in partition.values() for u in ids] for m, partition in groups.items()}
+    memberships = [Membership(reference, m, group, u) for m, partition in groups.items()
+                   for group, ids in partition.items() for u in ids]
+    snapshots = sample_snapshots(memberships, expected_reference=reference, expected_users_by_month=users,
+                                 generator_seed=fixture["generator_seed"], p_in=case["p_in"], p_out=case["p_out"])
+    for snapshot in snapshots:
+        month_dir = folder / "snapshots" / snapshot.month
+        month_dir.mkdir(parents=True)
+        write_nodes(month_dir / "nodes.csv", snapshot.month, snapshot.nodes)
+        write_edges(month_dir / "R.csv", snapshot.edges,
+                    expected_month=snapshot.month, expected_users=snapshot.nodes)
+    write_memberships(folder / "membership.csv", memberships,
+                      expected_reference=reference, expected_users_by_month=users)
+print(output.resolve())
+'@ | & .\.venv\Scripts\python.exe -
+```
+
+Ví dụ này lưu input fixture và 5 CSV/case trong folder mới. Gói bằng chứng T05 bổ sung metadata/hashes, đọc lại độc lập và ZIP đã kiểm tra; hai loại output đều chỉ dành cho diagnostic sampler.
+
 ## Kiểm tra và phạm vi
 
 ```powershell
 & .\.venv\Scripts\python.exe -m unittest tests.unit.test_graph_export tests.integration.test_graph_export tests.unit.test_benchmark_config tests.unit.test_synthetic_truth tests.unit.test_dynamic_benchmark tests.unit.test_synthetic_io tests.unit.test_contracts tests.unit.test_truth_fixture_export tests.integration.test_truth_fixtures -v
 ```
 
-T03 đã chạy 80 test liên quan. T04 bổ sung 12 test cho CSV cạnh, gói sáu case, hashes/tái lập, isolate, failure và CLI không ghi đè. Kết quả suite và lượt export thực tế được ghi trong [bằng chứng T04](../evidence/PHUC-002-T04-graph-export.md). [Bằng chứng T02](../evidence/PHUC-002-T02-six-event-truth.md) giữ lượt 70 test trước đó; [bằng chứng T01](../evidence/PHUC-002-T01-stable-graphs.md) giữ lượt 55 test và số cạnh stable đã đo.
+Suite liên quan hiện **100/100 pass**, trong đó generator có 18 test. [Bằng chứng T05](../evidence/PHUC-002-T05-generator-tests.md) ghi kết quả, dữ liệu tiny và đối chiếu output cũ; [T04](../evidence/PHUC-002-T04-graph-export.md) giữ lượt 92 test và các gói sáu case. [T03](../evidence/PHUC-002-T03-benchmark-config.md), [T02](../evidence/PHUC-002-T02-six-event-truth.md), [T01](../evidence/PHUC-002-T01-stable-graphs.md) giữ lịch sử kiểm tra trước đó.
 
-T01–T04 có sampler, truth sáu case, cấu hình/lịch chung và exporter. T05 bổ sung suite generator toàn diện về seed/order/xác suất biên/nhóm nhỏ; T06 nghiệm thu benchmark development cùng diagnostic/báo cáo tái lập đầy đủ. Lượt smoke test exporter T04 chưa thay thế các việc đó. Chưa có kết quả Leiden/AMI/tracker trên benchmark đầy đủ.
+T01–T05 có sampler, truth sáu case, cấu hình/lịch chung, exporter và suite generator/diagnostic. **T06** còn nghiệm thu benchmark development cùng diagnostic/báo cáo tái lập đầy đủ; test và mẫu tiny của T05 chưa thay thế lượt đó. Chưa có kết quả Leiden/AMI/tracker trên benchmark đầy đủ.

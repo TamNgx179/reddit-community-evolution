@@ -2,14 +2,14 @@
 
 **Nguồn trạng thái chính:** file này. **Owner mọi task PHUC:** Phúc. **Tạo bảng:** 16/10/2026. **Mốc chung nội bộ:** tối 20/10; 21/10 dự phòng, 22/10 báo cáo theo lịch repo.
 
-**Tiến độ:** 10/36 task triển khai hoàn thành: PHUC-001-T01–T06 và PHUC-002-T01–T04 đã DONE. Có sampler, truth sáu case, cấu hình/lịch seed chung và exporter graph/truth kèm metadata/hashes. Suite generator/diagnostic, nghiệm thu development, adapter detection và lượt evaluation thực tế vẫn thuộc các task tiếp theo.
+**Tiến độ:** 11/36 task triển khai hoàn thành: PHUC-001-T01–T06 và PHUC-002-T01–T05 đã DONE. Có sampler, truth sáu case, cấu hình/lịch seed chung, exporter và suite generator/diagnostic; CSV/log/JSON diagnostic đã lưu cùng ZIP. Nghiệm thu development, adapter detection và lượt evaluation thực tế vẫn thuộc các task tiếp theo.
 
 ## Bảng tổng quan cho thành viên nhóm
 
 | Spec | Phạm vi | Mốc nội bộ năm 2026 | Trạng thái | Task DONE | Đang làm / vướng mắc / bằng chứng |
 |---|---|---|---|---|---|
 | [PHUC-001](001-truth-fixtures/spec.md) | Truth stable/grow và fixture | 16/10 | DONE | 6/6 | 75 test liên quan pass; 2 run export/đọc độc lập, 12 file dataset giống byte, giữ output cũ. [Bằng chứng T06](evidence/PHUC-001-T06-export.md) |
-| [PHUC-002](002-dynamic-benchmark/spec.md) | Graph và sáu sự kiện | 18/10 | DOING | 4/6 | T01–T04 DONE; 92 test liên quan pass; hai run xuất sáu case seed 11, 54 file dataset giống byte, giữ output cũ. Tiếp theo T05. [Bằng chứng T04](evidence/PHUC-002-T04-graph-export.md) |
+| [PHUC-002](002-dynamic-benchmark/spec.md) | Graph và sáu sự kiện | 18/10 | DOING | 5/6 | T01–T05 DONE; 100 test liên quan pass, generator 18 test; 4 diagnostic × 2 bộ có 24 file giống byte, lưu CSV/log/JSON/ZIP, giữ 136 file output cũ. Tiếp theo T06. [Bằng chứng T05](evidence/PHUC-002-T05-generator-tests.md) |
 | [PHUC-003](003-leiden-detection/spec.md) | Adapter Leiden | Bộ đầu 17/10; đủ lịch 18/10 | TODO | 0/6 | Dùng detector có sẵn, cần graph nhỏ |
 | [PHUC-004](004-detection-evaluation/spec.md) | AMI và coverage | Bộ đầu 17/10; hoàn thiện 19/10 | TODO | 0/6 | Có thể viết evaluator bằng fixture |
 | [PHUC-005](005-reproducible-runs/spec.md) | Development/evaluation tái lập | 19/10 | TODO | 0/6 | Cần đầu ra 002–004 để nghiệm thu |
@@ -34,6 +34,7 @@ Bảng được cập nhật cùng checklist và ledger bằng chứng. Khi task
 - Reviewer đề xuất: Đăng cho phần giao diện/detection; chưa có xác nhận nhận review. Không tự ghi review/acceptance thay thành viên.
 - Quy trình chốt với Phúc ngày 17/10: sau mỗi task đã kiểm tra xong, cập nhật trạng thái/bằng chứng, commit có task ID và push nhánh đang làm; xác minh remote trước khi chuyển task tiếp theo.
 - Theo yêu cầu ngày 18/10: khi hoàn thành task, giải thích dễ hiểu vừa làm gì, phần đó dùng để làm gì và kết quả cụ thể; dùng ví dụ trước/sau khi hữu ích.
+- Theo yêu cầu tiếp theo ngày 18/10: lưu kết quả đầu ra, log và bằng chứng thành file; ghi rõ đường dẫn artifact local và cách tái tạo/nhận gói, không chỉ in kết quả trong chat. `artifacts/` vẫn bị Git ignore; code/fixture/docs được commit/push.
 
 ## Luồng ưu tiên tối nay
 
@@ -65,7 +66,7 @@ Giao truth stable/grow cho Đăng khi đã kiểm tra được, không chờ lu�
 - [x] PHUC-002-T02 [DONE] [FR03] Mở rộng `src/reddit_sna/benchmarks/scenarios.py` đủ shrink/merge/split/dissolve; mọi nguồn gồm K có truth.
 - [x] PHUC-002-T03 [DONE] [FR01,FR04,FR05] Tạo `configs/benchmark_week1.json` với probabilities, cases, tháng, seed development/evaluation và chính sách ordering/protocol.
 - [x] PHUC-002-T04 [DONE] [FR02,FR04] Hoàn thiện export R/nodes/truth/metadata/hashes và từ chối overwrite trong `src/reddit_sna/benchmarks/io.py`.
-- [ ] PHUC-002-T05 [TODO] [FR01,FR02,FR03,FR04,FR05] Kiểm tra seed/order, cạnh sai, xác suất biên, six-case truth, nhóm nhỏ/isolate trong `tests/unit/test_dynamic_benchmark.py`.
+- [x] PHUC-002-T05 [DONE] [FR01,FR02,FR03,FR04,FR05] Kiểm tra seed/order, cạnh sai, xác suất biên, six-case truth, nhóm nhỏ/isolate trong `tests/unit/test_dynamic_benchmark.py`.
 - [ ] PHUC-002-T06 [TODO] [FR03,FR04,FR05] Sinh/đọc lại sáu case development vào output mới ở `artifacts/detection-tracking/<run_id>/`; ghi số node/cạnh/nhóm, diagnostic và kết quả đối chiếu tái lập.
 
 **Nghiệm thu:** generator đúng theo kịch bản và contract; không phụ thuộc điểm Leiden có cao hay không.
@@ -151,6 +152,7 @@ Thêm một dòng khi có tiến triển kiểm tra được; có thể nhiều 
 | 2026-10-18 09:33:35 +07:00 | PHUC-002-T02 | `benchmarks/scenarios.py`; test truth sáu case; guard exporter cũ; source cơ sở `8b56ab0` + T02; [bằng chứng](evidence/PHUC-002-T02-six-event-truth.md) | Python 3.12.6; suite truth/dynamic/CSV/contracts/export/consumer; gọi API sáu case hai lần và so exporter stable/grow với gói T06 | 70/70 pass, 0 skip/failure/error; một event mỗi nguồn, split hai links, dissolve không link A, K stable; 6 JSON tái lập; 12 file legacy bằng byte, 2 reader isolated pass; unittest 6.389s | `artifacts/verification/phuc-002-t02-001/`; JSON sáu case, legacy regression, logs và source/output hashes | Tự kiểm tra; chưa chạy tracker hoặc export benchmark đủ sáu case |
 | 2026-10-18 10:23:42 +07:00 | PHUC-002-T03 | `configs/benchmark_week1.json`, `benchmarks/config.py`, test config; source cơ sở `93437d7` + T03; [bằng chứng](evidence/PHUC-002-T03-benchmark-config.md) | Python 3.12.6; suite config/truth/dynamic/CSV/contracts/export/consumer; CLI kiểm tra lịch, sampler dùng config stable seed 11 | 80/80 pass, 0 skip/failure/error; 18 dev + 18 eval, ID/seed không trùng; 72 snapshot/216 detector-unit là kế hoạch; mẫu stable 24 node, 76/53 cạnh và hash R khớp T01; unittest 8.139s | `artifacts/verification/phuc-002-t03-001/`; config copy/hash, hai lịch split, CLI/test logs và JSON kiểm chứng | Tự kiểm tra; không sinh dataset evaluation hoặc chạy detector ở T03 |
 | 2026-10-18 15:47:24 +07:00 | PHUC-002-T04 | CSV cạnh/export trong `benchmarks/io.py`, CLI `benchmarks/graphs.py`, TOML graph, test unit/integration; source cơ sở `5274b04` + T04; [bằng chứng](evidence/PHUC-002-T04-graph-export.md) | Python 3.12.6; suite graph export/config/truth/dynamic/CSV/contracts/legacy export; hai process hash seed 0/137, consumer stdlib riêng | 92/92 pass, 0 skip/failure/error; 6 dataset/12 snapshot mỗi run, 54 file dataset giống byte; 12 gói đọc lại; repeat exit 2 giữ output, legacy và config nguồn không đổi; unittest 26.859s | `artifacts/detection-tracking/phuc-002-t04-001/` và `-002/`; log/runner/config copy/counts/source/output hashes ở `artifacts/verification/phuc-002-t04-001/` | Tự kiểm tra exporter; chưa nghiệm thu diagnostic T05/T06, chưa chạy evaluation/Leiden/AMI/tracker |
+| 2026-10-18 16:01:47 +07:00 | PHUC-002-T05 | `tests/unit/test_dynamic_benchmark.py`, fixture tiny version 1; source cơ sở `9c18322` + T05; [bằng chứng](evidence/PHUC-002-T05-generator-tests.md) | Python 3.12.6; suite dynamic/graph export/config/truth/CSV/contracts/legacy export; test đủ sáu case, ba dev seed, bốn probability corners và hai process hash seed | 100/100 pass, 0 skip/failure/error; generator 18 test; hai bộ 4 diagnostic/8 snapshot, 24 file giống byte, đọc stdlib 8 gói; giữ 136 output cũ; unittest 15.502s | `artifacts/verification/phuc-002-t05-001/` có CSV/log/config/metadata/hashes, ZIP cùng tên bên ngoài 55 file đã kiểm tra; guide smoke ở `phuc-002-t05-guide-001/` | Tự kiểm tra; chưa nghiệm thu lượt development T06, không sinh evaluation hoặc chạy Leiden/AMI/tracker |
 
 Không yêu cầu đã có commit/PR mới được ghi tiến độ; đường dẫn code thực và lệnh chạy vẫn được dùng. Nếu artifact chỉ có trên máy Phúc, ghi rõ và cung cấp cách tái tạo; không ghi link giả để thành viên tưởng đã truy cập được.
 
@@ -160,12 +162,12 @@ T05 đã commit/push `9aba275` trên cùng nhánh T04. Đọc bản T04/T05/T06 
 
 **Git/review ngày 18/10:** T06 đã commit/push `223cf0c`. Đã mở [PR #6 — hoàn thiện truth/export T04–T06](https://github.com/TamNgx179/reddit-community-evolution/pull/6), base `feat/phuc-001-membership-csv` của PR #5 để review riêng phần T04–T06. Thứ tự phụ thuộc: #2 → #5 → #6; chuyển base sang `main` sau khi các PR trước được merge và đồng bộ nếu cần. PR #6 có lệnh tái tạo, kết quả 75 test đã chạy và giới hạn phạm vi truth; chưa merge.
 
-PHUC-002 triển khai trên nhánh riêng `feat/phuc-002-stable-graphs`, tách khỏi phạm vi PR #6. T01 đã commit/push `2926c3b`, T02 `93437d7`, T03 `5274b04`. [PR #7 — sampler, truth, config và export PHUC-002-T01–T04](https://github.com/TamNgx179/reddit-community-evolution/pull/7) dùng base là nhánh của PR #6; T04 tiếp tục trên cùng nhánh, commit/push cùng task board/evidence và cập nhật mô tả PR theo phạm vi thực tế. [Hướng dẫn](002-dynamic-benchmark/README.md) có lệnh tái tạo gói CSV/JSON; artifact local không nằm trong Git. PR chưa merge.
+PHUC-002 triển khai trên nhánh riêng `feat/phuc-002-stable-graphs`, tách khỏi phạm vi PR #6. T01 đã commit/push `2926c3b`, T02 `93437d7`, T03 `5274b04`, T04 `9c18322`. [PR #7 — sampler, truth, config, export và tests PHUC-002-T01–T05](https://github.com/TamNgx179/reddit-community-evolution/pull/7) dùng base là nhánh của PR #6; T05 tiếp tục trên cùng nhánh, commit/push cùng fixture/task board/evidence và cập nhật mô tả PR theo phạm vi thực tế. [Hướng dẫn](002-dynamic-benchmark/README.md) có lệnh tái tạo gói CSV/JSON và giữ diagnostic tiny; artifact/ZIP local không nằm trong Git. PR chưa merge.
 
 ## Blocker và thay đổi
 
 | Task/mốc | Thiếu điều kiện gì | Việc còn làm độc lập được | Người cần phản hồi | Bước mở chặn |
 |---|---|---|---|---|
-| — | Không có blocker đang mở; PHUC-002-T01–T04 đã DONE | PHUC-002-T05: bổ sung kiểm tra generator seed/order/xác suất biên/nhóm nhỏ/isolate; chưa bắt đầu, không cần chờ Đăng | — | — |
+| — | Không có blocker đang mở; PHUC-002-T01–T05 đã DONE | PHUC-002-T06: chạy/đọc lại benchmark development, ghép diagnostic và báo cáo tái lập đầy đủ; chưa bắt đầu, không cần chờ Đăng | — | — |
 
 Khi đổi requirement/contract, ghi lý do và cập nhật spec/plan/tasks liên quan; giữ evidence run cũ. Nếu đổi sau khi xem evaluation, ghi rõ ảnh hưởng đến tính giữ lại của bộ đánh giá.

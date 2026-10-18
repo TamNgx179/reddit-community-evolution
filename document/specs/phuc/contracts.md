@@ -1,6 +1,6 @@
 # Contract dataset và bàn giao Phúc–Đăng v1
 
-**Thiết kế v1:** 16/10/2026. Cụ thể hóa schema trong [phân công cặp](../../PHAN-CONG-PHUC-DANG-TUAN-1.md). PHUC-001 có CSV/truth/export stable/grow và consumer độc lập. PHUC-002-T01–T04 có sampler, truth sáu case, config chung và gói graph/truth kèm hashes; kết quả detection/tracking vẫn thuộc các bước sau. Specs 001–006 dùng chung contract này, không tạo biến thể riêng cho mỗi spec.
+**Thiết kế v1:** 16/10/2026. Cụ thể hóa schema trong [phân công cặp](../../PHAN-CONG-PHUC-DANG-TUAN-1.md). PHUC-001 có CSV/truth/export stable/grow và consumer độc lập. PHUC-002-T01–T05 có sampler, truth sáu case, config chung, gói graph/truth kèm hashes và suite generator/tiny diagnostics; kết quả detection/tracking vẫn thuộc các bước sau. Specs 001–006 dùng chung contract này, không tạo biến thể riêng cho mỗi spec.
 
 ## 1. Định danh và phạm vi
 
@@ -115,6 +115,12 @@ Mỗi case có nhóm nền K gồm 12 user riêng, ổn định qua hai tháng v
 - Metadata artifact type `synthetic-graph-truth`, schema 1, identity/reference/tháng, generator seed/config/protocol, Python/package versions, counts node/cạnh/nhóm/isolate và hash tám file dữ liệu/config. Metadata ghi cuối sau khi đọc lại CSV và config; `detector_references={}`, seed không dùng để sinh truth. Config JSON được serialize canonical, không giữ nguyên whitespace của input.
 - CLI `python -m reddit_sna.benchmarks.graphs --run-id <new-id>` dùng `configs/graph_benchmark.toml` và `configs/benchmark_week1.json`; sinh sáu case tại **một** development seed trong TOML. Run helper dùng boundary `project_root/artifacts`, từ chối run đã tồn tại kể cả rỗng. Không tự chạy evaluation.
 - Manifest `scope="graph-truth"`, chỉ hoàn tất `generation/truth`, hash cả metadata. Khi lỗi giữ output dở dang và ghi failed, không retry vào run cũ. Đây chưa phải manifest/freeze đầy đủ PHUC-005. Artifact local không đi theo Git; [hướng dẫn](002-dynamic-benchmark/README.md) và [bằng chứng T04](evidence/PHUC-002-T04-graph-export.md) ghi cách tái tạo/kiểm chứng. Exporter/consumer PHUC-001 cũ giữ nguyên phạm vi stable/grow.
+
+### Fixture diagnostic sampler — PHUC-002-T05
+
+[tests/fixtures/dynamic_diagnostics.json](../../../tests/fixtures/dynamic_diagnostics.json) khai báo protocol riêng `tiny-sampler-diagnostics-v1`, seed 11, nhóm/người, tháng quan sát, probabilities và counts mong đợi. Bốn case zero-edges/small-groups/empty-singleton/singleton-empty chỉ kiểm tra sampler với nhóm nhỏ/isolate/tháng rỗng; không thuộc sáu case easy hoặc evaluation. K trong tiny có một người có chủ ý.
+
+CSV node/edge/membership dùng schema chung, luôn giữ observed months và mọi active user, kể cả không có cạnh. Artifact local của T05 mang type `synthetic-sampler-diagnostic`, scope generator-only, difficulty diagnostic, config/seed/identity/counts và hashes; không có events/links, không tự suy ra dissolve và không đại diện cho gói benchmark đã nghiệm thu. Xem [bằng chứng](evidence/PHUC-002-T05-generator-tests.md) và [ví dụ lưu CSV](002-dynamic-benchmark/README.md#kiểm-tra-generator-và-lưu-mẫu-nhỏ--t05). Đây là version fixture riêng, không nới validator JSON benchmark easy v1.
 
 ## 5. Metadata, manifest và metric tối thiểu
 

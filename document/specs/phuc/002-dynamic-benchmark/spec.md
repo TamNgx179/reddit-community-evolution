@@ -41,3 +41,4 @@ Nghiệm thu dựa trên schema/truth của 001. Không cần tracker, Leiden ho
 - [Bằng chứng T02](../evidence/PHUC-002-T02-six-event-truth.md) xác minh membership/events/links đủ sáu case trong bộ nhớ; export graph/metadata và lịch evaluation vẫn thuộc các task sau.
 - [Bằng chứng T03](../evidence/PHUC-002-T03-benchmark-config.md) ghi JSON chung, validator/lịch split và mẫu sampler từ config. Lịch evaluation được khai báo; chạy/freeze evaluation vẫn thuộc PHUC-005.
 - [Bằng chứng T04](../evidence/PHUC-002-T04-graph-export.md) ghi exporter graph/truth sáu case, config/metadata/hashes, đọc lại/tái lập và giữ output cũ. Đây là kiểm chứng exporter ở development seed 11; suite generator T05 và nghiệm thu development/diagnostic T06 vẫn riêng.
+- [Bằng chứng T05](../evidence/PHUC-002-T05-generator-tests.md) ghi suite generator 18 test, tổng 100 test liên quan, bốn fixture tiny version riêng và hai bộ diagnostic CSV đã lưu. T06 vẫn nghiệm thu lượt development và báo cáo đầy đủ.
