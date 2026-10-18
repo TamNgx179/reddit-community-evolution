@@ -166,7 +166,7 @@ T05 đã commit/push `9aba275` trên cùng nhánh T04. Đọc bản T04/T05/T06 
 
 PHUC-002 triển khai trên nhánh riêng `feat/phuc-002-stable-graphs`, tách khỏi phạm vi PR #6. T01 đã commit/push `2926c3b`, T02 `93437d7`, T03 `5274b04`, T04 `9c18322`, T05 `c154564`, T06 `38ea2d1`. [PR #7 — hoàn thiện generator development PHUC-002-T01–T06](https://github.com/TamNgx179/reddit-community-evolution/pull/7) dùng base là nhánh của PR #6; reader, task board/evidence và CSV tổng hợp đi cùng implementation. [Hướng dẫn](002-dynamic-benchmark/README.md) có lệnh full development và đọc độc lập; artifact/ZIP local không nằm trong Git. PR chưa merge.
 
-PHUC-003 bắt đầu trên [nhánh adapter riêng](https://github.com/TamNgx179/reddit-community-evolution/tree/feat/phuc-003-leiden-adapter), base từ nhánh PR #7 để review phần mới mà không trộn với generator. T01 commit/push cùng test, task board/evidence và [CSV kết quả](evidence/PHUC-003-T01-stable-detection.csv). [Hướng dẫn API](003-leiden-detection/README.md) có cách replay và lưu output; full `run` detection–tracking vẫn chưa hoàn tất.
+PHUC-003 bắt đầu trên [nhánh adapter riêng](https://github.com/TamNgx179/reddit-community-evolution/tree/feat/phuc-003-leiden-adapter). T01 đã commit/push `92fa179` cùng test, task board/evidence và [CSV kết quả](evidence/PHUC-003-T01-stable-detection.csv). [PR #8 — adapter Leiden PHUC-003-T01](https://github.com/TamNgx179/reddit-community-evolution/pull/8) có base là nhánh PR #7 để review riêng phần mới; đang mở, chưa merge. [Hướng dẫn API](003-leiden-detection/README.md) có cách replay và lưu output; full `run` detection–tracking vẫn chưa hoàn tất.
 
 ## Blocker và thay đổi
 
