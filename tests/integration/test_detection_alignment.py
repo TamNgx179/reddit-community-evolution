@@ -10,7 +10,7 @@ import unittest
 
 from reddit_sna.benchmarks.config import load_benchmark_config
 from reddit_sna.benchmarks.io import export_graph_dataset
-from reddit_sna.evaluation.detection import count_snapshot, load_aligned_detection
+from reddit_sna.evaluation.detection import count_snapshot, load_aligned_detection, score_snapshot
 from reddit_sna.pipelines.detection_tracking import export_synthetic_detection
 from tests.support import ProjectCase
 
@@ -140,6 +140,24 @@ class DetectionPackageAlignmentTests(ProjectCase):
             self.assertEqual((counts.active_nodes, counts.endpoint_nodes, counts.assigned_nodes, counts.isolated_nodes), (24, 0, 0, 24))
             self.assertEqual((counts.coverage, counts.coverage_status), (0.0, "defined"))
             self.assertEqual((counts.true_communities_all_nodes, counts.true_communities_scored_nodes, counts.predicted_communities), (2, 0, 0))
+            score = score_snapshot(frame)
+            self.assertIsNone(score.ami)
+            self.assertEqual((score.ami_status, score.ami_reason), ("empty_scored", "no_scored_users"))
+
+    @unittest.skipUnless(importlib.util.find_spec("sklearn"), "install [evaluation] for persisted AMI tests")
+    def test_real_stable_scores_match_library_on_verified_users_without_input_writes(self):
+        from sklearn.metrics import adjusted_mutual_info_score
+        source, predicted = self.pair()
+        before_source, before_predicted = self.files(source), self.files(predicted)
+        for seed in (0, 1, 2):
+            result = load_aligned_detection(source, predicted, detector_seed=seed)
+            for frame in result.snapshots:
+                score = score_snapshot(frame)
+                self.assertEqual((score.ami_status, score.n_scored_users), ("ok", 24))
+                self.assertAlmostEqual(score.ami, 1.0, places=12)
+                self.assertAlmostEqual(score.ami, float(adjusted_mutual_info_score(frame.truth_labels, frame.predicted_labels, average_method="arithmetic")), places=12)
+        self.assertEqual(self.files(source), before_source)
+        self.assertEqual(self.files(predicted), before_predicted)
 
     def test_counts_match_saved_csvs_for_real_detection_with_isolates(self):
         source, predicted = self.pair(isolate_fixture=True)

@@ -1,0 +1,17 @@
+{
+  "all_singletons_partition": "null:degenerate_partition",
+  "average_method": "arithmetic",
+  "constant_partition": "null:degenerate_partition",
+  "empty_scored": "null:empty_scored",
+  "insufficient_users": "null:insufficient_users",
+  "invalid_input": "raise",
+  "library": "scikit-learn",
+  "metric": "adjusted_mutual_info_score",
+  "minimum_scored_users": 2,
+  "negative_scores": "preserve",
+  "nonfinite_score": "raise",
+  "policy_id": "synthetic-ami-v1",
+  "quality_summary_eligibility": "ami_status=ok",
+  "schema_version": 1,
+  "scoring_users": "verified_R_endpoints"
+}

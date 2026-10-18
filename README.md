@@ -16,6 +16,8 @@ python -m venv .venv
 
 Each run ID must be new. This scans all 15 ZIPs without extracting/modifying them and runs the January–March 2015 train-only pilot. Outputs are local under `artifacts/core/<run_id>/`. Use `--corpus moderatepolitics` for an explicitly labeled subset smoke test. Linux/macOS use `.venv/bin/python`. Dependencies are declared in `pyproject.toml`; manifests record installed versions.
 
+For synthetic truth-versus-detection AMI, install the optional evaluation dependency with `& .\.venv\Scripts\python.exe -m pip install -e '.[evaluation]'`. The [Phúc evaluation guide](document/specs/phuc/004-detection-evaluation/README.md) covers validated label alignment, coverage and the versioned AMI policy. Core graph preparation keeps its existing commands.
+
 Stages can also run separately:
 
 ```powershell

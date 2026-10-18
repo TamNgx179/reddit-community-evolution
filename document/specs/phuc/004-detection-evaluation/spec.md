@@ -3,7 +3,7 @@
 **Owner:** Phúc. **Thiết kế:** v1, 16/10/2026. **Phân công:** P04.
 **Tiến độ, hạn và bằng chứng:** [tasks.md](../tasks.md#phuc-004). **Giao diện:** [contracts.md](../contracts.md).
 
-**Triển khai hiện tại:** T01/T02 DONE — kiểm tra identity/keys/hash/cohort, căn vector theo user ID và đếm active/endpoint/assigned/isolate, coverage/status cùng số nhóm trên hai tập người. [Hướng dẫn](README.md), [bằng chứng T01](../evidence/PHUC-004-T01-alignment.md), [bằng chứng T02 và output](../evidence/PHUC-004-T02-counts.md). PHUC-004 đang làm 2/6 task; AMI/policy và metric export còn ở T03–T06.
+**Triển khai hiện tại:** T01/T02/T03 DONE — xác minh/căn nhãn, counts/coverage và AMI bằng sklearn với policy `synthetic-ami-v1`, null/status/reason rõ. [Hướng dẫn](README.md), [T01](../evidence/PHUC-004-T01-alignment.md), [T02](../evidence/PHUC-004-T02-counts.md), [bằng chứng T03/output/policy](../evidence/PHUC-004-T03-ami.md). PHUC-004 đang làm 3/6 task; exporter metrics/summary/timing và nghiệm thu tổng thể còn ở T04–T06.
 
 ## Mục tiêu và user story
 

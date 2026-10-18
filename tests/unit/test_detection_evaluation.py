@@ -1,10 +1,12 @@
 """Detection input alignment, before any AMI or coverage calculation."""
 
 from dataclasses import replace
+import importlib.util
 import unittest
+from unittest.mock import patch
 
 from reddit_sna.contracts import Membership
-from reddit_sna.evaluation.detection import align_memberships, count_snapshot
+from reddit_sna.evaluation.detection import AMI_POLICY, align_memberships, count_snapshot, score_snapshot
 
 
 class DetectionAlignmentTests(unittest.TestCase):
@@ -193,3 +195,125 @@ class DetectionCountTests(unittest.TestCase):
         for value in invalid:
             with self.subTest(value=value), self.assertRaises(ValueError):
                 count_snapshot(value)
+
+
+def ami_frame(truth, predicted):
+    users = tuple(f"u{index:03}" for index in range(len(truth)))
+    frame, = align_memberships(
+        [Membership("truth", "2020-01", label, user) for user, label in zip(users, truth, strict=True)],
+        [Membership("detector", "2020-01", label, user) for user, label in zip(users, predicted, strict=True)],
+        truth_reference="truth", detector_reference="detector",
+        active_users_by_month={"2020-01": users}, endpoint_users_by_month={"2020-01": users})
+    return frame
+
+
+class AMIPolicyTests(unittest.TestCase):
+    def test_null_cases_have_explicit_status_reason_and_never_import_sklearn(self):
+        cases = [
+            ((), (), "empty_scored", "no_scored_users"),
+            (("A",), ("x",), "insufficient_users", "fewer_than_2_scored_users"),
+            (tuple("AAAA"), tuple("xxyy"), "degenerate_partition", "truth_constant"),
+            (tuple("AABB"), tuple("xxxx"), "degenerate_partition", "prediction_constant"),
+            (tuple("AAAA"), tuple("xxxx"), "degenerate_partition", "truth_constant,prediction_constant"),
+            (tuple("ABCD"), tuple("xxyy"), "degenerate_partition", "truth_all_singletons"),
+            (tuple("AABB"), tuple("wxyz"), "degenerate_partition", "prediction_all_singletons"),
+            (tuple("ABCD"), tuple("wxyz"), "degenerate_partition", "truth_all_singletons,prediction_all_singletons"),
+            (tuple("AAAA"), tuple("wxyz"), "degenerate_partition", "truth_constant,prediction_all_singletons"),
+            (tuple("AB"), tuple("xy"), "degenerate_partition", "truth_all_singletons,prediction_all_singletons"),
+        ]
+        original_import = __import__
+        def no_sklearn(name, *args, **kwargs):
+            if name.startswith("sklearn"):
+                raise AssertionError("null cases must not invoke the metric backend")
+            return original_import(name, *args, **kwargs)
+        with patch("builtins.__import__", side_effect=no_sklearn):
+            for truth, predicted, status, reason in cases:
+                with self.subTest(truth=truth, predicted=predicted):
+                    result = score_snapshot(ami_frame(truth, predicted))
+                    self.assertIsNone(result.ami)
+                    self.assertEqual((result.ami_status, result.ami_reason), (status, reason))
+                    self.assertEqual(result.n_scored_users, len(truth))
+                    self.assertEqual((result.ami_policy_id, result.ami_average_method), ("synthetic-ami-v1", "arithmetic"))
+
+    def test_invalid_memberships_are_errors_before_missing_or_degenerate_policy(self):
+        frame = ami_frame(tuple("AABB"), tuple("xxyy"))
+        for invalid in (replace(frame, predicted_labels=()), replace(frame, user_ids=("u000",) * 4),
+                        replace(frame, truth_labels=tuple("BBAA")), replace(frame, month="2020-13")):
+            with self.subTest(invalid=invalid), self.assertRaises(ValueError):
+                score_snapshot(invalid)
+
+    def test_policy_is_immutable_and_json_copy_cannot_change_scoring_policy(self):
+        with self.assertRaises(TypeError):
+            AMI_POLICY["average_method"] = "max"
+        copied = dict(AMI_POLICY)
+        copied["average_method"] = "max"
+        self.assertEqual(AMI_POLICY["average_method"], "arithmetic")
+
+    def test_missing_sklearn_reports_installable_evaluation_extra(self):
+        original_import = __import__
+        def missing(name, *args, **kwargs):
+            if name == "sklearn.metrics":
+                raise ModuleNotFoundError("No module named sklearn", name="sklearn")
+            return original_import(name, *args, **kwargs)
+        with patch("builtins.__import__", side_effect=missing), self.assertRaisesRegex(ImportError, r"\.\[evaluation\]"):
+            score_snapshot(ami_frame(tuple("AABB"), tuple("xxyy")))
+
+    def test_missing_backend_transitive_dependency_is_not_misreported_as_null_ami(self):
+        original_import = __import__
+        def missing(name, *args, **kwargs):
+            if name == "sklearn.metrics":
+                raise ModuleNotFoundError("No module named scipy", name="scipy")
+            return original_import(name, *args, **kwargs)
+        with patch("builtins.__import__", side_effect=missing), self.assertRaises(ModuleNotFoundError) as error:
+            score_snapshot(ami_frame(tuple("AABB"), tuple("xxyy")))
+        self.assertEqual(error.exception.name, "scipy")
+
+
+@unittest.skipUnless(importlib.util.find_spec("sklearn"), "install [evaluation] for AMI scoring tests")
+class AMIScoringTests(unittest.TestCase):
+    def test_nontrivial_perfect_partition_returns_one(self):
+        result = score_snapshot(ami_frame(tuple("AABB"), tuple("yyxx")))
+        self.assertAlmostEqual(result.ami, 1.0, places=12)
+        self.assertEqual(result.ami_status, "ok")
+        self.assertIsNone(result.ami_reason)
+        self.assertEqual(result.n_scored_users, 4)
+
+    def test_reordering_csv_rows_and_renaming_groups_preserves_ami(self):
+        truth = [Membership("truth", "2020-01", group, f"u{i}") for i, group in enumerate("AAABBB")]
+        predicted = [Membership("detector", "2020-01", group, f"u{i}") for i, group in enumerate("xxxxyy")]
+        users = {"2020-01": [f"u{i}" for i in range(6)]}
+        options = dict(truth_reference="truth", detector_reference="detector", active_users_by_month=users, endpoint_users_by_month=users)
+        frame, = align_memberships(truth, predicted, **options)
+        changed, = align_memberships(reversed(truth), [Membership(row.reference_id, row.month, "name-" + row.community_id, row.user_id)
+                                                     for row in reversed(predicted)], **options)
+        self.assertAlmostEqual(score_snapshot(frame).ami, score_snapshot(changed).ami, places=12)
+
+    def test_negative_score_is_preserved_instead_of_clamped_to_zero(self):
+        result = score_snapshot(ami_frame(tuple("AABB"), tuple("xyxy")))
+        self.assertEqual(result.ami_status, "ok")
+        self.assertLess(result.ami, 0)
+        self.assertAlmostEqual(result.ami, -0.5, places=12)
+
+    def test_score_matches_library_arithmetic_method_and_is_symmetric(self):
+        from sklearn.metrics import adjusted_mutual_info_score
+        truth, predicted = tuple("AAABBB"), tuple("xxxxyy")
+        result = score_snapshot(ami_frame(truth, predicted))
+        expected = adjusted_mutual_info_score(truth, predicted, average_method="arithmetic")
+        self.assertAlmostEqual(result.ami, float(expected), places=12)
+        self.assertAlmostEqual(result.ami, score_snapshot(ami_frame(predicted, truth)).ami, places=12)
+
+    def test_isolate_truth_is_excluded_from_ami_but_retained_in_coverage(self):
+        frame = ami_frame(tuple("AABB"), tuple("xxyy"))
+        frame = replace(frame, active_user_ids=frame.active_user_ids + ("zzz-isolated",), truth_labels_all=frame.truth_labels_all + ("K",))
+        result = score_snapshot(frame)
+        self.assertAlmostEqual(result.ami, 1.0, places=12)
+        self.assertEqual(result.n_scored_users, 4)
+        self.assertEqual(count_snapshot(frame).coverage, 4 / 5)
+
+    def test_nonfinite_scores_and_backend_failures_raise_instead_of_filling_defaults(self):
+        frame = ami_frame(tuple("AABB"), tuple("xxyy"))
+        for value in (float("nan"), float("inf"), float("-inf")):
+            with self.subTest(value=value), patch("sklearn.metrics.adjusted_mutual_info_score", return_value=value), self.assertRaisesRegex(ValueError, "nonfinite"):
+                score_snapshot(frame)
+        with patch("sklearn.metrics.adjusted_mutual_info_score", side_effect=RuntimeError("backend failure")), self.assertRaisesRegex(RuntimeError, "backend failure"):
+            score_snapshot(frame)

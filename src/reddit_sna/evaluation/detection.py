@@ -1,7 +1,7 @@
 """Verify synthetic truth/detector inputs and align labels by user ID.
 
-This module aligns labels and calculates node coverage/community counts.
-AMI, aggregate summaries and timing metrics remain separate steps.
+This module aligns labels, counts coverage and scores AMI under a fixed policy.
+Aggregate summaries and timing metrics remain separate steps.
 Community names are preserved; aligning users is not community matching.
 """
 
@@ -9,13 +9,34 @@ from collections.abc import Iterable, Mapping
 from dataclasses import dataclass
 from hashlib import sha256
 import json
+from math import isfinite
 from pathlib import Path
+from types import MappingProxyType
 
 from reddit_sna.benchmarks.config import GRAPH_PROTOCOL, dataset_schedule, load_benchmark_config
 from reddit_sna.benchmarks.io import read_edges, read_memberships, read_nodes, validate_memberships
 from reddit_sna.config import validate_run_id
 from reddit_sna.contracts import Membership, next_month
 from reddit_sna.graphs.provenance import snapshot_inventory
+
+
+AMI_POLICY = MappingProxyType({
+    "schema_version": 1,
+    "policy_id": "synthetic-ami-v1",
+    "library": "scikit-learn",
+    "metric": "adjusted_mutual_info_score",
+    "average_method": "arithmetic",
+    "scoring_users": "verified_R_endpoints",
+    "minimum_scored_users": 2,
+    "empty_scored": "null:empty_scored",
+    "insufficient_users": "null:insufficient_users",
+    "constant_partition": "null:degenerate_partition",
+    "all_singletons_partition": "null:degenerate_partition",
+    "invalid_input": "raise",
+    "nonfinite_score": "raise",
+    "negative_scores": "preserve",
+    "quality_summary_eligibility": "ami_status=ok",
+})
 
 
 @dataclass(frozen=True)
@@ -57,6 +78,17 @@ class DetectionCounts:
     predicted_communities: int
 
 
+@dataclass(frozen=True)
+class DetectionAMI:
+    month: str
+    n_scored_users: int
+    ami: float | None
+    ami_status: str
+    ami_reason: str | None
+    ami_policy_id: str
+    ami_average_method: str
+
+
 def _require(condition, message):
     if not condition:
         raise ValueError(message)
@@ -95,6 +127,44 @@ def count_snapshot(snapshot: AlignedSnapshot) -> DetectionCounts:
         true_communities_scored_nodes=len(set(snapshot.truth_labels)),
         predicted_communities=len(set(snapshot.predicted_labels)),
     )
+
+
+def score_snapshot(snapshot: AlignedSnapshot) -> DetectionAMI:
+    """Score verified endpoint labels with scikit-learn and synthetic-ami-v1.
+
+    Validate input before applying null policies. Empty/too-small populations,
+    constant partitions and all-singleton partitions have explicit reasons;
+    missing memberships remain data errors. Negative valid AMI is preserved.
+    The optional evaluation dependency is loaded only for eligible frames.
+    """
+    counts = count_snapshot(snapshot)
+    n = counts.assigned_nodes
+    status, reason, value = "ok", None, None
+    if n == 0:
+        status, reason = "empty_scored", "no_scored_users"
+    elif n < AMI_POLICY["minimum_scored_users"]:
+        status, reason = "insufficient_users", "fewer_than_2_scored_users"
+    else:
+        flags = []
+        for side, groups in (("truth", counts.true_communities_scored_nodes), ("prediction", counts.predicted_communities)):
+            if groups == 1:
+                flags.append(f"{side}_constant")
+            elif groups == n:
+                flags.append(f"{side}_all_singletons")
+        if flags:
+            status, reason = "degenerate_partition", ",".join(flags)
+        else:
+            try:
+                from sklearn.metrics import adjusted_mutual_info_score
+            except ModuleNotFoundError as exc:
+                if exc.name not in ("sklearn", "sklearn.metrics"):
+                    raise
+                raise ImportError("AMI requires scikit-learn; install the project extra with pip install -e '.[evaluation]'") from exc
+            value = float(adjusted_mutual_info_score(
+                snapshot.truth_labels, snapshot.predicted_labels, average_method=AMI_POLICY["average_method"]))
+            _require(isfinite(value), "AMI backend returned a nonfinite score")
+    return DetectionAMI(month=snapshot.month, n_scored_users=n, ami=value, ami_status=status, ami_reason=reason,
+                        ami_policy_id=AMI_POLICY["policy_id"], ami_average_method=AMI_POLICY["average_method"])
 
 
 def _users_by_month(value):

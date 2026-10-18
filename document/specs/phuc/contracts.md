@@ -161,6 +161,14 @@ API trong bộ nhớ dựa vào scope/reference/user maps caller cung cấp; API
 - Số nhóm truth trên toàn active và trên scored users được tính riêng; predicted groups chỉ trên endpoint. Tập rỗng cho group count 0; partition constant/singleton vẫn có counts hợp lệ, policy AMI riêng ở T03.
 - Mỗi record là một snapshot của một dataset/seed; caller giữ context/reference ở `AlignedDetection`, không cộng seed/tháng thành số người độc lập. T02 chưa xuất summary/timing hoặc AMI; CSV kiểm chứng development và diagnostic có scope riêng. [Bằng chứng T02](evidence/PHUC-004-T02-counts.md).
 
+### AMI và policy — PHUC-004-T03
+
+`score_snapshot(snapshot: AlignedSnapshot) -> DetectionAMI` dùng validator/counts T02 rồi gọi `sklearn.metrics.adjusted_mutual_info_score` với `average_method="arithmetic"`. Kết quả có month/n_scored_users/ami/ami_status/ami_reason/ami_policy_id/ami_average_method; dataset/seed/reference vẫn do `AlignedDetection` giữ. Extra `[evaluation]` khai báo scikit-learn; dependency chỉ được import khi snapshot đủ điều kiện chấm.
+
+- Policy immutable `AMI_POLICY`, ID `synthetic-ami-v1`: n = 0 → null/`empty_scored`; n = 1 → null/`insufficient_users`; một trong hai phía constant hoặc all-singletons → null/`degenerate_partition` với reason theo truth rồi prediction. Các trường hợp còn lại `ok`, giữ nguyên điểm âm. Đây là policy của đồ án; thư viện vẫn có thể tính điểm cho các trường hợp đồ án loại.
+- User/key/length/reference lỗi vẫn bị từ chối qua T01/T02, không lấy giao hoặc điền metric mặc định. Thiếu sklearn báo cách cài `.[evaluation]`; lỗi dependency/backend khác và metric không hữu hạn được báo lỗi. Isolate không vào vector AMI, vẫn ở mẫu số coverage.
+- Lưu `dict(AMI_POLICY)` và hash trước lượt chấm, ghi sklearn version và giữ hàng null/status/reason. Quality summary T04 chỉ tổng hợp `ok` nhưng phải báo n thiếu/reason/canonical riêng; T03 chưa triển khai exporter/summary/timing production. Xem [hướng dẫn](004-detection-evaluation/README.md), [policy JSON](evidence/PHUC-004-T03-ami-policy.json), [bằng chứng T03](evidence/PHUC-004-T03-ami.md).
+
 ## 5. Metadata, manifest và metric tối thiểu
 
 `metadata.json` của mỗi dataset: schema version, dataset ID, split, scenario, difficulty, generator config/seed, observed months, identity scope, truth reference, detector references khi đã có, relative paths và hashes file đã hoàn thành.
