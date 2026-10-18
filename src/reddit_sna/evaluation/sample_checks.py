@@ -43,6 +43,56 @@ class SampleCheckError(ValueError):
     """Raised when the sample validation report contains failures."""
 
 
+VALID_SPLITS = ("train", "validation", "test")
+# t, t-1, t-2, ... are allowed; anything else (t+1, t+2, unknown, empty) is rejected.
+AVAILABLE_AT_PATTERN = r"t(-\d+)?"
+
+
+def _add_split_integrity_checks(samples, split, add, labelled_mask) -> None:
+    """Split-aware leakage checks: valid names, real labelled keys, no temporal overlap."""
+    values = set(split["split"].dropna().astype(str))
+    bad_values = sorted(values - set(VALID_SPLITS))
+    add(
+        "split_values_valid",
+        not bad_values,
+        f"Invalid split value(s): {bad_values}" if bad_values else
+        "Split values are only train, validation or test",
+    )
+
+    split_keys = set(
+        split[SPLIT_KEY_COLUMNS].astype(str).itertuples(index=False, name=None)
+    )
+    labelled_keys = set(
+        samples.loc[labelled_mask, SPLIT_KEY_COLUMNS]
+        .astype(str)
+        .itertuples(index=False, name=None)
+    )
+    unknown = split_keys - labelled_keys
+    add(
+        "split_keys_are_labelled_samples",
+        not unknown,
+        f"{len(unknown)} split key(s) are not labelled samples, e.g. {sorted(unknown)[:3]}"
+        if unknown else "Every split key refers to a labelled sample",
+    )
+
+    ordered = []
+    for name in VALID_SPLITS:
+        months = split.loc[split["split"].astype(str) == name, "label_month"].astype(str)
+        if len(months):
+            ordered.append((name, months.min(), months.max()))
+    problems = [
+        f"{a} ends at {a_end} but {b} starts at {b_start}"
+        for (a, _, a_end), (b, b_start, _) in zip(ordered, ordered[1:])
+        if not a_end < b_start
+    ]
+    add(
+        "temporal_order_no_overlap",
+        not problems,
+        "; ".join(problems) if problems else
+        "train < validation < test by label_month, with no overlapping months",
+    )
+
+
 def check_samples(
     samples: pd.DataFrame,
     catalog: pd.DataFrame,
@@ -179,6 +229,19 @@ def check_samples(
             .astype(str)
         )
 
+    if catalog_columns_ok:
+        bad_avail = catalog.loc[
+            ~catalog["available_at"].astype(str).str.fullmatch(AVAILABLE_AT_PATTERN),
+            ["feature", "available_at"],
+        ]
+        add(
+            "catalog_available_at_valid",
+            bad_avail.empty,
+            "; ".join(f"{r.feature}={r.available_at}" for r in bad_avail.itertuples())
+            if not bad_avail.empty else
+            "Every available_at is t or a past month (t-1, t-2, ...)",
+        )
+
     allowed_non_features = set(SAMPLE_KEY_COLUMNS) | {
         "label_month",
         "label",
@@ -290,6 +353,9 @@ def check_samples(
                     class_count >= 2,
                     f"Train contains {class_count} distinct label class(es); at least 2 required",
                 )
+
+    if split is not None and not (set(SPLIT_KEY_COLUMNS + ["split"]) - set(split.columns)):
+        _add_split_integrity_checks(samples, split, add, labelled_mask)
 
     return pd.DataFrame(results, columns=["check", "status", "detail"])
 
