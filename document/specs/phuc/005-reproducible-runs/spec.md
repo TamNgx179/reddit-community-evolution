@@ -3,6 +3,8 @@
 **Owner:** Phúc. **Thiết kế:** v1, 16/10/2026. **Phân công:** P06.
 **Tiến độ, hạn và bằng chứng:** [tasks.md](../tasks.md#phuc-005). **Giao diện:** [contracts.md](../contracts.md).
 
+**Triển khai hiện tại:** T01 DONE, PHUC-005 **1/6 DOING**. Đã liên kết graph recipe với AMI/summary/split policy bằng [protocol JSON](../../../../configs/benchmark_week1_protocol.json), có loader/CLI chỉ lập kế hoạch và kiểm tra disjoint seeds/dataset IDs/expected counts. 68/68 test liên quan pass, Windows checkout giữ hash; [hướng dẫn](README.md), [bằng chứng T01](../evidence/PHUC-005-T01-protocol.md). Chưa chạy evaluation giữ lại hoặc ghi freeze record. T02 ghép API tiếp theo.
+
 ## Mục tiêu và user story
 
 **US1, P1:** Là người review, tôi tái tạo được lượt benchmark, biết tham số được khóa lúc nào và phân biệt đầu ra thật với run mới started hoặc bị lỗi.
@@ -35,7 +37,7 @@ Nếu rút lịch do thời gian/tài nguyên, phải quyết định và versio
 
 ## Output và kiểm chứng độc lập
 
-- `configs/benchmark_week1.json`; API detection trong `pipelines/detection_tracking.py`, quản lý artifacts được dùng lại khi phù hợp.
+- `configs/benchmark_week1.json` giữ graph recipe schema 1; `configs/benchmark_week1_protocol.json` binding hash/policy/expected counts cho đường chạy mới, loader trong `benchmarks/protocol.py`. API detection trong `pipelines/detection_tracking.py`, quản lý artifacts được dùng lại khi phù hợp.
 - Artifact: config khóa, manifests, dataset ledger, metrics/summary và log kiểm tra hashes/tái lập.
 - Test dự kiến: `tests/integration/test_synthetic_benchmark_run.py`; một dataset nhỏ đủ kiểm tra orchestration/failure/no-overwrite. Suite nghiên cứu chạy riêng.
 - Evidence: development run, thời điểm/config freeze, evaluation run, expected/actual counts, exclusions/failures và nguồn chạy. Chưa đo bộ nhớ ghi null.
