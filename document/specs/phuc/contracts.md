@@ -128,6 +128,8 @@ API trên xuất **root manifest schema 2** qua `RunRecorder` trong `artifacts.p
 
 Timing có scope riêng cho preflight, run, stage wrappers và từng exporter dataset; evaluator chạy batch nên duration từng dataset là null. Diagnostics Leiden tháng/report timing giữ scope cũ, không coi là toàn stage detection. Peak memory null/not measured. [Schema, cách đọc timing và xử lý lỗi](005-reproducible-runs/README.md#hồ-sơ-của-mỗi-lượt-chạy--t03), [bằng chứng T03](evidence/PHUC-005-T03-provenance.md). Snapshots config/source là provenance, chưa là freeze evaluation T05.
 
+T04 nghiệm thu contract bằng 23/23 test liên quan (thêm 5 integration), runtime/config không đổi; full suite 314/314 là baseline T03, không phải lượt mới T04. Hai demo stable/dissolve giữ 12 metrics/run (9 valid/3 null truth_constant), 29 CSV/policy giống byte và 12 partitions khớp dưới đổi tên nhóm/thứ tự dòng. Complete/failed/started đều không overwrite; concurrent same-ID chỉ một CLI process thành công. Child report complete không thay thế root status: counts mismatch vẫn root failed/CLI exit 2. Artifact consumer T04 chặn failure/pending marker và byte thay đổi; đây chưa là public handoff consumer PHUC-006. [Bằng chứng và AC matrix T04](evidence/PHUC-005-T04-acceptance.md): AC01–03 pass, AC04/05 còn formal freeze/evaluation T05/T06.
+
 ### Export graph/truth hiện có — PHUC-002-T04
 
 - `export_graph_dataset(destination, benchmark=..., scenario=..., generator_seed=..., split="development")` trong [io.py](../../../src/reddit_sna/benchmarks/io.py) xuất một dataset theo lịch hợp lệ, parent phải tồn tại, destination mới. Gói có bảy CSV theo schema trên, `benchmark-config.json` và `metadata.json`.

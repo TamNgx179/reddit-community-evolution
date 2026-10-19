@@ -1,9 +1,11 @@
 """Protocol-to-report composition, development boundary and partial-run behavior."""
 
 import csv
+from contextlib import redirect_stderr, redirect_stdout
 from dataclasses import replace
 from hashlib import sha256
 import importlib.util
+import io
 import json
 from pathlib import Path
 import subprocess
@@ -38,6 +40,18 @@ class BenchmarkFixture(ProjectCase):
 
 
 class SyntheticBenchmarkPreflightTests(BenchmarkFixture):
+    def test_started_run_is_rejected_before_backend_without_modifying_checkpoint(self):
+        from reddit_sna.artifacts import create_run_directory
+        config, protocol = self.setup_config()
+        output = create_run_directory(config)
+        (output / "partial.txt").write_bytes(b"earlier interrupted invocation")
+        before = self.files(output)
+        with patch("reddit_sna.pipelines.detection_tracking.dependencies") as backend, self.assertRaisesRegex(ConfigError, "run already exists"):
+            run_synthetic_benchmark(config, protocol=protocol, dataset_ids=["dev-stable-easy-g11"])
+        backend.assert_not_called()
+        self.assertEqual(self.files(output), before)
+        self.assertEqual(json.loads(before["manifest.json"])["status"], "started")
+
     def test_namespace_seed_input_and_output_are_validated_before_any_stage(self):
         config, protocol = self.setup_config()
         invalid = [replace(config, pipeline=PipelineName.PREDICTION), replace(config, input_kind="reddit"),
@@ -78,6 +92,93 @@ class SyntheticBenchmarkPreflightTests(BenchmarkFixture):
 
 @unittest.skipUnless(all(importlib.util.find_spec(name) for name in ("igraph", "leidenalg", "sklearn")), "install [graph,evaluation] for benchmark integration")
 class SyntheticBenchmarkRunTests(BenchmarkFixture):
+    def test_configuration_failure_keeps_partial_archive_and_retry_cannot_overwrite_it(self):
+        from reddit_sna.pipelines.detection_tracking import _write_detection_json
+        config, protocol = self.setup_config()
+        original_inputs = {p: p.read_bytes() for p in (config.source, protocol, self.marker)}
+        def interrupted_archive(path, value):
+            if path.name == "resolved-run-config.json":
+                path.write_bytes(b"{")
+                raise OSError("configuration archive interrupted")
+            _write_detection_json(path, value)
+        with patch("reddit_sna.pipelines.detection_tracking._write_detection_json", side_effect=interrupted_archive), self.assertRaisesRegex(OSError, "configuration archive interrupted"):
+            run_synthetic_benchmark(config, protocol=protocol, dataset_ids=["dev-stable-easy-g11"])
+        output = config.run_directory
+        manifest = json.loads((output / "manifest.json").read_bytes())
+        self.assertEqual((manifest["status"], manifest["current_stage"], manifest["current_dataset"]),
+                         ("failed", "configuration", None))
+        self.assertEqual(manifest["completed_stages"], [])
+        self.assertEqual(manifest["stages"]["configuration"]["status"], "failed")
+        self.assertEqual(manifest["files"]["config/resolved-run-config.json"], {"sha256": sha256(b"{").hexdigest(), "bytes": 1})
+        self.assertFalse((output / "inputs").exists())
+        self.assertTrue(all(p.read_bytes() == data for p, data in original_inputs.items()))
+        before = self.files(output)
+        with patch("reddit_sna.pipelines.detection_tracking.export_graph_dataset") as generator, self.assertRaisesRegex(ConfigError, "run already exists"):
+            run_synthetic_benchmark(config, protocol=protocol, dataset_ids=["dev-stable-easy-g11"])
+        generator.assert_not_called()
+        self.assertEqual(self.files(output), before)
+
+    def test_cli_counts_mismatch_fails_even_when_child_report_is_complete(self):
+        from reddit_sna.evaluation.detection import export_detection_evaluation
+        from reddit_sna.pipelines.detection_tracking import main
+        config, protocol = self.setup_config()
+        def wrong_counts(*args, **kwargs):
+            report = export_detection_evaluation(*args, **kwargs)
+            return {**report, "metric_rows": report["metric_rows"] + 1}
+        stdout, stderr = io.StringIO(), io.StringIO()
+        with patch("reddit_sna.evaluation.detection.export_detection_evaluation", side_effect=wrong_counts), redirect_stdout(stdout), redirect_stderr(stderr):
+            code = main(["--config", str(config.source), "--protocol", str(protocol),
+                         "--run-id", config.run_id, "--dataset-id", "dev-stable-easy-g11"])
+        self.assertEqual(code, 2)
+        self.assertEqual(stdout.getvalue(), "")
+        self.assertIn("report counts differ", stderr.getvalue())
+        manifest = json.loads((config.run_directory / "manifest.json").read_bytes())
+        self.assertEqual((manifest["status"], manifest["current_stage"]), ("failed", "evaluation"))
+        self.assertEqual(manifest["progress_counts"], {"generated_datasets": 1, "detected_datasets": 1, "evaluated_datasets": 0})
+        self.assertEqual(manifest["stages"]["evaluation"]["status"], "failed")
+        child = json.loads((config.run_directory / "evaluation/metadata.json").read_bytes())
+        self.assertEqual(child["status"], "complete")
+        self.assertEqual(len(self.rows(config.run_directory / "evaluation/detection_metrics.csv")), 6)
+
+    def test_atomic_complete_replace_failure_preserves_checkpoint_then_publishes_failed(self):
+        config, protocol = self.setup_config()
+        original_replace = Path.replace
+        checkpoints = []
+        def replace_unless_complete(path, target):
+            if path == config.run_directory / "manifest.pending.json":
+                pending = json.loads(path.read_bytes())
+                if pending["status"] == "complete":
+                    checkpoints.append(json.loads((config.run_directory / "manifest.json").read_bytes())["status"])
+                    raise OSError("atomic complete replacement failed")
+            return original_replace(path, target)
+        with patch.object(Path, "replace", replace_unless_complete), self.assertRaisesRegex(OSError, "atomic complete replacement failed"):
+            run_synthetic_benchmark(config, protocol=protocol, dataset_ids=["dev-stable-easy-g11"])
+        self.assertEqual(checkpoints, ["started"])
+        manifest = json.loads((config.run_directory / "manifest.json").read_bytes())
+        self.assertEqual((manifest["status"], manifest["current_stage"]), ("failed", "manifest_publication"))
+        self.assertFalse((config.run_directory / "manifest.pending.json").exists())
+        self.assertTrue((config.run_directory / "evaluation/metadata.json").is_file())
+
+    def test_two_cli_processes_with_same_run_id_have_one_winner_and_one_rejection(self):
+        config, protocol = self.setup_config()
+        command = [sys.executable, "-m", "reddit_sna.pipelines.detection_tracking", "--config", str(config.source),
+                   "--protocol", str(protocol), "--run-id", config.run_id, "--dataset-id", "dev-stable-easy-g11"]
+        with subprocess.Popen(command, cwd=self.root, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True) as first, subprocess.Popen(command, cwd=self.root, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True) as second:
+            results = [(worker, worker.communicate(timeout=120)) for worker in (first, second)]
+        self.assertEqual(sorted(worker.returncode for worker, _ in results), [0, 2], results)
+        for worker, (stdout, stderr) in results:
+            if worker.returncode == 0:
+                self.assertEqual(json.loads(stdout)["status"], "complete")
+            else:
+                self.assertEqual(stdout, "")
+                self.assertIn("run already exists", stderr)
+        manifest = json.loads((config.run_directory / "manifest.json").read_bytes())
+        self.assertEqual(manifest["status"], "complete")
+        self.assertEqual(manifest["progress_counts"], {"generated_datasets": 1, "detected_datasets": 1, "evaluated_datasets": 1})
+        self.assertEqual(len(self.rows(config.run_directory / "evaluation/detection_metrics.csv")), 6)
+        self.assertEqual(set(manifest["files"]), set(self.files(config.run_directory)) - {"manifest.json"})
+        self.assertFalse((config.run_directory / "failure.json").exists())
+
     def test_schema_two_records_exact_hashes_source_environment_and_timing_scopes(self):
         config, protocol = self.setup_config()
         output = run_synthetic_benchmark(config, protocol=protocol, dataset_ids=["dev-stable-easy-g11"])

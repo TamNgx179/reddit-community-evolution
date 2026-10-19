@@ -1,6 +1,6 @@
 # PHUC-005 — Hướng dẫn cấu hình và lượt chạy tái lập
 
-**T01–T03 DONE, PHUC-005 3/6:** protocol binding, API/CLI development và manifest schema 2 với source/config/output hashes, environment, lifecycle/timing; **314/314 test repo pass**. Hai demo T03 có 12 metrics/9 summary mỗi run, 29 CSV/policy tái lập; ba manifest và hai report audit độc lập đạt, failure run được giữ. Tiến độ/nghiệm thu tại [task board](../tasks.md#phuc-005); [spec](spec.md) ghi phạm vi toàn bộ sáu task.
+**T01–T04 DONE, PHUC-005 4/6:** protocol/API development, manifest schema 2 và nghiệm thu lifecycle/replay. **T04 23/23 test liên quan pass**, runtime/config không đổi; full repo **314/314 tại T03**, không chạy lại full suite T04. Hai demo stable/dissolve có 12 metrics/run (9 valid/3 null), 29 CSV/policy và 12 partitions khớp; failure/no-overwrite/consumer checks đạt. Tiến độ/nghiệm thu tại [task board](../tasks.md#phuc-005); T05 freeze và T06 evaluation giữ lại chưa chạy.
 
 ## T01 dùng để làm gì
 
@@ -143,4 +143,22 @@ Khi lỗi, API ném lại lỗi gốc, giữ artifact đã có và ghi root `fai
 
 Các số đo lồng nhau nên không cộng tất cả để tính tổng. Timing, timestamp, absolute path và Git working tree có thể khác giữa replay; CSV/policy trong cùng lịch/seed mới là đối tượng đối chiếu tái lập. Hai demo T03, failed run, kiểm tra hashes và log/ZIP được ghi tại [bằng chứng T03](../evidence/PHUC-005-T03-provenance.md).
 
-T03 đã lưu hai successful runs `phuc-005-t03-001/002`, mỗi run 88 output files được hash và 41 source files được lưu; controlled failure `phuc-005-t03-failure-001` giữ progress 2 generated/1 detected/0 evaluated và partial file. Proof/ZIP local tại `artifacts/verification/phuc-005-t03-001`; [run summary](../evidence/PHUC-005-T03-run-summary.csv) và [stage timing](../evidence/PHUC-005-T03-stage-timing.csv) nhỏ theo Git. Full suite 314/314 pass; 3.503 artifact cũ được bảo toàn. **Tiếp theo T04:** nghiệm thu lifecycle/replay; T05 formal development/freeze, T06 evaluation giữ lại. Không cần chờ tracker Đăng.
+T03 đã lưu hai successful runs `phuc-005-t03-001/002`, mỗi run 88 output files được hash và 41 source files được lưu; controlled failure `phuc-005-t03-failure-001` giữ progress 2 generated/1 detected/0 evaluated và partial file. Proof/ZIP local tại `artifacts/verification/phuc-005-t03-001`; [run summary](../evidence/PHUC-005-T03-run-summary.csv) và [stage timing](../evidence/PHUC-005-T03-stage-timing.csv) nhỏ theo Git. Full suite 314/314 pass; 3.503 artifact cũ được bảo toàn.
+
+## Nghiệm thu chạy lại và xử lý lỗi — T04
+
+T04 thêm 5 integration tests: từ chối started run; configuration archive lỗi và retry failed run; CLI nhận counts sai dù child report complete; lỗi replace complete manifest thật; hai CLI process cùng run ID chỉ một process được tạo output. Không sửa runtime/config. Chạy bộ liên quan:
+
+```powershell
+& .\.venv\Scripts\python.exe -m unittest tests.unit.test_run_provenance tests.integration.test_synthetic_benchmark_run -v
+```
+
+Kết quả **23/23 pass**, 0 skip/failure/error, 109.220s. T04 không chạy lại full repo suite; baseline runtime không đổi là 314/314 ở T03.
+
+Demo T04 chọn **stable + dissolve, generator seed 11** trước khi chạy. Hai CLI process hash seed 0/137, đảo dataset selection, mỗi run 2 dataset/4 snapshot/12 metrics/9 summary. **9 dòng AMI hợp lệ, 3 dòng AMI null**: dissolve tháng cuối chỉ còn background K nên policy loại partition constant khỏi AMI; vẫn giữ dòng, status/reason và support. Đây không phải ba dòng bị mất hoặc được gán điểm 0. Coverage cả 12 dòng là 1.0.
+
+29 CSV/policy files khớp byte; 12 membership partitions khớp theo tập user, giữ nguyên khi đổi tên nhóm/đảo dòng; phép so sánh phát hiện khi membership thật bị thay đổi. CLI không ghi đè cả complete/failed/started run. Consumer root chặn started, failed, failure/pending marker và modified byte. Child report trong controlled failure vẫn đọc được nhưng **không được dùng thay trạng thái root**.
+
+[Bằng chứng T04](../evidence/PHUC-005-T04-acceptance.md) có [AC matrix](../evidence/PHUC-005-T04-acceptance-matrix.csv), [metrics](../evidence/PHUC-005-T04-detection-metrics.csv), [summary](../evidence/PHUC-005-T04-detection-summary.csv), [partition comparison](../evidence/PHUC-005-T04-partition-comparison.csv) và [run summary](../evidence/PHUC-005-T04-run-summary.csv). Full log/source/run copies/consumer/ZIP local ở `artifacts/verification/phuc-005-t04-001`; 4.043 artifact cũ giữ hash. AC01–03 pass; AC04/05 còn formal freeze/evaluation.
+
+**Tiếp theo T05:** chạy formal development và ghi cấu hình khóa/thời điểm/nguồn trước evaluation. T06 mới chạy tập giữ lại. Không cần chờ tracker Đăng.

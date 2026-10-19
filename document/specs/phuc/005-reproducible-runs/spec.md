@@ -3,7 +3,7 @@
 **Owner:** Phúc. **Thiết kế:** v1, 16/10/2026. **Phân công:** P06.
 **Tiến độ, hạn và bằng chứng:** [tasks.md](../tasks.md#phuc-005). **Giao diện:** [contracts.md](../contracts.md).
 
-**Triển khai hiện tại:** T01–T03 DONE, PHUC-005 **3/6 DOING**. Protocol binding và API/CLI development ghép generator → Leiden → metrics; manifest schema 2 có source/config/output hashes, source archives, environment, stage/dataset state và timing có scope. **314/314 test repo pass**; hai demo T03 có 12 metrics/9 summary mỗi run, 29 CSV/policy tái lập, ba manifest/hai report audit độc lập đạt; controlled failure giữ progress/partial output. [Hướng dẫn](README.md), [T01](../evidence/PHUC-005-T01-protocol.md), [T02](../evidence/PHUC-005-T02-api.md), [T03](../evidence/PHUC-005-T03-provenance.md). T04 nghiệm thu lifecycle/replay tiếp; T05 freeze và T06 evaluation giữ lại chưa chạy.
+**Triển khai hiện tại:** T01–T04 DONE, PHUC-005 **4/6 DOING**. Protocol/API development và manifest schema 2 đã nghiệm thu lifecycle/replay. **T04 23/23 targeted tests pass**, gồm 5 test mới; runtime/config không đổi, full repo 314/314 là lượt T03, không chạy lại tại T04. Hai stable/dissolve demo có 12 metrics/run (9 valid/3 null), 29 CSV/policy/12 partitions tái lập, failure/no-overwrite/consumer checks đạt. [Hướng dẫn](README.md), [T01](../evidence/PHUC-005-T01-protocol.md), [T02](../evidence/PHUC-005-T02-api.md), [T03](../evidence/PHUC-005-T03-provenance.md), [T04](../evidence/PHUC-005-T04-acceptance.md). AC01–03 pass; AC04/05 và T05 freeze/T06 evaluation giữ lại còn pending.
 
 ## Mục tiêu và user story
 
@@ -39,5 +39,5 @@ Nếu rút lịch do thời gian/tài nguyên, phải quyết định và versio
 
 - `configs/benchmark_week1.json` giữ graph recipe schema 1; `configs/benchmark_week1_protocol.json` binding hash/policy/expected counts cho đường chạy mới, loader trong `benchmarks/protocol.py`. API detection trong `pipelines/detection_tracking.py`, quản lý artifacts được dùng lại khi phù hợp.
 - Artifact: config khóa, manifests, dataset ledger, metrics/summary và log kiểm tra hashes/tái lập.
-- Tests hiện có: `tests/integration/test_synthetic_benchmark_run.py` (17 tests) và `tests/unit/test_run_provenance.py` (1 test); kiểm tra orchestration/failure/no-overwrite/provenance. Suite nghiên cứu chạy riêng.
+- Tests hiện có: `tests/integration/test_synthetic_benchmark_run.py` (22 tests) và `tests/unit/test_run_provenance.py` (1 test); kiểm tra orchestration/failure/no-overwrite/provenance/concurrent run ID. Suite nghiên cứu chạy riêng.
 - Evidence: development run, thời điểm/config freeze, evaluation run, expected/actual counts, exclusions/failures và nguồn chạy. Chưa đo bộ nhớ ghi null.

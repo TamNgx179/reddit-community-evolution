@@ -1,0 +1,13 @@
+membership_file,users,communities,byte_equal,partition_equal,renamed_reordered_equal
+inputs/detected/dev-dissolve-easy-g11/memberships/2020-01/membership-seed0.csv,24,2,True,True,True
+inputs/detected/dev-dissolve-easy-g11/memberships/2020-01/membership-seed1.csv,24,2,True,True,True
+inputs/detected/dev-dissolve-easy-g11/memberships/2020-01/membership-seed2.csv,24,2,True,True,True
+inputs/detected/dev-dissolve-easy-g11/memberships/2020-02/membership-seed0.csv,12,3,True,True,True
+inputs/detected/dev-dissolve-easy-g11/memberships/2020-02/membership-seed1.csv,12,2,True,True,True
+inputs/detected/dev-dissolve-easy-g11/memberships/2020-02/membership-seed2.csv,12,2,True,True,True
+inputs/detected/dev-stable-easy-g11/memberships/2020-01/membership-seed0.csv,24,2,True,True,True
+inputs/detected/dev-stable-easy-g11/memberships/2020-01/membership-seed1.csv,24,2,True,True,True
+inputs/detected/dev-stable-easy-g11/memberships/2020-01/membership-seed2.csv,24,2,True,True,True
+inputs/detected/dev-stable-easy-g11/memberships/2020-02/membership-seed0.csv,24,2,True,True,True
+inputs/detected/dev-stable-easy-g11/memberships/2020-02/membership-seed1.csv,24,2,True,True,True
+inputs/detected/dev-stable-easy-g11/memberships/2020-02/membership-seed2.csv,24,2,True,True,True
