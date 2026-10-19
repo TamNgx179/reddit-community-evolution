@@ -204,3 +204,22 @@ Freeze: `artifacts/detection-tracking/phuc-005-t05-freeze-001/`, lúc **19/10/20
 [Bằng chứng T05](../evidence/PHUC-005-T05-development-freeze.md), [metrics](../evidence/PHUC-005-T05-detection-metrics.csv), [summary](../evidence/PHUC-005-T05-detection-summary.csv), [ledger](../evidence/PHUC-005-T05-dataset-ledger.csv), [freeze reference](../evidence/PHUC-005-T05-freeze-reference.json) theo Git; reference chỉ trỏ tới bản khóa đầy đủ. Full proof/log/source/run copies và ZIP local ở `artifacts/verification/phuc-005-t05-001`. Ba independent consumers đạt sau relocation; 4.610 artifact cũ giữ hash. 40/40 targeted tests pass, không chạy lại full repo suite T05.
 
 **Tiếp theo T06:** thêm driver ngoài frozen package, verify bản khóa rồi chạy 18 evaluation datasets seeds 101/102/103, lưu đầy đủ 108 metric rows/failed records và đối chiếu tổng 36/72/216. AC04 và nghiệm thu evaluation của AC05 còn pending; tracker Đăng không chặn bước này.
+
+## Driver evaluation theo bản khóa — T06
+
+[scripts/run_frozen_evaluation.py](../../../../scripts/run_frozen_evaluation.py) nằm ngoài frozen package theo contract T05. Driver gọi `load_benchmark_freeze` trước khi tạo run, kiểm tra namespace/canonical/TOML/chronology/backend, rồi chạy **toàn bộ** evaluation schedule đã khóa. Không có tham số chọn subset, gamma hoặc seed theo điểm. Mọi module trong `src/reddit_sna` và pyproject giữ nguyên hash từ T05.
+
+```powershell
+& .\.venv\Scripts\python.exe scripts/run_frozen_evaluation.py `
+    --config configs/detection_development.toml `
+    --freeze artifacts/detection-tracking/phuc-005-t05-freeze-001 `
+    --run-id phuc-005-evaluation-review-001
+```
+
+Chọn run ID mới. Dùng TOML development để giữ nguyên input kind/canonical/output contract; **split chạy được lấy từ lịch evaluation trong freeze**, không từ tên file TOML. Output có root manifest schema 2, type `synthetic-frozen-evaluation-run`, scope `heldout-detection-evaluation`, split evaluation; shared full detection-tracking vẫn chưa có tracker.
+
+Run mới giữ `freeze/` nguyên bundle làm đầu vào, `config/` gồm configs đã khóa và config thực dùng, `provenance/source/` package source unchanged, **`provenance/driver/run_frozen_evaluation.py`** cùng hash driver riêng, `inputs/source|detected/<eval-id>/`, `evaluation/` report. Root `freeze_reference` ghi hash/thời điểm/source revision T05; source Git context hiện tại ghi revision của driver. Đây là sử dụng bản khóa, `freeze_record_created=false`; `evaluation_executed=true` từ khi bắt đầu truy cập heldout, không thay trạng thái complete/failed.
+
+Checkpoint, stage/dataset state, timing và inventory dùng `RunRecorder` đã khóa. Cuối run đối chiếu counts, original freeze, TOML và driver bytes; drift/lỗi giữ output và failed record, retry không overwrite. Chỉ root complete sau verification mới là kết quả evaluation hoàn tất.
+
+Tests mới ở [test_frozen_evaluation.py](../../../../tests/integration/test_frozen_evaluation.py) dùng **identity-only stubs**, không sinh graph/truth hoặc tính điểm giữ lại. Chúng kiểm tra preflight, full-schedule control flow, failure/progress/no-overwrite và late drift; các stubs không tạo CSV metric values. Production được chạy sau khi driver đã kiểm tra và commit, có kế hoạch trước khi xem điểm. [Bằng chứng T06](../evidence/PHUC-005-T06-heldout.md) sẽ ghi kết quả và source revision thực tế.

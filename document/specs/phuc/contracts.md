@@ -138,6 +138,12 @@ T04 nghiệm thu contract bằng 23/23 test liên quan (thêm 5 integration), ru
 
 Package Python source/pyproject bytes cùng recipe/policies/seeds được khóa; T06 driver ngoài package được bổ sung và lưu hash riêng, gọi thuật toán đã khóa. Docs/driver commit mới được phép làm HEAD tiến mà không đổi frozen package hashes. Bản khóa dùng hashes và version checks, không phải ACL/file readonly; mọi thay đổi thuật toán/policy sau freeze cần record công khai thay vì silently rebind.
 
+### Thực thi lịch giữ lại — PHUC-005-T06
+
+`run_frozen_evaluation(config, freeze=Path) -> Path` tại `scripts/run_frozen_evaluation.py` chỉ orchestration ngoài frozen package, không đổi algorithm/policy. Gate freeze/source/versions, canonical 0, frozen TOML, output không overlap freeze/development và chronology trước output/heldout access. Chạy đầy đủ `freeze.schedules.evaluation` theo thứ tự khóa; không nhận subset hay override detector/generator params. CLI `python scripts/run_frozen_evaluation.py --config ... --freeze ... --run-id ...`, lỗi exit 2.
+
+Root schema 2/type `synthetic-frozen-evaluation-run`, scope `heldout-detection-evaluation`, split evaluation; `freeze_reference` pin manifest SHA/thời điểm/revision T05, `driver` archive/hash riêng. Run chứa bản sao `freeze/` nguyên byte, configs, current package source/environment, driver source, source/detected datasets và report. `evaluation_executed` ghi việc bắt đầu truy cập heldout; `freeze_record_created=false`, tracking not_implemented; completed stages/root status mới xác nhận completion. Giữ scope timing/progress/error/partial outputs từ `RunRecorder`. Cuối run kiểm tra actual counts và nguồn freeze/TOML/driver, không overwrite input/run cũ. Tests driver trước production dùng stubs không có heldout labels/scores; kết quả thật được ghi riêng tại [evidence T06](evidence/PHUC-005-T06-heldout.md).
+
 ### Export graph/truth hiện có — PHUC-002-T04
 
 - `export_graph_dataset(destination, benchmark=..., scenario=..., generator_seed=..., split="development")` trong [io.py](../../../src/reddit_sna/benchmarks/io.py) xuất một dataset theo lịch hợp lệ, parent phải tồn tại, destination mới. Gói có bảy CSV theo schema trên, `benchmark-config.json` và `metadata.json`.
