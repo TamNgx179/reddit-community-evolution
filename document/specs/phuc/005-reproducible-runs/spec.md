@@ -39,5 +39,6 @@ Nếu rút lịch do thời gian/tài nguyên, phải quyết định và versio
 
 - `configs/benchmark_week1.json` giữ graph recipe schema 1; `configs/benchmark_week1_protocol.json` binding hash/policy/expected counts cho đường chạy mới, loader trong `benchmarks/protocol.py`. API detection trong `pipelines/detection_tracking.py`, quản lý artifacts được dùng lại khi phù hợp.
 - Artifact: config khóa, manifests, dataset ledger, metrics/summary và log kiểm tra hashes/tái lập.
-- Tests hiện có: `tests/integration/test_synthetic_benchmark_run.py` (22 tests) và `tests/unit/test_run_provenance.py` (1 test); kiểm tra orchestration/failure/no-overwrite/provenance/concurrent run ID. Suite nghiên cứu chạy riêng.
+- Tests hiện có: `tests/integration/test_synthetic_benchmark_run.py` (22 tests), `tests/unit/test_run_provenance.py` (1 test), `tests/integration/test_benchmark_freeze.py` (7 tests T05); kiểm tra orchestration/failure/no-overwrite/provenance/concurrent run ID và freeze gating. Suite nghiên cứu chạy riêng.
+- T05 bổ sung `benchmarks/freeze.py`: tạo/verify freeze run riêng sau full development, archive source/config/policy và development evidence; gate source/versions và audit metadata trước evaluation. [Hướng dẫn](README.md#chạy-đủ-development-và-tạo-bản-khóa--t05), [evidence đang cập nhật](../evidence/PHUC-005-T05-development-freeze.md).
 - Evidence: development run, thời điểm/config freeze, evaluation run, expected/actual counts, exclusions/failures và nguồn chạy. Chưa đo bộ nhớ ghi null.

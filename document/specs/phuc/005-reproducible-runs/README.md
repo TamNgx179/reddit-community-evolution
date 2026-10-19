@@ -162,3 +162,35 @@ Demo T04 chọn **stable + dissolve, generator seed 11** trước khi chạy. Ha
 [Bằng chứng T04](../evidence/PHUC-005-T04-acceptance.md) có [AC matrix](../evidence/PHUC-005-T04-acceptance-matrix.csv), [metrics](../evidence/PHUC-005-T04-detection-metrics.csv), [summary](../evidence/PHUC-005-T04-detection-summary.csv), [partition comparison](../evidence/PHUC-005-T04-partition-comparison.csv) và [run summary](../evidence/PHUC-005-T04-run-summary.csv). Full log/source/run copies/consumer/ZIP local ở `artifacts/verification/phuc-005-t04-001`; 4.043 artifact cũ giữ hash. AC01–03 pass; AC04/05 còn formal freeze/evaluation.
 
 **Tiếp theo T05:** chạy formal development và ghi cấu hình khóa/thời điểm/nguồn trước evaluation. T06 mới chạy tập giữ lại. Không cần chờ tracker Đăng.
+
+## Chạy đủ development và tạo bản khóa — T05
+
+API `create_benchmark_freeze(config, development_run=..., protocol=...)` trong [benchmarks/freeze.py](../../../../src/reddit_sna/benchmarks/freeze.py) tạo **run riêng**, giữ nguyên development run đã complete. Bản khóa chứa protocol/recipe/TOML/config thực dùng, source và môi trường đã tạo development, report development, bản sao manifest cùng hash và lịch hai tập. `frozen_at` là thời điểm UTC sau khi development hoàn tất; `changes_from_development=[]` chỉ khi hashes vẫn khớp.
+
+Chạy từ repository root, chọn ID mới cho mỗi output:
+
+```powershell
+& .\.venv\Scripts\python.exe -m reddit_sna.pipelines.detection_tracking `
+    --config configs/detection_development.toml `
+    --protocol configs/benchmark_week1_protocol.json `
+    --run-id phuc-005-development-review-001
+
+& .\.venv\Scripts\python.exe -m reddit_sna.benchmarks.freeze create `
+    --config configs/detection_development.toml `
+    --protocol configs/benchmark_week1_protocol.json `
+    --development-run artifacts/detection-tracking/phuc-005-development-review-001 `
+    --run-id phuc-005-freeze-review-001
+
+& .\.venv\Scripts\python.exe -m reddit_sna.benchmarks.freeze verify `
+    artifacts/detection-tracking/phuc-005-freeze-review-001
+```
+
+Lệnh đầu không có `--dataset-id`, chạy đủ **18 development datasets**, sáu case × generator seeds 11/12/13, 36 snapshots và 108 snapshot×detector-seed units. Hai lệnh sau **không sinh/chấm evaluation data**. `create` trả freeze directory; `verify` chỉ đọc, kiểm tra và trả manifest hash. Lỗi exit 2, output cũ không được ghi đè.
+
+Điều kiện tạo: full-development complete đúng lịch/counts/stages, inventory verified; config và source/runtime versions khớp. Namespace có graph/detection metadata `split=evaluation` thì không được tạo claim pre-evaluation freeze. Audit chỉ đọc metadata nhận diện artifact trong `artifacts/detection-tracking`, không đọc graph/truth/prediction giữ lại. Nếu ghi freeze lỗi, giữ phần đã tạo và failed record.
+
+`load_benchmark_freeze(Path(...))` trả `BenchmarkFreeze` gồm directory, manifest/hash và protocol đã đọc từ bản lưu. Loader kiểm tra archive inventory, development manifest/hash/counts, lịch, chronology, source bytes và Python/package versions hiện tại. Path tuyệt đối producer chỉ ghi provenance; bundle chuyển chỗ vẫn đọc được. Thay source hoặc phiên bản liên quan phải xử lý công khai trước evaluation, không sửa hashes để bỏ qua gate.
+
+Phạm vi khóa: **mọi `.py` trong package `reddit_sna` và pyproject nếu có**, recipe, scoring/split/summary policy và lịch seed. T06 có thể thêm driver ngoài package tại `scripts/run_frozen_evaluation.py` để gọi các module đã khóa; driver phải lưu source/hash riêng và không đổi thuật toán/policy/canonical. Git HEAD có thể tiến vì docs hoặc driver, nhưng package source hashes và versions vẫn phải khớp bản khóa. Khóa được thực thi bằng kiểm tra nội dung, không phải chỉ đánh dấu file readonly.
+
+Schema của bản khóa là **1**, artifact type `synthetic-benchmark-freeze`, scope `benchmark-protocol-freeze`; `freeze_record_created=true`, `evaluation_executed=false` nói về thao tác tạo khóa. Development run vẫn giữ manifest schema 2 và `freeze_record_created=false` vì bản thân run đó không tạo khóa. Frozen source Git context là của development; lượt production T05 sẽ dùng source đã commit với working tree sạch. Bản khóa không tự tuyên bố evaluation/tracking hoàn thành.
