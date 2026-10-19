@@ -2,9 +2,23 @@
 
 Owner: Phúc. [Spec](spec.md), [task board](../tasks.md#phuc-006), [contract](../contracts.md).
 
-**Tiến độ:** T01–T02 DONE, PHUC-006 **2/6**, tổng **32/36**. T01 có 51/51 targeted tests đạt, đủ 36 dataset/72 snapshot/216 membership CSV, hai cặp output sau relocation giống byte. T02 có [hướng dẫn gửi Đăng](../../../PHUC-DANG-WEEK1-HANDOFF.md) và ZIP giao 821 files/956.285 byte, đã thử đúng CLI/API sau giải nén mới; [reference/checksum](../evidence/PHUC-006-T02-delivery-reference.json), [bằng chứng T02](../evidence/PHUC-006-T02-handoff-guide.md). ZIP local chưa gửi/upload; chưa có xác nhận Đăng. Tiếp theo T03 notebook.
+**Tiến độ:** T01–T03 DONE, PHUC-006 **3/6**, tổng **33/36**. T03 có [notebook detection](../../../../notebooks/detection_tracking/01_synthetic_demo.ipynb), 4 hình có nguồn, 216 metrics/42 summary rows từ T02; **39/39 targeted tests** và hai fresh-kernel smoke runs 8/8 code cells đạt, final 40.532s. [Bằng chứng/preview T03](../evidence/PHUC-006-T03-notebook.md), [reference/ZIP](../evidence/PHUC-006-T03-notebook-reference.json). T02 ZIP/guide giữ nguyên; Phúc báo đã nhắn Đăng, chưa có receipt/đọc gói. Tiếp theo T04 phân tích case; formal clean install/replay T05 và demo cặp chưa nghiệm thu.
 
 Nếu mục tiêu là gửi dữ liệu ngay, dùng `artifacts/handoff/phuc-dang-week1-20261019-001.zip`, gửi kèm checksum ở reference; guide và consumer đã ở trong ZIP. Proof T01 vẫn giữ riêng: [bằng chứng](../evidence/PHUC-006-T01-inventory.md), [run summary](../evidence/PHUC-006-T01-run-summary.csv), [dataset ledger](../evidence/PHUC-006-T01-dataset-ledger.csv).
+
+## Notebook detection — T03
+
+Mở [01_synthetic_demo.ipynb](../../../../notebooks/detection_tracking/01_synthetic_demo.ipynb) bằng VS Code/Jupyter, chọn Python của project `.venv`, Restart Kernel → Run All. Cài extra `[notebook]` bằng đúng Python kernel nếu môi trường mới chưa có; notebook không tự cài package hoặc sửa `sys.path`:
+
+```powershell
+& .\.venv\Scripts\python.exe -m pip install -e '.[notebook]'
+```
+
+Notebook tìm root repo từ cwd hoặc `REDDIT_SNA_PROJECT`; đọc reference T02 đã version. Input mặc định là `artifacts/handoff/phuc-dang-week1-20261019-001/`. Nếu nhận ZIP và giải nén ở chỗ khác, đặt `REDDIT_SYNTHETIC_BUNDLE` tới root có `delivery-manifest.json`, `runs/`, `inventories/`. Có thể chọn `REDDIT_SYNTHETIC_DEMO_DATASET` (mặc định `dev-grow-easy-g11`) và `REDDIT_SYNTHETIC_DEMO_OUTPUT` là thư mục mới trong repo `artifacts/`. Để trống output sẽ dùng timestamp mới. Không đổi seed canonical theo điểm; replay không chạy lại graph/Leiden/AMI.
+
+Module [synthetic_demo.py](../../../../src/reddit_sna/reporting/synthetic_demo.py) có `load_synthetic_demo`, `build_synthetic_figures`, `export_synthetic_demo`: kiểm tra source bundle/run trước khi đọc, plot đầy đủ selected graph và recorded summaries, ghi PNG/SVG/CSV/figure provenance/complete metadata cuối. Bốn hình lần lượt network truth–Leiden, AMI/coverage từng case, seed diagnostics, recorded stage timing. Màu/ID nhóm cục bộ; missing AMI giữ null/support. Timing là của producer cũ, không phải thời gian vẽ, detection gồm cả ba seeds.
+
+Final smoke output `artifacts/detection-tracking/phuc-006-t03-notebook-002/` có 14 files; executed notebook ở `artifacts/verification/phuc-006-t03-001/smoke-002/01_synthetic_demo.executed.ipynb`. Không dùng lại output `-001`/`-002`. Full output/proof ZIP local; hai PNG preview và bảng nhỏ đã version trong [evidence T03](../evidence/PHUC-006-T03-notebook.md). T03 smoke hiện có không thay clean-install/replay gate T05. T04 sẽ bổ sung phân tích case, chưa có tracker/F1 Đăng trong notebook.
 
 ## T01 làm gì?
 

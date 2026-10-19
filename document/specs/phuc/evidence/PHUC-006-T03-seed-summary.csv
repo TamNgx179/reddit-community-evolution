@@ -1,0 +1,7 @@
+split,level,scenario,detector_seed,seed_role,n_rows,n_ami_valid,n_ami_missing,ami_mean,coverage_mean,missing_reasons
+development,all_scenarios,,0,canonical,36,33,3,0.9558799269999274,1.0,"{""truth_constant"":3}"
+development,all_scenarios,,1,diagnostic,36,33,3,0.9487475264624783,1.0,"{""truth_constant"":3}"
+development,all_scenarios,,2,diagnostic,36,33,3,0.9546409700892936,1.0,"{""truth_constant"":3}"
+evaluation,all_scenarios,,0,canonical,36,33,3,0.9331167511618917,1.0,"{""truth_constant"":3}"
+evaluation,all_scenarios,,1,diagnostic,36,33,3,0.9484196642529084,1.0,"{""truth_constant"":3}"
+evaluation,all_scenarios,,2,diagnostic,36,33,3,0.9404717903026866,1.0,"{""truth_constant"":3}"

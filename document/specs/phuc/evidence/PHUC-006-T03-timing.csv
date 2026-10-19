@@ -1,0 +1,9 @@
+split,phase,wall_seconds,scope
+development,generation,5.374415299971588,wrapper wall time including dataset checkpoints and end-of-stage integrity checks; excludes boundary checkpoint writes
+development,detection,9.237558100023307,wrapper wall time including dataset checkpoints and end-of-stage integrity checks; excludes boundary checkpoint writes
+development,evaluation,15.52904600003967,wrapper wall time including dataset checkpoints and end-of-stage integrity checks; excludes boundary checkpoint writes
+development,run_total,31.87520200002473,from recorder initialization through final verification; excludes final manifest publication
+evaluation,generation,4.432705699990038,wrapper wall time including dataset checkpoints and end-of-stage integrity checks; excludes boundary checkpoint writes
+evaluation,detection,9.509279199992307,wrapper wall time including dataset checkpoints and end-of-stage integrity checks; excludes boundary checkpoint writes
+evaluation,evaluation,12.326586799987126,wrapper wall time including dataset checkpoints and end-of-stage integrity checks; excludes boundary checkpoint writes
+evaluation,run_total,30.144648400018923,from recorder initialization through final verification; excludes final manifest publication

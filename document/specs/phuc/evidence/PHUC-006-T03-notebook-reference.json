@@ -1,0 +1,88 @@
+{
+  "archive": {
+    "archive": "artifacts/verification/phuc-006-t03-001.zip",
+    "bytes": 3251088,
+    "crc_and_entry_bytes_verified": true,
+    "files": 54,
+    "sha256": "9703f5d027142aac815d13ff18a6b3847c1373d3f6965a5080874ad8f9607b3c"
+  },
+  "artifact_type": "synthetic-notebook-reference",
+  "code_cells": 8,
+  "delivery_manifest_sha256": "7083d08df2d85eb6feacc874b5655f8759a07efb7c732d13947ad198ff0bceaf",
+  "delivery_zip_sha256": "e1a611092a8273b30570abdb4f6810ef9e07a0264ab07f0ce69ce4bce3880a14",
+  "figures": [
+    {
+      "canonical_seed": 0,
+      "figure": "01_network",
+      "height": 1500,
+      "png_sha256": "8c96d4a8a2ac6bfa8e0b6e47a07e0660a858e8b3f988c435291f235026f8a947",
+      "scope": "full selected graph",
+      "source_files": 7,
+      "svg_sha256": "5028001db5e65d82d3caa00f9bdca2a0997b9e650090f0ad0fa05b3c08a70752",
+      "width": 1800
+    },
+    {
+      "canonical_seed": 0,
+      "figure": "02_quality",
+      "height": 750,
+      "png_sha256": "cb7b6de77181871a13239e9964978387baab1b1d03218ace79f8596379a47877",
+      "scope": "recorded full-run results",
+      "source_files": 2,
+      "svg_sha256": "55fa08f9da3bc7ef48951cf835bf940a22bb0045b969a78101f459d00e767078",
+      "width": 1950
+    },
+    {
+      "canonical_seed": 0,
+      "figure": "03_seeds",
+      "height": 675,
+      "png_sha256": "40a9e8116d2af00b0e6f7792df3d55f5a956f51eb4ff123068263163c1a84a11",
+      "scope": "recorded full-run results",
+      "source_files": 2,
+      "svg_sha256": "8dbddef4997a6cb17ea90ace4ccb73046411bc90be147f5bc1415d0e3e69be20",
+      "width": 1200
+    },
+    {
+      "canonical_seed": 0,
+      "figure": "04_timing",
+      "height": 675,
+      "png_sha256": "ccacd3b5ed5d4c534c30d0636fb5c0481fb9f5ea76fdc182d6516dde6c3eb681",
+      "scope": "recorded full-run results",
+      "source_files": 2,
+      "svg_sha256": "34b898e803e0f41c1dac9240181c4b4dba3338b4af11937e942e6a5074c642ea",
+      "width": 1350
+    }
+  ],
+  "final_smoke_seconds": 40.53159880003659,
+  "finished_at": "2026-10-19T06:18:18.528870+00:00",
+  "formal_T05_clean_install_replay_complete": false,
+  "frozen_source_files_unchanged": 42,
+  "full_repo_suite_rerun": false,
+  "inline_png_outputs": 4,
+  "metric_rows": 216,
+  "new_unit_tests": 14,
+  "notebook_sha256": "d044284783b496cdc4300a2ecd5db842244a1c0f64940dbef201ade68c8a907c",
+  "null_ami_rows": 18,
+  "output": "artifacts/detection-tracking/phuc-006-t03-notebook-002",
+  "output_files": 14,
+  "prior_artifacts_preserved": 9340,
+  "prior_source_files_preserved": 101,
+  "producer_runs_regenerated": false,
+  "recipient_receipt": "not_verified",
+  "reference_only": true,
+  "reporting_module_sha256": "f2055ad18259b9f5f771e29459b45b520b6a9f46ba9a8a472f86ab7b5f3f22c7",
+  "schema_version": 1,
+  "scope": "T03 notebook/figures smoke; T04 analysis and T05 formal clean environment gate pending",
+  "source_base_revision": "c2867f1e65ddd7b736d13283d8fe1aa627d98e2a",
+  "source_files_added_outside_frozen_runtime": [
+    "reporting/synthetic_demo.py"
+  ],
+  "source_scores_not_recomputed": true,
+  "status": "verified",
+  "summary_rows": 42,
+  "task": "PHUC-006-T03",
+  "test_wall_seconds": 19.25685770000564,
+  "tests_passed": 39,
+  "timing_rows": 8,
+  "user_reports_message_sent": true,
+  "valid_ami_rows": 198
+}
