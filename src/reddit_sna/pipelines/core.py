@@ -6,6 +6,7 @@ from reddit_sna.pipelines import PipelineNotImplemented
 
 def run(config: RunConfig) -> None:
     raise PipelineNotImplemented(
-        "core is scaffold-only: implement Reddit preparation, detection, tracking, "
-        "features, forecasting and evaluation before running it"
+        "the generic core run entrypoint is scaffold-only; use week1 for the "
+        "implemented baseline demo, or explicit prepare and forecast stages. "
+        "HeTCo and the full proposed research pipeline remain planned"
     )

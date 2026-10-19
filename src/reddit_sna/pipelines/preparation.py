@@ -102,7 +102,7 @@ def run_preparation(config: RunConfig, *, stage="all", start=None, end=None,
                      "source_run": str(source) if source else None,
                      "source_manifest_sha256": digest_file(source / "manifest.json") if source else None,
                      "config_sha256": hashlib.sha256(config.source.read_bytes()).hexdigest(),
-                     "completed_stages": [], "forecast_status": "not_implemented"})
+                     "completed_stages": [], "forecast_status": "not_run_by_preparation"})
     revision = subprocess.run(["git", "rev-parse", "HEAD"], cwd=config.project_root,
                               capture_output=True, text=True)
     dirty = subprocess.run(["git", "status", "--porcelain", "--untracked-files=no"], cwd=config.project_root,

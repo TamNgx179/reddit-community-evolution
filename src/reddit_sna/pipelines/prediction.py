@@ -5,7 +5,7 @@ Entry point:
 
 Ownership:
     Tram: _stage_table, _stage_baselines, main, run framework
-    Lan Anh: _stage_evaluation (stub until Anh's branch is merged)
+    Lan Anh: _stage_evaluation, split and sample checks (evaluation/ package)
 
 Data kind: synthetic -- not Reddit results.
 """
@@ -418,28 +418,6 @@ def run(config: RunConfig) -> Path:
                     status="complete_through_baselines")
     print(f"\n[prediction] Pipeline complete_through_baselines -> {run_dir}")
     return run_dir
-
-
-def _basic_temporal_split(table: pd.DataFrame) -> pd.DataFrame:
-    """Basic temporal split: train 2015-02..2016-12, val 2017-01..2017-06, test 2017-07..2017-12.
-
-    Drops rows with empty label (last feature month).
-    Used until Anh's evaluation/splits.py is merged.
-    """
-    labelled = table[table["label"] != ""].copy()
-    labelled = labelled.reset_index(drop=True)
-
-    def assign(lm: str) -> str:
-        if lm <= "2016-12":
-            return "train"
-        elif lm <= "2017-06":
-            return "validation"
-        else:
-            return "test"
-
-    labelled["split"] = labelled["label_month"].apply(assign)
-    key_cols = ["reference_id", "feature_month", "community_id", "label_month", "split"]
-    return labelled[key_cols].copy()
 
 
 def _write_manifest(run_dir: Path, config: RunConfig, start_time: datetime,
