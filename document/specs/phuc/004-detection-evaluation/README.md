@@ -181,7 +181,7 @@ Timing có phạm vi cụ thể:
 
 Input được kiểm tra/recheck trước khi tạo output; output không được chồng lên input. Metadata complete được publish cuối qua file pending. Lỗi khi ghi report giữ các file dở dang và `failure.json` nếu ghi được, chưa có complete metadata; dùng output ID mới khi chạy lại. Metadata report chỉ có `scope=detection-evaluation-only`/stage evaluation, không báo toàn bộ pipeline đã hoàn tất. Manifest của luồng đầy đủ thuộc PHUC-005.
 
-[Bằng chứng T04](../evidence/PHUC-004-T04-export.md) có hai lượt development, CSV nhỏ theo Git, vị trí gói local và ZIP/consumer để đọc lại sau relocation. [Bằng chứng T05](../evidence/PHUC-004-T05-invariants.md) và [CSV AC01–05](../evidence/PHUC-004-T05-acceptance-matrix.csv) nối tiêu chí với test đã chạy. T06 còn mốc nghiệm thu stable/grow có truy vết input/config/version.
+[Bằng chứng T04](../evidence/PHUC-004-T04-export.md) có hai lượt development, CSV nhỏ theo Git, vị trí gói local và ZIP/consumer để đọc lại sau relocation. [Bằng chứng T05](../evidence/PHUC-004-T05-invariants.md) và [CSV AC01–05](../evidence/PHUC-004-T05-acceptance-matrix.csv) nối tiêu chí với test đã chạy. [T06](../evidence/PHUC-004-T06-stable-grow.md) đã nghiệm thu stable/grow với truy vết input/config/version và tập user được chấm.
 
 ## Kiểm tra và phần tiếp theo
 
@@ -192,4 +192,35 @@ Input được kiểm tra/recheck trước khi tạo output; output không đư�
 
 Integration tests tạo input bằng Leiden thật, cần extra `[graph]` theo hướng dẫn cài đặt repo; test chấm AMI cần thêm `[evaluation]`. Các unit tests căn nhãn/counts/null policy không cần thư viện graph. [Evidence T01](../evidence/PHUC-004-T01-alignment.md) giữ bằng chứng alignment và giới hạn lượt discover lịch sử; từng task mới ghi rõ test đã chạy.
 
-**T01–T05 đã triển khai:** căn nhãn, counts/coverage, AMI/policy, exporter metrics/summary/timing và kiểm tra tổng hợp các điều kiện nghiệm thu. T05 chạy full suite **286/286 pass**, gồm **48 test evaluator**, 0 skip; AC01–05 pass với 16 ánh xạ test trong CSV. Bốn test mới chặn membership CSV sai dù đã rehash, phân biệt ARI seed với AMI truth và kiểm tra lỗi công bố metadata cuối. Log/CSV/ZIP đã lưu theo evidence T05. **Tiếp theo T06:** nghiệm thu stable/grow. Tập evaluation giữ lại và tracker còn ở các phần việc riêng.
+**T01–T06 DONE:** căn nhãn, counts/coverage, AMI/policy, exporter metrics/summary/timing, kiểm tra các điều kiện nghiệm thu và chấm stable/grow development có truy vết. T05 chạy full suite **286/286 pass**, gồm **48 test evaluator**, 0 skip; AC01–05 pass với 16 ánh xạ test trong CSV. T06 chạy lại 48 test evaluator và hai report stable/grow tái lập, có input/config/versions và danh sách user được chấm. Tập evaluation giữ lại và tracker còn ở các phần việc riêng.
+
+## Nghiệm thu stable/grow và tái tạo report — T06
+
+[Bằng chứng T06](../evidence/PHUC-004-T06-stable-grow.md), [metrics](../evidence/PHUC-004-T06-detection-metrics.csv), [summary](../evidence/PHUC-004-T06-detection-summary.csv), [dataset ledger](../evidence/PHUC-004-T06-dataset-ledger.csv) ghi kết quả trên **6 dataset development, 12 snapshot, 36 dòng metrics**, dùng generator 11/12/13 và detector 0/1/2. Cả 36 dòng AMI 1, coverage 1; canonical vẫn là seed 0. Đây là kết quả của hai case tổng hợp easy, không suy rộng sang Reddit hoặc tracker.
+
+Report thực tế: `artifacts/detection-tracking/phuc-004-t06-001/` và `phuc-004-t06-002/`. Proof/ZIP local `artifacts/verification/phuc-004-t06-001/` và `.zip` giữ 108 input files, hai report, raw trace **918 lượt user qua ba seed**, config/versions/hashes, reader và log. 918 là số lượt quan sát khi chấm, không phải số người độc lập. Metrics/summary/policy giống byte giữa hai process đổi thứ tự input/hash seed; timing và timestamp có thể khác.
+
+Khi đã có graph/truth run và detection run development trên máy, chạy từ repository root vào output mới:
+
+```powershell
+$evaluationBenchmark = Get-Content configs/benchmark_week1.json -Raw | ConvertFrom-Json
+$evaluationSource = 'artifacts/detection-tracking/phuc-002-t06-001/datasets'
+$evaluationDetector = 'artifacts/detection-tracking/phuc-003-t06-001/datasets'
+$evaluationOutput = 'artifacts/detection-tracking/phuc-004-stable-grow-review-001'
+$evaluationArgs = @('-m', 'reddit_sna.evaluation.detection', '--output', $evaluationOutput)
+foreach ($evaluationScenario in @('stable', 'grow')) {
+    foreach ($evaluationGeneratorSeed in $evaluationBenchmark.generator.seeds.development) {
+        $evaluationDataset = "dev-$evaluationScenario-easy-g$evaluationGeneratorSeed"
+        $evaluationArgs += @('--pair', (Join-Path $evaluationSource $evaluationDataset), (Join-Path $evaluationDetector $evaluationDataset))
+    }
+}
+& .\.venv\Scripts\python.exe @evaluationArgs
+if ($LASTEXITCODE -ne 0) { throw 'Evaluation export failed; inspect the output/log before retrying with a new run ID.' }
+Import-Csv (Join-Path $evaluationOutput 'detection_summary.csv') |
+    Where-Object { $_.aggregation_level -eq 'all_scenarios' -and $_.detector_seed -eq '0' } |
+    Select-Object n_datasets, n_rows, n_ami_valid, n_ami_missing, ami_mean, coverage_mean
+```
+
+Thay source/detector paths nếu dùng run ID khác và chọn output chưa tồn tại. Nếu clone repo chưa có artifacts, tạo đầu vào theo [PHUC-002 full development](../002-dynamic-benchmark/README.md) rồi [PHUC-003 detection](../003-leiden-detection/README.md); Git không chứa full artifacts. Nếu đã nhận ZIP T06, giải nén rồi dùng `read_report.py` và lệnh trong evidence để đọc độc lập, không cần sinh lại dữ liệu.
+
+T06 không đổi code/config và không chạy lại full repo suite; 48/48 test liên quan pass, full 286/286 ở T05 vẫn là bằng chứng hồi quy gần nhất. **PHUC-004 hoàn thành 6/6. Tiếp theo PHUC-005-T01:** rà soát lịch/config/policy development/evaluation trước orchestration và freeze.

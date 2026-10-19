@@ -3,7 +3,7 @@
 **Owner:** Phúc. **Thiết kế:** v1, 16/10/2026. **Phân công:** P04.
 **Tiến độ, hạn và bằng chứng:** [tasks.md](../tasks.md#phuc-004). **Giao diện:** [contracts.md](../contracts.md).
 
-**Triển khai hiện tại:** T01–T05 DONE — xác minh/căn nhãn, counts/coverage, AMI/policy, exporter metrics/summary và kiểm tra các điều kiện nghiệm thu. [Hướng dẫn](README.md), [T01](../evidence/PHUC-004-T01-alignment.md), [T02](../evidence/PHUC-004-T02-counts.md), [T03](../evidence/PHUC-004-T03-ami.md), [T04/output](../evidence/PHUC-004-T04-export.md), [T05/AC01–05](../evidence/PHUC-004-T05-invariants.md). Full repo 286/286 test pass, gồm 48 test evaluator. PHUC-004 đang làm 5/6 task; T06 còn nghiệm thu stable/grow có truy vết input/config/version.
+**Trạng thái:** **DONE, 6/6 task**. Đã xác minh/căn nhãn, tính counts/coverage/AMI, xuất metrics/summary và kiểm tra AC01–05. [Hướng dẫn](README.md), [T01](../evidence/PHUC-004-T01-alignment.md), [T02](../evidence/PHUC-004-T02-counts.md), [T03](../evidence/PHUC-004-T03-ami.md), [T04/output](../evidence/PHUC-004-T04-export.md), [T05/AC01–05](../evidence/PHUC-004-T05-invariants.md), [T06/stable-grow](../evidence/PHUC-004-T06-stable-grow.md). T06 có hai report tái lập, mỗi report 6 dataset/36 metrics/9 summary, trace 918 lượt user và input/config/version; 48/48 test evaluator pass. Full repo 286/286 pass ở T05, code/config giữ nguyên trong T06. Freeze/evaluation giữ lại và orchestration thuộc PHUC-005.
 
 ## Mục tiêu và user story
 
