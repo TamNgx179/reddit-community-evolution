@@ -3,6 +3,8 @@
 **Owner phần cá nhân:** Phúc. **Thiết kế:** v1, 16/10/2026. **Phân công:** P07.
 **Tiến độ, hạn và bằng chứng:** [tasks.md](../tasks.md#phuc-006). **Giao diện:** [contracts.md](../contracts.md).
 
+**Hiện tại:** T01 DONE, PHUC-006 **1/6**, tổng Phúc **31/36**. [Consumer stdlib](../../../../src/reddit_sna/reporting/synthetic_handoff.py) và 25 unit tests mới; 51/51 targeted tests pass. Đã kiểm tra đủ hai source run PHUC-005 (36 dataset/72 snapshot/216 membership CSV), hai cặp index sau relocation giống byte; inventory/reference/CSV/log/full-source ZIP đã lưu. **AC01 phần consumer đạt**; AC02–AC04/notebook và nghiệm thu tổng thể còn các task sau. Tracker/receipt/review Đăng chưa có evidence. [Hướng dẫn](README.md), [bằng chứng](../evidence/PHUC-006-T01-inventory.md).
+
 ## Mục tiêu và user story
 
 **US1, P1:** Là thành viên nhóm, tôi mở notebook/hướng dẫn để hiểu phần Phúc, tái tạo kết quả và nhận đúng gói dữ liệu cho tracker mà không hỏi lại ý nghĩa từng file.
