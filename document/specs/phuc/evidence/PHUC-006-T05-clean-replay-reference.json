@@ -1,0 +1,375 @@
+{
+  "artifact_type": "synthetic-clean-replay-reference",
+  "base_revision": "8a010de33af4cffaf8fc17171317177c1e7c56fd",
+  "clean_environment_gate": "passed",
+  "constraints_file": "document/specs/phuc/006-handoff-demo/replay-constraints-py312.txt",
+  "csvs_byte_identical_to_T04": true,
+  "editable_install": false,
+  "frozen_source_files_unchanged": 42,
+  "full_repo_tests": {
+    "error_tests": [],
+    "errors": 0,
+    "failed_tests": [],
+    "failures": 0,
+    "finished_at": "2026-10-19T12:28:01.469815+00:00",
+    "python": "C:\\Users\\MSi\\reddit-community-evolution\\artifacts\\environments\\phuc-006-t05-clean-001\\venv\\Scripts\\python.exe",
+    "scope": "all repository unit/integration tests on temporary synthetic fixtures; first executor interrupted, original log preserved",
+    "seconds": 451.56352680000055,
+    "skip_reasons": [],
+    "skips": 0,
+    "status": "pass",
+    "tests": 385
+  },
+  "installation": {
+    "constraints_sha256": "6aa34ddf6378419ab9ea2a77e6e70655325833e316a71c8c31819e8d4130d0bd",
+    "editable_install": false,
+    "extras": [
+      "graph",
+      "evaluation",
+      "notebook"
+    ],
+    "finished_at": "2026-10-19T07:19:50.995971+00:00",
+    "python": "C:\\Users\\MSi\\reddit-community-evolution\\artifacts\\environments\\phuc-006-t05-clean-001\\venv\\Scripts\\python.exe",
+    "status": "complete",
+    "steps": [
+      {
+        "argv": [
+          "C:\\Users\\MSi\\reddit-community-evolution\\.venv\\Scripts\\python.exe",
+          "-m",
+          "venv",
+          "C:\\Users\\MSi\\reddit-community-evolution\\artifacts\\environments\\phuc-006-t05-clean-001\\venv"
+        ],
+        "exit_code": 0,
+        "name": "01-create-venv",
+        "seconds": 21.839654200011864
+      },
+      {
+        "argv": [
+          "C:\\Users\\MSi\\reddit-community-evolution\\artifacts\\environments\\phuc-006-t05-clean-001\\venv\\Scripts\\python.exe",
+          "-I",
+          "-c",
+          "import sys,json,importlib.util,importlib.metadata as m; assert sys.prefix!=sys.base_prefix; assert all(importlib.util.find_spec(n) is None for n in (\"reddit_sna\",\"nbclient\",\"matplotlib\",\"igraph\",\"sklearn\")); print(json.dumps({\"python\":sys.version,\"executable\":sys.executable,\"prefix\":sys.prefix,\"base_prefix\":sys.base_prefix,\"packages\":sorted(d.metadata[\"Name\"]+\"==\"+d.version for d in m.distributions()),\"no_system_site_packages\":True}))"
+        ],
+        "exit_code": 0,
+        "name": "02-empty-environment",
+        "seconds": 0.6027380999876186
+      },
+      {
+        "argv": [
+          "C:\\Users\\MSi\\reddit-community-evolution\\artifacts\\environments\\phuc-006-t05-clean-001\\venv\\Scripts\\python.exe",
+          "-m",
+          "pip",
+          "--isolated",
+          "--disable-pip-version-check",
+          "--no-cache-dir",
+          "wheel",
+          "--no-deps",
+          "--wheel-dir",
+          "C:\\Users\\MSi\\reddit-community-evolution\\artifacts\\environments\\phuc-006-t05-clean-001\\wheelhouse",
+          "C:\\Users\\MSi\\reddit-community-evolution\\artifacts\\environments\\phuc-006-t05-clean-001\\build-source"
+        ],
+        "exit_code": 0,
+        "name": "03-build-wheel",
+        "seconds": 33.20190479996381
+      },
+      {
+        "argv": [
+          "C:\\Users\\MSi\\reddit-community-evolution\\artifacts\\environments\\phuc-006-t05-clean-001\\venv\\Scripts\\python.exe",
+          "-m",
+          "pip",
+          "--isolated",
+          "--disable-pip-version-check",
+          "--no-cache-dir",
+          "install",
+          "--constraint",
+          "C:\\Users\\MSi\\reddit-community-evolution\\artifacts\\verification\\phuc-006-t05-001\\replay-constraints-py312.txt",
+          "C:\\Users\\MSi\\reddit-community-evolution\\artifacts\\environments\\phuc-006-t05-clean-001\\wheelhouse\\reddit_community_evolution-0.1.0-py3-none-any.whl[graph,evaluation,notebook]"
+        ],
+        "exit_code": 0,
+        "name": "04-install",
+        "seconds": 395.8838800000376
+      },
+      {
+        "argv": [
+          "C:\\Users\\MSi\\reddit-community-evolution\\artifacts\\environments\\phuc-006-t05-clean-001\\venv\\Scripts\\python.exe",
+          "-m",
+          "pip",
+          "--isolated",
+          "--disable-pip-version-check",
+          "check"
+        ],
+        "exit_code": 0,
+        "name": "05-pip-check",
+        "seconds": 2.063418800011277
+      },
+      {
+        "argv": [
+          "C:\\Users\\MSi\\reddit-community-evolution\\artifacts\\environments\\phuc-006-t05-clean-001\\venv\\Scripts\\python.exe",
+          "-m",
+          "pip",
+          "--isolated",
+          "--disable-pip-version-check",
+          "freeze",
+          "--all"
+        ],
+        "exit_code": 0,
+        "name": "06-pip-freeze",
+        "seconds": 1.5403810999705456
+      }
+    ],
+    "system_site_packages": false,
+    "venv": "C:\\Users\\MSi\\reddit-community-evolution\\artifacts\\environments\\phuc-006-t05-clean-001\\venv",
+    "wheel": "C:\\Users\\MSi\\reddit-community-evolution\\artifacts\\environments\\phuc-006-t05-clean-001\\wheelhouse\\reddit_community_evolution-0.1.0-py3-none-any.whl",
+    "wheel_bytes": 119260,
+    "wheel_sha256": "4367f739298a4fa007954406cca140f502ba197b14944f990d8dcb493efce405"
+  },
+  "installed_distributions": {
+    "Pygments": "2.21.0",
+    "asttokens": "3.0.2",
+    "attrs": "26.1.0",
+    "cloudpickle": "3.1.2",
+    "colorama": "0.4.6",
+    "comm": "0.2.3",
+    "contourpy": "1.4.0",
+    "cycler": "0.12.1",
+    "debugpy": "1.8.22",
+    "executing": "2.3.0",
+    "fastjsonschema": "2.22.2",
+    "fonttools": "4.67.0",
+    "igraph": "1.0.0",
+    "ipykernel": "7.4.0",
+    "ipython": "9.17.1",
+    "ipython_pygments_lexers": "1.1.1",
+    "jedi": "0.20.1",
+    "joblib": "1.6.0",
+    "jsonschema": "4.26.0",
+    "jsonschema-specifications": "2025.9.1",
+    "jupyter_client": "8.10.0",
+    "jupyter_core": "5.9.1",
+    "kiwisolver": "1.5.1",
+    "leidenalg": "0.12.0",
+    "matplotlib": "3.11.2",
+    "matplotlib-inline": "0.2.2",
+    "narwhals": "2.27.1",
+    "nbclient": "0.11.0",
+    "nbformat": "5.11.1",
+    "nest-asyncio2": "1.7.4",
+    "numpy": "2.5.4",
+    "packaging": "26.3",
+    "parso": "0.8.7",
+    "pillow": "12.3.0",
+    "pip": "24.2",
+    "platformdirs": "4.13.3",
+    "prompt_toolkit": "3.0.53",
+    "psutil": "7.2.2",
+    "pure_eval": "0.2.4",
+    "pyparsing": "3.3.3",
+    "python-dateutil": "2.9.0.post0",
+    "pyzmq": "27.2.0",
+    "reddit-community-evolution": "0.1.0",
+    "referencing": "0.37.0",
+    "rpds-py": "2026.9.1",
+    "scikit-learn": "1.9.1",
+    "scipy": "1.18.1",
+    "six": "1.17.0",
+    "stack-data": "0.6.3",
+    "texttable": "1.7.1",
+    "threadpoolctl": "3.7.0",
+    "tornado": "6.5.10",
+    "traitlets": "5.16.1",
+    "typing_extensions": "4.16.0",
+    "wcwidth": "0.9.2"
+  },
+  "installed_package_files_match": 44,
+  "interrupted_first_suite": {
+    "cause": "user reported previous turn timeout; executor session IDs unavailable; exact interruption time unknown",
+    "counts_or_pass_claim": null,
+    "last_log_line": "test_console_entrypoint_emits_utf8_under_legacy_encoding (tests.integration.test_cli.CliTests.test_console_entrypoint_emits_utf8_under_legacy_encoding) ... ",
+    "next_attempt": "full-suite-002",
+    "no_running_python_process_observed_on_resume": true,
+    "observed_at": "2026-10-19T12:20:27.153064+00:00",
+    "original_log": "full-suite.log",
+    "original_process_log": "full-suite-process.log",
+    "status": "interrupted_without_final_test_summary"
+  },
+  "kernel_registration_required": false,
+  "metrics": 216,
+  "native_launcher_observation": {
+    "cleanup_attempt": "Stop-Process for the two observed task launcher PIDs returned not found; both had already exited. No process was terminated.",
+    "launcher_inspection": "launcher-inspection.json",
+    "observation": "Full-suite progress stayed at this native Windows console launcher longer than the test communication timeout; later the original test returned ok and the suite continued.",
+    "observed_at": "2026-10-19T12:24:33.802962+00:00",
+    "root_cause": "not determined; no dependency/source/freeze gate changes",
+    "status": "resolved_without_source_or_test_changes",
+    "test_log_line": "test_console_entrypoint_emits_utf8_under_legacy_encoding (tests.integration.test_cli.CliTests.test_console_entrypoint_emits_utf8_under_legacy_encoding) ... ok",
+    "tests_skipped_or_modified": false
+  },
+  "notebook_source_sha256": "f4e81d180127827be89f373dd6583cd7311376d2a317823c76f61a497801d4c6",
+  "null_ami": 18,
+  "old_artifacts_preserved": 9507,
+  "platform_scope": "Windows / CPython 3.12.6 / pinned versions only",
+  "pngs_byte_identical_to_T04": true,
+  "production_benchmark_rerun": false,
+  "proof": {
+    "archive": "artifacts/verification/phuc-006-t05-001.zip",
+    "bytes": 5713130,
+    "crc_and_entry_bytes_verified": true,
+    "files": 154,
+    "finished_at": "2026-10-19T12:30:10.203948+00:00",
+    "inventory_sha256": "2be99cfdfea92d242c6beb8ed5be723e3a3eb85ffc9f1ebcddc1a580fad026db",
+    "proof_directory": "artifacts/verification/phuc-006-t05-001",
+    "sha256": "c91f11b09d4d3a46041c4369bb045094be5a8a0a8b5f1de8adb5686ad1e29cc7",
+    "status": "verified"
+  },
+  "python": "3.12.6",
+  "recipient_acceptance": "not_verified",
+  "reference_only": true,
+  "replay_script": "scripts/replay_synthetic_notebook.py",
+  "replay_script_sha256": "2355b1099cb7074edbd1c07fc1e4e0dd14f25c784e17b950134ac20d08cd6ebd",
+  "replays": [
+    {
+      "cells": [
+        {
+          "cell": 1,
+          "errors": [],
+          "execution_count": 1
+        },
+        {
+          "cell": 3,
+          "errors": [],
+          "execution_count": 2
+        },
+        {
+          "cell": 5,
+          "errors": [],
+          "execution_count": 3
+        },
+        {
+          "cell": 7,
+          "errors": [],
+          "execution_count": 4
+        },
+        {
+          "cell": 9,
+          "errors": [],
+          "execution_count": 5
+        },
+        {
+          "cell": 11,
+          "errors": [],
+          "execution_count": 6
+        },
+        {
+          "cell": 13,
+          "errors": [],
+          "execution_count": 7
+        },
+        {
+          "cell": 15,
+          "errors": [],
+          "execution_count": 8
+        },
+        {
+          "cell": 17,
+          "errors": [],
+          "execution_count": 9
+        },
+        {
+          "cell": 19,
+          "errors": [],
+          "execution_count": 10
+        }
+      ],
+      "environment": {
+        "REDDIT_SNA_PROJECT": "C:\\Users\\MSi\\reddit-community-evolution",
+        "REDDIT_SYNTHETIC_BUNDLE": "C:\\Users\\MSi\\reddit-community-evolution\\artifacts\\handoff\\phuc-006-t05-input-001",
+        "REDDIT_SYNTHETIC_DEMO_DATASET": "dev-grow-easy-g11",
+        "REDDIT_SYNTHETIC_DEMO_OUTPUT": "C:\\Users\\MSi\\reddit-community-evolution\\artifacts\\detection-tracking\\phuc-006-t05-notebook-001"
+      },
+      "finished_at": "2026-10-19T07:22:32.403518+00:00",
+      "kernel_cwd": "C:\\Users\\MSi\\reddit-community-evolution\\notebooks\\detection_tracking",
+      "png_outputs": 6,
+      "python": "C:\\Users\\MSi\\reddit-community-evolution\\artifacts\\environments\\phuc-006-t05-clean-001\\venv\\Scripts\\python.exe",
+      "scope": "saved synthetic detection replay; no producer rerun or partner acceptance",
+      "seconds": 132.98044099996332,
+      "source_sha256": "f4e81d180127827be89f373dd6583cd7311376d2a317823c76f61a497801d4c6",
+      "status": "complete"
+    },
+    {
+      "cells": [
+        {
+          "cell": 1,
+          "errors": [],
+          "execution_count": 1
+        },
+        {
+          "cell": 3,
+          "errors": [],
+          "execution_count": 2
+        },
+        {
+          "cell": 5,
+          "errors": [],
+          "execution_count": 3
+        },
+        {
+          "cell": 7,
+          "errors": [],
+          "execution_count": 4
+        },
+        {
+          "cell": 9,
+          "errors": [],
+          "execution_count": 5
+        },
+        {
+          "cell": 11,
+          "errors": [],
+          "execution_count": 6
+        },
+        {
+          "cell": 13,
+          "errors": [],
+          "execution_count": 7
+        },
+        {
+          "cell": 15,
+          "errors": [],
+          "execution_count": 8
+        },
+        {
+          "cell": 17,
+          "errors": [],
+          "execution_count": 9
+        },
+        {
+          "cell": 19,
+          "errors": [],
+          "execution_count": 10
+        }
+      ],
+      "environment": {
+        "REDDIT_SNA_PROJECT": "C:\\Users\\MSi\\reddit-community-evolution",
+        "REDDIT_SYNTHETIC_BUNDLE": "C:\\Users\\MSi\\reddit-community-evolution\\artifacts\\handoff\\phuc-006-t05-input-001",
+        "REDDIT_SYNTHETIC_DEMO_DATASET": "dev-grow-easy-g11",
+        "REDDIT_SYNTHETIC_DEMO_OUTPUT": "C:\\Users\\MSi\\reddit-community-evolution\\artifacts\\detection-tracking\\phuc-006-t05-notebook-002"
+      },
+      "finished_at": "2026-10-19T12:21:31.799023+00:00",
+      "kernel_cwd": "C:\\Users\\MSi\\AppData\\Local\\Temp\\phuc-006-t05-outside-cwd-001",
+      "png_outputs": 6,
+      "python": "C:\\Users\\MSi\\reddit-community-evolution\\artifacts\\environments\\phuc-006-t05-clean-001\\venv\\Scripts\\python.exe",
+      "scope": "saved synthetic detection replay; no producer rerun or partner acceptance",
+      "seconds": 60.98120879999988,
+      "source_sha256": "f4e81d180127827be89f373dd6583cd7311376d2a317823c76f61a497801d4c6",
+      "status": "complete"
+    }
+  ],
+  "schema_version": 1,
+  "source_scores_not_recomputed": true,
+  "status": "verified",
+  "summaries": 42,
+  "system_site_packages": false,
+  "task": "PHUC-006-T05",
+  "tracker_artifacts_received": false,
+  "valid_ami": 198
+}

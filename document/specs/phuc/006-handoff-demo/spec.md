@@ -3,7 +3,7 @@
 **Owner phần cá nhân:** Phúc. **Thiết kế:** v1, 16/10/2026. **Phân công:** P07.
 **Tiến độ, hạn và bằng chứng:** [tasks.md](../tasks.md#phuc-006). **Giao diện:** [contracts.md](../contracts.md).
 
-**Hiện tại:** T01–T04 DONE, PHUC-006 **4/6**, tổng Phúc **34/36**. [Notebook](../../../../notebooks/detection_tracking/01_synthetic_demo.ipynb) có thêm case merge/null development, hai hình graph–truth–prediction/contingency và density/pair counts; AMI cũ giữ nguyên, canonical 0. **51/51 targeted tests**, fresh-kernel smoke **10/10 code cells, 6 inline PNG**, 53.075s. [Bằng chứng/preview T04](../evidence/PHUC-006-T04-case-analysis.md), [reference](../evidence/PHUC-006-T04-case-analysis-reference.json). **AC01, AC03 và AC04 đạt**; AC02 formal clean environment/replay còn T05, chốt phần Phúc T06. Guide Git thêm mục 10; ZIP T02/guide bên trong giữ nguyên. Phúc báo đã nhắn Đăng, chưa có receipt/đọc gói/tracker hoặc demo chung. [Hướng dẫn](README.md).
+**Hiện tại:** T01–T05 DONE, PHUC-006 **5/6**, tổng **35/36**. T05 cài regular wheel trong venv mới Windows/CPython 3.12.6, pip check đạt, 44 installed source files khớp; hai fresh kernels đều 10/10 code cells/6 PNG, lượt 002 từ cwd ngoài repo. **385/385 full repo tests, 0 skip/failure/error, 451.564s**. 18 CSV/12 PNG comparisons giống byte T04, 216 metrics/42 summary giữ nguyên; 9.507 artifact cũ/42 frozen source files nguyên byte. [Bằng chứng T05](../evidence/PHUC-006-T05-clean-replay.md), [hướng dẫn chạy sạch](clean-replay.md). AC02 đạt; T06 chốt gói còn riêng. Chưa receipt/tracker/demo cặp Đăng. AC01/AC03/AC04 giữ trạng thái đạt; không suy ra người nhận đã đọc gói.
 
 ## Mục tiêu và user story
 
