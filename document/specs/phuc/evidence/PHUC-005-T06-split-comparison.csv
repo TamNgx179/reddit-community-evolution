@@ -1,0 +1,7 @@
+split,detector_seed,seed_role,n_datasets,n_rows,n_ami_valid,n_ami_missing,ami_mean,ami_min,ami_max,coverage_mean,ami_missing_reasons
+development,0,canonical,18,36,33,3,0.9558799269999274,0.7241648712463861,1.0,1.0,"{""truth_constant"":3}"
+development,1,diagnostic,18,36,33,3,0.9487475264624783,0.7241648712463861,1.0,1.0,"{""truth_constant"":3}"
+development,2,diagnostic,18,36,33,3,0.9546409700892936,0.7251609881533845,1.0,1.0,"{""truth_constant"":3}"
+evaluation,0,canonical,18,36,33,3,0.9331167511618917,0.7241648712463861,1.0,1.0,"{""truth_constant"":3}"
+evaluation,1,diagnostic,18,36,33,3,0.9484196642529084,0.7241648712463861,1.0,1.0,"{""truth_constant"":3}"
+evaluation,2,diagnostic,18,36,33,3,0.9404717903026866,0.7241648712463861,1.0,1.0,"{""truth_constant"":3}"

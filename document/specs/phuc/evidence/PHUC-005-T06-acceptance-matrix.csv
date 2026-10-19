@@ -1,0 +1,6 @@
+AC,status,evidence
+AC01,PASS,"Heldout CLI complete, 108 metrics independently audited; scope excludes tracking"
+AC02,PASS,Driver identity-stub failures retain partial/progress; real retry exit 2 preserves every byte; T03/T04 lifecycle evidence retained
+AC03,PASS,T04 fresh-process replay 29 files/12 partitions/rename-reorder; all historical package source hashes unchanged; heldout one preplanned run
+AC04,PASS,"Exact disjoint 36 datasets/72 snapshots/216 units; 36-row ledger, 216-row combined metrics, failed counts explicit"
+AC05,PASS,Pinned T05 freeze predates heldout access; package/versions/config unchanged; committed external driver archived; all three seeds retained and canonical 0 fixed

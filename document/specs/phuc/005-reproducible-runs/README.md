@@ -1,6 +1,6 @@
 # PHUC-005 — Hướng dẫn cấu hình và lượt chạy tái lập
 
-**T01–T05 DONE, PHUC-005 5/6:** full development **18 dataset/36 snapshot/108 metrics** (99 valid/9 null), canonical AMI mean **0.955879927**, coverage 1.0. Đã tạo freeze sau development từ clean source `d4fe76b`, giữ config/source/versions và gate trước evaluation. **T05 40/40 test liên quan pass**, không chạy lại full suite; 314/314 là lượt T03. CSV/log/run/ZIP và freeze reference đã lưu; [task board](../tasks.md#phuc-005), [bằng chứng T05](../evidence/PHUC-005-T05-development-freeze.md). T06 evaluation giữ lại chưa chạy.
+**PHUC-005 DONE 6/6:** đủ **36 dataset/72 snapshot/216 metric rows**, development và evaluation mỗi tập 18/36/108, mỗi tập 99 valid/9 null, 0 dataset lỗi. Canonical AMI mean: development **0.955879927**, evaluation **0.933116751**; coverage 1.0. Freeze T05/source package 42 files giữ nguyên, external driver `09623f1` đã commit trước evaluation. **T06 25/25 targeted tests pass**, không chạy lại full suite; AC01–AC05 pass. CSV/log/run/ZIP và references đã lưu; [task board](../tasks.md#phuc-005), [bằng chứng T06](../evidence/PHUC-005-T06-heldout.md). Tiếp theo PHUC-006 bàn giao/notebook; tracker/demo cặp theo dõi riêng.
 
 ## T01 dùng để làm gì
 
@@ -203,7 +203,7 @@ Freeze: `artifacts/detection-tracking/phuc-005-t05-freeze-001/`, lúc **19/10/20
 
 [Bằng chứng T05](../evidence/PHUC-005-T05-development-freeze.md), [metrics](../evidence/PHUC-005-T05-detection-metrics.csv), [summary](../evidence/PHUC-005-T05-detection-summary.csv), [ledger](../evidence/PHUC-005-T05-dataset-ledger.csv), [freeze reference](../evidence/PHUC-005-T05-freeze-reference.json) theo Git; reference chỉ trỏ tới bản khóa đầy đủ. Full proof/log/source/run copies và ZIP local ở `artifacts/verification/phuc-005-t05-001`. Ba independent consumers đạt sau relocation; 4.610 artifact cũ giữ hash. 40/40 targeted tests pass, không chạy lại full repo suite T05.
 
-**Tiếp theo T06:** thêm driver ngoài frozen package, verify bản khóa rồi chạy 18 evaluation datasets seeds 101/102/103, lưu đầy đủ 108 metric rows/failed records và đối chiếu tổng 36/72/216. AC04 và nghiệm thu evaluation của AC05 còn pending; tracker Đăng không chặn bước này.
+Freeze T05 là điều kiện trước driver evaluation bên dưới; giữ nguyên 42 source files và protocol/versions khi thực thi T06. Tracker Đăng không chặn phần detection evaluation.
 
 ## Driver evaluation theo bản khóa — T06
 
@@ -222,4 +222,14 @@ Run mới giữ `freeze/` nguyên bundle làm đầu vào, `config/` gồm confi
 
 Checkpoint, stage/dataset state, timing và inventory dùng `RunRecorder` đã khóa. Cuối run đối chiếu counts, original freeze, TOML và driver bytes; drift/lỗi giữ output và failed record, retry không overwrite. Chỉ root complete sau verification mới là kết quả evaluation hoàn tất.
 
-Tests mới ở [test_frozen_evaluation.py](../../../../tests/integration/test_frozen_evaluation.py) dùng **identity-only stubs**, không sinh graph/truth hoặc tính điểm giữ lại. Chúng kiểm tra preflight, full-schedule control flow, failure/progress/no-overwrite và late drift; các stubs không tạo CSV metric values. Production được chạy sau khi driver đã kiểm tra và commit, có kế hoạch trước khi xem điểm. [Bằng chứng T06](../evidence/PHUC-005-T06-heldout.md) sẽ ghi kết quả và source revision thực tế.
+Tests mới ở [test_frozen_evaluation.py](../../../../tests/integration/test_frozen_evaluation.py) dùng **identity-only stubs**, không sinh graph/truth hoặc tính điểm giữ lại. Chúng kiểm tra preflight, full-schedule control flow, failure/progress/no-overwrite và late drift; các stubs không tạo CSV metric values. Production đã chạy sau khi driver được kiểm tra và commit, có kế hoạch trước khi xem điểm. [Bằng chứng T06](../evidence/PHUC-005-T06-heldout.md) ghi source revision, chronology và kết quả thực tế.
+
+### Evaluation và nghiệm thu toàn lịch đã lưu
+
+Run `artifacts/detection-tracking/phuc-005-t06-evaluation-001/`, driver clean source **`09623f1`**, truy cập heldout lúc **19/10/2026 11:21:58 +07**, sau freeze **10:58:31 +07**. Package source/versions/config/policies không đổi từ T05. Eval root complete: **18 dataset/36 snapshot/108 metrics/21 summary/36 stored month timings**, **99 AMI valid/9 null truth_constant**, **0 dataset lỗi**; coverage 1.0. Canonical 0 giữ cố định, mean **0.9331167511618917**, min **0.7241648712463861**. Seed 1/2 diagnostic có mean 0.9484196642529084 / 0.9404717903026866, lưu bảng riêng.
+
+Dùng lại development T05 nguyên output, đã audit cả hai report: tổng **36 dataset, 72 snapshot, 216 metric rows**, **198 valid/18 null**, không trùng dataset/generator seeds giữa split. 36-row ledger và 216-row combined metrics trong proof khớp toàn bộ expected keys; không nhân dataset theo detector seed.
+
+[Evaluation metrics](../evidence/PHUC-005-T06-detection-metrics.csv), [summary](../evidence/PHUC-005-T06-detection-summary.csv), [ledger toàn lịch](../evidence/PHUC-005-T06-dataset-ledger.csv), [split comparison](../evidence/PHUC-005-T06-split-comparison.csv), [AC matrix](../evidence/PHUC-005-T06-acceptance-matrix.csv) và [evaluation reference](../evidence/PHUC-005-T06-evaluation-reference.json) theo Git. Full copy hai runs/freeze/driver/source/log/combined metrics và ZIP local ở `artifacts/verification/phuc-005-t06-001`. **25/25 targeted tests pass**, 4 audit invocations từ 3 independent consumers pass, no-overwrite exit 2; **5.512 artifact cũ** giữ hash. AC01–AC05 PASS; full repo suite không chạy lại T06.
+
+Nguồn tái lập là driver `09623f1` và 42 package source files đã archive; các bước reporting sau đó theo dõi riêng, không cập nhật lại bản khóa. **Tiếp theo PHUC-006-T01:** inventory và consumer độc lập cho gói bàn giao. Detection benchmark đã xong; notebook/handoff cá nhân và tracker/demo cặp còn riêng.

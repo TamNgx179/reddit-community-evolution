@@ -1,0 +1,48 @@
+{
+  "artifact_type": "frozen-evaluation-reference",
+  "bundle_local_zip": "artifacts/verification/phuc-005-t06-001.zip",
+  "bundle_sha256": "f1f2a791bc3a515d6973758697432e9279b85fed4936358bb5feb16d88275dec",
+  "combined_counts": {
+    "datasets": 36,
+    "snapshot_detector_runs": 216,
+    "snapshots": 72
+  },
+  "driver_revision": "09623f1a0fa299614c9e7ba3cf1dad560e5c13ac",
+  "driver_sha256": "8c18038300258f1e25b63ee16492a4d25a0e836b2e7a76dc4e441dd7eae124d0",
+  "evaluation_created_at": "2026-10-19T04:21:56.088664+00:00",
+  "evaluation_finished_at": "2026-10-19T04:22:26.238593+00:00",
+  "evaluation_manifest_sha256": "e305a6a0fe4d0068e50159f9078fe893de266d10d13ca9d5b18bd46df4aae16c",
+  "freeze_manifest_sha256": "8c3749cce905e5d416929bddd931cbb4a7104f047ad9273ab22561d5ccdf8ff9",
+  "frozen_at": "2026-10-19T03:58:31.148600+00:00",
+  "frozen_source_revision": "d4fe76b02962009dddb1d042da3fb084dd79582c",
+  "heldout_access_started_at": "2026-10-19T04:21:58.670511+00:00",
+  "local_directory": "artifacts/detection-tracking/phuc-005-t06-evaluation-001",
+  "primary_heldout_production_runs": 1,
+  "reference_only": true,
+  "run_id": "phuc-005-t06-evaluation-001",
+  "schema_version": 1,
+  "source_or_policy_changes_after_freeze": [],
+  "splits": [
+    {
+      "ami_missing": 9,
+      "ami_valid": 99,
+      "datasets": 18,
+      "failed_datasets": 0,
+      "metric_rows": 108,
+      "snapshots": 36,
+      "split": "development",
+      "summary_rows": 21
+    },
+    {
+      "ami_missing": 9,
+      "ami_valid": 99,
+      "datasets": 18,
+      "failed_datasets": 0,
+      "metric_rows": 108,
+      "snapshots": 36,
+      "split": "evaluation",
+      "summary_rows": 21
+    }
+  ],
+  "tracking_status": "not_implemented"
+}
