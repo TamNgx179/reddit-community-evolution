@@ -1,0 +1,110 @@
+{
+  "artifact_type": "benchmark-freeze-reference",
+  "bundle_local_zip": "artifacts/verification/phuc-005-t05-001.zip",
+  "bundle_sha256": "4282c57e8c7ec2bf7d534291c3814e92a6292f9f3fe8b3626a5df3ab0d0581a7",
+  "changes_from_development": [],
+  "detector": {
+    "canonical_seed": 0,
+    "gamma": 1.0,
+    "seeds": [
+      0,
+      1,
+      2
+    ]
+  },
+  "development": {
+    "counts": {
+      "datasets": 18,
+      "snapshot_detector_runs": 108,
+      "snapshots": 36
+    },
+    "dataset_ids": [
+      "dev-stable-easy-g11",
+      "dev-stable-easy-g12",
+      "dev-stable-easy-g13",
+      "dev-grow-easy-g11",
+      "dev-grow-easy-g12",
+      "dev-grow-easy-g13",
+      "dev-shrink-easy-g11",
+      "dev-shrink-easy-g12",
+      "dev-shrink-easy-g13",
+      "dev-merge-easy-g11",
+      "dev-merge-easy-g12",
+      "dev-merge-easy-g13",
+      "dev-split-easy-g11",
+      "dev-split-easy-g12",
+      "dev-split-easy-g13",
+      "dev-dissolve-easy-g11",
+      "dev-dissolve-easy-g12",
+      "dev-dissolve-easy-g13"
+    ],
+    "manifest": "development/manifest.json",
+    "manifest_sha256": "34364c98519e394af8541b9093a78899469239856f583d01608ec8848ade4e8e",
+    "run_id": "phuc-005-t05-development-001",
+    "source_directory": "C:\\Users\\MSi\\reddit-community-evolution\\artifacts\\detection-tracking\\phuc-005-t05-development-001"
+  },
+  "environment": {
+    "packages": {
+      "igraph": "1.0.0",
+      "leidenalg": "0.12.0",
+      "numpy": "2.5.4",
+      "reddit-community-evolution": "0.1.0",
+      "scikit-learn": "1.9.1",
+      "scipy": "1.18.1"
+    },
+    "platform": "Windows-11-10.0.26300-SP0",
+    "python_executable": "C:\\Users\\MSi\\reddit-community-evolution\\.venv\\Scripts\\python.exe",
+    "python_hash_seed": "0",
+    "python_implementation": "CPython",
+    "python_version": "3.12.6"
+  },
+  "evaluation_executed": false,
+  "expected_counts": {
+    "development": {
+      "datasets": 18,
+      "snapshot_detector_runs": 108,
+      "snapshots": 36
+    },
+    "evaluation": {
+      "datasets": 18,
+      "snapshot_detector_runs": 108,
+      "snapshots": 36
+    },
+    "total": {
+      "datasets": 36,
+      "snapshot_detector_runs": 216,
+      "snapshots": 72
+    }
+  },
+  "freeze_run_id": "phuc-005-t05-freeze-001",
+  "frozen_at": "2026-10-19T03:58:31.148600+00:00",
+  "frozen_protocol": {
+    "archive": "config/protocol/benchmark_week1_protocol.json",
+    "benchmark_sha256": "950737dfbc3fc895813c22e1abb64661f67a5ed11b389a9bf502189efa37edfc",
+    "sha256": "cc78f961de7e3c83a343362035ccf84756a39cdc89c5c9cc1e5fd5115fe3a347"
+  },
+  "generator_seeds": {
+    "development": [
+      11,
+      12,
+      13
+    ],
+    "evaluation": [
+      101,
+      102,
+      103
+    ]
+  },
+  "holdout_audit": {
+    "observed_evaluation_metadata": [],
+    "scope": "synthetic graph/detection metadata under project artifacts/detection-tracking"
+  },
+  "inventory_files": 54,
+  "local_directory": "artifacts\\detection-tracking\\phuc-005-t05-freeze-001",
+  "manifest_sha256": "8c3749cce905e5d416929bddd931cbb4a7104f047ad9273ab22561d5ccdf8ff9",
+  "reference_only": true,
+  "schema_version": 1,
+  "source_files": 42,
+  "source_revision": "d4fe76b02962009dddb1d042da3fb084dd79582c",
+  "source_working_tree_clean": true
+}

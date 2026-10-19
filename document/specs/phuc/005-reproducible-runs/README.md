@@ -1,6 +1,6 @@
 # PHUC-005 — Hướng dẫn cấu hình và lượt chạy tái lập
 
-**T01–T04 DONE, PHUC-005 4/6:** protocol/API development, manifest schema 2 và nghiệm thu lifecycle/replay. **T04 23/23 test liên quan pass**, runtime/config không đổi; full repo **314/314 tại T03**, không chạy lại full suite T04. Hai demo stable/dissolve có 12 metrics/run (9 valid/3 null), 29 CSV/policy và 12 partitions khớp; failure/no-overwrite/consumer checks đạt. Tiến độ/nghiệm thu tại [task board](../tasks.md#phuc-005); T05 freeze và T06 evaluation giữ lại chưa chạy.
+**T01–T05 DONE, PHUC-005 5/6:** full development **18 dataset/36 snapshot/108 metrics** (99 valid/9 null), canonical AMI mean **0.955879927**, coverage 1.0. Đã tạo freeze sau development từ clean source `d4fe76b`, giữ config/source/versions và gate trước evaluation. **T05 40/40 test liên quan pass**, không chạy lại full suite; 314/314 là lượt T03. CSV/log/run/ZIP và freeze reference đã lưu; [task board](../tasks.md#phuc-005), [bằng chứng T05](../evidence/PHUC-005-T05-development-freeze.md). T06 evaluation giữ lại chưa chạy.
 
 ## T01 dùng để làm gì
 
@@ -161,7 +161,7 @@ Demo T04 chọn **stable + dissolve, generator seed 11** trước khi chạy. Ha
 
 [Bằng chứng T04](../evidence/PHUC-005-T04-acceptance.md) có [AC matrix](../evidence/PHUC-005-T04-acceptance-matrix.csv), [metrics](../evidence/PHUC-005-T04-detection-metrics.csv), [summary](../evidence/PHUC-005-T04-detection-summary.csv), [partition comparison](../evidence/PHUC-005-T04-partition-comparison.csv) và [run summary](../evidence/PHUC-005-T04-run-summary.csv). Full log/source/run copies/consumer/ZIP local ở `artifacts/verification/phuc-005-t04-001`; 4.043 artifact cũ giữ hash. AC01–03 pass; AC04/05 còn formal freeze/evaluation.
 
-**Tiếp theo T05:** chạy formal development và ghi cấu hình khóa/thời điểm/nguồn trước evaluation. T06 mới chạy tập giữ lại. Không cần chờ tracker Đăng.
+Các kiểm tra T04 là điều kiện trước lượt formal development/freeze T05 bên dưới. T06 mới chạy tập giữ lại. Không cần chờ tracker Đăng.
 
 ## Chạy đủ development và tạo bản khóa — T05
 
@@ -193,4 +193,14 @@ Lệnh đầu không có `--dataset-id`, chạy đủ **18 development datasets*
 
 Phạm vi khóa: **mọi `.py` trong package `reddit_sna` và pyproject nếu có**, recipe, scoring/split/summary policy và lịch seed. T06 có thể thêm driver ngoài package tại `scripts/run_frozen_evaluation.py` để gọi các module đã khóa; driver phải lưu source/hash riêng và không đổi thuật toán/policy/canonical. Git HEAD có thể tiến vì docs hoặc driver, nhưng package source hashes và versions vẫn phải khớp bản khóa. Khóa được thực thi bằng kiểm tra nội dung, không phải chỉ đánh dấu file readonly.
 
-Schema của bản khóa là **1**, artifact type `synthetic-benchmark-freeze`, scope `benchmark-protocol-freeze`; `freeze_record_created=true`, `evaluation_executed=false` nói về thao tác tạo khóa. Development run vẫn giữ manifest schema 2 và `freeze_record_created=false` vì bản thân run đó không tạo khóa. Frozen source Git context là của development; lượt production T05 sẽ dùng source đã commit với working tree sạch. Bản khóa không tự tuyên bố evaluation/tracking hoàn thành.
+Schema của bản khóa là **1**, artifact type `synthetic-benchmark-freeze`, scope `benchmark-protocol-freeze`; `freeze_record_created=true`, `evaluation_executed=false` nói về thao tác tạo khóa. Development run vẫn giữ manifest schema 2 và `freeze_record_created=false` vì bản thân run đó không tạo khóa. Frozen source Git context là của development; production T05 đã dùng source `d4fe76b` với working tree sạch. Bản khóa không tự tuyên bố evaluation/tracking hoàn thành.
+
+### Kết quả T05 đã lưu
+
+Development: `artifacts/detection-tracking/phuc-005-t05-development-001/`, đủ 18 dataset/36 snapshot/108 metrics/21 summary/36 stored month timings; **99 AMI hợp lệ, 9 null truth_constant**, không loại điểm thấp. Canonical seed 0 có 33 valid/3 null, AMI mean **0.9558799269999274**, min **0.7241648712463861**, coverage mean 1.0. Seeds 1/2 giữ bảng riêng, không dùng để chọn lại canonical.
+
+Freeze: `artifacts/detection-tracking/phuc-005-t05-freeze-001/`, lúc **19/10/2026 10:58:31 UTC+07:00**, source revision `d4fe76b`, changes rỗng; **54 hashed output files/42 source files**. Manifest SHA-256 **`8c3749cce905e5d416929bddd931cbb4a7104f047ad9273ab22561d5ccdf8ff9`**. Development manifest giữ nguyên; retry cả hai run IDs bị từ chối và không đổi output.
+
+[Bằng chứng T05](../evidence/PHUC-005-T05-development-freeze.md), [metrics](../evidence/PHUC-005-T05-detection-metrics.csv), [summary](../evidence/PHUC-005-T05-detection-summary.csv), [ledger](../evidence/PHUC-005-T05-dataset-ledger.csv), [freeze reference](../evidence/PHUC-005-T05-freeze-reference.json) theo Git; reference chỉ trỏ tới bản khóa đầy đủ. Full proof/log/source/run copies và ZIP local ở `artifacts/verification/phuc-005-t05-001`. Ba independent consumers đạt sau relocation; 4.610 artifact cũ giữ hash. 40/40 targeted tests pass, không chạy lại full repo suite T05.
+
+**Tiếp theo T06:** thêm driver ngoài frozen package, verify bản khóa rồi chạy 18 evaluation datasets seeds 101/102/103, lưu đầy đủ 108 metric rows/failed records và đối chiếu tổng 36/72/216. AC04 và nghiệm thu evaluation của AC05 còn pending; tracker Đăng không chặn bước này.
