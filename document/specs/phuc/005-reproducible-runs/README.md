@@ -1,6 +1,6 @@
 # PHUC-005 — Hướng dẫn cấu hình và lượt chạy tái lập
 
-**T01–T02 DONE, PHUC-005 2/6:** protocol binding và API/CLI development từ generator đến bảng điểm; **305/305 test repo pass**. Hai demo mới có 12 metrics/9 summary mỗi run, CSV/policy tái lập. Tiến độ/nghiệm thu tại [task board](../tasks.md#phuc-005); [spec](spec.md) ghi phạm vi toàn bộ sáu task.
+**T01–T03 DONE, PHUC-005 3/6:** protocol binding, API/CLI development và manifest schema 2 với source/config/output hashes, environment, lifecycle/timing; **314/314 test repo pass**. Hai demo T03 có 12 metrics/9 summary mỗi run, 29 CSV/policy tái lập; ba manifest và hai report audit độc lập đạt, failure run được giữ. Tiến độ/nghiệm thu tại [task board](../tasks.md#phuc-005); [spec](spec.md) ghi phạm vi toàn bộ sáu task.
 
 ## T01 dùng để làm gì
 
@@ -89,9 +89,13 @@ print(output / "evaluation/detection_metrics.csv")
 Đầu ra ở `artifacts/detection-tracking/<run-id>/`:
 
 ```text
-manifest.json                            # scope, selection, counts, stage/status
+manifest.json                            # schema 2: scope, counts, hashes, status, timing
 config/run-config.toml                   # TOML nguồn; manifest giữ run_id đã override
+config/resolved-run-config.json          # config thực dùng, gồm override run_id
 config/protocol/                         # protocol và recipe nguyên byte
+provenance/environment.json              # Python, packages, platform, hash seed
+provenance/source.json                   # Git revision/working tree và source hashes
+provenance/source/                       # bản sao package Python + pyproject nếu có
 inputs/source/<dataset-id>/              # graph/nodes/truth/config/metadata
 inputs/detected/<dataset-id>/            # memberships/diagnostics/config/metadata
 evaluation/                              # metrics, summary, policy, timing, metadata
@@ -99,8 +103,44 @@ evaluation/                              # metrics, summary, policy, timing, met
 
 `evaluation/` ở đây là **bước chấm điểm development**; tập evaluation giữ lại chưa được chạy. Thành công có `scope=development-detection-evaluation`, `tracking_status=not_implemented`, `freeze_record_created=false`. Danh sách subset ghi rõ số lượng được chọn, không được coi là hoàn thành toàn lịch benchmark. Lệnh `reddit-sna run` cho full detection-tracking vẫn báo chưa triển khai; dùng entry riêng ở trên để chạy đến detection evaluation.
 
-Protocol, recipe và TOML được chụp trước các stage. Config/policy/selection/dependencies lỗi thì chưa tạo run; stage lỗi giữ những file đã tạo và manifest `failed` cùng stage/dataset. Thử lại vào run cũ bị từ chối. T02 có manifest trạng thái cơ bản; T03 tiếp tục inventory hashes/source/environment/timing và kiểm tra lifecycle đầy đủ. [Bằng chứng T02](../evidence/PHUC-005-T02-api.md) ghi lệnh thực chạy, kết quả và vị trí log/ZIP.
+Protocol, recipe và TOML được chụp trước các stage. Config/policy/selection/dependencies lỗi thì chưa tạo run; stage lỗi giữ những file đã tạo và manifest `failed` cùng stage/dataset. Thử lại vào run cũ bị từ chối. T02 có manifest trạng thái cơ bản; T03 bổ sung hồ sơ bên dưới, không sửa manifest/output T02 đã lưu. [Bằng chứng T02](../evidence/PHUC-005-T02-api.md) ghi lệnh thực chạy, kết quả và vị trí log/ZIP của T02.
 
 T02 đã chạy hai demo `artifacts/detection-tracking/phuc-005-t02-001/` và `-002/`: mỗi run 2 dataset stable/grow seed 11, 4 snapshot, 12 metrics/9 summary, AMI/coverage 1 trong phạm vi này. 29 CSV/policy files giống byte, hai reader độc lập đạt, 3.301 artifact cũ được bảo toàn. [Metrics](../evidence/PHUC-005-T02-detection-metrics.csv)/[summary](../evidence/PHUC-005-T02-detection-summary.csv) nhỏ theo Git; proof/ZIP local `artifacts/verification/phuc-005-t02-001/` và `.zip` giữ cả hai run/source/log/hash. Full suite 305/305 pass, gồm 9 test composition mới; không chạy held-out evaluation hoặc tạo freeze record.
 
-**Tiếp theo T03:** hoàn thiện provenance, environment, timing và lifecycle manifest ở cấp run. Tracker của Đăng không chặn phần này.
+## Hồ sơ của mỗi lượt chạy — T03
+
+Manifest schema **2** trả lời: đã chạy code/cấu hình nào, bằng môi trường gì, bước nào xong, mất bao lâu và file có còn nguyên byte không. Helper [artifacts.py](../../../../src/reddit_sna/artifacts.py) được API gọi tự động; không cần thêm tham số CLI. Schema của graph/detection/report con giữ nguyên. Các manifest T02 schema 1 vẫn là hồ sơ lịch sử, không tự nâng cấp hay ghi đè.
+
+| Trường | Dùng để đọc gì |
+|---|---|
+| `config_inputs` | Path nguồn, archive path tương đối và SHA-256 của protocol, recipe, TOML |
+| `resolved_config` và `config` | JSON cấu hình thực dùng, gồm run ID truyền từ CLI/API; TOML gốc có thể còn ID mặc định |
+| `source` | Package Python thực được import, hashes/bản sao các file `.py` và pyproject nếu có; Git revision/branch/working tree |
+| `environment` | Python/executable/platform, versions package/igraph/leidenalg/sklearn/numpy/scipy, `PYTHONHASHSEED` nếu đặt |
+| `files` | Tất cả file output khác root manifest/pending manifest, gồm metadata con, byte count và SHA-256 |
+| `stages` | Configuration, generation, detection, evaluation: pending/running/complete/failed, mốc UTC và wall seconds |
+| `dataset_records` | Context case/seed/split, trạng thái generation/detection/evaluation và metadata path cho từng dataset |
+| `progress_counts` | Số dataset đã sinh/chạy detector/đánh giá xong; khi lỗi không tự làm đủ expected counts |
+| `integrity` | Verified sau kiểm tra cuối; partial/unavailable khi lỗi, giữ expected/actual hashes nếu file đã niêm phong bị đổi |
+
+SHA-256 là mã đối chiếu nội dung file: khác mã nghĩa là byte đã thay đổi. Bản sao source giúp đối chiếu cả khi chạy từ working tree có sửa chưa commit; chỉ Git revision sẽ không đủ để mô tả tình huống đó. Nếu không lấy được Git, ghi `unavailable` cùng các trường null, vẫn giữ source hashes. Không ghi toàn bộ biến môi trường.
+
+Manifest được ghi qua file pending rồi thay thế. Trước mỗi stage/dataset có checkpoint; sau mỗi stage kiểm tra lại các output đã niêm phong. Chỉ ghi root `complete` sau khi mọi stage, expected/actual counts, source hashes và inventory đã qua kiểm tra. `evaluation/metadata.json` complete không đủ để kết luận cả run complete: lỗi kiểm tra cuối hoặc ghi manifest cuối vẫn làm root failed.
+
+Khi lỗi, API ném lại lỗi gốc, giữ artifact đã có và ghi root `failed`, stage/dataset, lỗi, thời gian đã đo và inventory còn đọc được. Ctrl+C được ghi theo đường lỗi khi Python còn xử lý được exception. Nếu ghi failed manifest cũng lỗi, helper cố lưu đầy đủ hồ sơ vào **`failure.json`**; người đọc phải ưu tiên dấu hiệu failure này và không coi checkpoint `started` là thành công. Mất điện, kill process hoặc không thể ghi cả hai file có thể chỉ để lại `started`; đó là run chưa hoàn tất, phải dùng run ID mới.
+
+### Đọc thời gian đúng phạm vi
+
+| Số đo | Phạm vi |
+|---|---|
+| `preflight_wall_seconds` | Kiểm tra config/selection/backend và lấy provenance trước khi tạo run |
+| `timing.run_wall_seconds` | Từ khởi tạo recorder đến kiểm tra cuối; không gồm preflight hoặc ghi complete manifest cuối. Lỗi dùng scope failure capture ghi kèm |
+| `stages.*.wall_seconds` | Cả wrapper của bước: gồm checkpoints bên trong và kiểm tra hash cuối stage; không gồm ghi checkpoint ranh giới |
+| `dataset_records.*.generation/detection.wall_seconds` | Lời gọi exporter từng dataset, gồm công việc đọc/ghi của exporter; không gồm ghi checkpoint wrapper |
+| `dataset_records.*.evaluation.wall_seconds` | **Null**: evaluator đo chung cả batch, không phân bổ giả thành từng dataset |
+| `evaluation/timing.json` | Phạm vi report cũ: detection tháng lấy từ diagnostics đã lưu, compute/export report đo riêng; generation tại report vẫn null |
+| Peak memory | **Null / not measured**; không suy ra từ các số đo thời gian |
+
+Các số đo lồng nhau nên không cộng tất cả để tính tổng. Timing, timestamp, absolute path và Git working tree có thể khác giữa replay; CSV/policy trong cùng lịch/seed mới là đối tượng đối chiếu tái lập. Hai demo T03, failed run, kiểm tra hashes và log/ZIP được ghi tại [bằng chứng T03](../evidence/PHUC-005-T03-provenance.md).
+
+T03 đã lưu hai successful runs `phuc-005-t03-001/002`, mỗi run 88 output files được hash và 41 source files được lưu; controlled failure `phuc-005-t03-failure-001` giữ progress 2 generated/1 detected/0 evaluated và partial file. Proof/ZIP local tại `artifacts/verification/phuc-005-t03-001`; [run summary](../evidence/PHUC-005-T03-run-summary.csv) và [stage timing](../evidence/PHUC-005-T03-stage-timing.csv) nhỏ theo Git. Full suite 314/314 pass; 3.503 artifact cũ được bảo toàn. **Tiếp theo T04:** nghiệm thu lifecycle/replay; T05 formal development/freeze, T06 evaluation giữ lại. Không cần chờ tracker Đăng.

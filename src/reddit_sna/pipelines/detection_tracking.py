@@ -1,7 +1,6 @@
 """Synthetic detection and development benchmark APIs; tracking remains unfinished."""
 
 from collections import Counter
-from datetime import datetime, timezone
 import csv
 from hashlib import sha256
 from importlib.metadata import version
@@ -11,8 +10,9 @@ from pathlib import Path
 import platform
 import sys
 from tempfile import TemporaryDirectory
+from time import perf_counter
 
-from reddit_sna.artifacts import create_run_directory
+from reddit_sna.artifacts import RunRecorder, capture_run_provenance, create_run_directory
 from reddit_sna.benchmarks.config import GRAPH_PROTOCOL, dataset_schedule, load_benchmark_config
 from reddit_sna.benchmarks.io import export_graph_dataset, read_edges, read_memberships, read_nodes, write_memberships
 from reddit_sna.config import ConfigError, RunConfig, validate_destination, validate_run_id
@@ -292,15 +292,6 @@ def export_synthetic_detection(
     return metadata
 
 
-def _save_benchmark_manifest(run: Path, manifest: dict) -> None:
-    """Replace only the manifest owned by this newly reserved invocation."""
-    pending = run / "manifest.pending.json"
-    with pending.open("w", encoding="utf-8", newline="\n") as handle:
-        json.dump(manifest, handle, ensure_ascii=False, sort_keys=True, indent=2, allow_nan=False)
-        handle.write("\n")
-    pending.replace(run / "manifest.json")
-
-
 def run_synthetic_benchmark(
     config: RunConfig, *, protocol: Path, dataset_ids=None,
 ) -> Path:
@@ -312,12 +303,14 @@ def run_synthetic_benchmark(
     RunConfig.seed names the canonical detector seed, not a generator seed.
     Snapshot inputs before work; keep partial outputs and a failed manifest on
     errors. Scope is development-detection-evaluation, never full tracking.
-    Full provenance/timing and freeze records are subsequent implementation.
+    Record source/config/output hashes, runtime environment and scoped timings.
+    Configuration snapshots are provenance; formal evaluation freeze is separate.
     """
     from importlib import import_module
     from reddit_sna.benchmarks.protocol import load_benchmark_protocol
     from reddit_sna.evaluation.detection import export_detection_evaluation
 
+    preflight_started = perf_counter()
     if (config.pipeline != PipelineName.DETECTION_TRACKING or config.input_kind != "synthetic"
             or config.input_path is not None):
         raise ConfigError("synthetic benchmark requires detection-tracking, synthetic input and no input.path")
@@ -353,66 +346,85 @@ def run_synthetic_benchmark(
         if exc.name in ("sklearn", "sklearn.metrics"):
             raise ImportError("install benchmark dependencies with pip install -e '.[graph,evaluation]'") from exc
         raise
+    source, environment, source_bytes = capture_run_provenance()
+    preflight_seconds = perf_counter() - preflight_started
     run = create_run_directory(config)
     manifest = json.loads((run / "manifest.json").read_text(encoding="utf-8"))
     expected = {"datasets": len(selected), "snapshots": len(selected) * len(plan.benchmark["months"]),
                 "snapshot_detector_runs": len(selected) * len(plan.benchmark["months"]) * len(plan.benchmark["detector"]["seeds"])}
-    manifest.update(schema_version=1, artifact_type="synthetic-detection-evaluation-run",
+    manifest.update(schema_version=2, artifact_type="synthetic-detection-evaluation-run",
                     scope="development-detection-evaluation", split="development",
                     selection={"mode": mode, "dataset_ids": [row["dataset_id"] for row in selected]},
                     expected_counts=expected, completed_stages=[], current_stage="configuration", current_dataset=None,
                     generated_datasets=[], detected_datasets=[], tracking_status="not_implemented",
                     freeze_record_created=False,
+                    source=source, environment=environment, preflight_wall_seconds=preflight_seconds,
+                    preflight_scope="config/selection/backend checks and provenance capture before run reservation",
+                    config_inputs={
+                        "protocol": {"source": str(plan.protocol_path), "archive": "config/protocol/" + plan.protocol_path.name,
+                                     "sha256": plan.protocol_sha256},
+                        "benchmark": {"source": str(plan.benchmark_path), "archive": "config/protocol/" + plan.benchmark_path.name,
+                                      "sha256": plan.benchmark_sha256},
+                        "run_config": {"source": str(config.source), "archive": "config/run-config.toml",
+                                       "sha256": sha256(run_config_bytes).hexdigest()}},
+                    dataset_records={item["dataset_id"]: {**item, **{
+                        stage: {"status": "pending", "wall_seconds": None} for stage in ("generation", "detection", "evaluation")}}
+                        for item in selected},
                     protocol={"source": str(plan.protocol_path), "sha256": plan.protocol_sha256,
                               "benchmark_sha256": plan.benchmark_sha256})
+    recorder = RunRecorder(run, manifest)
     try:
-        _save_benchmark_manifest(run, manifest)
-        archived = run / "config" / "protocol"
-        archived.mkdir(parents=True)
-        (archived / plan.protocol_path.name).write_bytes(protocol_bytes)
-        (archived / plan.benchmark_path.name).write_bytes(recipe_bytes)
-        (run / "config/run-config.toml").write_bytes(run_config_bytes)
-        frozen_inputs = load_benchmark_protocol(archived / plan.protocol_path.name)
-        source_root, detected_root = run / "inputs/source", run / "inputs/detected"
-        source_root.mkdir(parents=True)
-        detected_root.mkdir()
-        for item in selected:
-            dataset = item["dataset_id"]
-            manifest.update(current_stage="generation", current_dataset=dataset)
-            _save_benchmark_manifest(run, manifest)
-            export_graph_dataset(source_root / dataset, benchmark=frozen_inputs.benchmark,
-                                 scenario=item["scenario"], generator_seed=item["generator_seed"], split="development")
-            manifest["generated_datasets"].append(dataset)
-        manifest["completed_stages"].extend(["generation", "truth"])
-        for item in selected:
-            dataset = item["dataset_id"]
-            manifest.update(current_stage="detection", current_dataset=dataset)
-            _save_benchmark_manifest(run, manifest)
-            export_synthetic_detection(source_root / dataset, detected_root / dataset,
-                                       benchmark_config=frozen_inputs.benchmark_path)
-            manifest["detected_datasets"].append(dataset)
-        manifest["completed_stages"].append("detection")
-        manifest.update(current_stage="evaluation", current_dataset=None)
-        _save_benchmark_manifest(run, manifest)
-        report = export_detection_evaluation(
-            [(source_root / item["dataset_id"], detected_root / item["dataset_id"]) for item in selected], run / "evaluation")
-        actual = {"datasets": report["dataset_count"],
-                  "snapshots": report["metric_rows"] // len(plan.benchmark["detector"]["seeds"]),
-                  "snapshot_detector_runs": report["metric_rows"]}
-        if actual != expected:
-            raise ValueError("completed report counts differ from the selected development schedule")
-        if (plan.protocol_path.read_bytes() != protocol_bytes or plan.benchmark_path.read_bytes() != recipe_bytes
-                or config.source.read_bytes() != run_config_bytes):
-            raise ValueError("source configuration changed during the benchmark run")
-        manifest["completed_stages"].append("evaluation")
-        manifest.update(status="complete", current_stage=None, current_dataset=None,
-                        actual_counts=actual, evaluation_directory="evaluation")
-    except Exception as exc:
-        manifest.update(status="failed", error={"type": type(exc).__name__, "message": str(exc)})
+        with recorder.stage("configuration"):
+            archived = run / "config" / "protocol"
+            archived.mkdir(parents=True)
+            (archived / plan.protocol_path.name).write_bytes(protocol_bytes)
+            (archived / plan.benchmark_path.name).write_bytes(recipe_bytes)
+            (run / "config/run-config.toml").write_bytes(run_config_bytes)
+            _write_detection_json(run / "config/resolved-run-config.json", config.to_dict())
+            manifest["resolved_config"] = {"archive": "config/resolved-run-config.json",
+                "sha256": sha256((run / "config/resolved-run-config.json").read_bytes()).hexdigest()}
+            for name, data in source_bytes.items():
+                target = run / source["archive_root"] / name
+                target.parent.mkdir(parents=True, exist_ok=True)
+                target.write_bytes(data)
+            _write_detection_json(run / "provenance/environment.json", environment)
+            _write_detection_json(run / "provenance/source.json", source)
+            archived_plan = load_benchmark_protocol(archived / plan.protocol_path.name)
+            source_root, detected_root = run / "inputs/source", run / "inputs/detected"
+            source_root.mkdir(parents=True)
+            detected_root.mkdir()
+        with recorder.stage("generation"):
+            for item in selected:
+                dataset = item["dataset_id"]
+                with recorder.dataset("generation", dataset) as record:
+                    export_graph_dataset(source_root / dataset, benchmark=archived_plan.benchmark,
+                                         scenario=item["scenario"], generator_seed=item["generator_seed"], split="development")
+                    record["metadata"] = f"inputs/source/{dataset}/metadata.json"
+                    manifest["generated_datasets"].append(dataset)
+        with recorder.stage("detection"):
+            for item in selected:
+                dataset = item["dataset_id"]
+                with recorder.dataset("detection", dataset) as record:
+                    export_synthetic_detection(source_root / dataset, detected_root / dataset,
+                                               benchmark_config=archived_plan.benchmark_path)
+                    record["metadata"] = f"inputs/detected/{dataset}/metadata.json"
+                    manifest["detected_datasets"].append(dataset)
+        with recorder.stage("evaluation"):
+            report = export_detection_evaluation(
+                [(source_root / item["dataset_id"], detected_root / item["dataset_id"]) for item in selected], run / "evaluation")
+            actual = {"datasets": report["dataset_count"],
+                      "snapshots": report["metric_rows"] // len(plan.benchmark["detector"]["seeds"]),
+                      "snapshot_detector_runs": report["metric_rows"]}
+            if actual != expected:
+                raise ValueError("completed report counts differ from the selected development schedule")
+            if (plan.protocol_path.read_bytes() != protocol_bytes or plan.benchmark_path.read_bytes() != recipe_bytes
+                    or config.source.read_bytes() != run_config_bytes):
+                raise ValueError("source configuration changed during the benchmark run")
+            manifest.update(actual_counts=actual, evaluation_directory="evaluation")
+        recorder.complete()
+    except BaseException as exc:
+        recorder.fail(exc)
         raise
-    finally:
-        manifest["finished_at"] = datetime.now(timezone.utc).isoformat()
-        _save_benchmark_manifest(run, manifest)
     return run
 
 

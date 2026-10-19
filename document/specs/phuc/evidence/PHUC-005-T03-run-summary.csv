@@ -1,0 +1,4 @@
+run_id,status,scope,detected_datasets,evaluated_datasets,generated_datasets,inventory_files,source_files,integrity,run_wall_seconds,process_wall_seconds
+phuc-005-t03-001,complete,development-detection-evaluation,2,2,2,88,41,verified,3.274341199954506,15.082911800011061
+phuc-005-t03-002,complete,development-detection-evaluation,2,2,2,88,41,verified,3.710102499986533,11.368199000018649
+phuc-005-t03-failure-001,failed,development-detection-evaluation,1,0,2,75,41,partial,2.4290391000104137,10.387002900009975

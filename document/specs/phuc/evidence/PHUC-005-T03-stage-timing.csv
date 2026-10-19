@@ -1,0 +1,13 @@
+run_id,stage,status,wall_seconds,scope
+phuc-005-t03-001,configuration,complete,0.35878980002598837,wrapper wall time including dataset checkpoints and end-of-stage integrity checks; excludes boundary checkpoint writes
+phuc-005-t03-001,detection,complete,1.0878741999622434,wrapper wall time including dataset checkpoints and end-of-stage integrity checks; excludes boundary checkpoint writes
+phuc-005-t03-001,evaluation,complete,1.1547336999792606,wrapper wall time including dataset checkpoints and end-of-stage integrity checks; excludes boundary checkpoint writes
+phuc-005-t03-001,generation,complete,0.3196963000227697,wrapper wall time including dataset checkpoints and end-of-stage integrity checks; excludes boundary checkpoint writes
+phuc-005-t03-002,configuration,complete,0.4413949000299908,wrapper wall time including dataset checkpoints and end-of-stage integrity checks; excludes boundary checkpoint writes
+phuc-005-t03-002,detection,complete,0.9605479000019841,wrapper wall time including dataset checkpoints and end-of-stage integrity checks; excludes boundary checkpoint writes
+phuc-005-t03-002,evaluation,complete,1.5706683999742381,wrapper wall time including dataset checkpoints and end-of-stage integrity checks; excludes boundary checkpoint writes
+phuc-005-t03-002,generation,complete,0.3397819999954663,wrapper wall time including dataset checkpoints and end-of-stage integrity checks; excludes boundary checkpoint writes
+phuc-005-t03-failure-001,configuration,complete,0.8382073999964632,wrapper wall time including dataset checkpoints and end-of-stage integrity checks; excludes boundary checkpoint writes
+phuc-005-t03-failure-001,detection,failed,0.6426839000196196,wrapper wall time including dataset checkpoints and end-of-stage integrity checks; excludes boundary checkpoint writes
+phuc-005-t03-failure-001,evaluation,pending,,wrapper wall time including dataset checkpoints and end-of-stage integrity checks; excludes boundary checkpoint writes
+phuc-005-t03-failure-001,generation,complete,0.8534311999683268,wrapper wall time including dataset checkpoints and end-of-stage integrity checks; excludes boundary checkpoint writes
