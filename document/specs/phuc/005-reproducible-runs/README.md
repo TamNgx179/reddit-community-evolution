@@ -1,10 +1,10 @@
 # PHUC-005 — Hướng dẫn cấu hình và lượt chạy tái lập
 
-**T01 DONE, PHUC-005 1/6:** liên kết cấu hình, policy chấm và lịch dự kiến; **68/68 test pass**, Windows checkout giữ hash. Tiến độ/nghiệm thu tại [task board](../tasks.md#phuc-005); [spec](spec.md) ghi phạm vi toàn bộ sáu task.
+**T01–T02 DONE, PHUC-005 2/6:** protocol binding và API/CLI development từ generator đến bảng điểm; **305/305 test repo pass**. Hai demo mới có 12 metrics/9 summary mỗi run, CSV/policy tái lập. Tiến độ/nghiệm thu tại [task board](../tasks.md#phuc-005); [spec](spec.md) ghi phạm vi toàn bộ sáu task.
 
 ## T01 dùng để làm gì
 
-PHUC-004 đã chứng minh evaluator chấm được kết quả Leiden có sẵn. PHUC-005 chuẩn bị đường chạy từ cấu hình đến graph, detection và metrics, cùng bằng chứng bộ evaluation được giữ lại. T01 chốt bộ tham số và đơn vị của đường chạy đó; T02 mới ghép API, T05 mới ghi freeze, T06 mới chạy evaluation.
+PHUC-004 đã chứng minh evaluator chấm được kết quả Leiden có sẵn. PHUC-005 chuẩn bị đường chạy từ cấu hình đến graph, detection và metrics, cùng bằng chứng bộ evaluation được giữ lại. T01 chốt bộ tham số và đơn vị; T02 ghép API development bên dưới, T05 mới ghi freeze, T06 mới chạy evaluation giữ lại.
 
 | Tập | Generator seeds | Dataset dự kiến | Snapshot dự kiến | Snapshot × detector seed dự kiến |
 |---|---|---:|---:|---:|
@@ -54,4 +54,53 @@ Object trả về giữ các dictionary riêng cho caller; sửa object trong RA
 
 Test protocol không cần igraph/leidenalg/sklearn. Bộ lệnh có integration evaluator cần extras `[graph,evaluation]`; tests dùng fixture development trong thư mục tạm. [Bằng chứng T01](../evidence/PHUC-005-T01-protocol.md), [dataset schedule](../evidence/PHUC-005-T01-dataset-schedule.csv) và [counts](../evidence/PHUC-005-T01-planned-counts.csv) phân biệt kế hoạch với thực thi.
 
-**Tiếp theo T02:** ghép API generator → detection → metrics bằng protocol đã xác minh; scope hoàn thành chỉ đến detection evaluation. Không cần chờ tracker của Đăng.
+## API và lệnh chạy từ cấu hình đến bảng điểm — T02
+
+`run_synthetic_benchmark(config, protocol=..., dataset_ids=...)` trong [detection_tracking.py](../../../../src/reddit_sna/pipelines/detection_tracking.py) ghép ba module đã kiểm tra: sinh graph/truth → Leiden → evaluator. Mỗi lần gọi tạo run mới và lưu cả đầu vào lẫn điểm. Không cần tracker của Đăng.
+
+Chạy hai dataset development nhỏ từ repository root:
+
+```powershell
+& .\.venv\Scripts\python.exe -m reddit_sna.pipelines.detection_tracking `
+    --config configs/detection_development.toml `
+    --protocol configs/benchmark_week1_protocol.json `
+    --run-id phuc-005-api-demo-001 `
+    --dataset-id dev-stable-easy-g11 `
+    --dataset-id dev-grow-easy-g11
+```
+
+Chọn run ID mới nếu đã tồn tại. Lệnh cần extras `[graph,evaluation]`. Bỏ toàn bộ `--dataset-id` để chọn đủ **18 dataset development** theo protocol. Danh sách chỉ nhận ID development duy nhất, không rỗng; thứ tự thực thi luôn theo protocol. ID evaluation giữ lại bị chặn trước khi tạo output. TOML `seed=0` chỉ canonical detector; generator seed nằm trong từng dataset ID và lịch JSON.
+
+API tương đương, dùng trong notebook hoặc script:
+
+```python
+from pathlib import Path
+from reddit_sna.config import load_config
+from reddit_sna.pipelines.detection_tracking import run_synthetic_benchmark
+
+config = load_config(Path("configs/detection_development.toml"), run_id="phuc-005-api-review-001")
+output = run_synthetic_benchmark(
+    config, protocol=Path("configs/benchmark_week1_protocol.json"),
+    dataset_ids=("dev-stable-easy-g11", "dev-grow-easy-g11"),
+)
+print(output / "evaluation/detection_metrics.csv")
+```
+
+Đầu ra ở `artifacts/detection-tracking/<run-id>/`:
+
+```text
+manifest.json                            # scope, selection, counts, stage/status
+config/run-config.toml                   # TOML nguồn; manifest giữ run_id đã override
+config/protocol/                         # protocol và recipe nguyên byte
+inputs/source/<dataset-id>/              # graph/nodes/truth/config/metadata
+inputs/detected/<dataset-id>/            # memberships/diagnostics/config/metadata
+evaluation/                              # metrics, summary, policy, timing, metadata
+```
+
+`evaluation/` ở đây là **bước chấm điểm development**; tập evaluation giữ lại chưa được chạy. Thành công có `scope=development-detection-evaluation`, `tracking_status=not_implemented`, `freeze_record_created=false`. Danh sách subset ghi rõ số lượng được chọn, không được coi là hoàn thành toàn lịch benchmark. Lệnh `reddit-sna run` cho full detection-tracking vẫn báo chưa triển khai; dùng entry riêng ở trên để chạy đến detection evaluation.
+
+Protocol, recipe và TOML được chụp trước các stage. Config/policy/selection/dependencies lỗi thì chưa tạo run; stage lỗi giữ những file đã tạo và manifest `failed` cùng stage/dataset. Thử lại vào run cũ bị từ chối. T02 có manifest trạng thái cơ bản; T03 tiếp tục inventory hashes/source/environment/timing và kiểm tra lifecycle đầy đủ. [Bằng chứng T02](../evidence/PHUC-005-T02-api.md) ghi lệnh thực chạy, kết quả và vị trí log/ZIP.
+
+T02 đã chạy hai demo `artifacts/detection-tracking/phuc-005-t02-001/` và `-002/`: mỗi run 2 dataset stable/grow seed 11, 4 snapshot, 12 metrics/9 summary, AMI/coverage 1 trong phạm vi này. 29 CSV/policy files giống byte, hai reader độc lập đạt, 3.301 artifact cũ được bảo toàn. [Metrics](../evidence/PHUC-005-T02-detection-metrics.csv)/[summary](../evidence/PHUC-005-T02-detection-summary.csv) nhỏ theo Git; proof/ZIP local `artifacts/verification/phuc-005-t02-001/` và `.zip` giữ cả hai run/source/log/hash. Full suite 305/305 pass, gồm 9 test composition mới; không chạy held-out evaluation hoặc tạo freeze record.
+
+**Tiếp theo T03:** hoàn thiện provenance, environment, timing và lifecycle manifest ở cấp run. Tracker của Đăng không chặn phần này.

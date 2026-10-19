@@ -114,6 +114,12 @@ Mỗi case có nhóm nền K gồm 12 user riêng, ổn định qua hai tháng v
 
 `python -m reddit_sna.benchmarks.protocol configs/benchmark_week1_protocol.json` chỉ lập kế hoạch, trả `planned_counts`, `evaluation_executed=false`, `freeze_record_created=false`; lỗi exit 2. Không gọi generator/detector/metric hoặc tạo run. T01 có 68/68 test liên quan pass, kiểm tra checkout Windows `core.autocrlf=true` giữ hash; [hướng dẫn](005-reproducible-runs/README.md), [bằng chứng](evidence/PHUC-005-T01-protocol.md). Các gate orchestration/manifest/freeze/evaluation còn ở T02–T06; policy khai báo trong T01 chưa tự chặn các API sinh dữ liệu hiện có.
 
+### API development từ protocol đến report — PHUC-005-T02
+
+`run_synthetic_benchmark(RunConfig, protocol=Path, dataset_ids=None)` trong [pipelines/detection_tracking.py](../../../src/reddit_sna/pipelines/detection_tracking.py) tạo run mới, ghép graph/truth → Leiden → evaluator và trả đường dẫn. Config dùng synthetic/detection-tracking, input.path bỏ trống, seed 0 canonical. None chọn đủ 18 development datasets; subset phải nonempty/unique và giữ protocol order. Evaluation IDs bị chặn trước output. CLI riêng `python -m reddit_sna.pipelines.detection_tracking --run-id ...` nhận `--config`, `--protocol`, `--dataset-id` lặp lại.
+
+Run lưu config snapshots, `inputs/source/<id>/`, `inputs/detected/<id>/`, `evaluation/` và manifest stage/status/counts cơ bản. Complete có scope `development-detection-evaluation`, tracking `not_implemented`, freeze false; stage lỗi giữ output và failed manifest, run cũ bị từ chối. `evaluation/` là bước chấm development; shared full-pipeline `run` vẫn chưa triển khai tracking. T03 còn full source/output hashes, environment/timing/lifecycle. [T02](evidence/PHUC-005-T02-api.md): 305/305 test repo pass, hai demo mới mỗi run 2 dataset/12 metrics/9 summary, 29 CSV/policy files tái lập và hai consumer độc lập pass.
+
 ### Export graph/truth hiện có — PHUC-002-T04
 
 - `export_graph_dataset(destination, benchmark=..., scenario=..., generator_seed=..., split="development")` trong [io.py](../../../src/reddit_sna/benchmarks/io.py) xuất một dataset theo lịch hợp lệ, parent phải tồn tại, destination mới. Gói có bảy CSV theo schema trên, `benchmark-config.json` và `metadata.json`.

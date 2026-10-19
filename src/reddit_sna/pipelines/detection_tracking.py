@@ -1,6 +1,7 @@
-"""Synthetic detection API; full tracking/evaluation pipeline remains unfinished."""
+"""Synthetic detection and development benchmark APIs; tracking remains unfinished."""
 
 from collections import Counter
+from datetime import datetime, timezone
 import csv
 from hashlib import sha256
 from importlib.metadata import version
@@ -8,11 +9,14 @@ import json
 import math
 from pathlib import Path
 import platform
+import sys
 from tempfile import TemporaryDirectory
 
-from reddit_sna.benchmarks.config import GRAPH_PROTOCOL, load_benchmark_config
-from reddit_sna.benchmarks.io import read_edges, read_memberships, read_nodes, write_memberships
-from reddit_sna.config import RunConfig, validate_run_id
+from reddit_sna.artifacts import create_run_directory
+from reddit_sna.benchmarks.config import GRAPH_PROTOCOL, dataset_schedule, load_benchmark_config
+from reddit_sna.benchmarks.io import export_graph_dataset, read_edges, read_memberships, read_nodes, write_memberships
+from reddit_sna.config import ConfigError, RunConfig, validate_destination, validate_run_id
+from reddit_sna.contracts import PipelineName
 from reddit_sna.detection.leiden import dependencies, detect_snapshots
 from reddit_sna.pipelines import PipelineNotImplemented
 
@@ -288,8 +292,158 @@ def export_synthetic_detection(
     return metadata
 
 
+def _save_benchmark_manifest(run: Path, manifest: dict) -> None:
+    """Replace only the manifest owned by this newly reserved invocation."""
+    pending = run / "manifest.pending.json"
+    with pending.open("w", encoding="utf-8", newline="\n") as handle:
+        json.dump(manifest, handle, ensure_ascii=False, sort_keys=True, indent=2, allow_nan=False)
+        handle.write("\n")
+    pending.replace(run / "manifest.json")
+
+
+def run_synthetic_benchmark(
+    config: RunConfig, *, protocol: Path, dataset_ids=None,
+) -> Path:
+    """Generate, detect and score a new development run, without a tracker.
+
+    None selects the complete configured development schedule. An explicit
+    nonempty dataset-ID subset retains protocol order. Evaluation IDs are
+    rejected until the separate freeze/evaluation workflow is implemented.
+    RunConfig.seed names the canonical detector seed, not a generator seed.
+    Snapshot inputs before work; keep partial outputs and a failed manifest on
+    errors. Scope is development-detection-evaluation, never full tracking.
+    Full provenance/timing and freeze records are subsequent implementation.
+    """
+    from importlib import import_module
+    from reddit_sna.benchmarks.protocol import load_benchmark_protocol
+    from reddit_sna.evaluation.detection import export_detection_evaluation
+
+    if (config.pipeline != PipelineName.DETECTION_TRACKING or config.input_kind != "synthetic"
+            or config.input_path is not None):
+        raise ConfigError("synthetic benchmark requires detection-tracking, synthetic input and no input.path")
+    validate_destination(config)
+    plan = load_benchmark_protocol(protocol)
+    if type(config.seed) is not int or config.seed != plan.benchmark["detector"]["canonical_seed"]:
+        raise ConfigError("RunConfig.seed must equal canonical detector seed 0")
+    schedule = dataset_schedule(plan.benchmark, "development")
+    if dataset_ids is None:
+        selected, mode = schedule, "full-development"
+    else:
+        if isinstance(dataset_ids, (str, bytes, Path)):
+            raise ConfigError("dataset_ids must be a nonempty iterable of development IDs")
+        try:
+            requested = tuple(dataset_ids)
+        except TypeError as exc:
+            raise ConfigError("dataset_ids must be a nonempty iterable of development IDs") from exc
+        if (not requested or any(not isinstance(name, str) for name in requested)
+                or len(set(requested)) != len(requested)
+                or not set(requested) <= {row["dataset_id"] for row in schedule}):
+            raise ConfigError("select unique configured development dataset IDs; evaluation is not enabled")
+        selected = tuple(row for row in schedule if row["dataset_id"] in set(requested))
+        mode = "development-subset"
+    protocol_bytes, recipe_bytes, run_config_bytes = (path.read_bytes() for path in
+        (plan.protocol_path, plan.benchmark_path, config.source))
+    if (sha256(protocol_bytes).hexdigest() != plan.protocol_sha256
+            or sha256(recipe_bytes).hexdigest() != plan.benchmark_sha256):
+        raise ConfigError("protocol or benchmark changed during preflight")
+    dependencies()
+    try:
+        import_module("sklearn.metrics")
+    except ModuleNotFoundError as exc:
+        if exc.name in ("sklearn", "sklearn.metrics"):
+            raise ImportError("install benchmark dependencies with pip install -e '.[graph,evaluation]'") from exc
+        raise
+    run = create_run_directory(config)
+    manifest = json.loads((run / "manifest.json").read_text(encoding="utf-8"))
+    expected = {"datasets": len(selected), "snapshots": len(selected) * len(plan.benchmark["months"]),
+                "snapshot_detector_runs": len(selected) * len(plan.benchmark["months"]) * len(plan.benchmark["detector"]["seeds"])}
+    manifest.update(schema_version=1, artifact_type="synthetic-detection-evaluation-run",
+                    scope="development-detection-evaluation", split="development",
+                    selection={"mode": mode, "dataset_ids": [row["dataset_id"] for row in selected]},
+                    expected_counts=expected, completed_stages=[], current_stage="configuration", current_dataset=None,
+                    generated_datasets=[], detected_datasets=[], tracking_status="not_implemented",
+                    freeze_record_created=False,
+                    protocol={"source": str(plan.protocol_path), "sha256": plan.protocol_sha256,
+                              "benchmark_sha256": plan.benchmark_sha256})
+    try:
+        _save_benchmark_manifest(run, manifest)
+        archived = run / "config" / "protocol"
+        archived.mkdir(parents=True)
+        (archived / plan.protocol_path.name).write_bytes(protocol_bytes)
+        (archived / plan.benchmark_path.name).write_bytes(recipe_bytes)
+        (run / "config/run-config.toml").write_bytes(run_config_bytes)
+        frozen_inputs = load_benchmark_protocol(archived / plan.protocol_path.name)
+        source_root, detected_root = run / "inputs/source", run / "inputs/detected"
+        source_root.mkdir(parents=True)
+        detected_root.mkdir()
+        for item in selected:
+            dataset = item["dataset_id"]
+            manifest.update(current_stage="generation", current_dataset=dataset)
+            _save_benchmark_manifest(run, manifest)
+            export_graph_dataset(source_root / dataset, benchmark=frozen_inputs.benchmark,
+                                 scenario=item["scenario"], generator_seed=item["generator_seed"], split="development")
+            manifest["generated_datasets"].append(dataset)
+        manifest["completed_stages"].extend(["generation", "truth"])
+        for item in selected:
+            dataset = item["dataset_id"]
+            manifest.update(current_stage="detection", current_dataset=dataset)
+            _save_benchmark_manifest(run, manifest)
+            export_synthetic_detection(source_root / dataset, detected_root / dataset,
+                                       benchmark_config=frozen_inputs.benchmark_path)
+            manifest["detected_datasets"].append(dataset)
+        manifest["completed_stages"].append("detection")
+        manifest.update(current_stage="evaluation", current_dataset=None)
+        _save_benchmark_manifest(run, manifest)
+        report = export_detection_evaluation(
+            [(source_root / item["dataset_id"], detected_root / item["dataset_id"]) for item in selected], run / "evaluation")
+        actual = {"datasets": report["dataset_count"],
+                  "snapshots": report["metric_rows"] // len(plan.benchmark["detector"]["seeds"]),
+                  "snapshot_detector_runs": report["metric_rows"]}
+        if actual != expected:
+            raise ValueError("completed report counts differ from the selected development schedule")
+        if (plan.protocol_path.read_bytes() != protocol_bytes or plan.benchmark_path.read_bytes() != recipe_bytes
+                or config.source.read_bytes() != run_config_bytes):
+            raise ValueError("source configuration changed during the benchmark run")
+        manifest["completed_stages"].append("evaluation")
+        manifest.update(status="complete", current_stage=None, current_dataset=None,
+                        actual_counts=actual, evaluation_directory="evaluation")
+    except Exception as exc:
+        manifest.update(status="failed", error={"type": type(exc).__name__, "message": str(exc)})
+        raise
+    finally:
+        manifest["finished_at"] = datetime.now(timezone.utc).isoformat()
+        _save_benchmark_manifest(run, manifest)
+    return run
+
+
 def run(config: RunConfig) -> None:
     raise PipelineNotImplemented(
-        "detection-tracking is scaffold-only: implement graph benchmark generation, "
-        "detection, tracking and evaluation before running it"
+        "full detection-tracking is scaffold-only; use run_synthetic_benchmark for "
+        "development detection evaluation; community tracking is not implemented"
     )
+
+
+def main(argv=None):
+    """Separate development command; the shared full-pipeline run stays explicit."""
+    import argparse
+    from reddit_sna.config import load_config
+    parser = argparse.ArgumentParser(description="Run synthetic development generation, Leiden and detection evaluation.")
+    parser.add_argument("--config", type=Path, default=Path("configs/detection_development.toml"))
+    parser.add_argument("--protocol", type=Path, default=Path("configs/benchmark_week1_protocol.json"))
+    parser.add_argument("--run-id", required=True)
+    parser.add_argument("--dataset-id", action="append", help="Development subset; default all configured development IDs")
+    args = parser.parse_args(argv)
+    try:
+        output = run_synthetic_benchmark(load_config(args.config, run_id=args.run_id),
+                                         protocol=args.protocol, dataset_ids=args.dataset_id)
+    except (ValueError, OSError, ImportError) as exc:
+        print(f"synthetic benchmark failed: {exc}", file=sys.stderr)
+        return 2
+    print(json.dumps({"status": "complete", "scope": "development-detection-evaluation",
+                      "run_directory": str(output), "tracking_status": "not_implemented",
+                      "freeze_record_created": False}))
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

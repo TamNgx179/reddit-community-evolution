@@ -3,7 +3,7 @@
 **Owner:** Phúc. **Thiết kế:** v1, 16/10/2026. **Phân công:** P06.
 **Tiến độ, hạn và bằng chứng:** [tasks.md](../tasks.md#phuc-005). **Giao diện:** [contracts.md](../contracts.md).
 
-**Triển khai hiện tại:** T01 DONE, PHUC-005 **1/6 DOING**. Đã liên kết graph recipe với AMI/summary/split policy bằng [protocol JSON](../../../../configs/benchmark_week1_protocol.json), có loader/CLI chỉ lập kế hoạch và kiểm tra disjoint seeds/dataset IDs/expected counts. 68/68 test liên quan pass, Windows checkout giữ hash; [hướng dẫn](README.md), [bằng chứng T01](../evidence/PHUC-005-T01-protocol.md). Chưa chạy evaluation giữ lại hoặc ghi freeze record. T02 ghép API tiếp theo.
+**Triển khai hiện tại:** T01–T02 DONE, PHUC-005 **2/6 DOING**. Protocol binding đã có; API/CLI development ghép generator → Leiden → metrics, snapshot config, manifest stage/status cơ bản và no-overwrite. **305/305 test repo pass**, hai demo mới 2 dataset/12 metrics/9 summary mỗi run, CSV/policy tái lập và consumer độc lập đạt. [Hướng dẫn](README.md), [T01](../evidence/PHUC-005-T01-protocol.md), [T02](../evidence/PHUC-005-T02-api.md). T03 tiếp tục đầy đủ hashes/source/environment/timing/lifecycle; chưa chạy evaluation giữ lại hoặc ghi freeze record.
 
 ## Mục tiêu và user story
 
