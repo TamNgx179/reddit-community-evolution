@@ -88,7 +88,12 @@ def main(argv: list[str] | None = None) -> int:
             (PipelineName.DETECTION_TRACKING, "Synthetic graphs"),
             (PipelineName.PREDICTION, "Forecasting table"),
         ):
-            status = "prepare/forecast/week1 implemented; generic run remains planned" if pipeline == PipelineName.CORE else "scaffold-only"
+            if pipeline == PipelineName.CORE:
+                status = "prepare/forecast/week1 implemented; generic run remains planned"
+            elif pipeline == PipelineName.PREDICTION:
+                status = "baseline/evaluation implemented; extended prediction work remains planned"
+            else:
+                status = "scaffold-only"
             print(f"{pipeline.value}: {status} ({description})")
         return 0
     try:
@@ -126,7 +131,12 @@ def main(argv: list[str] | None = None) -> int:
             print(json.dumps({"preparation_output": str(output), "forecast_status": "not_run_by_preparation", "next_stage": "forecast or week1"}))
             return 0
         if args.command == "check":
-            support = "prepare_forecast_week1_available" if config.pipeline == PipelineName.CORE else "scaffold-only"
+            if config.pipeline == PipelineName.CORE:
+                support = "prepare_forecast_week1_available"
+            elif config.pipeline == PipelineName.PREDICTION:
+                support = "baseline_evaluation_available"
+            else:
+                support = "scaffold-only"
             print(json.dumps({"config_status": "valid", "pipeline_status": support, "generic_run_status": "scaffold-only", **config.to_dict()}, indent=2, ensure_ascii=False))
             return 0
         _run_selected(config)
