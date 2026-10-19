@@ -1,8 +1,8 @@
 # Bàn giao Phúc → Đăng: dữ liệu và detection tuần 1
 
-**Bản giao dữ liệu:** 19/10/2026, PHUC-006-T02. Phúc phụ trách dữ liệu tổng hợp, ground truth, Leiden và AMI; Đăng phụ trách tracker Jaccard, mapping và đánh giá sự kiện. Dữ liệu/detection đã có, notebook và demo chung còn làm tiếp. Đăng có thể bắt đầu ngay bằng development.
+**Bản chốt phần Phúc:** 19/10/2026, PHUC-006-T06. Phần dữ liệu tổng hợp/detection và 36 task cá nhân Phúc đã hoàn tất; tracker/mapping/F1/confusion và demo cặp còn chờ artifact Đăng. Notebook/clean-install đã có bằng chứng. **Gửi gói cuối `phuc-week1-final-20261019-001.zip`**, mở `START-HERE.md`; [hướng dẫn đầu tiên](specs/phuc/006-handoff-demo/FINAL-START-HERE.md). Các mục T02/T04 bên dưới giữ lịch sử nguồn; mục 11 chốt T06.
 
-**Tình trạng nhận:** Phúc đã tự kiểm tra gói; **chưa có xác nhận Đăng đã nhận, đồng ý các mặc định v1 hoặc chạy thành công**. Không cần đợi notebook để viết tracker. Tài liệu này dùng layout artifact thực tế; cây `datasets/` trong bản phân công ban đầu là thiết kế dự kiến trước triển khai.
+**Tình trạng nhận:** Phúc báo đã nhắn Đăng; chưa có receipt nhận/đọc ZIP, xác nhận mặc định v1, tracker hoặc demo chung. Tự kiểm tra gói thành công không thay phản hồi người nhận. Đăng có thể dùng development ngay; nếu đã có gói T02 thì tiếp tục dùng input đó nguyên byte.
 
 ## 1. Phúc gửi gì, Đăng làm gì trước?
 
@@ -219,3 +219,17 @@ Mở [notebook](../notebooks/detection_tracking/01_synthetic_demo.ipynb), mục 
 Paths được lấy từ inventory, tương đối với `runs/development`: `inputs/source/<dataset>/snapshots/2020-02/{R,nodes}.csv`, `inputs/source/<dataset>/truth/membership.csv`, `inputs/detected/<dataset>/memberships/2020-02/membership-seed0.csv`; AMI/coverage từ `evaluation/detection_metrics.csv`, policy từ `evaluation/ami-policy.json`. Run nguồn `phuc-005-t05-development-001`, manifest SHA `34364c98519e394af8541b9093a78899469239856f583d01608ec8848ade4e8e`. Mỗi hình có ledger paths/hash riêng. Hình vẽ toàn bộ nodes/cạnh, contingency là số user truth × detector, **không phải confusion matrix sự kiện**; ID/màu nhóm chỉ dùng trong từng panel.
 
 Notebook lưu bốn hình/bảng replay vào output mới, phân tích hai case vào thư mục cùng cấp có đuôi `-cases` với PNG/SVG, CSV contingency/edge blocks/summary, analysis JSON và metadata riêng. [Bằng chứng T04 và preview](specs/phuc/evidence/PHUC-006-T04-case-analysis.md) ghi run, kiểm chứng và đường dẫn đầy đủ. Các kết luận chỉ về detection tổng hợp; chưa có F1/confusion tracker, forecasting hoặc Reddit. Phúc báo đã nhắn Đăng; việc nhận/đọc gói và demo chung vẫn chờ bằng chứng thật.
+
+## 11. Chốt phần Phúc — PHUC-006-T06
+
+**Phần cá nhân Phúc hoàn thành 36/36, PHUC-006 6/6**: truth/graph sáu case, Independent Leiden, AMI/coverage, reproducible development/freeze/evaluation, consumer, notebook, case analysis và clean replay. Đây là nghiệm thu tự kiểm tra phần detection; chưa phải Đăng/nhóm đã review hoặc demo cặp hoàn thành.
+
+Gói cuối trên máy Phúc: `artifacts/handoff/phuc-week1-final-20261019-001.zip`, kèm `.sha256`. [Reference T06 trên Git](https://github.com/TamNgx179/reddit-community-evolution/blob/feat/phuc-006-handoff-demo/document/specs/phuc/evidence/PHUC-006-T06-final-reference.json) có SHA-256/kích thước/manifest/checks thật; checksum ZIP nằm ngoài ZIP để tránh tự tham chiếu. Mở `START-HERE.md` trong root giải nén. Git có code, specs, bằng chứng nhỏ và hướng dẫn; ZIP lớn vẫn local, cần Phúc tự gửi file qua kênh nhóm. Không cần gửi từng proof ZIP riêng cho Đăng.
+
+Gói cuối gồm source/scripts/config/tests, notebook không cache, wheel đã kiểm tra T05, dữ liệu T02 nguyên byte, sáu hình/CSV/metadata, executed notebook và full proof T05. `PHUC-FINAL-MANIFEST.json` ghi inventory/hash/size/nguồn và trạng thái cá nhân/phối hợp; đây là gói runtime cho synthetic detection, không kèm raw Reddit, Git metadata hoặc môi trường `.venv`. Toàn bộ task board/specs theo dõi trên Git; báo cáo T04/T05 trong gói giữ mốc lịch sử của từng task.
+
+Kiểm tra đóng gói đọc hai source runs bằng consumer stdlib và replay notebook từ cấu trúc gói mới bằng kernel sạch, không sinh graph/chạy lại Leiden/AMI production. Khi thử nhận lại ZIP, kiểm tra CRC/entry bytes/inventory/pins và consumer trên bản giải nén mới. Kết quả/counts/durations/checksum thực tế ở reference T06; gate **385/385 tests và clean install** là kết quả T05 đã kèm, không báo là full suite mới T06. Runtime source/config/notebook và original scientific freeze giữ nguyên.
+
+Kết quả detection đã khóa: **36 dataset/72 snapshot/216 metrics**, **198 valid/18 null**, seed chính **0**; canonical mean development **0.955879927**, evaluation **0.933116751**, coverage **1.0**. Mean bỏ null nhưng support/reason vẫn giữ. Case merge C24→12/12 và dissolve K12→5/4/3/null đã giải thích ở mục 10; coverage đủ không đảm bảo nhóm đúng, null không có nghĩa hoàn hảo. Timing là producer wrapper scopes đã ghi, không phải thời gian notebook; peak memory chưa đo. Không có event-F1, forecasting hoặc Reddit result trong phần nghiệm thu này.
+
+**AC01–AC04:** đạt theo consumer/kernel/nguồn bảng-hình/case analysis. **AC05:** đạt nhánh điều kiện “chưa có tracker”: detection chạy độc lập, thiếu artifact được ghi thật. AC05 không biến demo cặp thành accepted. EXT-D01 vẫn chưa receipt; EXT-D02 tracker truth, EXT-D03 tracker detector/mapping và PAIR-DEMO vẫn pending. Khi Đăng giao thật, kiểm tra nhánh/commit/config/reference/predictions, ghép hai nhánh A/B và đánh giá bằng kết quả thật; không tạo số thay thế để đóng mốc.

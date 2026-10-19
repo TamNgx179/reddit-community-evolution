@@ -2,9 +2,9 @@
 
 Owner: Phúc. [Spec](spec.md), [task board](../tasks.md#phuc-006), [contract](../contracts.md).
 
-**Tiến độ:** T01–T05 DONE, PHUC-006 **5/6**, tổng **35/36**. T05 cài regular wheel trong venv mới Windows/CPython 3.12.6, pip check đạt, 44 installed source files khớp; hai fresh kernels đều 10/10 code cells/6 PNG, lượt 002 từ cwd ngoài repo. **385/385 full repo tests, 0 skip/failure/error, 451.564s**. 18 CSV/12 PNG comparisons giống byte T04, 216 metrics/42 summary giữ nguyên; 9.507 artifact cũ/42 frozen source files nguyên byte. [Bằng chứng T05](../evidence/PHUC-006-T05-clean-replay.md), [hướng dẫn chạy sạch](clean-replay.md). AC02 đạt; T06 chốt gói còn riêng. Chưa receipt/tracker/demo cặp Đăng.
+**Tiến độ:** **Phần cá nhân Phúc DONE 36/36, PHUC-006 DONE 6/6.** Gói cuối `phuc-week1-final-20261019-001.zip` có 976 files/10.037.861 byte; 4 consumer reads, notebook gói 10/10 cells/6 PNG, 9 CSV/6 PNG giống T05, ZIP/fresh extraction/pins đạt. Gate 385/385 full suite/clean install là T05, không rerun production benchmark. [Bằng chứng T06](../evidence/PHUC-006-T06-final-handoff.md), [bắt đầu ở đây](FINAL-START-HERE.md). AC01–AC04 đạt, AC05 đạt nhánh chưa có tracker; receipt/tracker/demo cặp Đăng vẫn pending. ZIP local, chưa gửi/upload.
 
-Nếu mục tiêu là gửi dữ liệu ngay, dùng `artifacts/handoff/phuc-dang-week1-20261019-001.zip`, gửi kèm checksum ở reference; guide và consumer đã ở trong ZIP. Proof T01 vẫn giữ riêng: [bằng chứng](../evidence/PHUC-006-T01-inventory.md), [run summary](../evidence/PHUC-006-T01-run-summary.csv), [dataset ledger](../evidence/PHUC-006-T01-dataset-ledger.csv).
+**Gói gửi cuối:** `artifacts/handoff/phuc-week1-final-20261019-001.zip`, mở `START-HERE.md`; [checksum/manifest](../evidence/PHUC-006-T06-final-reference.json). Gói T02 cũ vẫn hợp lệ nếu Đăng đã có, input giữ nguyên. Proof T01 vẫn giữ riêng: [bằng chứng](../evidence/PHUC-006-T01-inventory.md), [run summary](../evidence/PHUC-006-T01-run-summary.csv), [dataset ledger](../evidence/PHUC-006-T01-dataset-ledger.csv).
 
 ## Notebook detection — T03
 

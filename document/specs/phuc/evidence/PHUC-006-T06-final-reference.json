@@ -1,0 +1,119 @@
+{
+  "acceptance": [
+    {
+      "criterion": "AC01",
+      "evidence": "T01 consumer; T06 four stage/extraction reads, exact inventory and CSV",
+      "limit": "recipient review not verified",
+      "verdict": "PASS"
+    },
+    {
+      "criterion": "AC02",
+      "evidence": "T05 clean install/two kernels; T06 packaged-layout fresh kernel 10 cells/6 PNG",
+      "limit": "platform Windows CPython 3.12.6",
+      "verdict": "PASS"
+    },
+    {
+      "criterion": "AC03",
+      "evidence": "T03/T04 ledgers; T06 9 CSV/6 PNG comparisons equal T05",
+      "limit": "recorded synthetic detection only",
+      "verdict": "PASS"
+    },
+    {
+      "criterion": "AC04",
+      "evidence": "T04 merge C24->12/12 and dissolve truth_constant/null analysis",
+      "limit": "no tuning or new AMI",
+      "verdict": "PASS"
+    },
+    {
+      "criterion": "AC05",
+      "evidence": "T06 guide/manifest distinguish personal completion and absent tracker",
+      "limit": "EXT-D01/D02/D03/PAIR-DEMO remain pending",
+      "verdict": "PASS_no_tracker_branch"
+    }
+  ],
+  "artifact_type": "phuc-week1-final-delivery-reference",
+  "base_revision": "b7b39208f9d388340639bf1a60880439262a924f",
+  "canonical_seed": 0,
+  "checksum_file": "artifacts/handoff/phuc-week1-final-20261019-001.sha256",
+  "comparisons_equal_to_T05": true,
+  "consumer_reads": 4,
+  "counts": {
+    "ami_null": 18,
+    "ami_valid": 198,
+    "datasets": 36,
+    "membership_csv": 216,
+    "metric_rows": 216,
+    "snapshots": 72,
+    "summary_rows": 42
+  },
+  "csv_comparisons": 9,
+  "delivery": {
+    "archive": "artifacts/handoff/phuc-week1-final-20261019-001.zip",
+    "bytes": 10037861,
+    "checked_folder": "artifacts/handoff/phuc-week1-final-20261019-001-checked",
+    "crc_and_all_entry_bytes_verified": true,
+    "files": 976,
+    "finished_at": "2026-10-19T12:44:34.558848+00:00",
+    "folder": "artifacts/handoff/phuc-week1-final-20261019-001",
+    "fresh_extraction_all_manifest_hashes_verified": true,
+    "manifest_sha256": "919d32f61c2bdd633df098dfdc3ae45b235d5d156208756498d7d2f64ab62e8e",
+    "sha256": "1a6f4d63cd0bd0e6304465a5557eb1ac8b3361300ad5d48dbdf5eb12875e31a3",
+    "status": "verified",
+    "uploaded_or_sent": false
+  },
+  "frozen_source_files_unchanged": 42,
+  "guide_change": {
+    "after_sha256": "c723b8dfaa38182cbd0458189e4acd6f4043c27bb5e84f04bc9ec72465787078",
+    "archived_T02_and_T04_guides_unchanged": true,
+    "before_sha256": "d305d51bff25d63d96d836779c6a28088c0142109bdf8ea19d300862cf903e55",
+    "scope": "current guide updated, historical references remain historical"
+  },
+  "new_unit_or_full_suite_run": false,
+  "notebook_code_cells": 10,
+  "notebook_inline_png": 6,
+  "notebook_seconds": 26.160552199999074,
+  "old_scientific_and_evidence_artifacts_preserved": 10539,
+  "packaged_source_files_match_T05_installed": 44,
+  "partner": {
+    "message_sent_reported": true,
+    "pair_demo": "not_accepted",
+    "receipt": "not_verified",
+    "tracker_detector_mapping": "not_received",
+    "tracker_truth": "not_received"
+  },
+  "personal_tasks_done": 36,
+  "personal_tasks_total": 36,
+  "phuc_006_tasks_done": 6,
+  "png_comparisons": 6,
+  "preservation_excludes": "installed artifacts/environments; preserved data/proofs separately checked",
+  "prior_tests": {
+    "errors": 0,
+    "failures": 0,
+    "pass": 385,
+    "skips": 0,
+    "task": "PHUC-006-T05"
+  },
+  "production_benchmark_rerun": false,
+  "proof": {
+    "archive": "artifacts/verification/phuc-006-t06-001.zip",
+    "bytes": 2742699,
+    "crc_and_entry_bytes_verified": true,
+    "files": 66,
+    "finished_at": "2026-10-19T12:46:42.965128+00:00",
+    "inventory_sha256": "c55853922704448df7e977a7fa290a5d0a732623ba1bb7ff09c2dcb2e800c778",
+    "proof_directory": "artifacts/verification/phuc-006-t06-001",
+    "sha256": "1ee85f038c192ae78e840b22a59d64a3686a2ad61aed78ef9f3831a1f9670725",
+    "status": "verified"
+  },
+  "runtime_python": "3.12.6",
+  "runtime_reused": "clean regular-wheel T05 environment; no new install in T06",
+  "schema_version": 1,
+  "scope": "personal synthetic detection done; group demo not accepted",
+  "source_manifest_sha256": {
+    "development": "34364c98519e394af8541b9093a78899469239856f583d01608ec8848ade4e8e",
+    "evaluation": "e305a6a0fe4d0068e50159f9078fe893de266d10d13ca9d5b18bd46df4aae16c"
+  },
+  "status": "verified",
+  "task": "PHUC-006-T06",
+  "uploaded_or_sent": false
+}

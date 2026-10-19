@@ -1,0 +1,6 @@
+criterion,verdict,evidence,limit
+AC01,PASS,"T01 consumer; T06 four stage/extraction reads, exact inventory and CSV",recipient review not verified
+AC02,PASS,T05 clean install/two kernels; T06 packaged-layout fresh kernel 10 cells/6 PNG,platform Windows CPython 3.12.6
+AC03,PASS,T03/T04 ledgers; T06 9 CSV/6 PNG comparisons equal T05,recorded synthetic detection only
+AC04,PASS,T04 merge C24->12/12 and dissolve truth_constant/null analysis,no tuning or new AMI
+AC05,PASS_no_tracker_branch,T06 guide/manifest distinguish personal completion and absent tracker,EXT-D01/D02/D03/PAIR-DEMO remain pending
