@@ -1,0 +1,45 @@
+{
+  "archive": "artifacts/handoff/phuc-dang-week1-20261019-001.zip",
+  "archive_bytes": 956285,
+  "archive_files": 821,
+  "archive_sha256": "e1a611092a8273b30570abdb4f6810ef9e07a0264ab07f0ce69ce4bce3880a14",
+  "artifact_type": "phuc-dang-delivery-reference",
+  "consumer_sha256": "628fac71936509b36d134c3719182998296918469db6536b38c1f9c55b7d2725",
+  "counts": {
+    "canonical_membership_files": 72,
+    "datasets": 36,
+    "membership_files": 216,
+    "snapshots": 72
+  },
+  "delivery_manifest_sha256": "7083d08df2d85eb6feacc874b5655f8759a07efb7c732d13947ad198ff0bceaf",
+  "delivery_uploaded": false,
+  "guide_base_revision": "2bf7cfe2ebd66083fc381abb5bbea8a6ff9c127d",
+  "guide_sha256": "97d3b4eb3e76d052c55a0d5467c5a6fa987d8a2485541ebf6f4801ab568ee472",
+  "notebook_status": "not_implemented",
+  "proof_directory": "artifacts/verification/phuc-006-t02-001",
+  "proof_inventory_sha256": "bc8b860123ec12e9c68c9a0da6b3bf9a27f268338450c0781153fe9e6babb154",
+  "pull_request": "https://github.com/TamNgx179/reddit-community-evolution/pull/11",
+  "recipient_acceptance": "not_verified",
+  "reference_only": true,
+  "schema_version": 1,
+  "source_manifest_sha256": {
+    "development": "34364c98519e394af8541b9093a78899469239856f583d01608ec8848ade4e8e",
+    "evaluation": "e305a6a0fe4d0068e50159f9078fe893de266d10d13ca9d5b18bd46df4aae16c"
+  },
+  "source_revision": "9ca106468bde862ba4128e50d302ee9e6bc15102",
+  "task": "PHUC-006-T02",
+  "tracking_status": "not_implemented",
+  "truth_sources_per_split": 39,
+  "validation": {
+    "api_passed": true,
+    "clean_install_or_notebook_run": false,
+    "documented_cli_runs_passed": 2,
+    "documented_powershell_cli_python": "3.14.4",
+    "full_repo_suite_rerun": false,
+    "new_scientific_evaluation": false,
+    "new_unit_tests": 0,
+    "package_api_python": "3.12.6",
+    "recreated_indexes_byte_identical": true,
+    "zip_crc_and_entry_bytes": "verified"
+  }
+}

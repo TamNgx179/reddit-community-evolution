@@ -2,7 +2,9 @@
 
 Owner: Phúc. [Spec](spec.md), [task board](../tasks.md#phuc-006), [contract](../contracts.md).
 
-**Tiến độ:** T01 DONE, PHUC-006 **1/6**, tổng **31/36**. 51/51 targeted tests đạt; đã đọc đủ 36 dataset/72 snapshot/216 membership CSV, hai cặp output sau relocation giống byte. [Bằng chứng T01 và ZIP](../evidence/PHUC-006-T01-inventory.md), [run summary](../evidence/PHUC-006-T01-run-summary.csv), [dataset ledger](../evidence/PHUC-006-T01-dataset-ledger.csv). T02 hướng dẫn bàn giao tiếp theo; chưa có xác nhận Đăng.
+**Tiến độ:** T01–T02 DONE, PHUC-006 **2/6**, tổng **32/36**. T01 có 51/51 targeted tests đạt, đủ 36 dataset/72 snapshot/216 membership CSV, hai cặp output sau relocation giống byte. T02 có [hướng dẫn gửi Đăng](../../../PHUC-DANG-WEEK1-HANDOFF.md) và ZIP giao 821 files/956.285 byte, đã thử đúng CLI/API sau giải nén mới; [reference/checksum](../evidence/PHUC-006-T02-delivery-reference.json), [bằng chứng T02](../evidence/PHUC-006-T02-handoff-guide.md). ZIP local chưa gửi/upload; chưa có xác nhận Đăng. Tiếp theo T03 notebook.
+
+Nếu mục tiêu là gửi dữ liệu ngay, dùng `artifacts/handoff/phuc-dang-week1-20261019-001.zip`, gửi kèm checksum ở reference; guide và consumer đã ở trong ZIP. Proof T01 vẫn giữ riêng: [bằng chứng](../evidence/PHUC-006-T01-inventory.md), [run summary](../evidence/PHUC-006-T01-run-summary.csv), [dataset ledger](../evidence/PHUC-006-T01-dataset-ledger.csv).
 
 ## T01 làm gì?
 

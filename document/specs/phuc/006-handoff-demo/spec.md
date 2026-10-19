@@ -3,7 +3,7 @@
 **Owner phần cá nhân:** Phúc. **Thiết kế:** v1, 16/10/2026. **Phân công:** P07.
 **Tiến độ, hạn và bằng chứng:** [tasks.md](../tasks.md#phuc-006). **Giao diện:** [contracts.md](../contracts.md).
 
-**Hiện tại:** T01 DONE, PHUC-006 **1/6**, tổng Phúc **31/36**. [Consumer stdlib](../../../../src/reddit_sna/reporting/synthetic_handoff.py) và 25 unit tests mới; 51/51 targeted tests pass. Đã kiểm tra đủ hai source run PHUC-005 (36 dataset/72 snapshot/216 membership CSV), hai cặp index sau relocation giống byte; inventory/reference/CSV/log/full-source ZIP đã lưu. **AC01 phần consumer đạt**; AC02–AC04/notebook và nghiệm thu tổng thể còn các task sau. Tracker/receipt/review Đăng chưa có evidence. [Hướng dẫn](README.md), [bằng chứng](../evidence/PHUC-006-T01-inventory.md).
+**Hiện tại:** T01–T02 DONE, PHUC-006 **2/6**, tổng Phúc **32/36**. [Consumer stdlib](../../../../src/reddit_sna/reporting/synthetic_handoff.py) có 25 unit tests mới; 51/51 targeted tests pass ở T01. Đã kiểm tra đủ hai source run PHUC-005 (36 dataset/72 snapshot/216 membership CSV), hai cặp index sau relocation giống byte. T02 có [hướng dẫn bàn giao](../../../PHUC-DANG-WEEK1-HANDOFF.md), ZIP dữ liệu 821 files/956.285 byte và lệnh CLI/API đã thử sau giải nén; [reference](../evidence/PHUC-006-T02-delivery-reference.json), [bằng chứng T02](../evidence/PHUC-006-T02-handoff-guide.md). **AC01 phần consumer đạt**; hướng dẫn môi trường/lệnh FR03 đã có, clean install/kernel/notebook và AC02–AC04 còn T03–T06. Tracker/receipt/review Đăng chưa có evidence. [Hướng dẫn consumer](README.md), [bằng chứng T01](../evidence/PHUC-006-T01-inventory.md).
 
 ## Mục tiêu và user story
 

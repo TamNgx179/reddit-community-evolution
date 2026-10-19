@@ -1,0 +1,10 @@
+check,result
+delivery ZIP CRC and 821 entry bytes,PASS
+820 delivered file hashes/sizes and original source pins,PASS
+documented development/evaluation CLI after fresh Expand-Archive,PASS
+both recreated indexes byte-identical to supplied inventory,PASS
+documented canonical grow index filter,PASS
+documented installed-package read-only API,PASS
+"grow 24/30 nodes, references, A12 to C18, K12 stable",PASS
+"39 truth sources/split, supports 21/3/3/6/3/3",PASS
+7664 prior artifacts and 100 source/config/test files preserved,PASS

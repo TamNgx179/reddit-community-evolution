@@ -1,0 +1,13 @@
+split,event,truth_sources
+development,stable,21
+development,grow,3
+development,shrink,3
+development,merge,6
+development,split,3
+development,dissolve,3
+evaluation,stable,21
+evaluation,grow,3
+evaluation,shrink,3
+evaluation,merge,6
+evaluation,split,3
+evaluation,dissolve,3
