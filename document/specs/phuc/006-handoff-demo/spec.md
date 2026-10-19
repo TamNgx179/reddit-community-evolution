@@ -3,7 +3,7 @@
 **Owner phần cá nhân:** Phúc. **Thiết kế:** v1, 16/10/2026. **Phân công:** P07.
 **Tiến độ, hạn và bằng chứng:** [tasks.md](../tasks.md#phuc-006). **Giao diện:** [contracts.md](../contracts.md).
 
-**Hiện tại:** T01–T03 DONE, PHUC-006 **3/6**, tổng Phúc **33/36**. Consumer/guide/ZIP T01–T02 giữ nguyên. T03 có [notebook](../../../../notebooks/detection_tracking/01_synthetic_demo.ipynb) và reporting helper, 4 hình có nguồn, 216 metrics/42 summary rows; **39/39 targeted tests**, hai fresh-kernel smoke runs 8/8 code cells đạt, final 40.532s. [Bằng chứng/preview](../evidence/PHUC-006-T03-notebook.md), [reference](../evidence/PHUC-006-T03-notebook-reference.json). **AC01 và AC03 phần nguồn bảng/hình đạt**; AC02 có smoke hiện tại, formal clean environment/replay T05 còn riêng. T04 case analysis và T06 chốt phần Phúc chưa hoàn tất. Phúc báo đã nhắn Đăng, chưa có receipt/đọc gói/tracker hoặc demo chung. [Hướng dẫn](README.md).
+**Hiện tại:** T01–T04 DONE, PHUC-006 **4/6**, tổng Phúc **34/36**. [Notebook](../../../../notebooks/detection_tracking/01_synthetic_demo.ipynb) có thêm case merge/null development, hai hình graph–truth–prediction/contingency và density/pair counts; AMI cũ giữ nguyên, canonical 0. **51/51 targeted tests**, fresh-kernel smoke **10/10 code cells, 6 inline PNG**, 53.075s. [Bằng chứng/preview T04](../evidence/PHUC-006-T04-case-analysis.md), [reference](../evidence/PHUC-006-T04-case-analysis-reference.json). **AC01, AC03 và AC04 đạt**; AC02 formal clean environment/replay còn T05, chốt phần Phúc T06. Guide Git thêm mục 10; ZIP T02/guide bên trong giữ nguyên. Phúc báo đã nhắn Đăng, chưa có receipt/đọc gói/tracker hoặc demo chung. [Hướng dẫn](README.md).
 
 ## Mục tiêu và user story
 

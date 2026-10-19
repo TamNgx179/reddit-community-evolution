@@ -1,0 +1,114 @@
+{
+  "T02_data_zip_sha256": "e1a611092a8273b30570abdb4f6810ef9e07a0264ab07f0ce69ce4bce3880a14",
+  "analysis_file_count": 12,
+  "analysis_output": "artifacts/detection-tracking/phuc-006-t04-notebook-001-cases",
+  "archived_T02_guide_sha256": "97d3b4eb3e76d052c55a0d5467c5a6fa987d8a2485541ebf6f4801ab568ee472",
+  "artifact_type": "synthetic-posthoc-case-analysis-reference",
+  "case_analysis_source_sha256": "08e679c82b19d90fdbe73cbcdd526a419f5640eb4c507dc3e64a49071b6c3285",
+  "cases": [
+    {
+      "dataset_id": "dev-merge-easy-g11",
+      "edges": 185,
+      "false_merge_pairs": 0,
+      "false_split_pairs": 144,
+      "kind": "hard",
+      "month": "2020-02",
+      "nodes": 36,
+      "predicted_sizes": {
+        "c0": 12,
+        "c1": 12,
+        "c2": 12
+      },
+      "raw_csv_and_recorded_metric_match": true,
+      "scored_pairs": 630,
+      "source_hashes_match": true,
+      "truth_sizes": {
+        "C": 24,
+        "K": 12
+      }
+    },
+    {
+      "dataset_id": "dev-dissolve-easy-g11",
+      "edges": 25,
+      "false_merge_pairs": 0,
+      "false_split_pairs": 47,
+      "kind": "null",
+      "month": "2020-02",
+      "nodes": 12,
+      "predicted_sizes": {
+        "c0": 5,
+        "c1": 4,
+        "c2": 3
+      },
+      "raw_csv_and_recorded_metric_match": true,
+      "scored_pairs": 66,
+      "source_hashes_match": true,
+      "truth_sizes": {
+        "K": 12
+      }
+    }
+  ],
+  "clean_install": false,
+  "executed_notebook": "artifacts/verification/phuc-006-t04-001/01_synthetic_demo.executed.ipynb",
+  "figures": [
+    {
+      "bytes": 527121,
+      "name": "hard.png",
+      "sha256": "468018ffa16541848de833e0f86328d121fb47eaef17b43e130aca51454f06d3"
+    },
+    {
+      "bytes": 170396,
+      "name": "null.png",
+      "sha256": "0410c00e6e94e6359ed05dc7929917ebfbc0fcb302dda63add81141b52c74d04"
+    }
+  ],
+  "frozen_source_files_unchanged": 42,
+  "full_repo_suite_rerun": false,
+  "guide_current_sha256": "d305d51bff25d63d96d836779c6a28088c0142109bdf8ea19d300862cf903e55",
+  "metrics": 216,
+  "notebook_cells": 21,
+  "notebook_code_cells": 10,
+  "notebook_inline_png": 6,
+  "notebook_source_sha256": "f4e81d180127827be89f373dd6583cd7311376d2a317823c76f61a497801d4c6",
+  "notebook_wall_seconds": 53.07531030004611,
+  "null_ami": 18,
+  "old_artifacts_preserved": 9426,
+  "old_four_csv_and_png_byte_identical_to_T03": true,
+  "proof": {
+    "archive": "artifacts/verification/phuc-006-t04-001.zip",
+    "bytes": 3288050,
+    "crc_and_entry_bytes_verified": true,
+    "files": 51,
+    "finished_at": "2026-10-19T06:38:49.884709+00:00",
+    "inventory_sha256": "6d13d53e5e39b41f3413ee0165addf205efe2f48e7f0fa5e2591538f363453dd",
+    "proof_directory": "artifacts/verification/phuc-006-t04-001",
+    "sha256": "6d017b9efcb60d35ff44c42cfe378297b4292a132b52e0a2fc09226da7a97152",
+    "status": "verified"
+  },
+  "recipient_acceptance": "not_verified",
+  "reference_only": true,
+  "replay_output": "artifacts/detection-tracking/phuc-006-t04-notebook-001",
+  "schema_version": 1,
+  "selection": "post-hoc development seed 0; deterministic tie-break; evaluation excluded from selection",
+  "source_revision_before_task": "a38ddeca9a9e42052b342d4ff3388cb9e6c59680",
+  "source_scores_not_recomputed": true,
+  "status": "verified",
+  "summaries": 42,
+  "task": "PHUC-006-T04",
+  "tests": {
+    "errors": 0,
+    "failures": 0,
+    "names": [
+      "tests.unit.test_synthetic_cases",
+      "tests.unit.test_synthetic_demo",
+      "tests.unit.test_synthetic_handoff"
+    ],
+    "python": "3.12.6 (tags/v3.12.6:a4a2d2b, Sep  6 2024, 20:11:23) [MSC v.1940 64 bit (AMD64)]",
+    "skips": 0,
+    "status": "pass",
+    "tests": 51,
+    "wall_seconds": 27.777999100042507
+  },
+  "tracker_artifacts_received": false,
+  "valid_ami": 198
+}

@@ -1,0 +1,4 @@
+truth_group,predicted_group,assigned,users
+K,c0,True,5
+K,c1,True,4
+K,c2,True,3

@@ -1,0 +1,3 @@
+kind,split,dataset_id,month,detector_seed,ami,ami_status,ami_reason,coverage,active_nodes,edges,assigned_nodes,unassigned_nodes,truth_groups,predicted_groups,scored_pairs,truth_same_pred_different_pairs,truth_different_pred_same_pairs,selection,tied_minimum_rows
+hard,development,dev-merge-easy-g11,2020-02,0,0.7241648712463861,ok,,1.0,36,185,36,0,2,3,630,144,0,"lowest recorded non-null canonical AMI, then dataset_id/month within split",2
+null,development,dev-dissolve-easy-g11,2020-02,0,,degenerate_partition,truth_constant,1.0,12,25,12,0,1,3,66,47,0,first recorded canonical null by dataset_id/month within split,
