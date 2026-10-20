@@ -1,186 +1,148 @@
 # Prediction Evaluation — Demo Guide
 
+## 1. Tổng quan
 
+Demo Week 1 minh họa luồng prototype:
 
-## 1. Overview
+`synthetic community-month table → sample checks / temporal split → B1/B4 baselines → evaluation`
 
+Dữ liệu là synthetic, không phải dữ liệu Reddit thật. Demo kiểm tra các stage hiện có; không chứng minh hiệu quả dự báo trên Reddit và không phải pipeline Reddit end-to-end.
 
+## 2. Yêu cầu
 
-This demo shows the temporal split, sample validation, baseline prediction and evaluation workflow for the Reddit community evolution project.
+- Windows và PowerShell.
+- Chạy lệnh từ repository root.
+- Python environment tại `.venv`.
+- Dependencies đã cài trong virtual environment của dự án.
 
-
-
-**Important:** The current pipeline uses synthetic data. This demo validates the workflow, not predictive performance on real Reddit communities.
-
-
-
-## 2. Requirements
-
-
-
-- Windows with PowerShell.
-
-- Python environment available at `.venv`.
-
-- Project dependencies installed.
-
-- Run commands from the repository root.
-
-
-
-## 3. Run the demo
-
-
-
-Execute the following command from the repository root:
-
-
+Có thể kiểm tra nhanh môi trường:
 
 ```powershell
-
-& .\.venv\Scripts\python.exe -m reddit_sna.pipelines.prediction `
-  --config configs/prediction.toml `
-  --run-id lan-demo-final-20261020
-
+& .\.venv\Scripts\python.exe -c "import numpy, pandas, sklearn; print('Environment OK', numpy.__version__, pandas.__version__, sklearn.__version__)"
 ```
 
+## 3. Chạy demo
 
+Dùng run ID mới chưa tồn tại cho mỗi lần chạy:
 
-Use a unique run ID for each new execution. Do not reuse an existing ID because it may refer to an earlier experiment.
+```powershell
+& .\.venv\Scripts\python.exe -m reddit_sna.pipelines.prediction `
+  --config .\configs\prediction.toml `
+  --run-id <unique-run-id>
+```
 
-The pipeline should complete the available table, split, baseline and evaluation stages. If it fails, inspect the terminal error and the run output before interpreting any artifacts as valid results.
+Không dùng lại run ID đã tồn tại và không ghi đè artifact cũ. Artifact được ghi dưới `artifacts/prediction/<run_id>/`. Nếu lệnh lỗi, kiểm tra traceback và manifest; không coi thư mục artifact cũ là bằng chứng cho lần chạy mới.
 
+## 4. Các stage
 
+1. Sinh bảng mẫu synthetic và `feature_catalog.csv`.
+2. Kiểm tra schema, khóa, nhãn và feature availability.
+3. Gán temporal split theo toàn bộ `label_month`.
+4. Chạy B1 Majority, B1 Persistence và B4 Logistic Regression.
+5. Kiểm tra predictions và liên kết với split.
+6. Tạo metrics, per-class metrics, confusion matrices và evaluation notes.
+7. Ghi metadata run vào `manifest.json`.
 
-## 4. Expected workflow
+`complete_through_baselines` mô tả việc hoàn tất các stage hiện có của run. Trạng thái này không có nghĩa mọi mô hình dự kiến, tracking/features đầy đủ hoặc xử lý Reddit thật đã hoàn tất.
 
+## 5. Artifact đầu ra
 
-
-1. Generate the sample table.
-
-2. Validate samples and assign temporal splits.
-
-3. Generate predictions from available baseline models.
-
-4. Validate predictions against the split.
-
-5. Calculate aggregate and per-class metrics.
-
-6. Export confusion matrices and evaluation notes.
-
-
-
-The current pipeline status is complete_through_baselines when the available stages complete successfully. This status does not indicate that all planned models or the real-data workflow are complete.
-
-
-
-## 5. Check the output
-
-
-
-The output directory for the example command is:
-
+Thư mục đầu ra:
 
 ```text
-
-artifacts/prediction/lan-demo-20261020/
-
+artifacts/prediction/<run_id>/
 ```
 
+Các file chính:
 
+- `samples.csv`: mẫu community-month synthetic theo schema 14 cột trong kế hoạch.
+- `feature_catalog.csv`: metadata feature, nguồn và thời điểm khả dụng.
+- `split.csv`: khóa mẫu, tháng và split cho các mẫu có nhãn.
+- `split_summary.csv`: số mẫu theo split, số `label_month`, phân bố nhãn và số mẫu không nhãn bị loại.
+- `predictions.csv`: dự đoán long format, một dòng mỗi sample/model; ghép split từ `split.csv` khi cần.
+- `baseline_config.json`, `model_B4.joblib`: chỉ có nếu implementation tạo các file này.
+- `metrics.csv`: metrics theo model/split.
+- `per_class.csv`: metrics theo lớp.
+- `confusion_<model>_<split>.csv`: confusion matrices, nếu được tạo.
+- `evaluation_notes.md`: quy ước đánh giá và ghi chú lớp thiếu/dòng bị loại.
+- `manifest.json`: trạng thái, revision, seed và metadata run.
 
-Check these files in the run output directory:
+Các module đánh giá phải dùng `Event` và `next_month()` từ `contracts.py`. Reusable logic thuộc package; notebook nghiên cứu không thay thế entry point của pipeline.
 
-- `samples.csv`: generated synthetic community-month samples.
-- `feature_catalog.csv`: feature metadata generated with the sample table.
-- `split.csv`: temporal split assignment for labelled samples.
-- `split_summary.csv`: sample counts by split, including `unlabeled_dropped`.
-- `predictions.csv`: predictions generated by the B1 Majority, B1 Persistence, and B4 Logistic Regression baselines.
-- `baseline_config.json`: configuration used for the B4 Logistic Regression baseline.
-- `model_B4.joblib`: serialized B4 Logistic Regression model.
-- `metrics.csv`: evaluation metrics by model and split.
-- `per_class.csv`: per-class evaluation metrics.
-- `confusion_<model>_<split>.csv`: confusion matrix for each available model/split combination.
-- `evaluation_notes.md`: evaluation summary, including the number of unlabelled samples excluded.
-- `manifest.json`: run metadata and SHA-256 hashes of files present in the output directory when the manifest is generated.
+Có thể đọc nhanh artifact của một run đã tồn tại bằng PowerShell:
 
-The sample table and feature catalog are generated by `_stage_table()`.
-The synthetic label represents the community event from `feature_month`
-(t) to `label_month` (t+1). The event is determined by `_resolve_event()`
-using the configured features, thresholds, and fixed priority order.
-`_apply_noise()` may replace the event label with another class according
-to `label_noise` (default: 0.05).
-
-The final feature month has no subsequent month available for assigning
-a label, so its `label` is empty. Unlabelled rows are excluded from
-temporal splitting and evaluation. The `unlabeled_dropped` field in
-`evaluation_notes.md` reports the number of rows with a missing or empty
-label.
-
-The baseline stage generates predictions and saves the B4 configuration
-and model. The evaluation stage writes the metrics, per-class results,
-confusion matrices, and evaluation notes. The manifest records hashes
-of existing files; it does not guarantee that every possible artifact
-was generated if an earlier stage failed.
-
-**Inspect the results**
-
-$run = ".\artifacts\prediction\lan-demo-20261020"
+```powershell
+$run = ".\artifacts\prediction\<run-id>"
 
 Get-Content "$run\manifest.json" -Encoding UTF8
-Import-Csv "$run\split_summary.csv" | Format-List *
-Import-Csv "$run\metrics.csv" | Format-List *
-Import-Csv "$run\per_class.csv" | Format-Table -Wrap
-
-For the current implementation, the previously inspected run lan-week1-final-20261019 reported test macro-F1 values of approximately 0.1125 for B1 Majority, 0.2557 for B1 Persistence, and 0.2160 for B4 Logistic Regression. These values belong to that specific run and should not be copied as results for a new run without inspecting its own metrics.
-
-The previously inspected manifest records Git revision 007696493ee1d05921dc8c0d80320ce6dd6d8185, while the reported repository HEAD is ac081e6. Run the demo again with a fresh ID to verify the current code revision before final reporting.
-
-The pipeline uses synthetic data. These outputs should not be interpreted as evaluation results on real Reddit data.
-
-
-
-## 6. Run the relevant unit tests
-
-Run the unit tests using Python's built-in `unittest` framework:
-
-```powershell
-& .\.venv\Scripts\python.exe -m unittest discover -s tests/unit -v
+Import-Csv "$run\split_summary.csv" | Format-Table -AutoSize
+Import-Csv "$run\metrics.csv" | Format-Table -AutoSize
+Import-Csv "$run\per_class.csv" | Format-Table -AutoSize
 ```
 
-This command discovers and runs tests compatible with `unittest` under `tests/unit`.
+Thay `<run-id>` bằng ID thực tế. Đảm bảo mọi file được đọc từ cùng một thư mục run.
 
-**Note:** `test_splits.py` currently uses pytest-style test functions and fixtures. These tests are not automatically discovered by `unittest`. To run the temporal split tests, use pytest:
+## 6. Temporal split và feature availability
+
+Split theo toàn bộ `label_month`, không chia ngẫu nhiên từng dòng:
+
+- Train: `2015-02` đến `2016-12` — 23 tháng.
+- Validation: `2017-01` đến `2017-06` — 6 tháng.
+- Test: `2017-07` đến `2017-12` — 6 tháng.
+- Mẫu không nhãn bị loại và đếm riêng.
+
+Số lượng của run tham chiếu `lan-demo-final-20261020`:
+
+| Split | Số mẫu | Số tháng nhãn |
+|---|---:|---:|
+| Train | 1.000 | 23 |
+| Validation | 263 | 6 |
+| Test | 261 | 6 |
+| `unlabeled_dropped` | 46 | 0 |
+
+Feature số trong hợp đồng gồm `size_t`, `size_tm1`, `size_tm2`, `age_months`, `growth_rate`, `retention_prev`, `density`, `reciprocity`. `prev_label` là lịch sử riêng cho B1 Persistence, không phải numeric feature. `community_id` không phải feature và không khẳng định identity xuyên tháng. Không dùng thông tin tương lai làm feature. Fixture `tests/fixtures/prediction/samples_leaky.csv` chỉ dùng làm negative control để kiểm tra phát hiện leakage.
+
+## 7. Kết quả tham chiếu
+
+Run tham chiếu `lan-demo-final-20261020` có seed 42, revision `696cbb61da2faebb75f06a701afee943fe0199c0`, trạng thái `complete_through_baselines`; manifest ghi các stage table, split, baselines và evaluation đều hoàn thành.
+
+| Model | Split | n | Macro-F1 | Balanced accuracy |
+|---|---|---:|---:|---:|
+| B1 Majority | validation | 263 | 0.1169 | 0.1667 |
+| B1 Majority | test | 261 | 0.1125 | 0.1667 |
+| B1 Persistence | validation | 263 | 0.2575 | 0.2643 |
+| B1 Persistence | test | 261 | 0.2557 | 0.2586 |
+| B4 Logistic Regression | validation | 263 | 0.2291 | 0.2324 |
+| B4 Logistic Regression | test | 261 | 0.2160 | 0.2155 |
+
+B1 Persistence có macro-F1 cao nhất trong ba baseline trên test của run synthetic này. Không diễn giải kết quả thành bằng chứng về hiệu quả trên Reddit thật.
+
+## 8. Chạy test
+
+Lệnh kiểm thử đã chạy:
 
 ```powershell
-& .\.venv\Scripts\python.exe -m pytest .\tests\unit\test_splits.py -v
+& .\.venv\Scripts\python.exe -m unittest discover -s tests -v
 ```
 
-To run the complete test suite, including pytest-style tests, use:
+Kết quả được cung cấp:
 
-```powershell
-& .\.venv\Scripts\python.exe -m pytest .\tests\unit -v
+```text
+Ran 253 tests in 94.716s
+
+OK
 ```
 
+Đây là kết quả của lần chạy được báo cáo. Nếu thay đổi source hoặc test, hãy chạy lại test trên working tree hiện tại và ghi nhận đúng kết quả.
 
-## 7. Negative-control test
+## 9. Notebook nghiên cứu
 
+`notebooks/prediction/00_research_plan.ipynb` ghi lại thiết kế nghiên cứu, bằng chứng đánh giá và giới hạn của prototype. Notebook hiện chọn run tham chiếu lan-demo-final-20261020. Đây là công cụ nghiên cứu, không thay thế entry point của pipeline; reusable logic vẫn thuộc src/reddit_sna.
 
+## 10. Giới hạn và bước tiếp theo
 
-The fixture `tests/fixtures/prediction/samples_leaky.csv` intentionally includes a `future_feature` feature with `t+1` availability.
-
-
-
-The test `test_leaky_fixture_is_detected` verifies that the sample validation logic detects this leakage. The fixture is a test artifact, not a valid dataset for model training.
-
-
-
-## 8. Current status
-
-
-
-The inspected run `lan-week1-final-20261019` generated 1,570 synthetic community-month samples, including 46 unlabeled samples excluded from evaluation. It produced 4,572 prediction rows and 9 model/split metric rows. The table, split, baseline and evaluation stages completed.
-
-The current evaluation includes B1 Majority, B1 Persistence, and B4 Logistic Regression. Remaining work includes B2 Random Forest, B5 Gradient Boosting, HeTCo, and real Reddit features.
-
-Before final submission, regenerate the demo using the intended final code revision and a new run ID. Keep the generated artifacts and manifest for reproducibility.
+- Dữ liệu synthetic; chưa đánh giá trên Reddit thật.
+- Run tham chiếu gồm B1 Majority, B1 Persistence và B4 Logistic Regression.
+- B2 Random Forest, B5 Gradient Boosting, HeTCo và feature Reddit thật nằm ngoài phạm vi run Week 1 này.
+- Review chéo schema, split, feature availability, fallback và metrics trước khi dùng kết quả trong báo cáo nghiên cứu.
+- Dùng run ID mới khi chạy lại và không trộn kết quả từ các run khác nhau.

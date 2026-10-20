@@ -1,97 +1,137 @@
 # Guide to Evaluation Results
 
-## 1. Purpose
+## 1. Mục đích và phạm vi
 
-This guide explains how to run the prediction pipeline and interpret its evaluation outputs.
+Tài liệu này hướng dẫn chạy prediction prototype và đọc artifact đánh giá Week 1. Run tham chiếu sử dụng dữ liệu **synthetic**, không phải dữ liệu Reddit thật. Prototype minh họa luồng bảng community-month → temporal split → baseline prediction → evaluation; không nên mô tả nó là pipeline Reddit end-to-end.
 
-The current week-one workflow uses synthetic data to validate the prediction and evaluation pipeline. It does not establish predictive effectiveness on real Reddit communities.
+Run được dùng làm tham chiếu trong tài liệu là `lan-demo-final-20261020`. Mọi số liệu bên dưới đều thuộc run này, trừ khi có ghi rõ khác. Không trộn metrics, manifest hoặc revision từ các run khác nhau.
 
-## 2. Run the pipeline
+## 2. Chạy pipeline
 
-From the repository root, run:
+Chạy từ repository root bằng virtual environment của dự án. Mỗi lần chạy cần một run ID mới chưa tồn tại:
 
 ```powershell
-& .\.venv\Scripts\python.exe -m reddit_sna.pipelines.prediction --config .\configs\prediction.toml --run-id lan-week1-final-20261019
+& .\.venv\Scripts\python.exe -m reddit_sna.pipelines.prediction `
+  --config .\configs\prediction.toml `
+  --run-id <unique-run-id>
 ```
 
-Use a unique run ID for each new run. The run ID identifies the generated artifacts under `artifacts/prediction/`.
+Không tái sử dụng run ID đã có và không ghi đè artifact cũ. Kết quả dự kiến nằm tại `artifacts/prediction/<run_id>/`. Nếu lệnh lỗi, đọc traceback và manifest của đúng run; không dùng một thư mục artifact cũ làm bằng chứng rằng lần chạy mới thành công.
 
-## 3. Output files
+## 3. Hợp đồng dữ liệu
 
-| File | Description |
+Theo kế hoạch Week 1, `samples.csv` có 14 cột:
+
+`reference_id`, `feature_month`, `community_id`, `label_month`, `label`, `prev_label`, `size_t`, `size_tm1`, `size_tm2`, `age_months`, `growth_rate`, `retention_prev`, `density`, `reciprocity`.
+
+- `label_month` phải bằng `next_month(feature_month)`.
+- Nhãn sử dụng các giá trị `Event` được khai báo trong `contracts.py`.
+- Dòng không có nhãn, chẳng hạn tháng cuối không có tháng kế tiếp, phải được thống kê riêng và loại khỏi supervised evaluation.
+- `community_id` là định danh cục bộ trong tháng; không dùng làm feature và không mặc định là identity xuyên tháng.
+- `prev_label` là lịch sử riêng cho B1 Persistence, không phải numeric feature.
+- Các feature số được mô tả trong kế hoạch gồm `size_t`, `size_tm1`, `size_tm2`, `age_months`, `growth_rate`, `retention_prev`, `density`, `reciprocity`.
+- Không dùng thông tin tương lai, chẳng hạn retention từ `t` sang `t+1`, làm feature tại thời điểm `t`.
+
+Các module cần dùng `Event` và `next_month()` từ `contracts.py`, không sao chép định nghĩa hợp đồng sang module đánh giá hoặc notebook.
+
+## 4. Artifact đầu ra
+
+| File | Ý nghĩa |
 |---|---|
-| `samples.csv` | Generated sample table |
-| `predictions.csv` | Baseline predictions |
-| `split.csv` | Temporal split assignments |
-| `split_summary.csv` | Sample counts by split |
-| `metrics.csv` | Metrics by model and split |
-| `per_class.csv` | Per-class precision, recall, F1 and support |
-| `confusion_<model>_<split>.csv` | Confusion matrix for a model and split |
-| `feature_catalog.csv` | Feature metadata used by the pipeline |
-| `manifest.json` | Run metadata |
-| `evaluation_notes.md` | Metric definitions and evaluation notes |
+| `samples.csv` | Bảng community-month synthetic |
+| `feature_catalog.csv` | Nguồn, cửa sổ thời gian, thời điểm khả dụng và model được phép dùng cho từng feature |
+| `split.csv` | Khóa mẫu, tháng và split cho các mẫu có nhãn |
+| `split_summary.csv` | Số mẫu, số `label_month`, phân bố nhãn theo split và dòng `unlabeled_dropped` |
+| `predictions.csv` | Dự đoán long format, một dòng cho mỗi sample/model |
+| `metrics.csv` | Metrics tổng hợp theo model/split |
+| `per_class.csv` | Precision, recall, F1 và support theo lớp |
+| `confusion_<model>_<split>.csv` | Ma trận nhầm lẫn theo model/split, nếu được tạo |
+| `evaluation_notes.md` | Quy ước đánh giá, lớp thiếu và mẫu không nhãn bị loại |
+| `manifest.json` | Trạng thái run, seed, revision và metadata |
+| `baseline_config.json`, `model_B4.joblib` | Chỉ tồn tại nếu implementation của run tạo các file này |
 
-The exact output files may depend on the pipeline configuration and implemented models.
+Hợp đồng `predictions.csv` gồm các cột:
 
-## 4. Metrics
+`reference_id`, `feature_month`, `community_id`, `label_month`, `model`, `y_true`, `y_pred`, `used_fallback`, `proba_stable`, `proba_grow`, `proba_shrink`, `proba_merge`, `proba_split`, `proba_dissolve`.
 
-- `macro_f1`: Mean F1 over classes present in the true labels.
-- `macro_f1_six`: Mean F1 over all six event classes, according to the implemented metric policy.
-- `balanced_accuracy`: Mean recall over classes present in the true labels.
-- `n`: Number of evaluated predictions.
-- `n_classes_present`: Number of classes present in the true labels.
+Theo kế hoạch, `predictions.csv` không có cột `split`; nối với `split.csv` bằng các khóa phù hợp khi cần phân tích theo split. Các cột probability được sử dụng cho B4 theo hợp đồng hiện tại.
 
-Compare models using the same split and identical sample keys. Consider class distribution and the treatment of classes absent from the true labels when interpreting results.
+## 5. Temporal split và leakage
 
-## 5. Per-class metrics and confusion matrices
+Split theo toàn bộ `label_month`, không chia ngẫu nhiên từng dòng:
 
-`per_class.csv` reports precision, recall, F1 and support for each model, split and event label.
+- Train: `2015-02` đến `2016-12` — 23 tháng.
+- Validation: `2017-01` đến `2017-06` — 6 tháng.
+- Test: `2017-07` đến `2017-12` — 6 tháng.
+- Mẫu không nhãn bị loại khỏi supervised evaluation và được đếm riêng.
 
-In confusion matrices, rows represent true labels and columns represent predicted labels. Diagonal values represent correct predictions; off-diagonal values represent misclassifications.
+Số liệu trong run `lan-demo-final-20261020`:
 
-A class with zero true support requires careful interpretation. Its class-level metrics alone do not establish successful detection.
+| Split | Số mẫu | Số tháng nhãn |
+|---|---:|---:|
+| Train | 1.000 | 23 |
+| Validation | 263 | 6 |
+| Test | 261 | 6 |
+| `unlabeled_dropped` | 46 | 0 |
 
-## 6. Latest verified development run
+`tests/fixtures/prediction/samples_leaky.csv` là negative-control fixture có chủ đích để kiểm tra phát hiện leakage; không dùng fixture này để train hoặc đánh giá mô hình. Các kiểm tra làm giảm rủi ro đã biết nhưng không chứng minh mọi dạng leakage đều đã bị loại bỏ.
 
-Run ID: `lan-week1-final-20261019`
+## 6. Cách đọc metrics
 
-The pipeline output reported:
+- `macro_f1`: trung bình F1 trên các lớp có support lớn hơn 0 trong `y_true` của model/split đang xét; quy ước `zero_division=0`.
+- `macro_f1_six`: trung bình F1 trên đủ sáu event class; lớp không có F1 xác định được tính bằng 0 theo quy ước.
+- `balanced_accuracy`: trung bình recall trên các lớp có support trong `y_true`.
+- `n`: số mẫu được đánh giá.
+- `n_classes_present`: số lớp xuất hiện trong nhãn thật của split.
 
-- 4,572 prediction rows.
-- 9 model/split metric rows.
-- Evaluation stage completed.
-- Generated evaluation outputs include `metrics.csv`, `per_class.csv`, `split_summary.csv`, confusion matrices and `evaluation_notes.md`.
+Đọc `metrics.csv` cùng `per_class.csv` và confusion matrix. Metric tổng hợp cao hơn không có nghĩa mô hình nhận diện tốt mọi lớp; cần kiểm tra support, recall và các kiểu nhầm lẫn. Cách tính cuối cùng phải khớp implementation trong `evaluation/metrics.py`.
 
-The complete unit test suite was also run:
+## 7. Kết quả tham chiếu
+
+Manifest của run `lan-demo-final-20261020` ghi:
+
+- `status`: `complete_through_baselines`
+- `data_kind`: `synthetic`
+- `seed`: `42`
+- `git revision`: `696cbb61da2faebb75f06a701afee943fe0199c0`
+- `git dirty`: `false`
+- Các stage `table`, `split`, `baselines`, `evaluation`: `complete`
+
+### Metrics validation và test
+
+| Model | Split | n | Macro-F1 | Macro-F1 (6 lớp) | Balanced accuracy |
+|---|---|---:|---:|---:|---:|
+| B1 Majority | validation | 263 | 0.1169 | 0.1169 | 0.1667 |
+| B1 Majority | test | 261 | 0.1125 | 0.1125 | 0.1667 |
+| B1 Persistence | validation | 263 | 0.2575 | 0.2575 | 0.2643 |
+| B1 Persistence | test | 261 | 0.2557 | 0.2557 | 0.2586 |
+| B4 Logistic Regression | validation | 263 | 0.2291 | 0.2291 | 0.2324 |
+| B4 Logistic Regression | test | 261 | 0.2160 | 0.2160 | 0.2155 |
+
+Ở run này, cả sáu lớp có support nên `macro_f1` và `macro_f1_six` trùng nhau. Không mặc định điều đó đúng cho các run khác. B1 Persistence có macro-F1 cao nhất trong ba baseline trên test của run synthetic này; kết quả không phải bằng chứng về hiệu quả trên Reddit thật.
+
+## 8. Kiểm thử và notebook
+
+Lần chạy kiểm thử được cung cấp dùng lệnh:
 
 ```powershell
 & .\.venv\Scripts\python.exe -m unittest discover -s tests -v
 ```
 
-Result: 253 tests run, `OK`, with no test failures or errors.
+Kết quả:
 
-Sample validation tests were run separately:
+```text
+Ran 253 tests in 94.716s
 
-```powershell
-& .\.venv\Scripts\python.exe -m unittest tests.unit.test_sample_checks -v
+OK
 ```
 
-Result: 14 tests passed.
+Notebook `notebooks/prediction/00_research_plan.ipynb` được để xử lý sau và không thuộc phạm vi cập nhật tài liệu này. Theo kiến trúc, đây là template nghiên cứu, không phải entry point thay thế pipeline. Việc rà soát notebook và lựa chọn run trong notebook sẽ được thực hiện riêng.
 
-These results provide evidence for implementation and pipeline validation. They should not be interpreted as proof of predictive performance on real Reddit data.
+## 9. Giới hạn và bước tiếp theo
 
-## 7. Research notebook status
-
-`notebooks/prediction/00_research_plan.ipynb` remains a research template with status `template_not_executed`.
-
-It defines the research question, temporal split and leakage principles, baseline fairness requirements, and evidence needed for future experiments. Its deliberate `NotImplementedError` cell means it is not currently an executable experiment.
-
-Do not report this notebook as a completed experiment. A future experiment should record its configuration, seed, source revision, environment, manifest and actual results.
-
-## 8. Limitations and next steps
-
-- Current development data is synthetic.
-- The current results validate pipeline behavior, not real-world Reddit predictive effectiveness or H3.
-- B2 Random Forest, B5 Gradient Boosting, HeTCo and real Reddit features remain unfinished in the current pipeline.
-- Further research should use appropriate real data, preserve temporal causality, compare identical sample keys and report negative results as well as positive ones.
-- Cross-review and final demo/slide preparation remain outstanding.
+- Dữ liệu synthetic; chưa đánh giá trên Reddit thật.
+- Run tham chiếu chỉ gồm B1 Majority, B1 Persistence và B4 Logistic Regression.
+- B2 Random Forest, B5 Gradient Boosting, HeTCo và feature Reddit thật nằm ngoài phạm vi run này.
+- Review chéo schema, temporal split, feature availability, fallback và metrics trước khi dùng kết quả trong báo cáo nghiên cứu.
+- Dùng run ID mới khi chạy lại và chỉ lấy metadata/metrics từ cùng một thư mục run.

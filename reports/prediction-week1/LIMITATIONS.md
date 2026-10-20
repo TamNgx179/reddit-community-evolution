@@ -1,60 +1,76 @@
 ﻿# Limitations and Remaining Work
 
-## 1. Synthetic data
+## 1. Phạm vi dữ liệu
 
-The current pipeline uses synthetic data. The results validate the evaluation workflow and software integration only. They must not be presented as evidence of predictive performance on real Reddit communities.
+Run tham chiếu Week 1 (`lan-demo-final-20261020`) dùng dữ liệu `synthetic`, seed 42. Kết quả kiểm tra luồng prototype table → temporal split → baseline prediction → evaluation; không phải kết quả dự báo trên cộng đồng Reddit thật.
 
-## 2. Model coverage
+Hoàn tất các stage với trạng thái `complete_through_baselines` không có nghĩa tracking, feature engineering, mô hình dự báo đầy đủ hoặc pipeline Reddit end-to-end đã hoàn tất. Kết quả cũng không tự xác nhận giả thuyết H3 hoặc chứng minh tính mới khoa học.
 
-The current pipeline includes the available baseline models:
+## 2. Phạm vi mô hình
 
-B1 Majority.
+Run tham chiếu đánh giá ba baseline:
 
-B1 Persistence.
+- B1 Majority.
+- B1 Persistence.
+- B4 Logistic Regression.
 
-B4 Logistic Regression.
+B2 Random Forest, B5 Gradient Boosting, HeTCo và feature từ Reddit thật nằm ngoài phạm vi run này. Không đưa ra so sánh với các mô hình chưa được chạy trong cùng điều kiện, cùng mẫu và cùng quy trình đánh giá.
 
-The following planned components remain unfinished:
+## 3. Temporal split và leakage
 
-- B2 Random Forest (Phuc).
-- B5 Gradient Boosting (Phuc).
-- HeTCo (Thanh).
-- Real Reddit features (Thanh).
+Run tham chiếu có:
 
-Metrics from the current run therefore do not represent a comparison of all planned models.
+- Train: 1.000 mẫu, 23 `label_month`.
+- Validation: 263 mẫu, 6 `label_month`.
+- Test: 261 mẫu, 6 `label_month`.
+- Mẫu không nhãn bị loại: 46.
 
-## 3. Temporal split and leakage
+Split phải giữ mỗi `label_month` hoàn chỉnh trong một tập. Quan hệ nhãn dự kiến là `label_month == next_month(feature_month)`, dùng `next_month()` từ `contracts.py`. Các sample checks và negative-control fixture `tests/fixtures/prediction/samples_leaky.csv` hỗ trợ kiểm tra một số rủi ro leakage đã biết.
 
-Samples are assigned to temporal splits using `label_month`. The current run contains 1,000 training samples across 23 labeled months, 263 validation samples across 6 labeled months, and 261 test samples across 6 labeled months. Another 46 unlabeled samples are excluded from evaluation.
+Những kiểm tra này không chứng minh mọi dạng leakage đã bị loại bỏ. Cần review feature catalog và code thực tế, bảo đảm feature chỉ dùng dữ liệu khả dụng tại thời điểm dự báo. Không dùng `community_id` làm feature hoặc xem nó là identity xuyên tháng. `prev_label` là lịch sử riêng cho B1 Persistence; không được gộp vào numeric feature set của B4.
 
-Sample validation checks data consistency and potential feature leakage. These checks reduce known risks but do not prove that every possible source of leakage has been eliminated. The exact temporal boundaries and feature availability should be reviewed before final acceptance.
+## 4. Metrics và diễn giải
 
-The fixture `tests/fixtures/prediction/samples_leaky.csv` is an intentionally leaky negative-control fixture. It must not be used as valid training or evaluation data.
+Metrics trên test của run tham chiếu:
 
-## 4. Metric interpretation
+| Model | n | Macro-F1 | Balanced accuracy |
+|---|---:|---:|---:|
+| B1 Majority | 261 | 0.1125 | 0.1667 |
+| B1 Persistence | 261 | 0.2557 | 0.2586 |
+| B4 Logistic Regression | 261 | 0.2160 | 0.2155 |
 
-- `macro_f1` averages F1 over classes present in the true labels.
-- `macro_f1_six` averages F1 over all six event classes.
-- `balanced_accuracy` averages recall over classes present in the true labels.
-- Per-class metrics should be interpreted alongside the true class support and confusion matrices. A class receiving no positive predictions has zero precision and recall under the current evaluation results and is not being successfully detected.
+B1 Persistence đạt macro-F1 cao nhất trong ba baseline trên test của run synthetic này. Test gồm 261 mẫu trên sáu `label_month`; tài liệu hiện tại không đưa ra khoảng tin cậy hay kiểm định thống kê. Không diễn giải các con số này thành kết luận về dữ liệu Reddit thật hoặc mọi lần chạy synthetic.
 
-All six classes are present in each evaluated split in the current run. Therefore, macro_f1 and macro_f1_six have the same reported values for this run. This equality should not be assumed for every future run.
+Theo quy ước hiện tại, `macro_f1` trung bình trên các lớp có support trong `y_true`; `macro_f1_six` tính trên đủ sáu lớp với `zero_division=0`. Hai chỉ số trùng nhau trong run này; không giả định điều đó đúng cho run khác. Khi diễn giải từng lớp, cần xem `per_class.csv` và confusion matrices, không chỉ xem điểm tổng hợp.
 
-On the current test split, B1 Persistence has macro-F1 of approximately 0.2557, B4 Logistic Regression approximately 0.2160, and B1 Majority approximately 0.1125. B1 Persistence does not predict split or dissolve on the test split, while B4 Logistic Regression does not correctly detect merge or dissolve in the reported test confusion matrix. These results illustrate why aggregate metrics alone are insufficient.
+## 5. Trạng thái pipeline và kiểm thử
 
-Metrics should be compared on the same split and interpreted alongside class support and confusion matrices. Since the dataset is synthetic, these comparisons are not evidence of real-world Reddit forecasting performance.
+Manifest của `lan-demo-final-20261020` ghi `status: complete_through_baselines`, `data_kind: synthetic`, seed 42, revision `696cbb61da2faebb75f06a701afee943fe0199c0`, `dirty: false`; các stage table, split, baselines và evaluation đều `complete`.
 
-## 5. Pipeline completion status
+Lần chạy test được cung cấp cho tài liệu này hoàn tất với:
 
-The run status `complete_through_baselines` means the available table, split, baseline and evaluation stages completed. It does not mean that every planned model or the real-data workflow is complete.
+```text
+Ran 253 tests in 94.716s
 
-The run manifest records Git revision 007696493ee1d05921dc8c0d80320ce6dd6d8185, whereas the currently reported repository HEAD is ac081e6. The current run should therefore be regenerated with a new run ID on the intended final code revision before its outputs are treated as final verification evidence.
+OK
+```
 
-## 6. Remaining work
+Đây là kết quả của lần chạy test được báo cáo. Test pass hỗ trợ độ tin cậy về hành vi phần mềm trong phạm vi được kiểm thử; không thay thế đánh giá nghiên cứu hoặc đánh giá ngoài mẫu trên Reddit thật.
 
-- Implement and integrate the remaining planned models and real Reddit features.
-- Perform cross-review of the evaluation implementation and outputs.
-- Verify temporal boundaries, feature-time constraints, and leakage checks.
-- Re-run the demo from the intended final code revision and retain its manifest and artifacts.
-- Complete the shared research notebook and presentation before the project code freeze.
-- Re-evaluate the workflow with appropriate real Reddit data when available.
+## 6. Artifact, run ID và khả năng tái lập
+
+Mỗi lần chạy mới phải dùng run ID chưa tồn tại; không ghi đè run cũ. Khi báo cáo kết quả, ghi run ID và lấy `manifest.json`, `split_summary.csv`, `metrics.csv`, `per_class.csv`, `predictions.csv` từ cùng một thư mục `artifacts/prediction/<run_id>/`.
+
+Các run khác có thể dùng seed, revision hoặc dữ liệu tổng hợp khác, nên số lượng mẫu và metrics có thể khác nhau. Không trộn kết quả của các run. Một lần chạy mới không tự động xác nhận lại số liệu của run tham chiếu.
+
+## 7. Notebook nghiên cứu
+
+`notebooks/prediction/00_research_plan.ipynb` sử dụng run tham chiếu lan-demo-final-20261020 và trình bày các giới hạn nghiên cứu. Notebook không thay thế entry point của pipeline. Khi thay đổi source, cấu hình hoặc run tham chiếu, cần kiểm tra lại bằng chứng và bảo đảm các kết quả được trích dẫn vẫn thuộc đúng run.
+
+## 8. Công việc còn lại
+
+- Review chéo schema, ranh giới `label_month`, feature availability, fallback behavior và metrics.
+- Dùng artifact của đúng run khi cập nhật báo cáo hoặc slide.
+- Bổ sung và đánh giá các mô hình/dữ liệu Reddit thật theo phạm vi các tuần tiếp theo.
+- Trình bày rõ đây là prototype synthetic và không đưa ra tuyên bố khoa học vượt quá bằng chứng hiện có.
+- Chỉ ghi nhận contribution là reviewed khi review thực tế đã diễn ra.
