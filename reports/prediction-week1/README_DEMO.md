@@ -32,19 +32,23 @@ This demo shows the temporal split, sample validation, baseline prediction and e
 
 
 
-Execute:
+Execute the following command from the repository root:
 
 
 
 ```powershell
 
-& .\.venv\Scripts\python.exe -m reddit_sna.pipelines.prediction --config .\configs\prediction.toml --run-id lan-eval-tram-feedback-20261018
+& .\.venv\Scripts\python.exe -m reddit_sna.pipelines.prediction `
+  --config configs/prediction.toml `
+  --run-id lan-demo-final-20261020
 
 ```
 
 
 
-This run ID refers to the existing evaluation run. To generate a fresh run, choose a new ID instead of reusing it.
+Use a unique run ID for each new execution. Do not reuse an existing ID because it may refer to an earlier experiment.
+
+The pipeline should complete the available table, split, baseline and evaluation stages. If it fails, inspect the terminal error and the run output before interpreting any artifacts as valid results.
 
 
 
@@ -66,7 +70,7 @@ This run ID refers to the existing evaluation run. To generate a fresh run, choo
 
 
 
-The current pipeline should report that it completed through the available baselines.
+The current pipeline status is complete_through_baselines when the available stages complete successfully. This status does not indicate that all planned models or the real-data workflow are complete.
 
 
 
@@ -74,13 +78,12 @@ The current pipeline should report that it completed through the available basel
 
 
 
-The existing successful run is located at:
-
+The output directory for the example command is:
 
 
 ```text
 
-artifacts/prediction/lan-eval-tram-feedback-20261018/
+artifacts/prediction/lan-demo-20261020/
 
 ```
 
@@ -120,8 +123,20 @@ confusion matrices, and evaluation notes. The manifest records hashes
 of existing files; it does not guarantee that every possible artifact
 was generated if an earlier stage failed.
 
-The pipeline uses synthetic data. These outputs should not be interpreted
-as evaluation results on real Reddit data.
+**Inspect the results**
+
+$run = ".\artifacts\prediction\lan-demo-20261020"
+
+Get-Content "$run\manifest.json" -Encoding UTF8
+Import-Csv "$run\split_summary.csv" | Format-List *
+Import-Csv "$run\metrics.csv" | Format-List *
+Import-Csv "$run\per_class.csv" | Format-Table -Wrap
+
+For the current implementation, the previously inspected run lan-week1-final-20261019 reported test macro-F1 values of approximately 0.1125 for B1 Majority, 0.2557 for B1 Persistence, and 0.2160 for B4 Logistic Regression. These values belong to that specific run and should not be copied as results for a new run without inspecting its own metrics.
+
+The previously inspected manifest records Git revision 007696493ee1d05921dc8c0d80320ce6dd6d8185, while the reported repository HEAD is ac081e6. Run the demo again with a fresh ID to verify the current code revision before final reporting.
+
+The pipeline uses synthetic data. These outputs should not be interpreted as evaluation results on real Reddit data.
 
 
 
@@ -164,8 +179,8 @@ The test `test_leaky_fixture_is_detected` verifies that the sample validation lo
 
 
 
-The run `lan-eval-tram-feedback-20261018` generated 1,570 synthetic community-month samples, including 46 unlabelled samples excluded from evaluation. It produced 4,572 prediction rows and 9 model/split metric rows. The table, split, baseline and evaluation stages completed.
+The inspected run `lan-week1-final-20261019` generated 1,570 synthetic community-month samples, including 46 unlabeled samples excluded from evaluation. It produced 4,572 prediction rows and 9 model/split metric rows. The table, split, baseline and evaluation stages completed.
 
+The current evaluation includes B1 Majority, B1 Persistence, and B4 Logistic Regression. Remaining work includes B2 Random Forest, B5 Gradient Boosting, HeTCo, and real Reddit features.
 
-
-Remaining work includes the planned Random Forest and Gradient Boosting baselines, HeTCo, and real Reddit features.
+Before final submission, regenerate the demo using the intended final code revision and a new run ID. Keep the generated artifacts and manifest for reproducibility.
