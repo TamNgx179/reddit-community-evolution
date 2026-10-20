@@ -1,6 +1,8 @@
 # Reddit Community Evolution
 
-Research package for detecting, tracking and forecasting changes in Reddit **user communities**. Subreddits are activity contexts, not ground-truth community labels. The implemented `prepare` path is ZIP audit → metadata normalization → monthly reply graphs → Independent Leiden. Tracking, features, forecasting and the other pair demos remain unimplemented; `run` exits with code 3 rather than inventing results.
+Research package for detecting, tracking and forecasting changes in Reddit **user communities**. Subreddits are activity contexts, not ground-truth community labels. The implemented real-data `prepare` path is ZIP audit → metadata normalization → monthly reply graphs → Independent Leiden. The separate [Phúc–Đăng synthetic demo](document/guide.md) implements truth/detector Jaccard tracking, mapping, event evaluation and an integrated notebook. Reddit tracking, features, forecasting and other pair demos remain planned; the generic `run` command still exits with code 3.
+
+For the completed synthetic pair demo, use [the runnable guide](document/guide.md) and [01_synthetic_demo.ipynb](notebooks/detection_tracking/01_synthetic_demo.ipynb). It reuses the original T02 input ZIP and saves both tracking splits, config/provenance, per-class results and confusion matrices. These are synthetic benchmark results, separate from the real Reddit pilot below.
 
 ## Install and run
 

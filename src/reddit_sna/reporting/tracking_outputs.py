@@ -1,14 +1,18 @@
 """Write reproducible development artifacts for the Jaccard tracker."""
 
 import csv
+from datetime import datetime, timezone
 from hashlib import sha256
 import json
 from pathlib import Path
+import platform
+import re
 from typing import Iterable, Mapping
 
 from reddit_sna.evaluation.tracking import evaluate_events, project_detector_events
 from reddit_sna.tracking.jaccard import track
 from reddit_sna.tracking.membership import groups_by_month, read_memberships
+from reddit_sna.reporting.synthetic_handoff import inspect_synthetic_handoff
 
 EVENT_COLUMNS = (
     "reference_id",
@@ -37,6 +41,20 @@ MAPPING_COLUMNS = (
     "status",
 )
 LABELS = ("stable", "grow", "shrink", "merge", "split", "dissolve")
+INPUT_PINS = {
+    "development": "34364c98519e394af8541b9093a78899469239856f583d01608ec8848ade4e8e",
+    "evaluation": "e305a6a0fe4d0068e50159f9078fe893de266d10d13ca9d5b18bd46df4aae16c",
+}
+SOURCE_RUNS = {"development": "phuc-005-t05-development-001", "evaluation": "phuc-005-t06-evaluation-001"}
+TRACKER_CONFIG = {
+    "jaccard_threshold": 0.30, "size_tolerance": 0.10, "detector_seed": 0,
+    "precedence": ["dissolve", "split", "merge", "grow", "shrink", "stable"],
+    "mapping": "source-month greedy one-to-one; score descending, truth ID then detector ID ascending; Jaccard >= 0.30",
+    "labels": list(LABELS), "zero_division": 0,
+    "truth_confusion_shape": [6, 6], "detector_confusion_shape": [6, 7],
+    "upstream_revision": "57a39c67835e9a08efe0fe22eea99e5095b0c3d1",
+    "scope": "Fixed PR12 algorithm replay. This file records this replay config, not a historical pre-evaluation freeze by Dang.",
+}
 
 
 def _write_csv(path: Path, columns: Iterable[str], rows: Iterable[Mapping[str, object]]) -> None:
@@ -86,7 +104,9 @@ def _link_rows(reference: str, links: Iterable[Mapping[str, object]]) -> list[di
     ]
 
 
-def _write_evaluation(directory: Path, result: Mapping[str, object]) -> None:
+def _write_evaluation(directory: Path, result: Mapping[str, object], *, allow_unmatched: bool = True) -> None:
+    if not allow_unmatched and result["matched_support"] != result["support"]:
+        raise ValueError("truth route must predict every source")
     _write_csv(directory / "event_predictions.csv", PREDICTION_COLUMNS, result["event_predictions"])
     metric_rows = [
         {"event": label, **values}
@@ -109,7 +129,7 @@ def _write_evaluation(directory: Path, result: Mapping[str, object]) -> None:
     ]
     _write_csv(
         directory / "confusion_matrix.csv",
-        ("truth_event", *LABELS, "__unmatched__"),
+        ("truth_event", *LABELS, *(("__unmatched__",) if allow_unmatched else ())),
         matrix_rows,
     )
     _write_json(
@@ -143,7 +163,8 @@ def _run_dataset(
     truth_rows = read_memberships(truth_dir / "membership.csv")
     truth_reference = truth_rows[0].reference_id
     truth_groups = groups_by_month(truth_rows, expected_reference=truth_reference)
-    truth_result = track(truth_groups["2020-01"], truth_groups["2020-02"])
+    tracker_args = {"tau": TRACKER_CONFIG["jaccard_threshold"], "size_tolerance": TRACKER_CONFIG["size_tolerance"]}
+    truth_result = track(truth_groups["2020-01"], truth_groups["2020-02"], **tracker_args)
     truth_events = _read_truth_events(truth_dir / "events.csv")
     truth_eval = evaluate_events(truth_events, truth_result["events"])
 
@@ -151,7 +172,14 @@ def _run_dataset(
     truth_output.mkdir(parents=True)
     _write_csv(truth_output / "events.csv", EVENT_COLUMNS, _event_rows(truth_reference, truth_result["events"]))
     _write_csv(truth_output / "links.csv", LINK_COLUMNS, _link_rows(truth_reference, truth_result["links"]))
-    _write_evaluation(truth_output, truth_eval)
+    _write_evaluation(truth_output, truth_eval, allow_unmatched=False)
+    _write_json(truth_output / "tracker_diagnostics.json", truth_result["diagnostics"])
+    if _read_truth_events(truth_dir / "events.csv") != _read_truth_events(truth_output / "events.csv"):
+        raise ValueError("truth tracker event rows differ from the declared truth")
+    def canonical(rows):
+        return sorted(tuple(sorted(row.items())) for row in rows)
+    if canonical(_read_truth_events(truth_dir / "links.csv")) != canonical(_read_truth_events(truth_output / "links.csv")):
+        raise ValueError("truth tracker links differ from the declared truth")
 
     detector_dir = detected_dataset / "memberships"
     detector_paths = [
@@ -163,11 +191,12 @@ def _run_dataset(
         detector_rows.extend(read_memberships(path))
     detector_reference = detector_rows[0].reference_id
     detector_groups = groups_by_month(detector_rows, expected_reference=detector_reference)
-    detector_result = track(detector_groups["2020-01"], detector_groups["2020-02"])
+    detector_result = track(detector_groups["2020-01"], detector_groups["2020-02"], **tracker_args)
     projected = project_detector_events(
         truth_groups["2020-01"],
         detector_groups["2020-01"],
         detector_result["events"],
+        tau=TRACKER_CONFIG["jaccard_threshold"],
     )
     detector_eval = evaluate_events(truth_events, projected["event_predictions"])
     detector_output = output_dataset / "detector_tracking"
@@ -176,6 +205,7 @@ def _run_dataset(
     _write_csv(detector_output / "links.csv", LINK_COLUMNS, _link_rows(detector_reference, detector_result["links"]))
     _write_csv(detector_output / "source_mapping.csv", MAPPING_COLUMNS, projected["mapping"])
     _write_evaluation(detector_output, detector_eval)
+    _write_json(detector_output / "tracker_diagnostics.json", detector_result["diagnostics"])
     _write_json(
         detector_output / "mapping_diagnostics.json",
         {
@@ -208,13 +238,35 @@ def run_split(
     """Create a fresh tracking run without modifying handoff inputs."""
     if split not in {"development", "evaluation"}:
         raise ValueError("split must be development or evaluation")
+    if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]{0,127}", run_id):
+        raise ValueError("run_id must be a portable single directory name")
+    handoff_root, output_root = Path(handoff_root).resolve(), Path(output_root).resolve()
+    destination = output_root / run_id
+    if destination.exists():
+        raise FileExistsError(destination)
+    if destination.is_relative_to(handoff_root) or handoff_root.is_relative_to(destination):
+        raise ValueError("tracking output must not overlap the handoff inputs")
+    if input_manifest_sha256 != INPUT_PINS[split] or source_run != SOURCE_RUNS[split]:
+        raise ValueError("input pin or source run does not match the fixed week-one split")
+    inventory = inspect_synthetic_handoff(handoff_root / "runs" / split, expected_manifest_sha256=input_manifest_sha256)
+    if inventory["split"] != split or inventory["counts"]["datasets"] != 18:
+        raise ValueError("tracking requires the full fixed split")
     source_root = handoff_root / "runs" / split / "inputs" / "source"
     detected_root = handoff_root / "runs" / split / "inputs" / "detected"
     datasets = sorted(path for path in source_root.iterdir() if path.is_dir())
     if len(datasets) != 18:
         raise ValueError(f"expected 18 development datasets, found {len(datasets)}")
-    destination = output_root / run_id
     destination.mkdir(parents=True)
+    started = datetime.now(timezone.utc).isoformat()
+    _write_json(destination / "tracker-config.json", TRACKER_CONFIG)
+    package = Path(__file__).resolve().parents[1]
+    provenance = {"python": platform.python_version(), "platform": platform.platform(),
+                  "implementation_files": {name: _digest(package / name) for name in (
+                      "tracking/membership.py", "tracking/jaccard.py", "evaluation/tracking.py",
+                      "reporting/tracking_outputs.py", "contracts.py", "benchmarks/io.py", "reporting/synthetic_handoff.py")},
+                  "started_at_utc": started, "origin": "Phuc integration replay of Dang PR12; original Dang output folders not received",
+                  "historical_dang_freeze": "not_verified", "new_independent_holdout_claim": False}
+    _write_json(destination / "provenance.json", provenance)
     summaries = {}
     for dataset in datasets:
         summaries[dataset.name] = _run_dataset(
@@ -223,6 +275,13 @@ def run_split(
             destination / "datasets" / dataset.name,
         )
     metadata = {
+        "schema_version": 1,
+        "artifact_type": "synthetic-tracking-replay",
+        "status": "complete",
+        "started_at_utc": started,
+        "finished_at_utc": datetime.now(timezone.utc).isoformat(),
+        "origin": provenance["origin"],
+        "tracker_config_sha256": _digest(destination / "tracker-config.json"),
         "run_id": run_id,
         "split": split,
         "source_run": source_run,
@@ -237,7 +296,7 @@ def run_split(
     files = {}
     for path in sorted(destination.rglob("*")):
         if path.is_file():
-            files[str(path.relative_to(destination))] = _digest(path)
+            files[path.relative_to(destination).as_posix()] = _digest(path)
     _write_json(destination / "manifest.json", {"files": files})
     return destination
 
