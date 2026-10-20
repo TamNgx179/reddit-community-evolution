@@ -1,0 +1,470 @@
+{
+  "pr": 12,
+  "revision": "57a39c67835e9a08efe0fe22eea99e5095b0c3d1",
+  "python": "C:\\Users\\MSi\\reddit-community-evolution\\artifacts\\environments\\phuc-006-t05-clean-001\\venv\\Scripts\\python.exe",
+  "scope": "Independent Phuc review replay; Dang original run folders/guide are not delivered here. No producer, Leiden or AMI rerun and no threshold tuning.",
+  "splits": {
+    "development": {
+      "input_manifest_sha256_verified": "34364c98519e394af8541b9093a78899469239856f583d01608ec8848ade4e8e",
+      "consumer_counts": {
+        "datasets": 18,
+        "snapshots": 36,
+        "snapshot_detector_runs": 108
+      },
+      "output": "artifacts\\detection-tracking\\phuc-review-dang-development-20261020-001",
+      "output_files": 254,
+      "manifest_hashes_verified": 253,
+      "output_manifest_sha256": "565bfa004d2544180cd99eb826cd858a991ab74faf3cb15cb531926e5cc34d8b",
+      "datasets": 18,
+      "truth_events_and_links_match_datasets": 18,
+      "mean_dataset_truth_macro_f1_six_labels": 0.3055555555555555,
+      "mean_dataset_detector_macro_f1_six_labels": 0.2561728395061728,
+      "matched_coverage": 1.0,
+      "unmatched_truth": 0,
+      "extra_detector": 3,
+      "tracker_config_present": false,
+      "truth_confusion_shape": [
+        6,
+        7
+      ],
+      "detector_confusion_shape": [
+        6,
+        7
+      ],
+      "pooled_metrics": {
+        "truth_tracking": {
+          "macro_f1_over_39_sources": 1.0,
+          "correct": 39,
+          "support": 39,
+          "accuracy": 1.0,
+          "confusion_matrix": {
+            "stable": {
+              "stable": 21,
+              "grow": 0,
+              "shrink": 0,
+              "merge": 0,
+              "split": 0,
+              "dissolve": 0,
+              "__unmatched__": 0
+            },
+            "grow": {
+              "stable": 0,
+              "grow": 3,
+              "shrink": 0,
+              "merge": 0,
+              "split": 0,
+              "dissolve": 0,
+              "__unmatched__": 0
+            },
+            "shrink": {
+              "stable": 0,
+              "grow": 0,
+              "shrink": 3,
+              "merge": 0,
+              "split": 0,
+              "dissolve": 0,
+              "__unmatched__": 0
+            },
+            "merge": {
+              "stable": 0,
+              "grow": 0,
+              "shrink": 0,
+              "merge": 6,
+              "split": 0,
+              "dissolve": 0,
+              "__unmatched__": 0
+            },
+            "split": {
+              "stable": 0,
+              "grow": 0,
+              "shrink": 0,
+              "merge": 0,
+              "split": 3,
+              "dissolve": 0,
+              "__unmatched__": 0
+            },
+            "dissolve": {
+              "stable": 0,
+              "grow": 0,
+              "shrink": 0,
+              "merge": 0,
+              "split": 0,
+              "dissolve": 3,
+              "__unmatched__": 0
+            }
+          },
+          "per_class": {
+            "stable": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "support": 21
+            },
+            "grow": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "support": 3
+            },
+            "shrink": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "support": 3
+            },
+            "merge": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "support": 6
+            },
+            "split": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "support": 3
+            },
+            "dissolve": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "support": 3
+            }
+          }
+        },
+        "detector_tracking": {
+          "macro_f1_over_39_sources": 0.85,
+          "correct": 33,
+          "support": 39,
+          "accuracy": 0.8461538461538461,
+          "confusion_matrix": {
+            "stable": {
+              "stable": 18,
+              "grow": 0,
+              "shrink": 0,
+              "merge": 0,
+              "split": 3,
+              "dissolve": 0,
+              "__unmatched__": 0
+            },
+            "grow": {
+              "stable": 0,
+              "grow": 3,
+              "shrink": 0,
+              "merge": 0,
+              "split": 0,
+              "dissolve": 0,
+              "__unmatched__": 0
+            },
+            "shrink": {
+              "stable": 0,
+              "grow": 0,
+              "shrink": 3,
+              "merge": 0,
+              "split": 0,
+              "dissolve": 0,
+              "__unmatched__": 0
+            },
+            "merge": {
+              "stable": 0,
+              "grow": 0,
+              "shrink": 0,
+              "merge": 4,
+              "split": 2,
+              "dissolve": 0,
+              "__unmatched__": 0
+            },
+            "split": {
+              "stable": 1,
+              "grow": 0,
+              "shrink": 0,
+              "merge": 0,
+              "split": 2,
+              "dissolve": 0,
+              "__unmatched__": 0
+            },
+            "dissolve": {
+              "stable": 0,
+              "grow": 0,
+              "shrink": 0,
+              "merge": 0,
+              "split": 0,
+              "dissolve": 3,
+              "__unmatched__": 0
+            }
+          },
+          "per_class": {
+            "stable": {
+              "precision": 0.9473684210526315,
+              "recall": 0.8571428571428571,
+              "f1": 0.9,
+              "support": 21
+            },
+            "grow": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "support": 3
+            },
+            "shrink": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "support": 3
+            },
+            "merge": {
+              "precision": 1.0,
+              "recall": 0.6666666666666666,
+              "f1": 0.8,
+              "support": 6
+            },
+            "split": {
+              "precision": 0.2857142857142857,
+              "recall": 0.6666666666666666,
+              "f1": 0.4,
+              "support": 3
+            },
+            "dissolve": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "support": 3
+            }
+          }
+        }
+      }
+    },
+    "evaluation": {
+      "input_manifest_sha256_verified": "e305a6a0fe4d0068e50159f9078fe893de266d10d13ca9d5b18bd46df4aae16c",
+      "consumer_counts": {
+        "datasets": 18,
+        "snapshots": 36,
+        "snapshot_detector_runs": 108
+      },
+      "output": "artifacts\\detection-tracking\\phuc-review-dang-evaluation-20261020-001",
+      "output_files": 254,
+      "manifest_hashes_verified": 253,
+      "output_manifest_sha256": "56d1df455a55ea3f774863c0a69718fe37d21812a0118cee345716764d2c3140",
+      "datasets": 18,
+      "truth_events_and_links_match_datasets": 18,
+      "mean_dataset_truth_macro_f1_six_labels": 0.3055555555555555,
+      "mean_dataset_detector_macro_f1_six_labels": 0.2175925925925926,
+      "matched_coverage": 1.0,
+      "unmatched_truth": 0,
+      "extra_detector": 6,
+      "tracker_config_present": false,
+      "truth_confusion_shape": [
+        6,
+        7
+      ],
+      "detector_confusion_shape": [
+        6,
+        7
+      ],
+      "pooled_metrics": {
+        "truth_tracking": {
+          "macro_f1_over_39_sources": 1.0,
+          "correct": 39,
+          "support": 39,
+          "accuracy": 1.0,
+          "confusion_matrix": {
+            "stable": {
+              "stable": 21,
+              "grow": 0,
+              "shrink": 0,
+              "merge": 0,
+              "split": 0,
+              "dissolve": 0,
+              "__unmatched__": 0
+            },
+            "grow": {
+              "stable": 0,
+              "grow": 3,
+              "shrink": 0,
+              "merge": 0,
+              "split": 0,
+              "dissolve": 0,
+              "__unmatched__": 0
+            },
+            "shrink": {
+              "stable": 0,
+              "grow": 0,
+              "shrink": 3,
+              "merge": 0,
+              "split": 0,
+              "dissolve": 0,
+              "__unmatched__": 0
+            },
+            "merge": {
+              "stable": 0,
+              "grow": 0,
+              "shrink": 0,
+              "merge": 6,
+              "split": 0,
+              "dissolve": 0,
+              "__unmatched__": 0
+            },
+            "split": {
+              "stable": 0,
+              "grow": 0,
+              "shrink": 0,
+              "merge": 0,
+              "split": 3,
+              "dissolve": 0,
+              "__unmatched__": 0
+            },
+            "dissolve": {
+              "stable": 0,
+              "grow": 0,
+              "shrink": 0,
+              "merge": 0,
+              "split": 0,
+              "dissolve": 3,
+              "__unmatched__": 0
+            }
+          },
+          "per_class": {
+            "stable": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "support": 21
+            },
+            "grow": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "support": 3
+            },
+            "shrink": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "support": 3
+            },
+            "merge": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "support": 6
+            },
+            "split": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "support": 3
+            },
+            "dissolve": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "support": 3
+            }
+          }
+        },
+        "detector_tracking": {
+          "macro_f1_over_39_sources": 0.655142599045038,
+          "correct": 28,
+          "support": 39,
+          "accuracy": 0.717948717948718,
+          "confusion_matrix": {
+            "stable": {
+              "stable": 17,
+              "grow": 1,
+              "shrink": 0,
+              "merge": 0,
+              "split": 3,
+              "dissolve": 0,
+              "__unmatched__": 0
+            },
+            "grow": {
+              "stable": 0,
+              "grow": 3,
+              "shrink": 0,
+              "merge": 0,
+              "split": 0,
+              "dissolve": 0,
+              "__unmatched__": 0
+            },
+            "shrink": {
+              "stable": 1,
+              "grow": 0,
+              "shrink": 1,
+              "merge": 1,
+              "split": 0,
+              "dissolve": 0,
+              "__unmatched__": 0
+            },
+            "merge": {
+              "stable": 2,
+              "grow": 0,
+              "shrink": 0,
+              "merge": 2,
+              "split": 2,
+              "dissolve": 0,
+              "__unmatched__": 0
+            },
+            "split": {
+              "stable": 0,
+              "grow": 0,
+              "shrink": 1,
+              "merge": 0,
+              "split": 2,
+              "dissolve": 0,
+              "__unmatched__": 0
+            },
+            "dissolve": {
+              "stable": 0,
+              "grow": 0,
+              "shrink": 0,
+              "merge": 0,
+              "split": 0,
+              "dissolve": 3,
+              "__unmatched__": 0
+            }
+          },
+          "per_class": {
+            "stable": {
+              "precision": 0.85,
+              "recall": 0.8095238095238095,
+              "f1": 0.8292682926829269,
+              "support": 21
+            },
+            "grow": {
+              "precision": 0.75,
+              "recall": 1.0,
+              "f1": 0.8571428571428571,
+              "support": 3
+            },
+            "shrink": {
+              "precision": 0.5,
+              "recall": 0.3333333333333333,
+              "f1": 0.4,
+              "support": 3
+            },
+            "merge": {
+              "precision": 0.6666666666666666,
+              "recall": 0.3333333333333333,
+              "f1": 0.4444444444444444,
+              "support": 6
+            },
+            "split": {
+              "precision": 0.2857142857142857,
+              "recall": 0.6666666666666666,
+              "f1": 0.4,
+              "support": 3
+            },
+            "dissolve": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "support": 3
+            }
+          }
+        }
+      }
+    }
+  },
+  "handoff_inputs_unchanged": 821,
+  "finished_at_utc": "2026-10-20T01:40:37.495482+00:00"
+}
