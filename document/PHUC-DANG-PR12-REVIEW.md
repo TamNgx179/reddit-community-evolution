@@ -1,5 +1,7 @@
 # Kiểm tra bàn giao tracker/evaluator của Đăng — 20/10/2026
 
+**Cập nhật sau review:** theo yêu cầu hoàn thành trong ngày, PR #12 đã được merge vào nhánh Phúc và tích hợp tại `89173ce`. Đã có `document/guide.md`, notebook chính 14 cells/8 hình, runner/config/provenance/diagnostics và gói output cuối; 94 tests liên quan đạt. [Bản bàn giao hiện tại](PHUC-DANG-FINAL-HANDOFF.md). Những phần bên dưới giữ kết quả review trước tích hợp; hai artifact/freeze lịch sử gốc của Đăng vẫn chưa đối chiếu, nhưng đã có output tái lập để bàn giao kỹ thuật.
+
 **Kết luận:** source PR #12 chạy được và tái lập đúng các số Đăng báo. Đường truth khớp toàn bộ events/links; một notebook kiểm tra riêng đọc được cả hai đường. **Bàn giao artifact gốc và demo chung vẫn ở REVIEW**, chưa merge hoặc xác nhận nghiệm thu thay Đăng.
 
 - PR: [#12 — Implement Jaccard tracking and evaluation artifacts](https://github.com/TamNgx179/reddit-community-evolution/pull/12).

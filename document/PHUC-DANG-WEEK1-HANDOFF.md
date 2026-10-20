@@ -1,5 +1,7 @@
 # Bàn giao Phúc → Đăng: dữ liệu và detection tuần 1
 
+**Bản hiện tại — 20/10/2026:** demo kỹ thuật đã tích hợp tracker Đăng, chạy notebook chính 14 cells/8 hình và có gói kết quả cuối. [Bàn giao cuối](PHUC-DANG-FINAL-HANDOFF.md), [guide chạy](guide.md). ZIP input T02 cũ giữ nguyên. Các ghi chú review/T06 bên dưới là lịch sử; output tái lập hiện tại đủ để bàn giao, artifact/freeze gốc của Đăng được bổ sung đối chiếu sau.
+
 **Cập nhật 20/10/2026:** Đăng đã gửi source PR #12; Phúc kiểm tra 34 tests và replay hai split thành công, notebook kiểm tra riêng đọc được hai đường. [Review, số liệu và việc còn thiếu](PHUC-DANG-PR12-REVIEW.md). Đăng tiếp tục dùng **ZIP input T02 đã nhận**; không cần Phúc gửi lại ZIP cuối. Hai artifact output gốc của Đăng và `document/guide.md` chưa có trên Git/máy Phúc; chưa merge PR hoặc nghiệm thu demo chung. Nội dung T06 bên dưới là lịch sử chốt phần cá nhân.
 
 **Bản chốt phần Phúc:** 19/10/2026, PHUC-006-T06. Phần dữ liệu tổng hợp/detection và 36 task cá nhân Phúc đã hoàn tất; tracker/mapping/F1/confusion và demo cặp còn chờ artifact Đăng. Notebook/clean-install đã có bằng chứng. **Gửi gói cuối `phuc-week1-final-20261019-001.zip`**, mở `START-HERE.md`; [hướng dẫn đầu tiên](specs/phuc/006-handoff-demo/FINAL-START-HERE.md). Các mục T02/T04 bên dưới giữ lịch sử nguồn; mục 11 chốt T06.

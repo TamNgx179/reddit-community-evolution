@@ -1,6 +1,6 @@
 # Phúc — kết thúc phần cá nhân tuần 1
 
-**36/36 task cá nhân đã hoàn thành; sáu spec đều 6/6.** Phần của bạn tạo dữ liệu tổng hợp biết trước đáp án, chạy Leiden tìm nhóm qua từng tháng, đo mức khớp với đáp án và chuẩn bị gói để Đăng viết tracker. **Demo chung với Đăng vẫn chưa hoàn thành.**
+**36/36 task cá nhân đã hoàn thành; sáu spec đều 6/6.** Phần của bạn tạo dữ liệu tổng hợp biết trước đáp án, chạy Leiden tìm nhóm qua từng tháng, đo mức khớp với đáp án và chuẩn bị gói để Đăng viết tracker. **Cập nhật 20/10:** đã ghép code Đăng, hoàn thành demo kỹ thuật 14 cells/8 hình và 94 tests liên quan. [Bàn giao cuối](PHUC-DANG-FINAL-HANDOFF.md), [guide chạy](guide.md). Nghiệm thu của thành viên và artifact/freeze lịch sử gốc Đăng vẫn ghi riêng; các mục T06 bên dưới là lịch sử phần cá nhân.
 
 | Phần | Bạn đã có gì? | Trạng thái |
 |---|---|---|
@@ -13,9 +13,9 @@
 
 [Task board và ledger](specs/phuc/tasks.md) là nguồn trạng thái chính. [Bằng chứng chốt T06](specs/phuc/evidence/PHUC-006-T06-final-handoff.md), [acceptance](specs/phuc/evidence/PHUC-006-T06-acceptance.csv), [checksum/reference](specs/phuc/evidence/PHUC-006-T06-final-reference.json), [hướng dẫn đầu tiên](specs/phuc/006-handoff-demo/FINAL-START-HERE.md).
 
-## Gửi gì cho Đăng?
+## Gói T06 cá nhân — lịch sử
 
-Gửi **một file `phuc-week1-final-20261019-001.zip`**, ở `artifacts/handoff/` trên máy bạn, khoảng **10 MB**; kèm checksum từ reference. ZIP có **976 files**, dữ liệu/code/wheel/notebook/CSV/hình/log T05. Đăng giải nén, mở `START-HERE.md`, kiểm tra development rồi làm tracker trên truth trước. Nếu Đăng đã có gói T02, input cũ vẫn đúng; không cần đổi dataset/reference.
+File `phuc-week1-final-20261019-001.zip` ở `artifacts/handoff/` là bản lưu đầy đủ phần cá nhân, khoảng **10 MB**, có **976 files**. Đăng đã nhận input T02, không cần gửi lại ZIP này. Bản giao demo kỹ thuật ngày 20/10 dùng gói **kết quả** `phuc-dang-demo-results-20261020-001.zip`, được mô tả trong bàn giao cuối; không thay dataset/reference input cũ.
 
 GitHub có code, docs và bằng chứng nhỏ; ZIP lớn chưa có trên GitHub, chưa tự gửi/upload. Không cần gửi từng ZIP proof riêng. Người nhận cần ZIP thật hoặc gói T02 đã nhận trước; chỉ pull nhánh không tự tải dữ liệu synthetic local.
 
@@ -27,8 +27,8 @@ Ví dụ: nhóm chuẩn 24 người bị Leiden chia 12+12 thì coverage vẫn 1
 
 T05: môi trường Python sạch, pip check, **385/385 tests**, hai kernel replays đạt. T06: **4 consumer reads**, notebook gói 10/10 cells/6 hình, CSV/PNG giống T05, ZIP/fresh extraction/hashes đạt. T06 không chạy full suite hoặc benchmark mới; giữ kết quả cũ.
 
-## Còn cần chờ gì?
+## Phối hợp sau khi chốt kỹ thuật
 
-Phúc đã báo nhắn Đăng; chưa có phản hồi nhận/đọc gói. Còn chờ Đăng cung cấp tracker truth, tracker detector/mapping, predictions và F1/support/confusion. Khi có artifact thật, hai bạn ghép đường A trên truth và B trên Leiden, thử notebook/demo cặp rồi mới cập nhật EXT-D02/03/PAIR-DEMO. Không viết tracker hoặc ghi chỉ số thay Đăng để đóng mốc.
+Đăng đã phản hồi nhận input và gửi tracker/evaluator trong PR #12. Phúc đã merge source, tái lập hai split, đối chiếu predictions và ghép notebook chính. Có thể bàn giao kỹ thuật ngay bằng run tái lập có provenance. Hai artifact/freeze gốc Đăng có thể bổ sung đối chiếu sau; không ghi chúng là đã nhận hoặc tự ghi xác nhận nghiệm thu thay thành viên.
 
-Bạn có thể chuyển sang đồ án môn khác sau khi gửi gói và giữ lại nhánh/ZIP này. Phần phối hợp còn mở được theo dõi riêng trên task board; không còn task PHUC cá nhân đang chờ Đăng.
+Bạn có thể bàn giao code/guide/notebook/gói kết quả theo bản cuối rồi chuyển sang môn khác. Xác nhận của nhóm theo dõi riêng trên task board; không còn task PHUC cá nhân hoặc công việc ghép kỹ thuật phải chờ Đăng.
