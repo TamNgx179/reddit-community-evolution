@@ -14,10 +14,11 @@ def main():
     args = parser.parse_args()
     delivery = read_handoff(args.run)
     project = Path(__file__).resolve().parents[1]
-    # Preserve the six-document layout so relative navigation also works offline.
+    # Preserve canonical navigation and the single group report in offline handoffs.
     documents = (
         "README.md", "PHAN-CONG-SNA-8-TUAN.md", "docs/METHODS.md",
         "docs/RUNBOOK.md", "docs/RESULTS.md", "docs/LABEL_REVIEW.md",
+        "reports/WEEK1_REPORT.md",
     )
     for relative in documents:
         if not (project / relative).is_file():

@@ -1,0 +1,11 @@
+schema_version = 1
+pipeline = "detection-tracking"
+project_root = ".."
+seed = 11
+
+[input]
+kind = "synthetic"
+
+[output]
+root = "../artifacts"
+run_id = "phuc-002-graph-truth"

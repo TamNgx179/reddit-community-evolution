@@ -1,0 +1,58 @@
+# Midterm development experiment: scheduling record, not unseen certification.
+# Runtime enforcement lives in configs/midterm.toml and evaluation/research_protocol.py.
+plan_version = 1
+report_target_date = "2026-10-22"
+execution_deadline = "2026-10-21 after verification; no unverified success at deadline"
+scope = "three instructor deliverables: plan, baseline results, preliminary proposed results"
+status = "executed_descriptive_midterm_prototype"
+protocol = "configs/midterm.toml"
+source_population = "fixed Independent Leiden / GED-adapted 2015 Reddit pseudo-label reference"
+question = "Does observed within-month thread/corpus context add predictive value beyond matched structural/history/lag features?"
+method = "project-defined HeTCo-v0 feature forecaster; not full final HeTCo or temporal/consensus detection"
+exposure = "2015 pilot already inspected; descriptive development only"
+search_budget = "one fixed parameter configuration per model/ablation; no tuning after evaluation"
+seeds = [42, 43, 44]
+primary_metric = "fixed-six-class macro-F1"
+main_label_months = ["2015-10", "2015-11", "2015-12"]
+rolling_label_months = ["2015-07", "2015-08", "2015-09", "2015-10", "2015-11", "2015-12"]
+uncertainty = "exploratory paired 2-month moving blocks over six rolling months; 1000 draws; average seed deltas inside draws"
+main_uncertainty = "unavailable: too few inspected holdout months under declared policy"
+completion_rule = "actual verified predictions, matched comparison and ablation tables, per-class/month failures, notebook, single group report; improvement not required"
+human_validation = "pending independent reviewers, agreement and adjudication"
+novelty = "unverified; closest-work and full confirmatory experiments remain separate"
+
+[[execution]]
+owner_scope = "Tam with Thanh: source/context/provenance"
+order = 1
+task = "validate input manifests, schema, SQLite identity/cutoff and runtime protocol; freeze before fitting"
+output = "protocol files/hash and run manifest"
+[[execution]]
+owner_scope = "Thanh with Tam: feature availability"
+order = 2
+task = "extract current-month context and past-only predecessor features without changing labels or sample availability"
+output = "samples.csv with full feature order and missing flags"
+[[execution]]
+owner_scope = "Thanh and Tram with Phuc: proposed and matched baselines"
+order = 3
+task = "fit B1/B2/B4/B5/HeTCo-v0/A1/A4/A6 under fixed matched schedules"
+output = "models, fits.json, predictions.csv"
+[[execution]]
+owner_scope = "Anh with Dang: independent paired evaluation"
+order = 4
+task = "independently verify metric joins, paired deltas and limited exploratory intervals"
+output = "evaluation.json and comparison.csv"
+[[execution]]
+owner_scope = "Phuc and Dang: detection/tracking diagnostic"
+order = 5
+task = "run separately versioned harder synthetic detection/tracking diagnostic"
+output = "AMI/coverage and two tracking-route metrics/confusions"
+[[execution]]
+owner_scope = "Anh and Tam with the full team: evidence and rehearsal"
+order = 6
+task = "run fresh notebook kernel, full regression suite and wheel checks; update report/concise local overview"
+output = "verified midterm deliverables and explicit human/full-study pending items"
+
+[verified_runs]
+research = "research/midterm-context-003"
+harder = "detection-tracking/midterm-harder-003"
+report = "reports/WEEK1_REPORT.md#9-midterm-completion-plan-baselines-and-preliminary-proposed-results"
