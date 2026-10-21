@@ -149,11 +149,22 @@ def main(argv: list[str] | None = None) -> int:
             print(json.dumps({"preparation_output": str(output), "forecast_status": "not_run_by_preparation", "next_stage": "forecast or week1"}))
             return 0
         if args.command == "check":
-            support = {PipelineName.CORE: "prepare_forecast_week1_available",
-                       PipelineName.DETECTION_TRACKING: "synthetic_week1_available",
-                       PipelineName.PREDICTION: "prediction_evaluation_available"}[config.pipeline]
-            generic = "implemented" if config.pipeline == PipelineName.PREDICTION else "scaffold-only"
-            print(json.dumps({"config_status": "valid", "pipeline_status": support, "generic_run_status": generic, **config.to_dict()}, indent=2, ensure_ascii=False))
+            support = {
+                PipelineName.CORE: "prepare_forecast_week1_available",
+                PipelineName.DETECTION_TRACKING: "synthetic_week1_available",
+                PipelineName.PREDICTION: "prediction_evaluation_available",
+            }[config.pipeline]
+            generic = (
+                "implemented"
+                if config.pipeline == PipelineName.PREDICTION
+                else "scaffold-only"
+            )
+            print(json.dumps({
+                "config_status": "valid",
+                "pipeline_status": support,
+                "generic_run_status": generic,
+                **config.to_dict(),
+            }, indent=2, ensure_ascii=False))
             return 0
         _run_selected(config)
     except PipelineNotImplemented as exc:
