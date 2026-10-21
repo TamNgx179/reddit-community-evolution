@@ -356,7 +356,3 @@ Historical reference values reproduced at aa110ac: 2,320 feature rows, 2,065 sou
 Explain that grow and merge recall were zero in the historical model despite its higher aggregate score. The 2015 held-out period was already inspected, so scores are descriptive. Jaccard versus GED scores use different reference labels/populations and are not a controlled improvement. No claim of full original GED, HeTCo, social ground truth or paper novelty is justified yet.
 
 Rehearse a missing-dependency or missing-artifact explanation, immutable output behavior and how to reproduce the notebook from the new demo. Each contributor should explain their own modules, tests, scientific assumptions and remaining limitations. Record actual attendance/rehearsal/peer review only after they occur.
-
-## Integrated group delivery
-
-The sections above retain the 17 October core evidence. The current six-member, three-pipeline delivery and fresh combined verification are recorded in [the group week-one report](../reports/WEEK1_REPORT.md). Its current-run provenance supersedes old status descriptions without changing historical metrics or hashes.
