@@ -444,7 +444,7 @@ def _write_manifest(run_dir: Path, config: RunConfig, start_time: datetime,
         "artifact_hashes": artifact_hashes,
         "unimplemented": [
             "B2_random_forest (Phuc)", "B5_gradient_boosting (Phuc)",
-            "HeTCo (Thanh)", "real Reddit features (Thanh)",
+            "HeTCo", "cross-pair adapter from Reddit features to this synthetic table contract",
         ],
     }
 

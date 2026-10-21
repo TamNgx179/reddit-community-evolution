@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "protocol": "synthetic-planted-undirected-v1",
+  "months": ["2020-01", "2020-02"],
+  "scenarios": ["stable", "grow", "shrink", "merge", "split", "dissolve"],
+  "difficulty": "easy",
+  "generator": {
+    "sampler_version": 1,
+    "rng_protocol": "python-random-sequential-months-sorted-pairs-v1",
+    "p_in": 0.50,
+    "p_out": 0.02,
+    "weight": 1.0,
+    "seeds": {
+      "development": [11, 12, 13],
+      "evaluation": [101, 102, 103]
+    }
+  },
+  "detector": {
+    "gamma": 1.0,
+    "seeds": [0, 1, 2],
+    "canonical_seed": 0
+  },
+  "ordering": {
+    "months": "ascending",
+    "nodes": "user_id_lexicographic",
+    "edges": "source_target_lexicographic",
+    "undirected_endpoints": "source_lt_target"
+  }
+}

@@ -1,5 +1,0 @@
-claim_id,claim,required_experiments,evidence_run_ids,interpretation,status
-H1,Temporal coupling and consensus improve usable stability,E2_E5,,No result yet; must also examine true event changes,not_evaluated
-H2,Future information can inflate evaluation,E3,,No result yet; control confined to train,not_evaluated
-H3,Context and past membership add value beyond structure,E4_E5,,No result yet; require B5 and matched references plus A1_A4,not_evaluated
-NOVELTY,Question or findings advance closest related work,literature_review,,Background papers are insufficient to establish a research gap,unverified

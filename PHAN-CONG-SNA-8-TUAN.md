@@ -63,7 +63,7 @@ reddit-community-evolution/
 │   └── fixtures/               # Dữ liệu tổng hợp nhỏ
 ├── data/                       # Dataset đã duyệt qua Git/LFS; khóa riêng giữ local
 ├── artifacts/                  # Output riêng <pipeline>/<run_id>, không commit
-└── reports/                    # Bảng claim/evidence và đóng góp dạng CSV
+└── reports/WEEK1_REPORT.md      # Báo cáo tổng hợp duy nhất của cả nhóm
 ```
 
 Source chia theo chức năng để dùng lại khi tích hợp; mỗi nhóm có pipeline, config và output riêng, không phụ thuộc artifact nhóm khác trong tuần 1. Mỗi nhóm có thể phát triển và demo bằng notebook riêng, chạy lại được từ kernel sạch theo thứ tự cell. Logic đã ổn định hoặc cần dùng lại chuyển vào src/reddit_sna; notebook import lại, không copy source. Demo notebook đủ input đến evaluation được chấp nhận trong phạm vi nhóm; CLI tiếp tục phục vụ tự động hóa và tích hợp. Thêm thuật toán vào module tương ứng, không tạo cây proposed/baseline hoặc thư mục source theo tên người. Tâm tạo repository, mời năm thành viên còn lại và hướng dẫn cài đặt. Theo quyết định công bố dữ liệu sau đó của chủ repo, 15 corpus gốc và processed lịch sử đã được đưa lên Git/LFS kèm checksum. Khóa riêng, bảng ánh xạ danh tính, `.venv`, artifact runtime và bộ mẫu chấm nhãn vẫn giữ local.
@@ -289,3 +289,7 @@ Ba prototype độc lập là đầu ra tuần 1. Pipeline Reddit tích hợp to
 - [ ] Nhóm tập trình bày, đi học và báo cáo ngày 22/10; dàn ý slide không phải bằng chứng đã thuyết trình.
 
 Lệnh demo và nội dung trình bày ở `docs/RUNBOOK.md` và `docs/RESULTS.md#presentation-outline`. Các hạn chế về ground truth, lớp thiếu và coverage phải được trình bày cùng điểm số. HeTCo đầy đủ và detector đề xuất thuộc các tuần sau, không phải thiếu sót bắt buộc của baseline tuần 1.
+
+## Bản tích hợp toàn nhóm tuần 1
+
+Báo cáo hiện hành của cả sáu thành viên ở [reports/WEEK1_REPORT.md](reports/WEEK1_REPORT.md). Phúc–Đăng được tích hợp theo chức năng vào src, không còn thư mục document theo cá nhân. Các báo cáo/CSV phân tán đã được hợp nhất; dữ liệu runtime và bản cũ lưu local. Trạng thái nghiên cứu/hoạt động con người chỉ được ghi hoàn tất khi có bằng chứng thật.

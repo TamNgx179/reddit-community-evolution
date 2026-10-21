@@ -54,7 +54,7 @@ class WeekOneDeliveryTests(CorpusCase):
         packaged = subprocess.run(command, cwd=project, capture_output=True, text=True)
         self.assertEqual(packaged.returncode, 0, packaged.stderr)
         documents = ("README.md", "PHAN-CONG-SNA-8-TUAN.md", "docs/METHODS.md",
-                     "docs/RUNBOOK.md", "docs/RESULTS.md", "docs/LABEL_REVIEW.md")
+                     "docs/RUNBOOK.md", "docs/RESULTS.md", "docs/LABEL_REVIEW.md", "reports/WEEK1_REPORT.md")
         with zipfile.ZipFile(archive) as bundle:
             self.assertEqual({name for name in bundle.namelist() if name.endswith(".md")}, set(documents))
             for relative in documents:

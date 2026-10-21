@@ -13,7 +13,7 @@ Read [the runbook](RUNBOOK.md) for commands and [results](RESULTS.md) for execut
 - [Features and timing](#features-and-timing)
 - [Jaccard fallback](#jaccard-fallback-semantics)
 
-One functional package, `src/reddit_sna`, serves CLI and notebooks. The implemented core-pair baseline connects ZIP audit → normalization → monthly R → Independent Leiden → Jaccard/GED adaptation → current/history features → temporal baselines → verified evaluation. HeTCo, full original GED, heterogeneous/temporal detection and the synthetic pair demos remain planned. Filenames describe responsibilities; ownership is in the administrative assignment.
+One functional package, `src/reddit_sna`, serves CLI and notebooks. The implemented core-pair baseline connects ZIP audit → normalization → monthly R → Independent Leiden → Jaccard/GED adaptation → current/history features → temporal baselines → verified evaluation. HeTCo, full original GED, heterogeneous/temporal detection remain planned; the independent synthetic pair demos are implemented. Filenames describe responsibilities; ownership is in the administrative assignment.
 
 ## Dependencies and boundaries
 
@@ -42,8 +42,8 @@ Algorithm modules never import CLI or pipelines. The dedicated week-one orchestr
 | `evaluation/causality.py` | Explicitly aligned past graph/partition comparisons through a cutoff |
 | `pipelines/preparation.py` | One stage or raw-to-membership orchestration; stops before tracking |
 | `pipelines/core.py` | Planned complete Reddit pipeline, explicitly unfinished |
-| `pipelines/detection_tracking.py` | Planned independent synthetic graph demo |
-| `pipelines/prediction.py` | Planned independent synthetic table demo |
+| `pipelines/detection_tracking.py`, `pipelines/synthetic_week1.py` | Synthetic development detection plus complete two-split generation/tracking/report demo |
+| `pipelines/prediction.py` | Synthetic community table, temporal split, Majority/Persistence/Logistic Regression and evaluation |
 | `tracking/`, `features/` | Jaccard/GED adaptation, current snapshot features and past-only lineage history |
 | `pipelines/forecast.py`, `pipelines/week1.py` | Temporal baseline training/evaluation and full raw/replay demo orchestration |
 | `reporting/forecast.py`, `reporting/forecast_handoff.py` | Independent table/metric verification, six figure families and source-bound exports |
@@ -97,7 +97,7 @@ Reporting treats manifests as trusted local inputs and checks changes relative t
 
 The supplied rubric allocates A1/A2 50% each and requires paper potential for maximum project credit. Distinguish software correctness, method validation on controlled truth, and out-of-time Reddit results. Passing tests or arranging source does not establish the latter two, novelty or a grade.
 
-`experiments/study.toml` is a draft task/graph/label/split/hypothesis/fairness design. Experiment E1–E5, ablation A1–A7, feature and literature catalogs are planning records; CLI does not enforce them. `reports/claim_evidence.csv` has unverified claims and `contribution_log.csv` is a blank record of actual work, not attendance evidence. Every final result must trace to data/version/reference/config/seed/environment/prediction keys and exclusions.
+`experiments/study.toml` is a draft task/graph/label/split/hypothesis/fairness design. Experiment E1–E5, ablation A1–A7, feature and literature catalogs are planning records; CLI does not enforce them. The single `reports/WEEK1_REPORT.md` records current contributions and evidence; administrative contribution claims do not certify attendance or human acceptance. Every final result must trace to data/version/reference/config/seed/environment/prediction keys and exclusions.
 
 | Next component | Evidence required before claiming completion |
 |---|---|
@@ -238,3 +238,22 @@ search. Macro-F1 and confusion matrices always use the six declared event classe
 absent classes receive zero F1. Per-class support is included. Labels are
 tracker-derived pseudo-labels, so these metrics evaluate prediction of this rule,
 not tracking accuracy against independently annotated truth.
+
+
+## Independent synthetic pair contracts
+
+`benchmarks/config.py`, `scenarios.py`, `dynamic.py`, `graphs.py` and `io.py` generate fixed synthetic memberships/events/links and weighted undirected graph snapshots. Ground truth is defined by the generator, not inferred by the tracker being scored. Dataset identity includes split/scenario/difficulty/generator seed; community IDs are local. Development seeds 11/12/13 and evaluation seeds 101/102/103 are disjoint. The baseline uses p_in=0.50 and p_out=0.02; this is an easy regime, not broad generalization evidence.
+
+`detection/leiden.py` also adapts these public graph/nodes inputs to Independent Leiden; detector seeds 0/1/2 use canonical 0. `evaluation/detection.py` aligns node populations, reports coverage, and computes AMI on eligible partitions. Undefined scores retain a null reason, including constant truth. A null score is neither zero nor perfect detection. Seeds are diagnostics within a dataset, not independent datasets.
+
+The synthetic `tracking.jaccard.track()` API uses Jaccard >=0.30 and a 10% size tolerance; split takes precedence over merge. The existing Reddit `transitions()` API retains threshold 0.25 and exact-size grow/shrink decisions. They are separate protocols with different return contracts. Do not replace one with the other during integration. Final unobserved successors are not fabricated dissolve labels.
+
+`tracking/membership.py` validates multi-month memberships. `evaluation/tracking.py` performs deterministic greedy one-to-one source mapping for scoring only; ground truth never changes tracker assignments. Unmatched truth remains an error column, and extra detector groups remain diagnostics. `reporting/tracking_demo.py` independently reconstructs per-class scores/confusions and pools keys qualified by dataset/reference/month/source. Mean-dataset fixed-six-class F1 differs from pooled F1; both are reported.
+
+`pipelines/synthetic_week1.py` creates an isolated current run: generation/development -> source/version freeze -> evaluation -> two verified tracking routes -> figures. A new local chronological freeze is not a retroactive certification of historical work and not proof of an unseen scientific test, because recipes were inspected before integration. Original T02 replay keeps its fixed pins. New current-run replay accepts an explicit manifest reference produced by its parent run, not a silently substituted historical hash.
+
+## Synthetic prediction table contract
+
+`benchmarks/community_table.py` supplies a reproducible synthetic community-month table. `evaluation/splits.py` assigns whole label-month train/validation/test groups; final unlabeled observations stay counted separately. `sample_checks.py` checks keys, schema, availability, labels, splits and missing-value constraints. Majority uses the training majority, Persistence uses only available past labels with a Majority fallback, and Logistic Regression fits its scaler/model on training rows. This does not make the synthetic label mechanism a realistic model of Reddit.
+
+`evaluation/metrics.py` exports `macro_f1` across present truth classes and `macro_f1_six` across all declared events, plus balanced accuracy, per-class support and six-class confusion matrices. `reporting/prediction.py` checks hashes and full prediction keys and recomputes metrics/confusions before plotting. The baseline pipeline status `complete_through_baselines` includes its completed evaluation stage and does not claim B2/B5/HeTCo implementation.

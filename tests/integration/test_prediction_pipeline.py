@@ -14,6 +14,7 @@ import json
 import random
 import string
 import unittest
+import tempfile
 from pathlib import Path
 
 
@@ -31,21 +32,16 @@ def _rand_id(prefix: str = "itest") -> str:
 
 
 class TestPredictionPipeline(unittest.TestCase):
-    """Integration tests using the real artifacts directory in the project root.
-
-    The config boundary check requires output_root inside project_root/artifacts.
-    Each test uses a unique run_id. Artifacts are not committed (.gitignore).
-
-    NOTE: parents[2] is correct here:
-      parents[0] = tests/integration
-      parents[1] = tests
-      parents[2] = repo root
-       parents[3] would resolve outside the repo (wrong).
-    """
+    """Use real synthetic execution in a temporary project, preserving user artifacts."""
 
     @classmethod
     def setUpClass(cls):
-        cls.project_root = (Path(__file__).parents[2]).resolve()
+        cls.temporary = tempfile.TemporaryDirectory(prefix="prediction-integration-")
+        cls.addClassCleanup(cls.temporary.cleanup)
+        cls.project_root = Path(cls.temporary.name)
+        (cls.project_root / "configs").mkdir()
+        (cls.project_root / "configs/prediction.toml").write_bytes(
+            (Path(__file__).resolve().parents[2] / "configs/prediction.toml").read_bytes())
         cls.artifact_root = cls.project_root / "artifacts"
         cls.artifact_root.mkdir(parents=True, exist_ok=True)
 

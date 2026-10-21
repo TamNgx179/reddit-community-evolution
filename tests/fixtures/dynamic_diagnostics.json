@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "artifact_type": "sampler-test-fixtures",
+  "protocol": "tiny-sampler-diagnostics-v1",
+  "generator_seed": 11,
+  "observed_months": ["2020-01", "2020-02"],
+  "cases": [
+    {
+      "case_id": "zero-edges",
+      "p_in": 0,
+      "p_out": 0,
+      "groups_by_month": {
+        "2020-01": {"A": ["a", "b"], "K": ["k"], "S": ["s"]},
+        "2020-02": {"C": ["a", "b"], "K": ["k"], "T": ["s"]}
+      },
+      "expected_counts": {
+        "2020-01": {"nodes": 4, "edges": 0, "communities": 3, "isolates": 4},
+        "2020-02": {"nodes": 4, "edges": 0, "communities": 3, "isolates": 4}
+      }
+    },
+    {
+      "case_id": "small-groups",
+      "p_in": 1,
+      "p_out": 0,
+      "groups_by_month": {
+        "2020-01": {"A": ["a", "b"], "K": ["k"], "S": ["s"]},
+        "2020-02": {"C": ["a", "b"], "K": ["k"], "T": ["s"]}
+      },
+      "expected_counts": {
+        "2020-01": {"nodes": 4, "edges": 1, "communities": 3, "isolates": 2},
+        "2020-02": {"nodes": 4, "edges": 1, "communities": 3, "isolates": 2}
+      }
+    },
+    {
+      "case_id": "empty-singleton",
+      "p_in": 1,
+      "p_out": 1,
+      "groups_by_month": {"2020-01": {}, "2020-02": {"S": ["s"]}},
+      "expected_counts": {
+        "2020-01": {"nodes": 0, "edges": 0, "communities": 0, "isolates": 0},
+        "2020-02": {"nodes": 1, "edges": 0, "communities": 1, "isolates": 1}
+      }
+    },
+    {
+      "case_id": "singleton-empty",
+      "p_in": 1,
+      "p_out": 1,
+      "groups_by_month": {"2020-01": {"S": ["s"]}, "2020-02": {}},
+      "expected_counts": {
+        "2020-01": {"nodes": 1, "edges": 0, "communities": 1, "isolates": 1},
+        "2020-02": {"nodes": 0, "edges": 0, "communities": 0, "isolates": 0}
+      }
+    }
+  ]
+}

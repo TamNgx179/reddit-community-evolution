@@ -29,8 +29,8 @@ class CliTests(ProjectCase):
         self.assertEqual(listing.returncode, 0, listing.stderr)
         self.assertIn("core: prepare/forecast/week1 implemented", listing.stdout)
         self.assertIn("generic run remains planned", listing.stdout)
-        self.assertIn("detection-tracking: scaffold-only", listing.stdout)
-        self.assertIn("prediction: scaffold-only", listing.stdout)
+        self.assertIn("detection-tracking: generation/detection/tracking/synthetic-week1 implemented", listing.stdout)
+        self.assertIn("prediction: table/split/baselines/evaluation implemented", listing.stdout)
 
     def test_config_check_reports_resolved_paths_without_writing(self):
         result = self.cli("check", "--config", self.config("core"))
@@ -60,7 +60,7 @@ class CliTests(ProjectCase):
 
     def test_unimplemented_runs_fail_without_producing_artifacts(self):
         original = self.marker.read_bytes()
-        for pipeline in ("core", "detection-tracking", "prediction"):
+        for pipeline in ("core", "detection-tracking"):
             with self.subTest(pipeline=pipeline):
                 result = self.cli("run", "--config", self.config(pipeline))
                 self.assertEqual(result.returncode, 3, result.stderr)

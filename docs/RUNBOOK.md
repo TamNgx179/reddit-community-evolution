@@ -21,7 +21,7 @@ Use Python 3.11+ and Git LFS. In PowerShell at the repository root:
 git lfs install
 git lfs pull --include="data/raw/*.zip" --exclude=""
 python -m venv .venv
-& .\.venv\Scripts\python.exe -m pip install -e '.[graph,forecast,notebook]'
+& .\.venv\Scripts\python.exe -m pip install -e '.[graph,forecast,evaluation,prediction,notebook]'
 & .\.venv\Scripts\python.exe -m ipykernel install --prefix .venv --name reddit-sna --display-name 'Reddit SNA (.venv)'
 & .\.venv\Scripts\python.exe -m reddit_sna week1 --config configs/core.toml --run-id week1-demo
 ```
@@ -225,7 +225,7 @@ Additional current checks verify GED ambiguity/history, future-append invariance
 & .\.venv\Scripts\python.exe scripts/package_forecast.py --run artifacts/core/week1-demo/forecast --output artifacts/core/forecast-handoff-001.zip
 ```
 
-The local ZIP includes verified forecast outputs and all six navigation documents in their repository layout. Document-to-document links work after extraction. Notebook links require the repository checkout; notebooks and preparation artifacts are not included. It excludes raw datasets, private identities and annotation packages. Create the matching local preparation artifacts before replaying notebook or raw-demo commands.
+The local ZIP includes verified forecast outputs and canonical navigation documents and the single group report in their repository layout. Document-to-document links work after extraction. Notebook links require the repository checkout; notebooks and preparation artifacts are not included. It excludes raw datasets, private identities and annotation packages. Create the matching local preparation artifacts before replaying notebook or raw-demo commands.
 
 ## Environment constraints and interpretation
 
@@ -234,3 +234,39 @@ Run the full synthetic suite using `python -m unittest discover -s tests -v`. Se
 Read `summary.json`, forecast `quality.json` and `metrics.json` together. Keep zero-support events and the excluded population visible. Scores measure prediction of tracker-derived pseudo-labels, not independently established social events. Previously inspected 2015 held-out scores remain descriptive. Do not compare Jaccard/GED scores as a controlled improvement because their eligible populations and label references differ.
 
 Use `LABEL_REVIEW.md` to prepare independent review, `experiments/followup_protocol.toml` for the pending follow-up protocol and `RESULTS.md#presentation-outline` for the pair's presentation outline. Software evidence does not establish annotation completion, attendance, accepted collaborator invitations or paper novelty.
+
+
+## Complete independent synthetic detection and tracking
+
+Use the declared extras in a new checkout:
+
+```powershell
+& .\.venv\Scripts\python.exe -m pip install -e '.[graph,forecast,evaluation,prediction,notebook]'
+& .\.venv\Scripts\python.exe -m reddit_sna synthetic-week1 --config configs/detection_development.toml --run-id week1-synthetic-demo
+```
+
+The run ID must be new. No legacy ZIP is required. The command creates `artifacts/detection-tracking/week1-synthetic-demo/` with an isolated generation workspace, verified development/evaluation bundle, tracking runs for both routes/splits, eight figure families and `pair-reference.json`. This is a current descriptive rerun of already inspected recipes. Existing artifacts and historical pins are preserved. A local source freeze precedes local evaluation; it is not evidence of historical partner acceptance or a scientifically unseen test.
+
+Open `notebooks/detection_tracking/01_synthetic_demo.ipynb`, select the project environment and restart/run all. Its default reference is the run above. To use another run, set `REDDIT_SYNTHETIC_REFERENCE` to that run's `pair-reference.json` before starting the kernel. All fourteen code cells read verified outputs and show eight figure families. Source notebooks for the synthetic pairs are output-free; execution reports are local.
+
+Automated fresh-kernel replay:
+
+```powershell
+& .\.venv\Scripts\python.exe scripts/replay_synthetic_notebook.py --project . --bundle artifacts/detection-tracking/week1-synthetic-demo/bundle --reference artifacts/detection-tracking/week1-synthetic-demo/pair-reference.json --tracking-development artifacts/detection-tracking/week1-synthetic-demo/tracking/development --tracking-evaluation artifacts/detection-tracking/week1-synthetic-demo/tracking/evaluation --output artifacts/detection-tracking/synthetic-notebook-001 --report artifacts/verification/synthetic-notebook-001
+```
+
+Output/report and sibling `-cases`/`-tracking` directories must be new. Legacy T02 recipients may continue using `scripts/run_tracking_handoff.py` with the exact old input, and use `configs/legacy-handoff-reference.json` as the explicit notebook reference. `configs/legacy-replay-constraints-py312.txt` preserves the author's historical Python 3.12 replay environment snapshot; it does not redefine the current installation or certify all platforms. Do not change historical pins or reseal old freezes to make current outputs look historical.
+
+## Complete independent synthetic prediction
+
+```powershell
+& .\.venv\Scripts\python.exe -m reddit_sna.pipelines.prediction --config configs/prediction.toml --run-id week1-prediction-demo
+```
+
+This needs the `prediction` extra, including declared pandas/numpy/scikit-learn dependencies. Outputs live under `artifacts/prediction/week1-prediction-demo/`; a complete run has samples/catalog, split/summary, predictions, models/config, metrics/per-class/confusions and a manifest whose evaluation stage is complete. The historical status name is `complete_through_baselines`.
+
+Open `notebooks/prediction/01_baseline_demo.ipynb` for verified results, class support, both F1 conventions, each baseline's test confusion and actual errors. Set `REDDIT_PREDICTION_RUN` to another repository-relative run path when needed. Restart/run all six code cells. Neither this table nor its results are Reddit observations.
+
+## Group report and publication
+
+`reports/` contains only [WEEK1_REPORT.md](../reports/WEEK1_REPORT.md). It records individual responsibilities, three independent demonstrations, actual result provenance, error analysis and pending research obligations. Former role-specific report/spec folders were consolidated; originals remain in the maintainer's local verification record, not as product dependencies. Keep private identities, annotation cases and runtime artifacts local. A software check cannot establish attendance, original partner acceptance or human labels.
