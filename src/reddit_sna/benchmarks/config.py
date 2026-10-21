@@ -39,14 +39,15 @@ def validate_benchmark_config(config: dict) -> dict:
     """Reject unsupported fields, invalid parameters and overlapping split seeds.
 
     Return the input object without coercion or mutation. This schema supports
-    the six-case, two-month easy protocol; diagnostic/reduced protocols require
-    a separately versioned design. It does not run or freeze any evaluation.
+    the original schema-1 easy protocol and a separately versioned schema-2
+    harder regime. It does not run or freeze any evaluation.
     """
     _table(config, {"schema_version", "protocol", "months", "scenarios", "difficulty",
                     "generator", "detector", "ordering"}, "benchmark")
-    if type(config["schema_version"]) is not int or config["schema_version"] != 1:
-        raise ConfigError("benchmark schema_version must be 1")
-    if config["protocol"] != GRAPH_PROTOCOL or config["difficulty"] != "easy":
+    if type(config["schema_version"]) is not int or config["schema_version"] not in (1, 2):
+        raise ConfigError("benchmark schema_version must be 1 or 2")
+    expected_difficulty = "easy" if config["schema_version"] == 1 else "harder"
+    if config["protocol"] != GRAPH_PROTOCOL or config["difficulty"] != expected_difficulty:
         raise ConfigError("unsupported benchmark protocol or difficulty")
     months = config["months"]
     if not isinstance(months, list) or len(months) != 2:
@@ -67,6 +68,8 @@ def validate_benchmark_config(config: dict) -> dict:
         value = generator[name]
         if type(value) not in (int, float) or not 0 <= value <= 1:
             raise ConfigError(f"{name} must be a finite number in [0, 1]")
+    if config["schema_version"] == 2 and (generator["p_in"], generator["p_out"]) != (.25, .10):
+        raise ConfigError("harder schema-2 regime fixes p_in=.25 and p_out=.10")
     if type(generator["weight"]) not in (int, float) or generator["weight"] != 1:
         raise ConfigError("this sampler supports only weight 1.0")
     _table(generator["seeds"], {"development", "evaluation"}, "generator.seeds")

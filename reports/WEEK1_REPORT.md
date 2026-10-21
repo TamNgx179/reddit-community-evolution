@@ -1,5 +1,7 @@
 # Week 1 Report — Reddit Community Evolution
 
+**Midterm update:** Section 9 records the new enforced experiment, controlled baseline/proposed/ablation results and harder synthetic diagnostic. Sections 1–8 retain the original three-pair baseline evidence and its scope.
+
 **Team:** Tâm, Thanh, Phúc, Đăng, Trâm, Anh. **Work period:** October 15–21, 2026. **Scheduled presentation:** October 22, 2026. This report documents the responsibilities, methods, execution evidence, and limitations of all three pairs. Attendance, presentation delivery, and instructor assessment require separate evidence.
 
 > Integration verified on October 21, 2026: all three demos and four notebooks completed; 558/558 tests passed with no skips. The Git bases were main `b17f005` and the Phúc–Đăng branch `ff15259`; pre-commit runs recorded source hashes and working-tree state. These are descriptive baseline results, not certification of an unseen test or a maximum grade.
@@ -187,3 +189,75 @@ A clean installation with all declared extras and successful `pip check` is reco
 Items requiring human or historical evidence remain pending: independent dual annotation, agreement/adjudication, verification of Đăng's historical artifacts/freeze, teammate acceptance, rehearsal/attendance, and confirmation of an unseen evaluation period.
 
 Progress toward paper potential requires comparison with the closest related work, harder benchmarks and independent seeds, fair protocols and label populations, question-driven ablations, controlled SNA insights with alternative explanations, and transparent negative results. A complete software workflow provides a foundation; it does not guarantee a grade of 9–10.
+
+## 9. Midterm completion: plan, baselines and preliminary proposed results
+
+This section updates the engineering status after the original three-pair Week 1 acceptance above. It supplies an enforced experimental plan, controlled baseline results and preliminary results of a **project-defined HeTCo-v0 context/history forecasting prototype**. It does not claim full final HeTCo, T/temporal/consensus detection, original GED reproduction, human validation, novelty or an unseen test.
+
+### 9.1. Detailed experimental plan actually executed
+
+- Input: verified `core/week1-demo-input` preparation and `core/week1-group-core-001/forecast`, fixed Independent Leiden/GED-adapted reference. Keep all 1,333 eligible samples, 732 unresolved exclusions and original feature/label values.
+- Runtime protocol: `configs/midterm.toml`; scheduling/ownership: `experiments/midterm_plan.toml` and the administrative assignment. The run archives protocol bytes/resolved feature order, exact model parameters, source/build bytes, Git state, input/sample/label provenance and dependency versions before fitting.
+- Feature blocks: S = five current structural attributes; H = seven past-only history attributes; L = predecessor structural means/missing flag; C = normalized corpus entropy, log thread activity, active-member fraction and within-month external co-thread exposure. Only records in feature month t enter C; predecessor information is available through t. No future-completed thread or t→t+1 label enters features.
+- Matched comparison: B5 uses S+H+L and HeTCo-v0 adds C, sharing the estimator family, parameters, seeds and one-config/no-search budget. A1 removes C and exactly reproduces B5 predictions; A4 removes four membership-dynamics rates; A6 removes L. B1 Majority/Persistence, B4 LR and B2 Random Forest are additional controls, not an assertion that all named baselines reproduce a particular paper.
+- Seeds 42/43/44; HGB learning_rate=.05, 100 iterations, depth 3, seven leaves, min leaf 20, L2=1, balanced class weights, internal early stopping disabled. Train-only LR scaler; explicit Majority fallback for single-class windows and missing persistence history. No post-outcome tuning.
+- Main holdout: October–December 2015 label months, train earlier months; 571 evaluation samples per seed. Rolling origins: July–December 2015, fit earlier label months only; 982 pooled evaluation samples per seed. Both use already inspected development data; rolling/main results are not independent confirmation.
+- Primary metric: fixed-six-class macro-F1; retain present-class F1, supported-class balanced accuracy, precision/recall/F1/support, confusion, monthly results and fallback/exclusions. All differences below retain the same label/sample reference.
+
+
+Actual run: `research/midterm-context-003`, status `complete`, 140.607 seconds within the recorded pipeline scope. Protocol SHA-256: `dcdf3265016b8e7ea0a1a959d967425b62048f260ca792e78683209b6e393489`. All 189 local models were reloaded to reproduce predictions; 54 score groups matched independent scikit-learn computations. Native peak memory remains unmeasured, with an explicit null/reason.
+
+### 9.2. Controlled main-holdout results
+
+| Model / variant | Mean six-class macro-F1 | Delta vs matched B5 | Fallback samples/seed |
+|---|---:|---:|---:|
+| B1_majority | 0.159671533 | -0.129341068 | 0 |
+| B1_persistence | 0.157729696 | -0.131282905 | 538 |
+| B4_logreg | 0.360540447 | +0.071527846 | 0 |
+| B2_random_forest | 0.305448022 | +0.016435422 | 0 |
+| B5_matched_boosting | 0.289012601 | +0.000000000 | 0 |
+| HeTCo_v0 | 0.291182340 | +0.002169739 | 0 |
+| A1_no_context | 0.289012601 | +0.000000000 | 0 |
+| A4_no_dynamics | 0.288224920 | -0.000787681 | 0 |
+| A6_no_lag | 0.298035584 | +0.009022983 | 0 |
+
+HeTCo-v0 changes B5 by **+0.002170 macro-F1**, below the draft +0.02 target; B4 LR remains stronger (0.360540 versus 0.291182). Thus the prototype is executable, but these results do not establish a forecasting advantage over the strongest simple control. Removing lag raises the main score to 0.298036; more feature blocks do not automatically help. Persistence falls back on 538/571 samples, which limits its interpretation on this reference.
+
+Context inspection finds 1190/1333 eligible rows with zero observed corpus entropy. This is a sparse explanatory signal, not evidence of ideological homogeneity: zero can reflect one observed context or no authored observation. A feature-availability/context-distribution diagnostic is retained rather than assuming every added context feature is informative.
+
+Stable has zero main test support and dissolve remains 525/571. Labels are tracker-derived proxies. The method cannot be judged from aggregate F1 alone; the notebook retains class confusions and monthly behavior.
+
+### 9.3. Rolling diagnostics and limited uncertainty
+
+Across July–December rolling origins, B5 is 0.277682938, HeTCo-v0 0.321836017, and B4 LR 0.378104305. The context delta versus B5 is +0.044153080. This diagnostic uses refitting on earlier months; it is a different estimand from the fixed main holdout, not a replacement selected because it looks better.
+
+The predeclared moving-block exercise uses six months, block length 2, 1,000 paired draws, seed 2026, averaging seed-specific deltas within each draw. The exploratory HeTCo-v0 minus B5 95% percentile interval is **[-0.004065639, 0.132229204]**, crossing zero. No interval is issued for the three-month main holdout under the declared support policy. Limited inspected temporal support and rare classes prevent confirmation of H3, even where a point estimate exceeds +0.02. Seed repeats do not multiply independent month support.
+
+### 9.4. Harder synthetic diagnostic
+
+Actual run: `detection-tracking/midterm-harder-003`, complete; 103.364 recorded seconds. Recipe/protocol schema 2 fixes p_in=.25/p_out=.10 and generator seeds 21/22/23 (development), 201/202/203 (evaluation), with detector seeds 0/1/2. Original easy schema-1 files, thresholds and trusted historical pins remain unchanged.
+
+Evaluation canonical AMI is **0.224239981** over 33 valid/3 missing rows; mean coverage 1.000000.
+
+| Split / route | Support | Pooled event macro-F1 | Correct | Matched coverage | Extra detector sources |
+|---|---:|---:|---:|---:|---:|
+| development / truth_tracking | 39 | 1.000000000 | 39/39 | 1.000000 | 0 |
+| development / detector_tracking | 39 | 0.130291005 | 5/39 | 0.794872 | 50 |
+| evaluation / truth_tracking | 39 | 1.000000000 | 39/39 | 1.000000 | 0 |
+| evaluation / detector_tracking | 39 | 0.112227539 | 6/39 | 0.871795 | 42 |
+
+Truth tracking still fits the designed scenarios, while the harder detector route degrades substantially. This supports error-propagation analysis, not the general correctness of the tracker on arbitrary networks or confirmation of temporal/consensus detection. Both null and unmatched/extra cases remain visible. Mean-dataset metrics are also retained in the run and must not be confused with pooled scores.
+
+### 9.5. Verification and instructor-deliverable status
+
+The current full suite passed **584/584 tests** (exit 0; 592.494 runner seconds). The new notebook [03_midterm_research.ipynb](../notebooks/core/03_midterm_research.ipynb) executed in a fresh kernel: **7 code cells, 7 figure outputs, no errors**. Its independently verified tables/figures cover population, model comparison, ablation, months, class confusion, context distributions and exploratory intervals. New notebook caches and run artifacts remain local; only source and reviewed aggregate report are in publication scope.
+
+| Instructor deliverable | Evidence now available | Boundary |
+|---|---|---|
+| Detailed experimental plan | Enforced protocol, formulas, fixed budgets/seeds/splits, run order and per-area responsibilities | Development plan frozen before these new fits, not a pre-exposure unseen preregistration |
+| Baseline results | Three original pair demos plus new matched B1/B2/B4/B5 comparisons | Scores refer to their declared populations and references |
+| Preliminary proposed results | Actual HeTCo-v0 predictions, controlled B5/A1/A4/A6 results, error analysis and a fresh notebook | Preliminary feature forecaster; no guarantee of positive effect or paper novelty |
+
+For rehearsal, explain the dataset and causal graph first, then the fixed reference/sample population, matched experiment, unfavorable results, and next steps. Each member should identify their module/input/output and one failure mode; this report cannot certify attendance or understanding.
+
+Remaining human/full-study work: independent annotation/agreement/adjudication, historical artifact acceptance, verified novelty against closest work, full T/temporal/consensus and reference-sensitivity experiments, adequate temporal uncertainty, and a confirmed untouched evaluation period. These are not silently marked complete by the midterm prototype. The three software-backed midterm deliverables have evidence; final research/paper potential remains open.

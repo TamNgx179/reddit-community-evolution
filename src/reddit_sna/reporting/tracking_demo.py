@@ -51,6 +51,13 @@ def read_tracking_run(directory, *, split, expected_input_sha256=None):
              and _sha(root / "tracker-config.json") == meta["tracker_config_sha256"], "tracking config mismatch")
     prefix, seeds = ("dev", (11, 12, 13)) if split == "development" else ("eval", (101, 102, 103))
     expected = {f"{prefix}-{case}-easy-g{seed}" for case in SCENARIOS for seed in seeds}
+    if "source_recipe_sha256" in meta:
+        from reddit_sna.benchmarks.config import load_benchmark_config, dataset_schedule
+        _require(meta.get("replay_mode") == "current_source" and expected_input_sha256 is not None
+                 and _sha(root / "source-recipe.json") == meta["source_recipe_sha256"],
+                 "current tracking recipe requires an explicit source pin")
+        recipe = load_benchmark_config(root / "source-recipe.json")
+        expected = {r["dataset_id"] for r in dataset_schedule(recipe, split)}
     _require(meta["datasets"] == 18 and set(meta["summaries"]) == expected
              and {p.name for p in (root / "datasets").iterdir()} == expected, "tracking dataset schedule mismatch")
     records, dataset_scores = [], []

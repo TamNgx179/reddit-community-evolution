@@ -13,7 +13,7 @@ Read [the runbook](RUNBOOK.md) for commands and [results](RESULTS.md) for execut
 - [Features and timing](#features-and-timing)
 - [Jaccard fallback](#jaccard-fallback-semantics)
 
-One functional package, `src/reddit_sna`, serves CLI and notebooks. The implemented core-pair baseline connects ZIP audit → normalization → monthly R → Independent Leiden → Jaccard/GED adaptation → current/history features → temporal baselines → verified evaluation. HeTCo, full original GED, heterogeneous/temporal detection remain planned; the independent synthetic pair demos are implemented. Filenames describe responsibilities; ownership is in the administrative assignment.
+One functional package, `src/reddit_sna`, serves CLI and notebooks. The implemented core-pair baseline connects ZIP audit → normalization → monthly R → Independent Leiden → Jaccard/GED adaptation → current/history features → temporal baselines → verified evaluation. Full final HeTCo, original GED and heterogeneous/temporal detection remain planned; the separate preliminary context/history forecasting prototype is described below; the independent synthetic pair demos are implemented. Filenames describe responsibilities; ownership is in the administrative assignment.
 
 ## Dependencies and boundaries
 
@@ -257,3 +257,30 @@ The synthetic `tracking.jaccard.track()` API uses Jaccard >=0.30 and a 10% size 
 `benchmarks/community_table.py` supplies a reproducible synthetic community-month table. `evaluation/splits.py` assigns whole label-month train/validation/test groups; final unlabeled observations stay counted separately. `sample_checks.py` checks keys, schema, availability, labels, splits and missing-value constraints. Majority uses the training majority, Persistence uses only available past labels with a Majority fallback, and Logistic Regression fits its scaler/model on training rows. This does not make the synthetic label mechanism a realistic model of Reddit.
 
 `evaluation/metrics.py` exports `macro_f1` across present truth classes and `macro_f1_six` across all declared events, plus balanced accuracy, per-class support and six-class confusion matrices. `reporting/prediction.py` checks hashes and full prediction keys and recomputes metrics/confusions before plotting. The baseline pipeline status `complete_through_baselines` includes its completed evaluation stage and does not claim B2/B5/HeTCo implementation.
+
+## Midterm context/history research contract
+
+`research` is a separate, fixed-reference development experiment. It does not change the three original pair demos or claim to implement full T/temporal/consensus detection. **HeTCo-v0** is this project's preliminary feature-based context/history forecaster, not a reproduced external algorithm or a novelty claim.
+
+The command verifies a canonical preparation store and a completed GED/history forecast, including manifest linkage, identity scope, month cohort and membership reference. Every variant uses the same eligible sample keys and label-reference ID. `configs/midterm.toml` is strictly validated and copied/resolved into the output before the first fit. The run records the protocol hash, freeze/first-fit timestamps, source/code/dependency hashes, model inventory, predictions, fit windows, exclusions and resource scope. Previously inspected 2015 data remain development data after this freeze.
+
+Feature blocks are S (five structural features), H (seven past-only history features), L (lagged predecessor structure and missing flag), and C (four context attributes). For each community C at t:
+
+| Context attribute | Exact observation and formula |
+|---|---|
+| subreddit_entropy | Authored-record corpus frequencies among community members in t; `-sum(p*log(p))/log(15)`; zero without observed authored records |
+| thread_activity | `log1p(number of distinct roots authored in t by members / community size)` |
+| active_member_fraction | Distinct members authoring valid-user records in t / community size |
+| co_thread_external_exposure | Across roots observed in t, let a be distinct community participants and n all valid-user participants; `sum(a*(n-a))/sum(a*(n-1))`, zero if denominator is zero |
+
+Only records whose stored month and UTC timestamp agree with t are accepted. Corpus IDs must belong to the declared 15-corpus inventory. Thread participants are unique within the current month, including valid authors outside the detected partition; no future thread completion is consumed. Exposure uses counts instead of generating a quadratic co-thread clique, and therefore does not constitute T-layer graph detection.
+
+L contains equal-predecessor means of size, density and internal weight from accepted t−1→t links, plus `lag_missing`. Missing history has zero lag values and a flag. Persistence uses eligible predecessor source events already known at t, with deterministic majority/lexical tie resolution; absent history falls back to training Majority. Outgoing t→t+1 labels cannot enter these inputs.
+
+B1 Majority/Persistence and B4 LR provide simple controls; B2 is a project Random Forest adaptation. B5, HeTCo-v0 and ablations share the exact boosting family, parameters, seeds and zero-search budget. B5 uses S+H+L; HeTCo-v0 adds C; A1 removes C and must reproduce B5 predictions exactly; A4 removes four membership-dynamics rates; A6 removes L. B4 uses the existing S+H features. Single-class training is explicitly recorded as a Majority fallback.
+
+Main evaluation preserves the October–December 2015 label-month holdout. Six rolling diagnostics for July–December fit earlier label months only, with no test-driven tuning. Primary scoring is fixed-six-class macro-F1; also report present-class macro-F1, supported-class balanced accuracy, per-class precision/recall/F1/support, confusion matrices, monthly scores and fallback/exclusion counts. The independent reporting consumer reconstructs these from complete matched prediction keys and rejects semantic inconsistencies even if a file hash is updated.
+
+No interval is provided for the three-month main holdout under this protocol. Exploratory rolling uncertainty uses paired moving month blocks (length 2, 1,000 draws, seed 2026); seed-specific pooled deltas versus B5 are averaged inside each draw. All variants use the same resampled months. Six inspected months provide limited support: this is not an unseen confidence claim or confirmation of H3. Native peak memory is unmeasured and remains null with a reason; fit wall times include serialization/reload checks.
+
+The harder synthetic diagnostic uses recipe/protocol schema 2, difficulty `harder`, p_in=.25, p_out=.10, development seeds 21/22/23 and evaluation seeds 201/202/203. Its graph sampler semantics remain unchanged. Schema 1 retains its original `easy` restriction and archived hashes/pins. Both regimes report detection and truth/detector tracking separately; a harder baseline run does not complete the proposed temporal/consensus H1 experiment.

@@ -35,7 +35,7 @@ def _evaluation_driver(project):
     return module.run_frozen_evaluation
 
 
-def run_demo(config_path, run_id):
+def run_demo(config_path, run_id, *, protocol_path=None):
     """Generate both fixed splits, freeze before local evaluation, track and plot.
 
     These recipes have already been inspected. A chronological local freeze is
@@ -44,6 +44,7 @@ def run_demo(config_path, run_id):
     cannot be hidden or mislabeled as a first historical freeze.
     """
     from reddit_sna.benchmarks.freeze import create_benchmark_freeze
+    from reddit_sna.benchmarks.protocol import load_benchmark_protocol
     from reddit_sna.detection.leiden import dependencies
     from reddit_sna.pipelines.detection_tracking import run_synthetic_benchmark
     from reddit_sna.reporting.synthetic_handoff import inspect_synthetic_handoff
@@ -64,9 +65,10 @@ def run_demo(config_path, run_id):
         raise RuntimeError('Install the project extras: .[graph,evaluation,notebook]') from exc
     evaluate = _evaluation_driver(config.project_root)
     recipe_root = config.project_root / "configs"
-    for name in ("benchmark_week1.json", "benchmark_week1_protocol.json"):
-        if not (recipe_root / name).is_file():
-            raise ValueError(f"Missing versioned benchmark input: {name}")
+    plan = load_benchmark_protocol(Path(protocol_path) if protocol_path else recipe_root / "benchmark_week1_protocol.json")
+    recipe_names = (plan.benchmark_path.name, plan.protocol_path.name)
+    if len(set(recipe_names)) != 2:
+        raise ValueError("Benchmark and protocol filenames must differ")
     output.mkdir(parents=True, exist_ok=False)
     started = perf_counter()
     manifest = dict(status="started", artifact_type="synthetic-week1-demo",
@@ -79,14 +81,14 @@ def run_demo(config_path, run_id):
         workspace = output / "workspace"
         configs = workspace / "configs"
         configs.mkdir(parents=True)
-        for name in ("benchmark_week1.json", "benchmark_week1_protocol.json"):
-            shutil.copy2(recipe_root / name, configs / name)
+        for source_path in (plan.benchmark_path, plan.protocol_path):
+            shutil.copy2(source_path, configs / source_path.name)
         # All stages use the same TOML bytes, source and dependency versions.
         config_file = configs / "run.toml"
         config_file.write_text('schema_version = 1\npipeline = "detection-tracking"\nproject_root = ".."\nseed = 0\n'
                                '[input]\nkind = "synthetic"\n[output]\nroot = "../artifacts"\nrun_id = "development"\n', encoding="utf-8")
         stage = load_config(config_file)
-        protocol = configs / "benchmark_week1_protocol.json"
+        protocol = configs / plan.protocol_path.name
         development = run_synthetic_benchmark(stage, protocol=protocol)
         freeze = create_benchmark_freeze(replace(stage, run_id="freeze"), development_run=development, protocol=protocol)
         evaluation = evaluate(replace(stage, run_id="evaluation"), freeze=freeze)
@@ -107,7 +109,8 @@ def run_demo(config_path, run_id):
                          source_manifest_sha256=pins, bundle=str(bundle), tracking={s: str(p) for s, p in tracking.items()},
                          interpretation=manifest["interpretation"])
         _save(output / "pair-reference.json", reference)
-        demo = load_synthetic_demo(bundle, expected_delivery_sha256=reference["delivery_manifest_sha256"])
+        selected_id = f"dev-grow-{plan.benchmark['difficulty']}-g{plan.benchmark['generator']['seeds']['development'][0]}"
+        demo = load_synthetic_demo(bundle, expected_delivery_sha256=reference["delivery_manifest_sha256"], dataset_id=selected_id)
         figures.update(build_synthetic_figures(demo))
         notebook = config.project_root / "notebooks/detection_tracking/01_synthetic_demo.ipynb"
         export_synthetic_demo(demo, figures, output / "detection-report", notebook=notebook)

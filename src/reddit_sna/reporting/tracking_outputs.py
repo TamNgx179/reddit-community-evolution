@@ -299,6 +299,16 @@ def _run_split(
         "datasets": 18,
         "summaries": summaries,
     }
+    if current_source is not None:
+        # Archive the recipe whose bytes were already checked by the source
+        # consumer. New schedules must never borrow the historical easy IDs.
+        source_manifest = json.loads((input_run / "manifest.json").read_text(encoding="utf-8"))
+        recipe_info = source_manifest["config_inputs"]["benchmark"]
+        recipe_path = (input_run / recipe_info["archive"]).resolve()
+        if not recipe_path.is_relative_to(input_run) or _digest(recipe_path) != recipe_info["sha256"]:
+            raise ValueError("Tracking source recipe binding mismatch")
+        (destination / "source-recipe.json").write_bytes(recipe_path.read_bytes())
+        metadata["source_recipe_sha256"] = recipe_info["sha256"]
     _write_json(destination / "metadata.json", metadata)
     files = {}
     for path in sorted(destination.rglob("*")):

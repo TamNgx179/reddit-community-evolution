@@ -270,3 +270,21 @@ Open `notebooks/prediction/01_baseline_demo.ipynb` for verified results, class s
 ## Group report and publication
 
 `reports/` contains only [WEEK1_REPORT.md](../reports/WEEK1_REPORT.md). It records individual responsibilities, three independent demonstrations, actual result provenance, error analysis and pending research obligations. Former role-specific report/spec folders were consolidated; originals remain in the maintainer's local verification record, not as product dependencies. Keep private identities, annotation cases and runtime artifacts local. A software check cannot establish attendance, original partner acceptance or human labels.
+
+## Midterm research: explicit inputs and a frozen development protocol
+
+Install the new research extra together with graph and notebook requirements:
+
+```powershell
+& .\.venv\Scripts\python.exe -m pip install -e '.[graph,forecast,evaluation,prediction,research,notebook]'
+& .\.venv\Scripts\python.exe -m reddit_sna research --protocol configs/midterm.toml --preparation-run artifacts/core/week1-demo-input --forecast-run artifacts/core/week1-group-core-001/forecast --run-id midterm-context-003
+& .\.venv\Scripts\python.exe -m reddit_sna synthetic-week1 --config configs/detection_development.toml --protocol configs/benchmark_midterm_protocol.json --run-id midterm-harder-003
+```
+
+These input names identify the previously verified local core runs; they are not bundled runtime data on a new machine. If absent, build a fresh annual core run using `week1`, then pass its `-input` preparation and `forecast` directory explicitly. Keep the protocol's October test boundary and twelve-month source scope. Every output ID must be new. The research command cannot overwrite a run, silently substitute a source or claim a new raw scan from replay.
+
+The research output is `artifacts/research/<run-id>/`: protocol TOML/resolved JSON, eligible samples, predictions, models, fit schedule, independent evaluation/comparison, quality and manifest. Model files are trusted local products; consumers do not unpickle untrusted files. `reporting.research.export_figures(run, new_output)` writes seven figure families into a new separate directory.
+
+Run `notebooks/core/03_midterm_research.ipynb` from the repository root with the project kernel. Set `REDDIT_SNA_PROJECT` if the notebook server starts elsewhere and `REDDIT_RESEARCH_RUN` when selecting a different explicit run. Restart/run all; the notebook verifies every input before displaying derived metrics/figures. New notebook execution outputs remain local unless separately authorized for publication.
+
+The harder synthetic output retains the same bundle/reference/tracking/report layout as the original easy demo, using its own schema-2 recipe/protocol and new run ID. The default `synthetic-week1` invocation still selects the original easy recipe. Neither a new run ID nor the local freeze makes already inspected evaluation recipes scientifically unseen.

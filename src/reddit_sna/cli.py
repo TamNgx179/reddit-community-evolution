@@ -30,13 +30,20 @@ def main(argv: list[str] | None = None) -> int:
         if hasattr(stream, "reconfigure"):
             stream.reconfigure(encoding="utf-8", errors="backslashreplace")
     parser = argparse.ArgumentParser(
-        prog="reddit-sna", description="Reddit SNA: three independent week-one baselines available; HeTCo and proposed research methods remain planned."
+        prog="reddit-sna", description="Reddit SNA: three week-one baselines and a preliminary context/history research experiment; full final HeTCo remains planned."
     )
     subparsers = parser.add_subparsers(dest="command", required=True)
     subparsers.add_parser("pipelines", help="List independent pipelines and implementation status")
     synthetic = subparsers.add_parser("synthetic-week1", help="Rebuild synthetic graphs, detection, tracking and evaluation without a legacy ZIP")
     synthetic.add_argument("--config", type=Path, required=True)
     synthetic.add_argument("--run-id", required=True)
+    synthetic.add_argument("--protocol", type=Path, help="Explicit versioned benchmark protocol; default keeps the original easy recipe")
+    research = subparsers.add_parser("research", help="Run the fixed-reference midterm context/history development experiment")
+    research.add_argument("--protocol", type=Path, required=True)
+    research.add_argument("--preparation-run", type=Path, required=True)
+    research.add_argument("--forecast-run", type=Path, required=True)
+    research.add_argument("--artifact-root", type=Path, default=Path("artifacts"))
+    research.add_argument("--run-id", required=True)
     demo = subparsers.add_parser("week1", help="Run the core-pair raw/replay to verified forecast and figures")
     demo.add_argument("--config", type=Path, required=True)
     demo.add_argument("--run-id", required=True)
@@ -99,9 +106,14 @@ def main(argv: list[str] | None = None) -> int:
             print(f"{pipeline.value}: {status} ({description})")
         return 0
     try:
+        if args.command == "research":
+            from reddit_sna.pipelines.research import run_research
+            output = run_research(args.protocol, args.preparation_run, args.forecast_run, args.artifact_root, args.run_id)
+            print(json.dumps({"research_output": str(output), "scope": "inspected development; preliminary proposed variant"}))
+            return 0
         if args.command == "synthetic-week1":
             from reddit_sna.pipelines.synthetic_week1 import run_demo
-            print(json.dumps({"synthetic_week1_output": str(run_demo(args.config, args.run_id))}))
+            print(json.dumps({"synthetic_week1_output": str(run_demo(args.config, args.run_id, protocol_path=args.protocol))}))
             return 0
         if args.command == "week1":
             from reddit_sna.pipelines.week1 import run_demo

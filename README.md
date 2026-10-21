@@ -2,7 +2,7 @@
 
 Research package for detecting, tracking and forecasting Reddit **user communities**. Subreddits are activity contexts, not ground-truth community labels.
 
-The core baseline runs **raw ZIPs → audited normalization → monthly reply graphs → Independent Leiden → GED adaptation → current/past-only features → temporal Majority/Logistic Regression → verified evaluation and figures**. The synthetic detection/tracking and table-prediction demos are also implemented. HeTCo, full original GED and multislice/consensus remain planned. The generic `run` entrypoint remains unfinished; use `week1` for the complete baseline.
+The core baseline runs **raw ZIPs → audited normalization → monthly reply graphs → Independent Leiden → GED adaptation → current/past-only features → temporal Majority/Logistic Regression → verified evaluation and figures**. The synthetic detection/tracking and table-prediction demos are also implemented. A separate `research` command implements **HeTCo-v0**, a preliminary context/history feature forecaster with matched B5 and ablations on the inspected 2015 reference. Full final HeTCo, original GED and multislice/consensus remain planned. The generic `run` entrypoint remains unfinished; use `week1` for the complete baseline.
 
 ## Quick start
 
@@ -22,6 +22,7 @@ Use a new run ID each time. The full fifteen-corpus January–December 2015 rebu
 
 - [Preparation and SNA diagnostics](notebooks/core/01_reddit_pilot.ipynb): ten code cells and fourteen figure families.
 - [Tracking and forecast evaluation](notebooks/core/02_core_forecast.ipynb): seven code cells and six figure families, including both model confusion matrices.
+- [Midterm research](notebooks/core/03_midterm_research.ipynb): verified baseline/proposed/ablation comparisons, monthly/class diagnostics and explicitly limited exploratory uncertainty. See the [midterm runbook](docs/RUNBOOK.md#midterm-research-explicit-inputs-and-a-frozen-development-protocol).
 
 Both contain reviewed executed snapshots with code, results and charts visible on GitHub. To run them, select this repository's `.venv` kernel in VS Code/Jupyter and restart/run all. GitHub provides a static preview. The three `00_research_plan.ipynb` files remain unfinished planning templates. [Synthetic detection/tracking](notebooks/detection_tracking/01_synthetic_demo.ipynb) and [synthetic prediction](notebooks/prediction/01_baseline_demo.ipynb) provide executable demos after their input runs are built; their reviewed execution copies remain local.
 

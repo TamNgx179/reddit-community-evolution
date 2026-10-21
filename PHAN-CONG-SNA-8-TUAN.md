@@ -293,3 +293,18 @@ Lệnh demo và nội dung trình bày ở `docs/RUNBOOK.md` và `docs/RESULTS.m
 ## Bản tích hợp toàn nhóm tuần 1
 
 Báo cáo hiện hành của cả sáu thành viên ở [reports/WEEK1_REPORT.md](reports/WEEK1_REPORT.md). Phúc–Đăng được tích hợp theo chức năng vào src, không còn thư mục document theo cá nhân. Các báo cáo/CSV phân tán đã được hợp nhất; dữ liệu runtime và bản cũ lưu local. Trạng thái nghiên cứu/hoạt động con người chỉ được ghi hoàn tất khi có bằng chứng thật.
+
+### Bổ sung để đáp ứng midterm 1
+
+Đây là phạm vi triển khai và phối hợp tiếp theo, không tự xác nhận từng thành viên đã thực hiện hay nghiệm thu cá nhân. Giữ nguyên ba demo độc lập tuần 1; thí nghiệm nghiên cứu mới dùng input core được chỉ định tường minh.
+
+| Hạng mục | Phạm vi phụ trách/phối hợp | Evidence cần bàn giao |
+|---|---|---|
+| Context/cutoff và provenance | Tâm phối hợp Thanh | Feature từ corpus/thread quan sát đến t; manifest/hash/identity scope |
+| HeTCo-v0 và history/lag ablation | Thanh phối hợp Tâm/Trâm | Proposed prototype có đặc tả, predictions và A1/A4/A6 trên cùng nhãn/mẫu |
+| B2/B5 và harder detection benchmark | Phúc phối hợp Trâm/Đăng | Matched model budget và regime schema-2; AMI/coverage/errors |
+| Tracking/reference và paired evaluation | Đăng phối hợp Anh | Không trộn reference; matched keys, confusion và giới hạn bootstrap |
+| Chạy baseline–proposed | Trâm phối hợp Thanh | Models/seeds/budget cố định, negative results và fallback |
+| Experimental plan/evaluation/report | Anh phối hợp cả nhóm | Protocol, bảng điểm/support, notebook/slide và trạng thái pending đúng thực tế |
+
+Protocol nghiên cứu mới ở `configs/midterm.toml`, lịch thực thi ở `experiments/midterm_plan.toml`. HeTCo-v0 chỉ là prototype dự báo dựa feature context/history, không phải detector T/temporal/consensus hay bằng chứng HeTCo đầy đủ. Human annotation, unseen confirmation và novelty vẫn cần evidence riêng.

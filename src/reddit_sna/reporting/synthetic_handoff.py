@@ -167,7 +167,8 @@ def _dataset(root, dataset_id, recipe, split, record):
     _require(scenario in SCENARIOS and type(seed) is int
              and seed in recipe["generator"]["seeds"][split], "dataset scenario/seed mismatch")
     prefix = "dev" if split == "development" else "eval"
-    _require(dataset_id == f"{prefix}-{scenario}-easy-g{seed}" and gm["difficulty"] == "easy",
+    difficulty = recipe.get("difficulty", "easy")
+    _require(dataset_id == f"{prefix}-{scenario}-{difficulty}-g{seed}" and gm["difficulty"] == difficulty,
              "dataset ID does not match configured identity")
     reference = "truth-" + dataset_id
     for key, expected in {"scenario": scenario, "generator_seed": seed,
@@ -301,6 +302,16 @@ def inspect_synthetic_handoff(run_directory: Path, *, expected_manifest_sha256: 
     for info in manifest["config_inputs"].values():
         _require(files[info["archive"]]["sha256"] == info["sha256"], "config input binding mismatch")
     recipe = _json(_path(root, manifest["config_inputs"]["benchmark"]["archive"]))
+    # Historical independent schema-2 run consumers accepted a minimal recipe
+    # without schema/difficulty fields. Preserve its implicit easy-only meaning;
+    # harder inputs must explicitly declare both fields and fixed probabilities.
+    recipe_version = recipe.get("schema_version", 1)
+    difficulty = recipe.get("difficulty", "easy")
+    _require(type(recipe_version) is int and
+             ((recipe_version == 1 and difficulty == "easy") or
+              (recipe_version == 2 and difficulty == "harder" and
+               recipe["generator"].get("p_in") == .25 and recipe["generator"].get("p_out") == .10)),
+             "unsupported recipe difficulty/version")
     _require(recipe["protocol"] == PROTOCOL and recipe["detector"]["seeds"] == [0, 1, 2]
              and recipe["detector"]["canonical_seed"] == 0 and recipe["detector"]["gamma"] == 1
              and recipe["scenarios"] == list(SCENARIOS), "unsupported recipe/detector policy")
@@ -311,14 +322,14 @@ def inspect_synthetic_handoff(run_directory: Path, *, expected_manifest_sha256: 
     _require(not set(seeds["development"]) & set(seeds["evaluation"]), "generator split overlap")
     ids = manifest["selection"]["dataset_ids"]
     _require(isinstance(ids, list) and ids and len(ids) == len(set(ids))
-             and all(isinstance(i, str) and re.fullmatch(r"(?:dev|eval)-[a-z]+-easy-g\d+", i) for i in ids),
+             and all(isinstance(i, str) and re.fullmatch(r"(?:dev|eval)-[a-z]+-" + difficulty + r"-g\d+", i) for i in ids),
              "invalid/duplicate dataset IDs")
     mode = manifest["selection"]["mode"]
     _require(mode in (("full-development", "development-subset") if split == "development" else ("full-evaluation",)),
              "unsupported run selection")
     if mode.startswith("full-"):
         prefix = "dev" if split == "development" else "eval"
-        scheduled = {f"{prefix}-{case}-easy-g{s}" for case in SCENARIOS for s in seeds[split]}
+        scheduled = {f"{prefix}-{case}-{difficulty}-g{s}" for case in SCENARIOS for s in seeds[split]}
         _require(set(ids) == scheduled, "full run dataset schedule mismatch")
     _require(set(manifest["dataset_records"]) == set(ids), "dataset records mismatch")
     for kind in ("source", "detected"):

@@ -1,0 +1,58 @@
+{
+  "schema_version": 2,
+  "protocol_id": "midterm-detection-evaluation-v2",
+  "benchmark": {
+    "file": "benchmark_midterm.json",
+    "sha256": "255944788144cfa8c576607fecaebd6437412555edc80fc20730b7daaff8545e"
+  },
+  "ami_policy": {
+    "schema_version": 1,
+    "policy_id": "synthetic-ami-v1",
+    "library": "scikit-learn",
+    "metric": "adjusted_mutual_info_score",
+    "average_method": "arithmetic",
+    "scoring_users": "verified_R_endpoints",
+    "minimum_scored_users": 2,
+    "empty_scored": "null:empty_scored",
+    "insufficient_users": "null:insufficient_users",
+    "constant_partition": "null:degenerate_partition",
+    "all_singletons_partition": "null:degenerate_partition",
+    "invalid_input": "raise",
+    "nonfinite_score": "raise",
+    "negative_scores": "preserve",
+    "quality_summary_eligibility": "ami_status=ok"
+  },
+  "summary_policy": {
+    "aggregation_unit": "dataset-month separately per detector seed",
+    "ami_aggregation": "unweighted mean of rows with ami_status=ok",
+    "coverage_aggregation": "unweighted mean of rows with defined coverage",
+    "canonical_seed": 0,
+    "pool_detector_seeds": false,
+    "missing_ami": "exclude from mean; retain support, status and combined reason counts",
+    "user_support": "user observations across rows, not distinct people"
+  },
+  "split_policy": {
+    "generator_seed_sets": "disjoint",
+    "dataset_identity": "split,scenario,difficulty,generator_seed",
+    "detector_seed_role": "repeat_within_dataset",
+    "canonical_selection": "first_configured_seed_not_selected_by_score",
+    "evaluation_access": "after_development_and_freeze"
+  },
+  "expected_counts": {
+    "development": {
+      "datasets": 18,
+      "snapshots": 36,
+      "snapshot_detector_runs": 108
+    },
+    "evaluation": {
+      "datasets": 18,
+      "snapshots": 36,
+      "snapshot_detector_runs": 108
+    },
+    "total": {
+      "datasets": 36,
+      "snapshots": 72,
+      "snapshot_detector_runs": 216
+    }
+  }
+}

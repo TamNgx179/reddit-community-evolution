@@ -61,7 +61,9 @@ def load_benchmark_protocol(path: Path) -> BenchmarkProtocol:
     content, protocol = _json_file(path)
     _table(protocol, {"schema_version", "protocol_id", "benchmark", "ami_policy",
                       "summary_policy", "split_policy", "expected_counts"}, "benchmark protocol")
-    if type(protocol["schema_version"]) is not int or protocol["schema_version"] != 1 or protocol["protocol_id"] != PROTOCOL_ID:
+    supported = {1: PROTOCOL_ID, 2: "midterm-detection-evaluation-v2"}
+    if (type(protocol["schema_version"]) is not int
+            or supported.get(protocol["schema_version"]) != protocol["protocol_id"]):
         raise ConfigError("unsupported benchmark protocol schema or ID")
     recipe = protocol["benchmark"]
     _table(recipe, {"file", "sha256"}, "protocol benchmark binding")
@@ -80,6 +82,8 @@ def load_benchmark_protocol(path: Path) -> BenchmarkProtocol:
     if actual_hash != expected_hash:
         raise ConfigError("benchmark SHA-256 differs from protocol binding")
     validate_benchmark_config(benchmark)
+    if protocol["schema_version"] != benchmark["schema_version"]:
+        raise ConfigError("benchmark/protocol schema versions must match")
     if benchmark["detector"] != {"gamma": 1.0, "seeds": [0, 1, 2], "canonical_seed": 0}:
         raise ConfigError("week-one detector schedule differs from the supported protocol")
     _exact(protocol["ami_policy"], dict(AMI_POLICY), "AMI policy")

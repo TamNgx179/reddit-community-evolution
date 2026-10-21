@@ -96,7 +96,7 @@ def detect_synthetic_dataset(
     split, scenario, generator_seed = meta["split"], meta["scenario"], meta["generator_seed"]
     if (split not in ("development", "evaluation") or scenario not in benchmark["scenarios"]
             or type(generator_seed) is not int or generator_seed not in benchmark["generator"]["seeds"][split]
-            or dataset_id != f"{'dev' if split == 'development' else 'eval'}-{scenario}-easy-g{generator_seed}"):
+            or dataset_id != f"{'dev' if split == 'development' else 'eval'}-{scenario}-{benchmark['difficulty']}-g{generator_seed}"):
         raise ValueError("dataset ID must match its scenario and configured split/seed")
     if meta["graph"] != {"directed": False, "simple": True, "weight": 1.0}:
         raise ValueError("a simple undirected unit-weight synthetic graph is required")
