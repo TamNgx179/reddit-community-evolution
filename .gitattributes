@@ -6,3 +6,7 @@ data/raw/*.zip filter=lfs diff=lfs merge=lfs -text
 data/processed/**/*.zip filter=lfs diff=lfs merge=lfs -text
 data/processed/**/*.parquet filter=lfs diff=lfs merge=lfs -text
 data/processed/**/*.sqlite filter=lfs diff=lfs merge=lfs -text
+
+# These config files use byte hashes; keep checkout bytes stable on Windows.
+/configs/benchmark_week1.json text eol=lf
+/configs/benchmark_week1_protocol.json text eol=lf

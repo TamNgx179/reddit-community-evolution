@@ -13,15 +13,23 @@ def main():
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
     delivery = read_handoff(args.run)
-    docs = Path(__file__).resolve().parents[1] / "reports"
+    project = Path(__file__).resolve().parents[1]
+    # Preserve canonical navigation and the single group report in offline handoffs.
+    documents = (
+        "README.md", "PHAN-CONG-SNA-8-TUAN.md", "docs/METHODS.md",
+        "docs/RUNBOOK.md", "docs/RESULTS.md", "docs/LABEL_REVIEW.md",
+        "reports/WEEK1_REPORT.md",
+    )
+    for relative in documents:
+        if not (project / relative).is_file():
+            raise FileNotFoundError(f"Missing handoff document: {relative}")
     args.output.parent.mkdir(parents=True, exist_ok=True)
     with zipfile.ZipFile(args.output, "x", compression=zipfile.ZIP_DEFLATED) as bundle:
         for relative in sorted(delivery["manifest"]["artifact_hashes"]):
             bundle.write(args.run / relative, relative)
         bundle.write(args.run / "manifest.json", "manifest.json")
-        for name in ("FORECAST-HANDOFF.md", "FORECAST-GED-RESULTS.md"):
-            if (docs / name).exists():
-                bundle.write(docs / name, name)
+        for relative in documents:
+            bundle.write(project / relative, relative)
     print(args.output.resolve())
 
 
