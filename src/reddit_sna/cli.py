@@ -34,6 +34,12 @@ def main(argv: list[str] | None = None) -> int:
     )
     subparsers = parser.add_subparsers(dest="command", required=True)
     subparsers.add_parser("pipelines", help="List independent pipelines and implementation status")
+    study = subparsers.add_parser("temporal-study", help="Run resource-monitored full-study stages with a frozen evaluation gate")
+    study.add_argument("--protocol", type=Path, required=True)
+    study.add_argument("--raw", type=Path, default=Path("data/raw"))
+    study.add_argument("--root", type=Path, required=True)
+    study.add_argument("--artifact-root", type=Path, default=Path("artifacts"))
+    study.add_argument("--stage", choices=("normalize-development","develop","select","evaluate","report"), required=True)
     synthetic = subparsers.add_parser("synthetic-week1", help="Rebuild synthetic graphs, detection, tracking and evaluation without a legacy ZIP")
     synthetic.add_argument("--config", type=Path, required=True)
     synthetic.add_argument("--run-id", required=True)
@@ -106,6 +112,15 @@ def main(argv: list[str] | None = None) -> int:
             print(f"{pipeline.value}: {status} ({description})")
         return 0
     try:
+        if args.command == "temporal-study":
+            from reddit_sna.pipelines.temporal_study import run_temporal_study
+            try:
+                output = run_temporal_study(args.protocol, args.raw, args.root, args.stage, args.artifact_root)
+            except RuntimeError as exc:
+                print(f"Study phase failed: {exc}. Inspect the preserved resource journal and worker log.", file=sys.stderr)
+                return 2
+            print(json.dumps(output))
+            return 0
         if args.command == "research":
             from reddit_sna.pipelines.research import run_research
             output = run_research(args.protocol, args.preparation_run, args.forecast_run, args.artifact_root, args.run_id)

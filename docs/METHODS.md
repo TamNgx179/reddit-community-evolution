@@ -52,7 +52,7 @@ Algorithm modules never import CLI or pipelines. The dedicated week-one orchestr
 
 ## Notebooks and reporting
 
-The three notebook directories support independent pair prototypes. `00_research_plan.ipynb` files are deliberately unfinished templates. `core/01_reddit_pilot.ipynb` is executable with an installed graph/notebook environment: it checks the actual kernel, resolves repository paths, replays verified results or rebuilds from raw, displays diagnostics and exports figures. Follow the setup in README. No `sys.path` modification is allowed.
+The notebook directories retain the completed independent pair prototypes. `core/01_reddit_pilot.ipynb` is executable with an installed graph/notebook environment: it checks the actual kernel, resolves repository paths, replays verified results or rebuilds from raw, displays diagnostics and exports figures. Follow the setup in README. No `sys.path` modification is allowed.
 
 Keep exploratory prototypes in notebooks until stable. Reusable replay, validation and plotting belong in the package and are behavior-tested independently. Restart and run all cells before handing off; store executed copies/figures in fresh local artifact folders and commit only explicitly reviewed execution snapshots in the two core notebooks; keep standalone artifacts local. Plots are derived from recorded aggregates, never hardcoded scientific results. Network sampling is display-only; full graph data determine metrics and memberships.
 

@@ -125,8 +125,15 @@ class GroupCompatibilityTests(unittest.TestCase):
 
     def test_source_does_not_depend_on_retired_report_or_document_folders(self):
         self.assertFalse((PROJECT / "document").exists())
-        self.assertEqual([p.relative_to(PROJECT / "reports").as_posix()
-                          for p in (PROJECT / "reports").rglob("*") if p.is_file()], ["WEEK1_REPORT.md"])
+        # The integrated report now embeds seven declared aggregate figures.
+        # Keep the retired-report guard while permitting those published assets.
+        figures = ("comparison", "monthly", "support", "confusion", "flow",
+                   "graph_scale", "community_graph")
+        expected = {"WEEK1_REPORT.md"} | {
+            f"figures/temporal-study-001/{name}.png" for name in figures}
+        actual = {p.relative_to(PROJECT / "reports").as_posix()
+                  for p in (PROJECT / "reports").rglob("*") if p.is_file()}
+        self.assertEqual(actual, expected)
         for folder in ("src", "scripts", "configs"):
             for path in (PROJECT / folder).rglob("*"):
                 if path.is_file() and path.suffix in {".py", ".json", ".toml"}:

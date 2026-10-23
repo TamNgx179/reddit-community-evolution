@@ -1,263 +1,209 @@
-# Week 1 Report — Reddit Community Evolution
+# Forecasting Structural Evolution of Reddit User Communities
 
-**Midterm update:** Section 9 records the new enforced experiment, controlled baseline/proposed/ablation results and harder synthetic diagnostic. Sections 1–8 retain the original three-pair baseline evidence and its scope.
+**Midterm research report**
 
-**Team:** Tâm, Thanh, Phúc, Đăng, Trâm, Anh. **Work period:** October 15–21, 2026. **Scheduled presentation:** October 22, 2026. This report documents the responsibilities, methods, execution evidence, and limitations of all three pairs. Attendance, presentation delivery, and instructor assessment require separate evidence.
+## Executive summary
 
-> Integration verified on October 21, 2026: all three demos and four notebooks completed; 558/558 tests passed with no skips. The Git bases were main `b17f005` and the Phúc–Đăng branch `ff15259`; pre-commit runs recorded source hashes and working-tree state. These are descriptive baseline results, not certification of an unseen test or a maximum grade.
+We implemented an end-to-end prototype that converts observed Reddit replies into monthly user networks, detects communities, derives structural evolution labels and forecasts each existing community's next-month event. The research question is whether past member activity and sustained interaction add predictive value beyond current structure and activity, and whether a two-stage forecast helps with the highly imbalanced event distribution.
 
-## 1. Objective and scope
+The verified run contains **45 monthly snapshots**, **5,295 training**, **926 validation** and **1,269 final-evaluation community–month samples**. The frozen proposed model scores **0.4117 six-class Macro-F1** versus **0.3880** for the strongest of the five reported baselines. This is a preliminary improvement on an algorithm-derived structural target, not proof of accurate social-community prediction. Rare events and unresolved transitions remain central limitations.
 
-The Week 1 requirement is to **complete an end-to-end baseline prototype, from input data to evaluation results**. Three independent pairs have their own inputs, execution paths, and outputs, without waiting for another pair's artifacts.
+## 1. Problem, motivation and research questions
 
-| Pair | Week 1 validation question | Input | Final output |
-|---|---|---|---|
-| Tâm–Thanh | Can the core workflow run from Reddit data through forecasting and evaluation? | 15 Reddit corpora; 2015 pilot | Membership, algorithmic labels, features, predictions, metrics, and diagnostics |
-| Phúc–Đăng | Where do detection and tracking succeed or fail against known answers? | Synthetic dynamic networks with ground truth | AMI/coverage, event metrics, mappings, confusion matrices, and failure cases |
-| Trâm–Anh | Do temporal baselines and evaluation behave correctly? | Synthetic community–month table with an explicit generation mechanism | Splits, Majority/Persistence/Logistic Regression, predictions, and evaluation |
+The unit of interest is a **community of interacting users detected in a network**, rather than a subreddit, post or individual account. At the end of month t, can information already available predict whether that community will retain its size, grow, shrink, merge, split or lose meaningful observed continuity in t+1? This directly addresses temporal community evolution in SNA. The intended use is monitoring observed community continuity; the system does not infer political affiliation, social intent or causal mechanisms.
 
-The three workflows address different tasks and populations; their scores do not support a direct ranking of the pairs. Full HeTCo, original GED, the T layer, multislice/consensus, and B2/B5 are beyond the required Week 1 baseline scope.
+- **RQ1 — Dynamic information:** Do returning-member activity and sustained replies add value beyond structure, predecessor history, subreddit context and current activity?
+- **RQ2 — Forecast architecture:** Does separating observed disappearance from the other events outperform a direct classifier with the same features?
+- **RQ3 — Robustness:** Where does improvement hold across months, classes and community sizes, and how sensitive is the measurement to graph/label choices?
 
-## 2. Responsibilities and contributions
+The working hypothesis is that equally large and dense communities may differ in repeated participation and interaction persistence. These measurable differences motivate the features; they do not guarantee better forecasts.
 
-| Member | Assigned scope represented in the source | Technical deliverables |
-|---|---|---|
-| **Tâm** | Repository/environment, Reddit auditing and normalization, R graphs, provisional Independent Leiden, provenance, validation, and core integration | `data/`, `graphs/`, `detection/leiden.py`, preparation, core notebooks, and reproducibility instructions |
-| **Thanh** | Jaccard/GED-adapted tracking, current and historical features, t→t+1 labels, basic forecasting | `tracking/ged.py`, core Jaccard API, `features/`, `pipelines/forecast.py`, metrics/predictions |
-| **Phúc** | Six-event generator, graphs/truth, Leiden, AMI/coverage, protocol/freeze, synthetic handoff | `benchmarks/`, detection adapter, `evaluation/detection.py`, source runs, notebook/case analysis |
-| **Đăng** | Membership adapter, Jaccard tracker, evaluation-only truth–detector mapping, event metrics | `tracking/membership.py`, `track()`, `evaluation/tracking.py`, predictions/confusions/diagnostics |
-| **Trâm** | Temporal synthetic table, Majority/Persistence, Logistic Regression, model/prediction export | `benchmarks/community_table.py`, `models/`, generation/baseline stages of the prediction pipeline |
-| **Anh** | Sample/availability validation, temporal splitting, leakage checks, metrics/confusions, interpretation | `evaluation/sample_checks.py`, `splits.py`, `metrics.py`, evaluation stages of the prediction pipeline |
+## 2. Exact task: input, output and information boundary
 
-Integration preserves the original algorithms and contributions while adding dependencies/status checks, rebuild paths, reporting, and compatibility tests. This table describes responsibility rather than authorship of every line or participation in class. The repository owner confirmed that invitations were sent to all five teammates; actual acceptance and access have not been independently verified.
+**Raw input:** utterance ID, author pseudonym, parent-reply ID, conversation/thread ID, subreddit and UTC timestamp from the ConvoKit Reddit corpus [1], [2], [7]. Text and eventual popularity are not required for the proposed activity features.
 
-## 3. Architecture and independence
+**Model input:** one community C_t detected at the end of t, its current weighted reply structure, predecessor information already known at t, and member activity/replies in t and up to three earlier observed months. Historical activity is computed on the fixed current member set C_t. No t+1 memberships, replies or target labels enter a forecast feature.
 
-```mermaid
-flowchart LR
-    R[Reddit raw] --> N[Audit / normalization] --> G[Monthly R] --> L[Leiden]
-    L --> F[Tracking / causal features] --> M[Temporal baselines] --> E[Core evaluation]
-    S[Synthetic graphs + truth] --> D[Leiden / AMI] --> T[Truth and detector tracking] --> TE[Event evaluation]
-    C[Synthetic community table] --> SP[Temporal split] --> B[Majority / Persistence / Logistic Regression] --> PE[Prediction evaluation]
-```
+**Output:** a six-element probability vector and its highest-probability event for C_t at t+1. At evaluation time, the forecast is compared against the structural label derived after observing t+1. Probabilities have not been established as calibrated. Future graph observations are used to construct evaluation targets, never as prediction inputs.
 
-The workflows use separate configurations and outputs. Shared code is organized by function under `src/reddit_sna/`; notebooks call package APIs instead of copying algorithms. Each run has a new identifier, configuration, and hashes. Failed runs are recorded as failures and cannot overwrite earlier runs.
+![System flow](figures/temporal-study-001/flow.png)
 
-## 4. Methods by pair
+*Figure 1. Forecasting pipeline. Source: [executed study notebook](../notebooks/core/05_temporal_activity_study.ipynb).*
 
-### 4.1. Reddit core — Tâm and Thanh
+## 3. Dataset and feasibility
 
-1. Check ZIP CRC/SHA-256 and schema; normalize UTC/IDs, handle duplicates, and apply the cutoff in SQLite. Preserve pre-pilot metadata for parent lookup without counting all such metadata as pilot activity.
-2. A directed edge represents comment author → parent author, assigned to the comment month, provided the parent is not in the future. R combines both directions. Remove self-replies and invalid authors while auditing exclusion reasons.
-3. Retain active-author/endpoint/isolate counts to explain coverage; partition only endpoints. `node_order.csv` uses a causal record anchor so detector behavior does not depend on ID allocation order when the cutoff changes.
-4. Run Independent Leiden per month with weighted RBConfiguration, gamma 1, and seeds 0/1/2; the first seed is canonical. Modularity and seed ARI are diagnostics, not measures of social correctness.
-5. The GED adaptation uses overlap and internal weighted-degree importance; it is not original GED. Preserve unresolved reasons rather than forcing every transition into a supervised label.
-6. Features use information available through t. History comes from t−1→t, never t→t+1. Split by **label month** and fit the scaler/model on training data. Majority and Logistic Regression use the same eligible population.
+The observed collection comprises **15 subreddit corpora**: AskALiberal, AskThe_Donald, AskTrumpSupporters, Ask_Politics, Conservative, EnoughTrumpSpam, NeutralPolitics, PoliticalDiscussion, Political_Revolution, Republican, SandersForPresident, democrats, hillaryclinton, moderatepolitics, socialism. This is a topic-biased observational collection, not a representative sample of all Reddit. A user can participate in several subreddits; a subreddit is an activity context, not a ground-truth community label. The source documentation also warns that incomplete thread histories and duplicate processing entries can occur [1]. Our normalizer deduplicates record IDs, rejects inconsistent duplicates and records graph losses.
 
-The `transitions()` API retains Jaccard 0.25 and exact size comparisons. Its distinction from the synthetic tracker remains explicit to avoid silently changing core pseudo-labels or references during integration.
+Across the study snapshots there are **18,567,881 comment records** before graph-event exclusions, **8,222–93,006 monthly reply endpoints**, and **27,221–693,866 unique undirected edges per month**. Comment records, account endpoints, edges and labeled community–months are different units; their counts must not be conflated. Parent records may predate the first study month and are retained for reply resolution rather than treated as extra forecast samples.
 
-### 4.2. Synthetic detection/tracking — Phúc and Đăng
+| Label-month partition | stable | grow | shrink | merge | split | dissolve | Total |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| Training | 11 | 54 | 82 | 192 | 102 | 4854 | 5,295 |
+| Validation | 1 | 14 | 18 | 22 | 25 | 846 | 926 |
+| Final evaluation | 4 | 19 | 25 | 15 | 39 | 1167 | 1,269 |
 
-The generator provides known memberships, events, and links for stable, grow, shrink, merge, split, and dissolve. Development seeds are 11/12/13; evaluation seeds are 101/102/103. Each split contains 18 datasets and 36 snapshots; detector seeds 0/1/2 produce 108 units per split. The current regime is easy, with p_in=0.50 and p_out=0.02.
+Metadata are streamed into an indexed local store and graphs are processed month by month. We do not generate a quadratic clique among all users in a thread. Runtime stops enforce the declared 30 GiB working budget, 8 GiB sampled process-tree RSS ceiling and 12 GiB minimum free disk. The maximum RSS recorded in completed phases is **1.08 GiB**; one-second monitoring can miss brief peaks. These measurements support feasibility on the observed collection, not unlimited scaling.
 
-AMI evaluates detection partitions on an aligned population; coverage and null reasons are retained. Constant truth partitions may make AMI uninformative under the declared policy. Null values are not replaced with zero or one.
+## 4. Network construction before forecasting
 
-The `track()` tracker uses Jaccard ≥0.30, 10% size tolerance, and split-before-merge precedence. Route A uses ground-truth membership. Route B uses detected membership, followed by one-to-one greedy Jaccard source mapping **in the evaluator**. Ground truth does not inform tracker decisions. Outputs retain unmatched truth, extra detector sources, per-class support, and confusion matrices. Mean-dataset macro-F1 and pooled macro-F1 are distinct aggregation conventions.
+1. For each valid reply written in UTC month t, add a directed interaction from its author u to the parent author v. The parent timestamp must not exceed the reply timestamp. Count repeated replies as weight.
+2. Exclude self-replies, invalid authors, missing parents and temporally invalid links from graph edges, recording the exclusions and coverage. Loss incidence counters may overlap and should not be summed as disjoint records.
+3. Detect communities on the weighted undirected projection **R_t(u,v)=w_t(u,v)+w_t(v,u)**. A node is a pseudonymous account incident to a valid reply; accounts without a valid edge are counted separately.
+4. Run independent weighted Leiden with the RB objective, resolution gamma=1 and canonical seed0 [3]. Seeds1/2 are measurement diagnostics, not additional independent datasets. Communities are detected independently each month and linked afterward.
 
-The new rebuild path runs development → source/version freeze → evaluation in an isolated workspace, then tracking and reporting. Because the recipes have already been inspected, this freeze establishes local engineering order; **it does not make evaluation an independent unseen test**. Legacy T02 replay preserves its original pins. Hashes are not rewritten to manufacture retrospective evidence for Đăng.
+![Network scale](figures/temporal-study-001/graph_scale.png)
 
-### 4.3. Synthetic forecasting table — Trâm and Anh
+*Figure 2. Monthly network scale and reply coverage. Source: [study notebook](../notebooks/core/05_temporal_activity_study.ipynb).*
 
-The community–month table includes labels, current/historical features, and a fixed seed. Entire label-month groups are assigned to training, validation, or test. Final rows without future labels are counted separately and excluded from supervised samples.
+![Observed community network](figures/temporal-study-001/community_graph.png)
 
-Majority predicts the most frequent training class. Persistence repeats the previously observed event, falling back to Majority when history is insufficient. Logistic Regression uses numeric features and a training-fitted scaler, with fallback under the missing-feature policy. B4 is not HeTCo, and its design does not imply that it should outperform Persistence under every generator.
+*Figure 3. Observed community interaction graph. Source: [study notebook](../notebooks/core/05_temporal_activity_study.ipynb).*
 
-Evaluation checks sample keys, label availability, splits, and predictions before exporting `macro_f1` over classes present in truth, `macro_f1_six` over all six fixed classes, balanced accuracy, per-class metrics, and confusion matrices. The F1 conventions can differ when classes are absent. Reporting recomputes metrics from predictions before plotting.
+Figure 3 is a quotient graph of up to the twenty largest detected communities, showing up to forty strongest between-community reply links. The display filter does not remove communities, edges or samples from the experiment. It illustrates the measured network, not an independent validation of social groups.
 
-## 5. Results and reproducibility
+## 5. Labels: definition, generation and validity
 
-### 5.1. Integration runs
+Reddit supplies **no native community-evolution class labels**. We create **GED-adapted operational pseudo-labels** using consecutive detected partitions [4]. For source A and successor B, weighted inclusion is
 
-| Workflow | New integration run | Status |
-|---|---|---|
-| Core | `core/week1-group-core-001` | Complete; 83.325 seconds wall time |
-| Detection/tracking | `detection-tracking/week1-group-synthetic-001` | Complete; 111.155 seconds wall time |
-| Prediction | `prediction/week1-group-prediction-001` | Complete; 7.277 seconds wall time |
+$$I(A,B)=\frac{|A\cap B|}{|A|}\frac{\sum_{u\in A\cap B}q_A(u)}{\sum_{u\in A}q_A(u)}.$$
 
-Paths above are relative to `artifacts/`. Runtime artifacts and annotation cases remain local; the repository contains source, instructions, and this report. Core notebooks retain output snapshots authorized for publication by the owner. Synthetic notebook source is published; separately executed copies remain in the local acceptance record.
+Here q_A(u) is internal weighted degree, replaced by 1 if zero. A link is accepted if either directional inclusion reaches 0.5. This is our documented adaptation, not a claim to reproduce every original GED rule.
 
-### 5.2. Reddit core — verified integration replay
-
-The new run uses graphs/memberships from `core/week1-demo-input`, produced by a previously verified raw scan covering all 15 corpora. This integration run **does not rescan raw data**. Both saved models were reloaded and reproduced every prediction. Six samples/features/labels/splits/predictions/metrics files are byte-identical to the earlier raw demo outputs.
-
-| Metric | Result |
-|---|---:|
-| Eligible samples | 1,333 |
-| Excluded source transitions | 732 |
-| Train | 762 |
-| Test | 571 |
-| Majority: six-class macro-F1 | 0.159671533 |
-| Logistic Regression: six-class macro-F1 | 0.360540447 |
-
-There are 2,320 feature rows and 2,065 source transitions; the 732 exclusions represent 35.45%. Stable has no test support, while dissolve accounts for 525/571 samples. Logistic Regression recall for grow and merge is zero. Aggregate scores must be interpreted alongside failed classes and excluded populations.
-
-### 5.3. Synthetic detection and event tracking — fresh source rebuild
-
-Both splits were rebuilt from versioned configuration without requiring the historical T02 ZIP. Together they contain 36 datasets, 72 snapshots, and 216 detector units. Across all three detector seeds, 198 AMI values are valid and 18 are null under the declared policy; nulls remain null.
-
-| Split | Canonical AMI mean | AMI valid / missing | Coverage mean |
-|---|---:|---:|---:|
-| development | 0.955879927 | 33 / 3 | 1.000 |
-| evaluation | 0.933116751 | 33 / 3 | 1.000 |
-
-| Split | Route | Support | Mean-dataset macro-F1 | Pooled macro-F1 | Correct events | Extra detector sources |
-|---|---|---:|---:|---:|---:|---:|
-| development | truth_tracking | 39 | 0.305555556 | 1.000000000 | 39/39 | 0 |
-| development | detector_tracking | 39 | 0.256172840 | 0.850000000 | 33/39 | 3 |
-| evaluation | truth_tracking | 39 | 0.305555556 | 1.000000000 | 39/39 | 0 |
-| evaluation | detector_tracking | 39 | 0.217592593 | 0.655142599 | 28/39 | 6 |
-
-Each split has stable/grow/shrink/merge/split/dissolve support of 21/3/3/6/3/3, including sources that retain K. This run has no unmatched truth sources; extra detector sources remain in diagnostics. Tracking confusion matrices show both the truth route (6×6) and detector route (6×7, including unmatched).
-
-Pooled truth-route F1 of 1 demonstrates agreement with these designed scenarios, not correctness on every graph. Detection errors in merge/split/dissolve reduce event F1 despite mapping coverage of 1. The F1 aggregations differ because each dataset contains only a subset of events, while dataset-level averaging retains six classes.
-
-The rebuilt development/evaluation results match Phúc's final handoff figures. This remains a **current descriptive rerun**: it does not independently authenticate Đăng's original artifacts or historical freeze, nor establish that scientific evaluation was previously unseen.
-
-### 5.4. Synthetic prediction — fresh Trâm–Anh run
-
-The generator produces 1,570 rows and retains 4,572 prediction rows across three baselines. The final 46 unlabeled rows are excluded from supervised samples. Training/validation/test contain 1,000/263/261 samples across 23/6/6 label months. Reloading the B4 joblib model reproduces every saved prediction.
-
-| Model | Test n | Macro-F1: present truth classes | Macro-F1: fixed six classes | Balanced accuracy | Test fallback |
-|---|---:|---:|---:|---:|---:|
-| B1_majority | 261 | 0.112521151 | 0.112521151 | 0.166666667 | 0.00% |
-| B1_persistence | 261 | 0.255692894 | 0.255692894 | 0.258583980 | 4.98% |
-| B4_logreg | 261 | 0.215965945 | 0.215965945 | 0.215521013 | 11.49% |
-
-Test support for stable/grow/shrink/merge/split/dissolve is **133/46/37/22/9/14**. All six classes occur here, so the two macro-F1 columns agree; they are not equivalent for every dataset.
-
-B4 trails Persistence by approximately 0.039727 macro-F1 points. B4 does not use `prev_label`, while the generator includes historical signal. This is a plausible explanation rather than a causal conclusion, because an ablation has not been performed. Persistence recall for split/dissolve is zero; B4 recall for merge/dissolve is zero. These negative results remain alongside confusion matrices and per-class metrics instead of selectively reporting favorable models or scores.
-
-## 6. Error analysis and limitations
-
-- **Core:** the population covers observed replies only; missing observations do not establish the dissolution of a social group. Tracker labels are pseudo-labels. Imbalance and 35.45% exclusions limit score interpretation.
-- **Detection:** a single truth community can be fragmented by the detector; coverage can remain 100% while AMI falls. A null AMI for constant truth does not imply correct detection. The easy regime and limited seeds restrict generalization.
-- **Tracking:** split/merge errors may arise from input membership or overlap rules; routes A/B help distinguish them. Mapping coverage is not event accuracy. Extra groups remain visible in diagnostics.
-- **Prediction:** the label-generation mechanism may favor Persistence. B4 underperforming another baseline is a retained negative result. Small rare-class support, fallback, and the short test period limit conclusions.
-- **Reproducibility:** hashes establish integrity relative to trusted metadata; they do not authenticate simultaneous alteration of files and metadata. Other platform versions require verification. Peak native memory has not been measured.
-- **Research:** Week 1 does not establish human ground truth, verified novelty, complete uncertainty/ablation analyses, or a certified unseen evaluation period.
-
-## 7. Reproduction commands and notebooks
-
-Run from the repository root in PowerShell:
-
-```powershell
-& .\.venv\Scripts\python.exe -m pip install -e '.[graph,forecast,evaluation,prediction,notebook]'
-& .\.venv\Scripts\python.exe -m reddit_sna week1 --config configs/core.toml --run-id core-new-001
-& .\.venv\Scripts\python.exe -m reddit_sna synthetic-week1 --config configs/detection_development.toml --run-id week1-synthetic-demo
-& .\.venv\Scripts\python.exe -m reddit_sna.pipelines.prediction --config configs/prediction.toml --run-id week1-prediction-demo
-& .\.venv\Scripts\python.exe -m unittest discover -s tests -v
-```
-
-Every run ID must be new. By default, the core command scans the full raw pilot year. Explicit flags can replay verified graph/detection sources as described in the [RUNBOOK](../docs/RUNBOOK.md). A replay must not be described as a raw rebuild.
-
-| Notebook | Content |
+| Target | Exact operational rule |
 |---|---|
-| [Core preparation](../notebooks/core/01_reddit_pilot.ipynb) | Audit, graphs, coverage, communities, and sensitivity; 14 figure families |
-| [Core forecast](../notebooks/core/02_core_forecast.ipynb) | Eligibility/support, baselines, per-class metrics, confusion, months/folds; 6 figure families |
-| [Synthetic detection/tracking](../notebooks/detection_tracking/01_synthetic_demo.ipynb) | Both splits, detection/case analysis, and both tracking routes; 8 figure families |
-| [Synthetic prediction](../notebooks/prediction/01_baseline_demo.ipynb) | Support, both F1 conventions, baseline confusion matrices, and errors; figures use a verified run |
+| split | More than one accepted successor, without a many-to-many conflict |
+| merge | One accepted successor with more than one accepted predecessor |
+| grow / shrink / stable | One-to-one link; successor size is larger / smaller / equal |
+| dissolve | No accepted link and no overlap with directional inclusion reaching 0.1 |
+| unresolved, excluded from classification | Weak-overlap ambiguity or a many-to-many conflict |
+| censored, not a class | Last snapshot has no observed successor month |
 
-Select the `.venv/Scripts/python.exe` kernel, restart it, and run all cells. Notebooks expose explicit run/reference selectors. Environment, output, and legacy replay instructions are in the [RUNBOOK](../docs/RUNBOOK.md); schemas and policies are in [METHODS](../docs/METHODS.md).
+**Worked example, synthetic:** if two equally important four-person groups share three members, each directional inclusion is(3/4)×(3/4)=0.5625. A one-to-one link receives `stable` because sizes match, even though a member changed. Thus stable means equal observed size, not unchanged membership. Dissolve means loss of sufficient observed inclusion, not verified social disappearance. Forming is outside this source-community task because a newly born future community has no existing C_t to forecast from.
 
-## 8. Acceptance evidence and next steps
+The audit records **11,562 source transitions with an observed next snapshot**, including **4,072 unresolved (35.22%)**. Classification results therefore apply to the **64.78%** with resolvable labels, not all detected transitions. Missing data, monthly aggregation and detector resolution may influence labels. Automated recomputation checks rule consistency; two-person blinded review forms exist, but **human annotation and agreement are still pending**. The labels are suitable for a clearly bounded structural forecasting experiment; their social validity remains unestablished.
 
-Technical acceptance requires each pair to execute its own input-to-evaluation workflow, retain real outputs/provenance, validate failure cases, document execution, and acknowledge limitations.
+Development-only sensitivity: threshold 0.4: 5/1,652 changed source-transition labels; threshold 0.6: 4/1,652 changed source-transition labels. On the measured development graph, gamma=0.5: ARI=0.501, gamma=1.5: ARI=0.403. These checks do not retune the forecast target or demonstrate robustness under every network construction. In particular, resolution sensitivity remains a limitation.
 
-| Integration check | Observed result |
+## 6. Evaluation plan and why each experiment exists
+
+Training label months are February 2015–June 2017. Six expanding validation origins cover July–December 2017; each fit uses only earlier labels. After choosing settings, models are refitted through December 2017 and frozen before evaluating January–September 2018. Scalers and class weights learn only from training folds. There is no random row split and no model refitting on final labels [5].
+
+**Primary metric:** Macro-F1 with a fixed six-class list and zero_division=0. We retain absent/rare classes in the metric and report per-class F1/support, confusion, monthly and size-stratum results. All methods predict identical sample keys, targets and dates. Three estimator seeds measure algorithm variability, not independent temporal replications.
+
+| Experiment | Scientific purpose |
 |---|---|
-| Full unittest suite | **558/558 passed**, no skips/failures/errors; 364.977 seconds wall time |
-| Regular wheel | 65 Python modules match source bytes/inventory; README matches metadata; installation and imports succeed |
-| Three demos | Verified core replay, full two-split synthetic rebuild, and prediction generation→evaluation all exit 0 |
-| Model/metric audit | Both core models and B4 reproduce predictions; metrics/support/confusions cross-checked; six core files match the earlier raw demo |
-| Four fresh kernels | 37 code cells, 33 figure families, no errors; HTML checked for complete code/output |
-| Notebooks by pair | Core 10/14 and 7/6; detection/tracking 14/8; prediction 6/5 (code cells/figure families) |
+| B1 Majority and B2 Persistence | Establish frequency and temporal-repeatability reference levels |
+| B3 Flat LR, same full features | Isolate the hierarchy comparison within a linear model family |
+| B4 Hierarchical HGB static | Compare with the original strong champion already given current activity |
+| B5 Hierarchical HGB dynamic | Test whether the proposed advantage survives a nonlinear model with the same full inputs |
+| Proposed without D, settings fixed | Check the contribution of activity/interaction dynamics |
+| Class, month, size and measurement diagnostics | Identify where the aggregate improvement does and does not hold |
 
-Execution environment: Windows CPython 3.13.3, NumPy 2.5.4, pandas 3.0.6, scikit-learn 1.9.1, igraph 1.0.0, and leidenalg 0.12.0; manifests record actual versions. Reported times include each run's recorded execution/validation/I/O scope and are not controlled algorithm benchmarks. Peak native memory is unmeasured.
+The compact forward protocol has **five baselines, one proposed model and one ablation**. Four tuned families receive eight configurations and the same six origins: **192 configuration–fold evaluations**. Two-head configurations fit up to two estimators per evaluation, so192 is not a count of individual head fits. Majority/Persistence have fixed rules; the ablation reuses selected primary settings. This replaces the original480 configuration–fold design without adding new test-driven searches.
 
-A clean installation with all declared extras and successful `pip check` is recorded separately in the local acceptance evidence. Documentation links and publication paths are checked before publication. Original documents/reports are preserved locally; `reports/` contains only this report. Runtime/private/Harness files remain outside the publication allowlist.
+The submitted seven-configuration view is a retrospective reduction of a completed broader study. The original primary, predictions, validation champion and full archived results are retained. HGB dynamic was an alternative architecture in that study and is now explicitly treated as a strong nonlinear reference. This role change is disclosed; it is not a new preregistered comparison or an independent rerun.
 
-Items requiring human or historical evidence remain pending: independent dual annotation, agreement/adjudication, verification of Đăng's historical artifacts/freeze, teammate acceptance, rehearsal/attendance, and confirmation of an unseen evaluation period.
+The original validation champion remains **hier_hgb_static**. A paired moving-block bootstrap uses three-month blocks,2,000 draws and a fixed seed, following the time-block resampling principle [8], with pooled confusion matrices and mean-over-seed F1 differences. The nine-month interval is exploratory. We additionally compute the same descriptive contrast against the stronger expanded reference, clearly distinguishing it from the original frozen primary comparison. Past post-2015 outcome exposure has not been independently certified; the chronology alone does not establish an untouched confirmation set.
 
-Progress toward paper potential requires comparison with the closest related work, harder benchmarks and independent seeds, fair protocols and label populations, question-driven ablations, controlled SNA insights with alternative explanations, and transparent negative results. A complete software workflow provides a foundation; it does not guarantee a grade of 9–10.
+## 7. Proposed method and relation to prior work
 
-## 9. Midterm completion: plan, baselines and preliminary proposed results
+Feature groups are **S**(current structure), **H**(community history), **L**(known predecessor state), **C**(subreddit activity context), **A**(current member activity/replies) and **D**(past activity and interaction dynamics). Static uses S+H+L+C+A; dynamic adds D. D includes returning-member fraction, observed active-month fraction, log changes in records and internal replies, repeated dyads and subreddit-distribution drift. Empty or missing histories carry explicit flags; missing observations are not proof of inactivity.
 
-This section updates the engineering status after the original three-pair Week 1 acceptance above. It supplies an enforced experimental plan, controlled baseline results and preliminary results of a **project-defined HeTCo-v0 context/history forecasting prototype**. It does not claim full final HeTCo, T/temporal/consensus detection, original GED reproduction, human validation, novelty or an unseen test.
+The proposed **hierarchical Logistic Regression with dynamics** first predicts P(dissolve). A second Logistic Regression predicts the other five classes conditional on non-dissolution. Composition uses P(event)=(1−P(dissolve))P(event|non-dissolve), with an explicit dissolve probability and fixed-class argmax. Single-class or empty-conditional training folds use documented training-only fallbacks. The selected primary setting is **estimator=lr, C=1.0, class_weight=balanced, transform=standard**; model outputs are not claimed to be calibrated.
 
-### 9.1. Detailed experimental plan actually executed
+The two-stage design is motivated by a common disappearance event and heterogeneous surviving-community transitions. It is still evaluated against the same-input flat LR and nonlinear hierarchical controls, rather than assumed to help. The no-D ablation fixes selected primary settings; it measures that fitted design's dependence on D, not the best possible independently retuned static LR.
 
-- Input: verified `core/week1-demo-input` preparation and `core/week1-group-core-001/forecast`, fixed Independent Leiden/GED-adapted reference. Keep all 1,333 eligible samples, 732 unresolved exclusions and original feature/label values.
-- Runtime protocol: `configs/midterm.toml`; scheduling/ownership: `experiments/midterm_plan.toml` and the administrative assignment. The run archives protocol bytes/resolved feature order, exact model parameters, source/build bytes, Git state, input/sample/label provenance and dependency versions before fitting.
-- Feature blocks: S = five current structural attributes; H = seven past-only history attributes; L = predecessor structural means/missing flag; C = normalized corpus entropy, log thread activity, active-member fraction and within-month external co-thread exposure. Only records in feature month t enter C; predecessor information is available through t. No future-completed thread or t→t+1 label enters features.
-- Matched comparison: B5 uses S+H+L and HeTCo-v0 adds C, sharing the estimator family, parameters, seeds and one-config/no-search budget. A1 removes C and exactly reproduces B5 predictions; A4 removes four membership-dynamics rates; A6 removes L. B1 Majority/Persistence, B4 LR and B2 Random Forest are additional controls, not an assertion that all named baselines reproduce a particular paper.
-- Seeds 42/43/44; HGB learning_rate=.05, 100 iterations, depth 3, seven leaves, min leaf 20, L2=1, balanced class weights, internal early stopping disabled. Train-only LR scaler; explicit Majority fallback for single-class windows and missing persistence history. No post-outcome tuning.
-- Main holdout: October–December 2015 label months, train earlier months; 571 evaluation samples per seed. Rolling origins: July–December 2015, fit earlier label months only; 982 pooled evaluation samples per seed. Both use already inspected development data; rolling/main results are not independent confirmation.
-- Primary metric: fixed-six-class macro-F1; retain present-class F1, supported-class balanced accuracy, precision/recall/F1/support, confusion, monthly results and fallback/exclusions. All differences below retain the same label/sample reference.
+GED provides the structural-event framework [4]. Prior work already predicts community evolution from historical states [6]. We therefore claim an implemented and measured activity/interaction feature design on this observed Reddit task, **not invention of community-evolution prediction, a complete HeTCo implementation, or established methodological novelty**. More complex representation models are future comparators, not methods already reproduced here.
 
+## 8. Measured results and interpretation
 
-Actual run: `research/midterm-context-003`, status `complete`, 140.607 seconds within the recorded pipeline scope. Protocol SHA-256: `dcdf3265016b8e7ea0a1a959d967425b62048f260ca792e78683209b6e393489`. All 189 local models were reloaded to reproduce predictions; 54 score groups matched independent scikit-learn computations. Native peak memory remains unmeasured, with an explicit null/reason.
+| Method | Six-class Macro-F1, mean of three seeds | Why it is included |
+|---|---:|---|
+| B1 Majority | 0.1597 | Most frequent training label; minimum sanity check |
+| B2 Persistence | 0.1562 | Known predecessor event; training-majority fallback |
+| B3 Flat LR + dynamics | 0.3616 | Same full inputs, direct six-class prediction; tests hierarchy |
+| B4 Hierarchical HGB static | 0.3728 | Strong original validation champion; already includes current activity |
+| B5 Hierarchical HGB + dynamics | 0.3880 | Same full inputs and hierarchy; strong nonlinear reference |
+| Proposed hierarchical LR + dynamics | 0.4117 | Two-stage linear forecast with interpretable past-activity features |
+| Ablation: proposed without D | 0.3643 | Same selected primary settings, removing dynamic features only |
 
-### 9.2. Controlled main-holdout results
+The frozen proposed model exceeds the strongest reported baseline **hier_hgb_dynamic** by **+0.0237**. Against the original validation champion, its difference is **+0.0390**, with 95% paired interval **[+0.0056, +0.0744]**. The secondary strongest-reference interval is **[-0.0828, +0.0984]**; its automatic descriptive criterion is **not_demonstrated**. A higher point estimate alone must not be described as confirmed superiority if this interval includes zero. These are preliminary observed-cohort results with rule-derived labels.
 
-| Model / variant | Mean six-class macro-F1 | Delta vs matched B5 | Fallback samples/seed |
+![Method comparison](figures/temporal-study-001/comparison.png)
+
+*Figure 4. Five baselines, proposed and ablation. Source: [executed study notebook](../notebooks/core/05_temporal_activity_study.ipynb).*
+
+![Monthly results](figures/temporal-study-001/monthly.png)
+
+*Figure 5. Monthly generalization. Source: [study notebook](../notebooks/core/05_temporal_activity_study.ipynb).*
+
+The proposed method wins **5/9** observed months against the strongest expanded reference. It is not uniformly superior over time.
+
+### 8.1. Rare classes and errors
+
+| Event | Final support | Proposed F1, mean seeds | Strongest-reference F1, mean seeds |
 |---|---:|---:|---:|
-| B1_majority | 0.159671533 | -0.129341068 | 0 |
-| B1_persistence | 0.157729696 | -0.131282905 | 538 |
-| B4_logreg | 0.360540447 | +0.071527846 | 0 |
-| B2_random_forest | 0.305448022 | +0.016435422 | 0 |
-| B5_matched_boosting | 0.289012601 | +0.000000000 | 0 |
-| HeTCo_v0 | 0.291182340 | +0.002169739 | 0 |
-| A1_no_context | 0.289012601 | +0.000000000 | 0 |
-| A4_no_dynamics | 0.288224920 | -0.000787681 | 0 |
-| A6_no_lag | 0.298035584 | +0.009022983 | 0 |
+| stable | 4 | 0.0000 | 0.0000 |
+| grow | 19 | 0.0968 | 0.1277 |
+| shrink | 25 | 0.4444 | 0.4667 |
+| merge | 15 | 0.2308 | 0.1132 |
+| split | 39 | 0.7397 | 0.6567 |
+| dissolve | 1167 | 0.9587 | 0.9640 |
 
-HeTCo-v0 changes B5 by **+0.002170 macro-F1**, below the draft +0.02 target; B4 LR remains stronger (0.360540 versus 0.291182). Thus the prototype is executable, but these results do not establish a forecasting advantage over the strongest simple control. Removing lag raises the main score to 0.298036; more feature blocks do not automatically help. Persistence falls back on 538/571 samples, which limits its interpretation on this reference.
+Dissolve accounts for **91.96%** of final samples. Stable has only **4** final cases. The headline metric must therefore be read with the class table: the current system cannot be presented as reliably forecasting all six events. Better aggregate performance does not resolve rare-class validity or guarantee useful forecasts for growth/stability.
 
-Context inspection finds 1190/1333 eligible rows with zero observed corpus entropy. This is a sparse explanatory signal, not evidence of ideological homogeneity: zero can reflect one observed context or no authored observation. A feature-availability/context-distribution diagnostic is retained rather than assuming every added context feature is informative.
+![Class support](figures/temporal-study-001/support.png)
 
-Stable has zero main test support and dissolve remains 525/571. Labels are tracker-derived proxies. The method cannot be judged from aggregate F1 alone; the notebook retains class confusions and monthly behavior.
+*Figure 6. Class support by temporal split. Source: [study notebook](../notebooks/core/05_temporal_activity_study.ipynb).*
 
-### 9.3. Rolling diagnostics and limited uncertainty
+![Proposed confusion](figures/temporal-study-001/confusion.png)
 
-Across July–December rolling origins, B5 is 0.277682938, HeTCo-v0 0.321836017, and B4 LR 0.378104305. The context delta versus B5 is +0.044153080. This diagnostic uses refitting on earlier months; it is a different estimand from the fixed main holdout, not a replacement selected because it looks better.
+*Figure 7. Proposed confusion matrix, seed42. Source: [study notebook](../notebooks/core/05_temporal_activity_study.ipynb).*
 
-The predeclared moving-block exercise uses six months, block length 2, 1,000 paired draws, seed 2026, averaging seed-specific deltas within each draw. The exploratory HeTCo-v0 minus B5 95% percentile interval is **[-0.004065639, 0.132229204]**, crossing zero. No interval is issued for the three-month main holdout under the declared support policy. Limited inspected temporal support and rare classes prevent confirmation of H3, even where a point estimate exceeds +0.02. Seed repeats do not multiply independent month support.
+### 8.2. Component and size diagnostics
 
-### 9.4. Harder synthetic diagnostic
+Removing D at fixed settings changes Macro-F1 from **0.4117** to **0.3643**. Same-input flat LR achieves **0.3616**. These contrasts support investigating activity dynamics and hierarchy on this cohort; they do not establish social causality or a separately significance-tested contribution for every component.
 
-Actual run: `detection-tracking/midterm-harder-003`, complete; 103.364 recorded seconds. Recipe/protocol schema 2 fixes p_in=.25/p_out=.10 and generator seeds 21/22/23 (development), 201/202/203 (evaluation), with detector seeds 0/1/2. Original easy schema-1 files, thresholds and trusted historical pins remain unchanged.
+| Source-community size | Proposed Macro-F1 | Strongest-reference Macro-F1 |
+|---|---:|---:|
+| 2 or fewer members | 0.2078 | 0.1967 |
+| 3–9 members | 0.2396 | 0.2148 |
+| 10 or more members | 0.3474 | 0.3414 |
 
-Evaluation canonical AMI is **0.224239981** over 33 valid/3 missing rows; mean coverage 1.000000.
+Each size bucket retains the fixed six-class metric, so class absence and composition affect its score. Size-stratum results are descriptive, not independent validation datasets. No small-community exclusion was introduced to improve the headline result.
 
-| Split / route | Support | Pooled event macro-F1 | Correct | Matched coverage | Extra detector sources |
-|---|---:|---:|---:|---:|---:|
-| development / truth_tracking | 39 | 1.000000000 | 39/39 | 1.000000 | 0 |
-| development / detector_tracking | 39 | 0.130291005 | 5/39 | 0.794872 | 50 |
-| evaluation / truth_tracking | 39 | 1.000000000 | 39/39 | 1.000000 | 0 |
-| evaluation / detector_tracking | 39 | 0.112227539 | 6/39 | 0.871795 | 42 |
+## 9. Prototype, reproducibility and midterm status
 
-Truth tracking still fits the designed scenarios, while the harder detector route degrades substantially. This supports error-propagation analysis, not the general correctness of the tracker on arbitrary networks or confirmation of temporal/consensus detection. Both null and unmatched/extra cases remain visible. Mean-dataset metrics are also retained in the run and must not be confused with pooled scores.
+The runnable path is **raw archives → normalized metadata → monthly graphs → Leiden partitions → audited event labels → causal features → temporal selection/freeze → prediction/evaluation → report/notebook**. The CLI stages are normalize-development, develop, select, evaluate and report. Completed stages carry hashes; incomplete/failed attempts are retained, and verified completed months can be resumed. The evaluation gate rejects source/config/model drift after selection. Historical run readers validate saved targets, probability vectors and metrics without loading model pickles.
 
-### 9.5. Verification and instructor-deliverable status
+The [executed notebook](../notebooks/core/05_temporal_activity_study.ipynb) contains code, saved metric output and all seven figures. [README](../README.md) and the [runbook](../docs/RUNBOOK.md) document environment and execution. A fresh checkout needs the documented raw data/environment and either a completed local run or an explicit new run; saved GitHub notebook output is a static evidence snapshot, not a hosted executable service.
 
-The current full suite passed **584/584 tests** (exit 0; 592.494 runner seconds). The new notebook [03_midterm_research.ipynb](../notebooks/core/03_midterm_research.ipynb) executed in a fresh kernel: **7 code cells, 7 figure outputs, no errors**. Its independently verified tables/figures cover population, model comparison, ablation, months, class confusion, context distributions and exploratory intervals. New notebook caches and run artifacts remain local; only source and reviewed aggregate report are in publication scope.
+| Midterm requirement | Evidence and status |
+|---|---|
+| Detailed experimental plan | RQs, exact task, five baseline roles, tuning budgets, split/metric/uncertainty rules in this report and runtime protocol |
+| Baseline results | Five methods evaluated on identical frozen community–month targets |
+| Preliminary proposed results | Selected two-stage LR, actual scores, probabilities and per-class errors |
+| Basic comparison | Strongest-reference, original champion, ablation, temporal and size analysis |
+| Prototype demonstration | End-to-end CLI, resumable artifacts and executed seven-figure notebook |
 
-| Instructor deliverable | Evidence now available | Boundary |
-|---|---|---|
-| Detailed experimental plan | Enforced protocol, formulas, fixed budgets/seeds/splits, run order and per-area responsibilities | Development plan frozen before these new fits, not a pre-exposure unseen preregistration |
-| Baseline results | Three original pair demos plus new matched B1/B2/B4/B5 comparisons | Scores refer to their declared populations and references |
-| Preliminary proposed results | Actual HeTCo-v0 predictions, controlled B5/A1/A4/A6 results, error analysis and a fresh notebook | Preliminary feature forecaster; no guarantee of positive effect or paper novelty |
+**Next work, prioritized by scientific risk:** independently review a blinded sample spanning all event classes and unresolved cases, report agreement/adjudication and investigate detector/target errors; establish a new genuinely unexposed confirmation cohort before further model selection; examine rare-event support and monthly-resolution sensitivity on development data; then evaluate additional architectures only against the same audited task. Any change to label semantics or eligibility creates a new versioned target and requires a new evaluation, not a replacement of these results.
 
-For rehearsal, explain the dataset and causal graph first, then the fixed reference/sample population, matched experiment, unfavorable results, and next steps. Each member should identify their module/input/output and one failure mode; this report cannot certify attendance or understanding.
+The midterm demonstrates a functioning research prototype and interpretable preliminary evidence. Human target validity, rare-event reliability, unseen confirmation and novelty remain incomplete. Improving the report cannot substitute for those experiments or justify a guaranteed grade.
 
-Remaining human/full-study work: independent annotation/agreement/adjudication, historical artifact acceptance, verified novelty against closest work, full T/temporal/consensus and reference-sensitivity experiments, adequate temporal uncertainty, and a confirmed untouched evaluation period. These are not silently marked complete by the midterm prototype. The three software-backed midterm deliverables have evidence; final research/paper potential remains open.
+## References
+
+[1] CornellNLP, “Reddit Corpus (by subreddit),” ConvoKit documentation. [Online]. Available: [corpus documentation](https://convokit.cornell.edu/documentation/subreddit.html).
+
+[2] J. Baumgartner et al., “The Pushshift Reddit Dataset,” Proceedings of ICWSM, vol.14, pp.830–839,2020. [doi:10.1609/icwsm.v14i1.7347](https://doi.org/10.1609/icwsm.v14i1.7347).
+
+[3] V. A. Traag, L. Waltman, and N. J. van Eck, “From Louvain to Leiden: Guaranteeing well-connected communities,” Scientific Reports, vol.9, Art.5233,2019. [doi:10.1038/s41598-019-41695-z](https://doi.org/10.1038/s41598-019-41695-z).
+
+[4] P. Bródka, S. Saganowski, and P. Kazienko, “GED: The method for group evolution discovery in social networks,” Social Network Analysis and Mining, vol.3, pp.1–14,2013. [doi:10.1007/s13278-012-0058-8](https://doi.org/10.1007/s13278-012-0058-8).
+
+[5] Scikit-learn developers, “Cross-validation: Evaluating estimator performance.” [Online]. Available: [documentation](https://scikit-learn.org/stable/modules/cross_validation.html).
+
+[6] S. Saganowski et al., “Predicting Community Evolution in Social Networks,” Entropy, vol.17, pp.3053–3096,2015. [doi:10.3390/e17053053](https://doi.org/10.3390/e17053053).
+
+[7] J. P. Chang et al., “ConvoKit: A Toolkit for the Analysis of Conversations,” Proceedings of SIGDIAL,2020. [Paper](https://www.cs.cornell.edu/~cristian/ConvoKit_Demo_Paper_files/convokit-demo-paper.pdf).
+
+[8] H. R. Künsch, “The Jackknife and the Bootstrap for General Stationary Observations,” The Annals of Statistics, vol.17, no.3, pp.1217–1241,1989. [doi:10.1214/aos/1176347265](https://doi.org/10.1214/aos/1176347265).

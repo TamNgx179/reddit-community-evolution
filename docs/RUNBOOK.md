@@ -120,7 +120,7 @@ Normalization audits raw inputs again. Downstream stages verify completed source
 
 ## Notebooks and kernels
 
-Open [01_reddit_pilot.ipynb](../notebooks/core/01_reddit_pilot.ipynb) for preparation/detection, then [02_core_forecast.ipynb](../notebooks/core/02_core_forecast.ipynb) for verified tracking/forecast results. Follow [the complete week-one demo](RUNBOOK.md) to create the required artifacts from a fresh checkout. The three `00_research_plan.ipynb` files are templates and deliberately raise `NotImplementedError`.
+Open [01_reddit_pilot.ipynb](../notebooks/core/01_reddit_pilot.ipynb) for preparation/detection, then [02_core_forecast.ipynb](../notebooks/core/02_core_forecast.ipynb) for verified tracking/forecast results. Follow [the complete week-one demo](RUNBOOK.md) to create the required artifacts from a fresh checkout.
 
 1. Install dependencies using the commands above.
 2. Register a project-local kernel if needed:
