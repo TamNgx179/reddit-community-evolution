@@ -32,3 +32,31 @@ The coordinator records completion timestamps and exposure history, then compare
 Report sampled/annotated/adjudicated counts by hidden sampling stratum, missing submissions, disagreements, unresolved cases and confidence. Compare algorithm labels only after adjudication and include both all-reviewed coverage and the eligible subset; do not discard disagreement to inflate agreement. Distinguish exact rule conformance from independent structural plausibility and from social ground truth. Preserve failed/negative cases. Do not revise thresholds using inspected held-out cases and then call the same cases independent validation.
 
 Current generated status is `prepared_pending_human_annotation`. No human labels, agreement scores or social validation are produced automatically by the tool.
+
+## Full-study panels and submitted assessments
+
+The temporal study uses `study-review --study-root <root> --output <new-panel>
+--period development` or `--period final`. It samples the two periods separately,
+including available unresolved strata. Give each assessor only `reviewer/cases.json`.
+These compact summaries contain sizes, all successor overlaps, retention and
+the five largest predecessor summaries, with truncation disclosed. They omit
+machine labels, thresholds and model predictions. Keep the coordinator key local.
+
+Each actual submission is a separate JSON object containing `reviewer_id`,
+`reviewer_type` (`human` or `automated`), truthful `provenance`, the exact
+`payload_sha256`, a timezone-aware `submitted_utc`, and `attestations` confirming
+`answer_key_not_seen`, `predictions_not_seen`, `other_assessment_not_seen`.
+`judgments` must include each case exactly once with `case_id`, `label`,
+`confidence` and a nonblank evidence-based `rationale`.
+
+`study-agreement --panel <panel> --first <first.json> --second <second.json>
+--output <new-result>` verifies panel integrity, complete submissions, distinct
+identities and common reviewer type. It preserves originals and computes a
+seven-label confusion table, raw agreement and unweighted Cohen kappa (explicitly
+undefined for degenerate marginals). Optional `--adjudication <third.json>`
+requires a separate actual assessor and decisions for every disagreement.
+
+Automated assessments are supplementary structural plausibility checks. Shared
+model priors can inflate their agreement. They cannot be attributed to people,
+certify independent human validation, replace original tracker labels or establish
+social ground truth. Human review remains pending until genuine submissions arrive.

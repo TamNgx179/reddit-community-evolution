@@ -8,7 +8,7 @@ import math
 from pathlib import Path
 
 from reddit_sna.contracts import SnapshotEdge, next_month
-from reddit_sna.data.archive import digest_file
+from reddit_sna.data.archive import CORPORA, digest_file
 from reddit_sna.features.activity import ACTIVITY_FIELDS, DYNAMIC_FIELDS, activity_features
 from reddit_sna.features.community import snapshot_features
 from reddit_sna.features.context import CONTEXT_FEATURES, context_features
@@ -56,7 +56,7 @@ def load_month(directory, month):
     return dict(groups), edges
 
 
-def build_study_samples(database, month_directories, output, reference, cache=None):
+def build_study_samples(database, month_directories, output, reference, cache=None, *, corpora=CORPORA):
     """Rebuild a contiguous cohort; label t only after its t+1 snapshot exists.
 
     The final snapshot's features remain available but its target is censored.
@@ -64,13 +64,24 @@ def build_study_samples(database, month_directories, output, reference, cache=No
     reference binds their verified inventory and fixed measurement protocol.
     """
     output = Path(output)
+    corpora = tuple(corpora)
+    if len(corpora) < 2 or len(set(corpora)) != len(corpora):
+        raise ValueError('Samples need a unique declared context cohort')
     ordered = sorted(month_directories)
     if len(ordered) < 2 or any(next_month(a) != b for a,b in zip(ordered, ordered[1:])):
         raise ValueError('Samples require at least two consecutive snapshots')
+    # Bind cached normalization to each sealed graph cohort. Older sample
+    # manifests lack this field, so their graph inventories remain the evidence.
+    for directory in month_directories.values():
+        graph = json.loads((Path(directory)/'snapshots.json').read_text(encoding='utf-8'))
+        if set(graph['declared_corpora']) != set(corpora):
+            raise ValueError('Context corpus normalization differs from graph cohort')
     cached,cache_months,cache_hash={},{},None
     if cache is not None:
         cache=Path(cache)
         info=verified(cache)
+        if tuple(info.get('context_corpora', corpora)) != corpora:
+            raise ValueError('Cached context normalization differs from declared cohort')
         prefix=info['months']
         if info['stage']!='samples' or info['reference_id']!=reference or prefix!=ordered[:len(prefix)] or len(prefix)>=len(ordered):
             raise ValueError('Feature cache must be a verified strict prefix of this reference cohort')
@@ -112,7 +123,7 @@ def build_study_samples(database, month_directories, output, reference, cache=No
             if {cid for m,cid in cached if m==month}!=set(groups):
                 raise ValueError('Cached community feature inventory differs from membership')
         else:
-            context = context_features(database, month, groups)
+            context = context_features(database, month, groups, corpora=corpora)
             activity = activity_features(database, month, groups)
         for cid in sorted(groups):
             if month in cache_months:
@@ -159,5 +170,6 @@ def build_study_samples(database, month_directories, output, reference, cache=No
     prepare_review(labels, group_inventory, output / 'review', weights=weight_inventory)
     return seal(output, dict(status='complete', stage='samples', reference_id=reference,
         label_reference_id=label_ref, months=ordered, n=len(samples), human_review='pending',
+        context_corpora=list(corpora),
         cached_feature_manifest_sha256=cache_hash,
         input_month_manifests={m:digest_file(Path(p) / 'complete.json') for m,p in month_directories.items()}))

@@ -37,11 +37,17 @@ def verified(directory):
     return info
 
 
-def normalize_phase(raw, destination, end, source=None):
+def normalize_phase(raw, destination, end, source=None, *, corpora=CORPORA):
     """Audit original ZIPs and stream only metadata before the phase cutoff."""
     destination = Path(destination)
     destination.mkdir(parents=True, exist_ok=False)
-    paths = selected_archives(Path(raw), CORPORA)
+    if tuple(corpora) == CORPORA:
+        paths = selected_archives(Path(raw), CORPORA)
+    else:
+        # External replication is an explicit fixed cohort. Do not relax the
+        # historical selected_archives contract or mutate global constants.
+        from reddit_sna.data.confirmation import declared_paths
+        paths = sorted(declared_paths(raw, corpora))
     if source is None:
         audit = audit_archives(paths)
     else:
@@ -76,12 +82,12 @@ def normalize_phase(raw, destination, end, source=None):
                                   identity_scope=summary['identity_scope']))
 
 
-def prepare_month(database, destination, month):
+def prepare_month(database, destination, month, *, corpora=CORPORA):
     """Keep one month's graph in memory; outputs include complete loss audits."""
     from reddit_sna.contracts import next_month
     destination = Path(destination)
     destination.mkdir(parents=True, exist_ok=False)
-    graph = build_snapshots(Path(database), destination / 'snapshots', month, next_month(month), corpora=CORPORA)
+    graph = build_snapshots(Path(database), destination / 'snapshots', month, next_month(month), corpora=corpora)
     json_write(destination / 'snapshots.json', graph)
     detection = detect_snapshots(destination / 'snapshots', destination / 'memberships',
         graph['identity_scope'], seeds=(0,1,2), gamma=1.0,

@@ -10,7 +10,7 @@ Mỗi người có nhiệm vụ riêng và cùng người trong cặp hoàn thà
 
 A1 thi lý thuyết 50%; A2 đồ án 50%. Điểm tối đa của đồ án đòi hỏi tiềm năng paper và quá trình tham gia. Nhóm định hướng nghiên cứu có phân tích SNA: tính mới cần kiểm chứng bằng related work; không xem source chạy được hoặc nhiều thuật toán là đủ.
 
-Mỗi cặp dùng notebook `00_research_plan.ipynb` của mình để ghi câu hỏi, đầu vào, protocol, đối chứng, kết quả có artifact và phần phản biện. Các notebook hiện là template chưa thực thi. Hồ sơ `experiments/` đang draft/planned và chưa được CLI enforce; đây là quy ước thiết kế chung, không tạo phụ thuộc output giữa các nhóm tuần 1.
+Mỗi cặp ghi câu hỏi, đầu vào, protocol, đối chứng, kết quả và phần phản biện trong notebook demo thuộc thư mục của mình. Bản tổng hợp Midterm 1 nằm ở `notebooks/core/05_temporal_activity_study.ipynb` và `reports/WEEK1_REPORT.md`. Cấu hình thực chạy nằm trong `configs/`; danh sách thí nghiệm và hướng nghiên cứu tiếp theo được gom vào report, không tạo phụ thuộc output giữa các cặp tuần 1.
 
 Các mốc giữa/cuối kỳ cần kiểm chứng graph/coverage, tracker trên ground truth, split theo toàn tháng nhãn, đối chứng cùng mẫu/nhãn/budget, ablation có mục tiêu và phân tích lỗi/giới hạn. Test phần mềm không thay cho bằng chứng SNA. Xem docs/METHODS.md để biết thành phần source và câu hỏi cần bảo vệ.
 ## 1. Phần việc sở hữu
@@ -35,7 +35,6 @@ reddit-community-evolution/
 ├── pyproject.toml              # Package và dependencies
 ├── .gitignore
 ├── configs/                    # Cấu hình runtime ba nhóm
-├── experiments/                # Protocol draft, E1–E5/A1–A7, features và related work
 ├── notebooks/                  # Thử nghiệm và trình bày bằng .ipynb
 │   ├── core/                   # Tâm–Thanh
 │   ├── detection_tracking/     # Phúc–Đăng

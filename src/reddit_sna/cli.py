@@ -30,10 +30,29 @@ def main(argv: list[str] | None = None) -> int:
         if hasattr(stream, "reconfigure"):
             stream.reconfigure(encoding="utf-8", errors="backslashreplace")
     parser = argparse.ArgumentParser(
-        prog="reddit-sna", description="Reddit SNA: three week-one baselines and a preliminary context/history research experiment; full final HeTCo remains planned."
+        prog="reddit-sna", description="Reddit SNA: five-baseline temporal forecasting, preliminary activity dynamics and development observability audits; full HeTCo remains planned."
     )
     subparsers = parser.add_subparsers(dest="command", required=True)
     subparsers.add_parser("pipelines", help="List independent pipelines and implementation status")
+    continuity = subparsers.add_parser("audit-continuity", help="Audit development-only 1/2/3-month observability without relabeling")
+    for flag in ("protocol", "study", "output"):
+        continuity.add_argument("--"+flag, type=Path, required=True)
+    continuity.add_argument("--artifact-root", type=Path, default=Path("artifacts"))
+    confirmation = subparsers.add_parser("confirm-study", help="Run the separately locked external-corpus replication")
+    confirmation.add_argument("--protocol", type=Path, required=True)
+    confirmation.add_argument("--root", type=Path, required=True)
+    confirmation.add_argument("--artifact-root", type=Path, default=Path("artifacts"))
+    confirmation.add_argument("--stage", choices=("acquire","develop","fit","evaluate"), required=True)
+    panel = subparsers.add_parser("study-review", help="Prepare blinded structural assessments; does not annotate")
+    panel.add_argument("--study-root", type=Path, required=True)
+    panel.add_argument("--output", type=Path, required=True)
+    panel.add_argument("--period", choices=("development","final"), required=True)
+    panel.add_argument("--per-stratum", type=int, default=5)
+    panel.add_argument("--seed", type=int, default=2026)
+    agreement = subparsers.add_parser("study-agreement", help="Summarize actual submitted assessments with truthful provenance")
+    for flag in ("panel","first","second","output"):
+        agreement.add_argument("--"+flag, type=Path, required=True)
+    agreement.add_argument("--adjudication", type=Path, help="Actual separate adjudicator submission, if available")
     study = subparsers.add_parser("temporal-study", help="Run resource-monitored full-study stages with a frozen evaluation gate")
     study.add_argument("--protocol", type=Path, required=True)
     study.add_argument("--raw", type=Path, default=Path("data/raw"))
@@ -112,6 +131,26 @@ def main(argv: list[str] | None = None) -> int:
             print(f"{pipeline.value}: {status} ({description})")
         return 0
     try:
+        if args.command == "audit-continuity":
+            from reddit_sna.pipelines.longitudinal import run_audit
+            try:
+                print(json.dumps(run_audit(args.protocol, args.study, args.output, args.artifact_root)))
+            except RuntimeError as exc:
+                print(f"Continuity audit failed: {exc}. Inspect the preserved resource journal and worker log.", file=sys.stderr)
+                return 2
+            return 0
+        if args.command == "confirm-study":
+            from reddit_sna.pipelines.confirmation import run_confirmation
+            print(json.dumps(run_confirmation(args.protocol,args.root,args.stage,args.artifact_root)))
+            return 0
+        if args.command == "study-review":
+            from reddit_sna.evaluation.label_validation import prepare_panel
+            print(json.dumps(prepare_panel(args.study_root,args.output,args.period,args.per_stratum,args.seed)))
+            return 0
+        if args.command == "study-agreement":
+            from reddit_sna.evaluation.label_validation import summarize_panel
+            print(json.dumps(summarize_panel(args.panel,args.first,args.second,args.output,args.adjudication)))
+            return 0
         if args.command == "temporal-study":
             from reddit_sna.pipelines.temporal_study import run_temporal_study
             try:

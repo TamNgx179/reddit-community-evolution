@@ -2,6 +2,20 @@
 
 Commands run from the repository root. Use a new immutable output ID for each run. For definitions and CSV contracts see [methods](METHODS.md); for measured evidence see [results](RESULTS.md).
 
+The current midterm narrative is the [integrated report](../reports/WEEK1_REPORT.md).
+After a completed original/external temporal study, run the development-only audit:
+
+```powershell
+reddit-sna audit-continuity --protocol configs/continuity_audit.toml --study artifacts/temporal/activity-study-001 --output artifacts/validation/continuity-original-002
+reddit-sna audit-continuity --protocol configs/continuity_audit.toml --study artifacts/confirmation/political-cohort-001 --output artifacts/validation/continuity-external-002
+```
+
+These paths identify the runs displayed in the notebook. Existing destinations
+are refused. To reproduce, choose new output IDs and update the notebook's local
+reader paths. Source stores and memberships are local prerequisites; outputs
+saved in the committed notebook allow GitHub viewing without those stores.
+The audit observes only pre-2018 data and changes no model, target or feature.
+
 ## Contents
 
 - [Fresh checkout](#fresh-checkout)
@@ -233,4 +247,4 @@ Run the full synthetic suite using `python -m unittest discover -s tests -v`. Se
 
 Read `summary.json`, forecast `quality.json` and `metrics.json` together. Keep zero-support events and the excluded population visible. Scores measure prediction of tracker-derived pseudo-labels, not independently established social events. Previously inspected 2015 held-out scores remain descriptive. Do not compare Jaccard/GED scores as a controlled improvement because their eligible populations and label references differ.
 
-Use `LABEL_REVIEW.md` to prepare independent review, `experiments/followup_protocol.toml` for the pending follow-up protocol and `RESULTS.md#presentation-outline` for the pair's presentation outline. Software evidence does not establish annotation completion, attendance, accepted collaborator invitations or paper novelty.
+Use `LABEL_REVIEW.md` to prepare independent review and the [integrated report](../reports/WEEK1_REPORT.md#113-research-decision) for the current follow-up priorities. Executable study protocols are in `configs/`; `RESULTS.md#presentation-outline` retains the historical pair presentation outline. Software evidence does not establish annotation completion, attendance, accepted collaborator invitations or paper novelty.

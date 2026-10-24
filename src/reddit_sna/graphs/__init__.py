@@ -1,13 +1,9 @@
-"""Graph definitions, temporal snapshots and user projections.
+"""Monthly reply observations, user projections and graph provenance.
 
-Planned responsibilities, not implemented algorithms:
-- Preserve directed reply observations and UTC observation cutoffs.
-- Define user/post/comment/subreddit nodes and typed heterogeneous relations.
-- Build R (reply) and T (co-thread) user layers; version projection weights.
-- Separate active users from edge-covered users; report isolates and losses.
-- Record graph identity, window, direction, weights and detector objective.
-- Bound thread projection costs explicitly; never silently sample or drop edges.
-
-Detection consumes graph representations from here. A user projection is not
-the original heterogeneous graph. See experiments/study.toml and ARCHITECTURE.
+The implemented snapshot builder preserves directed replies and UTC cutoffs,
+constructs the weighted undirected R projection, and records active users,
+isolates, losses and source hashes. Detection consumes these representations.
+Typed heterogeneous relations and additional co-thread projection operators are
+research extensions, not implemented by this package initializer. See
+docs/METHODS.md and reports/WEEK1_REPORT.md for current semantics and scope.
 """
