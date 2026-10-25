@@ -17,15 +17,20 @@ CONTEXT_FEATURES = ("subreddit_entropy", "thread_activity", "active_member_fract
                     "co_thread_external_exposure")
 
 
-def context_features(database, month, groups):
+def context_features(database, month, groups, *, corpora=CORPORA):
     """Return four finite context attributes per community, including empty activity.
 
-    Entropy uses authored-record corpus frequencies / log(15). Thread activity
+    Entropy uses authored-record corpus frequencies / log(len(corpora)); the
+    historical default is log(15), while the external cohort declares log(3).
+    Thread activity
     is log1p(unique community threads / community size). Exposure is the share
     of potential within-month thread peers outside the community, weighted by
     community participants; it is computed by counts, not quadratic pair lists.
     Participants include valid observed authors outside the assigned partition.
     """
+    corpora = tuple(corpora)
+    if len(corpora) < 2 or len(set(corpora)) != len(corpora):
+        raise ValueError("Context needs at least two unique declared corpora")
     start, end = month_boundary(month), month_boundary(next_month(month))
     owners = {}
     for cid, members in groups.items():
@@ -42,7 +47,7 @@ def context_features(database, month, groups):
         # The WHERE clause prevents any future thread record being consumed.
         for user, root, corpus, timestamp in db.execute(
                 "SELECT user_id,root,corpus,timestamp FROM records WHERE month=?", (month,)):
-            if corpus not in CORPORA or not root or not start <= timestamp < end:
+            if corpus not in corpora or not root or not start <= timestamp < end:
                 raise ValueError("Context record has inconsistent corpus/month/root")
             if user is None:
                 continue
@@ -63,7 +68,7 @@ def context_features(database, month, groups):
     for cid, members in groups.items():
         total = sum(counts[cid].values())
         entropy = -sum((n / total) * math.log(n / total) for n in counts[cid].values()) if total else 0.0
-        result[cid] = dict(subreddit_entropy=entropy / math.log(len(CORPORA)),
+        result[cid] = dict(subreddit_entropy=entropy / math.log(len(corpora)),
                            thread_activity=math.log1p(len(roots[cid]) / len(members)),
                            active_member_fraction=len(active[cid]) / len(members),
                            co_thread_external_exposure=numerator[cid] / denominator[cid]

@@ -13,7 +13,7 @@ Read [the runbook](RUNBOOK.md) for commands and [results](RESULTS.md) for execut
 - [Features and timing](#features-and-timing)
 - [Jaccard fallback](#jaccard-fallback-semantics)
 
-One functional package, `src/reddit_sna`, serves CLI and notebooks. The implemented core-pair baseline connects ZIP audit → normalization → monthly R → Independent Leiden → Jaccard/GED adaptation → current/history features → temporal baselines → verified evaluation. HeTCo, full original GED, heterogeneous/temporal detection and the synthetic pair demos remain planned. Filenames describe responsibilities; ownership is in the administrative assignment.
+One functional package, `src/reddit_sna`, serves CLI and notebooks. The implemented core-pair baseline connects ZIP audit → normalization → monthly R → Independent Leiden → Jaccard/GED adaptation → current/history features → temporal baselines → verified evaluation. Synthetic detection/tracking demos, the activity-dynamics forecast and fixed external replication are implemented. Full HeTCo, verbatim original GED and heterogeneous/temporal detection remain planned. See the [integrated research report](../reports/WEEK1_REPORT.md) for the current task, five baselines, proposed model and measured limitations. Filenames describe responsibilities; ownership is in the administrative assignment.
 
 ## Dependencies and boundaries
 
@@ -33,6 +33,10 @@ Algorithm modules never import CLI or pipelines. The dedicated week-one orchestr
 |---|---|
 | `data/archive.py` | Explicit ZIP allowlist, streaming SHA-256, full member CRC and sampled schema audit |
 | `data/normalize.py` | Full-row validation, UTC cutoff, namespaced record IDs and indexed SQLite metadata |
+| `data/observability.py` | Read-only authored/post/comment/reply-endpoint channels within declared corpora |
+| `evaluation/longitudinal.py` | Development-only 1/2/3-month direct matching and censored/unknown denominators; never predictive features |
+| `pipelines/longitudinal.py` | Verified development sources, resource-monitored audit, saved seed-ARI reconstruction |
+| `reporting/longitudinal.py` | Aggregate audit figures and separately scoped archived matched-flat diagnostic |
 | `graphs/audit.py` | Complete corpus-month support and exclusive reply outcomes |
 | `graphs/snapshots.py` | Child-month directed replies, symmetric R, users, isolates and coverage |
 | `graphs/provenance.py` | Cohort month/schema validation, month hashes and protocol-bound references |
@@ -52,7 +56,7 @@ Algorithm modules never import CLI or pipelines. The dedicated week-one orchestr
 
 ## Notebooks and reporting
 
-The three notebook directories support independent pair prototypes. `00_research_plan.ipynb` files are deliberately unfinished templates. `core/01_reddit_pilot.ipynb` is executable with an installed graph/notebook environment: it checks the actual kernel, resolves repository paths, replays verified results or rebuilds from raw, displays diagnostics and exports figures. Follow the setup in README. No `sys.path` modification is allowed.
+The notebook directories retain the completed independent pair prototypes. `core/01_reddit_pilot.ipynb` is executable with an installed graph/notebook environment: it checks the actual kernel, resolves repository paths, replays verified results or rebuilds from raw, displays diagnostics and exports figures. Follow the setup in README. No `sys.path` modification is allowed.
 
 Keep exploratory prototypes in notebooks until stable. Reusable replay, validation and plotting belong in the package and are behavior-tested independently. Restart and run all cells before handing off; store executed copies/figures in fresh local artifact folders and commit only explicitly reviewed execution snapshots in the two core notebooks; keep standalone artifacts local. Plots are derived from recorded aggregates, never hardcoded scientific results. Network sampling is display-only; full graph data determine metrics and memberships.
 
@@ -97,7 +101,7 @@ Reporting treats manifests as trusted local inputs and checks changes relative t
 
 The supplied rubric allocates A1/A2 50% each and requires paper potential for maximum project credit. Distinguish software correctness, method validation on controlled truth, and out-of-time Reddit results. Passing tests or arranging source does not establish the latter two, novelty or a grade.
 
-`experiments/study.toml` is a draft task/graph/label/split/hypothesis/fairness design. Experiment E1–E5, ablation A1–A7, feature and literature catalogs are planning records; CLI does not enforce them. `reports/claim_evidence.csv` has unverified claims and `contribution_log.csv` is a blank record of actual work, not attendance evidence. Every final result must trace to data/version/reference/config/seed/environment/prediction keys and exclusions.
+The [integrated report](../reports/WEEK1_REPORT.md) is the single source for research questions, experiment purposes, feature groups, comparisons, references and future priorities. Executable protocols live in `configs/temporal_study.toml`, `configs/confirmation.toml` and `configs/continuity_audit.toml`. Earlier draft registries are superseded. Every result must trace to its data, reference, configuration, seed, environment, prediction keys and exclusions; planning documents alone are not evidence of execution.
 
 | Next component | Evidence required before claiming completion |
 |---|---|

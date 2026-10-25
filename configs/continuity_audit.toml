@@ -1,0 +1,10 @@
+schema_version = 1
+protocol_id = "development-observability-v1"
+start = "2015-01"
+cutoff_exclusive = "2018-01"
+horizons = [1, 2, 3]
+alpha = 0.5
+beta = 0.5
+memory_budget_gib = 8
+working_budget_gib = 30
+minimum_free_gib = 12

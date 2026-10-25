@@ -1,0 +1,15 @@
+schema_version = 3
+protocol_id = "activity-interaction-five-baselines-v3"
+start = "2015-01"
+validation_start = "2017-07"
+test_start = "2018-01"
+end = "2018-10"
+seeds = [42, 43, 44]
+selection_seed = 42
+bootstrap_draws = 2000
+block_length = 3
+bootstrap_seed = 2026
+working_budget_gib = 30
+memory_budget_gib = 8
+minimum_free_gib = 12
+exposure = "chronological_development_unseen_uncertified"

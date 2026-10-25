@@ -1,8 +1,0 @@
-ablation_id,change,changes_partition,comparison_unit,required_control,status
-A1,Remove heterogeneous feature block,false,same_sample_and_label_keys,Keep partition tracker model family budget and split fixed,midterm_v0_executed
-A2,Remove co-thread T layer,true,benchmark_partition_and_events,Rerun all predictors if making forecast comparison on new reference,planned
-A3,Remove temporal coupling,true,benchmark_partition_and_events,Rerun all predictors if making forecast comparison on new reference,planned
-A4,Remove past membership-dynamics features,false,same_sample_and_label_keys,Do not remove future features because they were never permitted,midterm_v0_executed
-A5,Remove consensus,true,benchmark_partition_and_events,Separate seed variability from temporal invariance and rerun predictors for new labels,planned
-A6,Remove lagged feature history,false,same_sample_and_label_keys,Preserve missing-history policy and sample intersection,midterm_v0_executed
-A7,Change tracker or resolution,only_if_resolution_changes,separate_versioned_reference_sets,Report class and coverage changes and evaluate all models on each reference,planned

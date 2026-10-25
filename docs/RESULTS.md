@@ -1,6 +1,12 @@
 # Results and research evidence
 
-The current work completes reproducible baseline delivery, not the entire research proposal. Ownership is recorded in ../PHAN-CONG-SNA-8-TUAN.md. The technical demonstration is independent of the other two pairs.
+For the current full-study midterm results, external replication and longitudinal
+measurement audit, read the [integrated research report](../reports/WEEK1_REPORT.md)
+and [executed notebook](../notebooks/core/05_temporal_activity_study.ipynb).
+The pilot and earlier handoff evidence below is historical and uses different
+reference targets. Its scores must not be compared as a controlled improvement.
+
+The sections below preserve earlier baseline and handoff evidence. Their independent pair demos use different reference targets. The integrated report linked above describes the current Midterm 1 study. Ownership remains in ../PHAN-CONG-SNA-8-TUAN.md.
 
 ## Contents
 
