@@ -1,0 +1,31 @@
+schema_version = 1
+protocol_id = "prospective-ideological-cohort-v1"
+corpora = ["Anarchism", "Libertarian", "GreenParty"]
+start = "2015-01"
+test_start = "2018-01"
+end = "2018-10"
+seeds = [42, 43, 44]
+bootstrap_draws = 2000
+block_length = 3
+bootstrap_seed = 2026
+working_budget_gib = 30
+memory_budget_gib = 8
+minimum_free_gib = 12
+models = "confirmation_models.json"
+primary = "hier_lr_pruned_growth"
+champion = "hier_hgb_dynamic"
+review_seed = 20261026
+review_per_stratum = 3
+exposure = "new_to_this_run_after_declaration_team_exposure_uncertified_users_may_overlap"
+
+[archives.Anarchism]
+url = "https://zissou.infosci.cornell.edu/convokit/datasets/subreddit-corpus/corpus-zipped/AmericanPorn~-~Androgynoushotties/Anarchism.corpus.zip"
+bytes = 228362409
+
+[archives.Libertarian]
+url = "https://zissou.infosci.cornell.edu/convokit/datasets/subreddit-corpus/corpus-zipped/LiberalAdvance~-~LifeProTips/Libertarian.corpus.zip"
+bytes = 920449141
+
+[archives.GreenParty]
+url = "https://zissou.infosci.cornell.edu/convokit/datasets/subreddit-corpus/corpus-zipped/GrandTheftAutoV4x4~-~Guelph/GreenParty.corpus.zip"
+bytes = 4398276
