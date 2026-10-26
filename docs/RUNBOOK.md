@@ -3,6 +3,21 @@
 Commands run from the repository root. Use a new immutable output ID for each run. For definitions and CSV contracts see [methods](METHODS.md); for measured evidence see [results](RESULTS.md).
 
 The current midterm narrative is the [integrated report](../reports/WEEK1_REPORT.md).
+The supplementary component study uses eight fixed configurations with the
+original primary LR settings. It does not add headline baselines or replace
+the primary using exposed outcomes:
+
+```powershell
+reddit-sna component-study --protocol configs/components.toml --original artifacts/temporal/activity-study-001 --external artifacts/confirmation/political-cohort-001 --output artifacts/components/controlled-new
+```
+
+Use a new output path. Historical samples, source manifests and prepared blinded
+review payloads are prerequisites. The output contains per-sample predictions,
+matched full-minus-control differences, temporal uncertainty and blank review
+forms. These exposed-period analyses are separate from a future frozen cohort
+and actual independent human assessment. Reproduction of the original primary
+and A1 final predictions is required before component results are interpreted.
+
 After a completed original/external temporal study, run the development-only audit:
 
 ```powershell
@@ -15,6 +30,43 @@ are refused. To reproduce, choose new output IDs and update the notebook's local
 reader paths. Source stores and memberships are local prerequisites; outputs
 saved in the committed notebook allow GitHub viewing without those stores.
 The audit observes only pre-2018 data and changes no model, target or feature.
+
+## Predeclared new-cohort replication
+
+`configs/prospective.toml` fixes Anarchism, Libertarian and GreenParty and their
+checked Cornell source URLs and compressed sizes. The 35-field candidate drops
+only record/reply growth. Five transferred baselines, the original 37-field
+model, no-D and a matched flat 35-field control remain in the comparison.
+There is no search over the new final outcomes.
+
+Run these stages in order from the repository root, using one new output ID:
+
+```powershell
+foreach ($stage in @('acquire', 'develop', 'fit', 'evaluate', 'review')) {
+    & .\.venv\Scripts\python.exe -m reddit_sna prospective-study --protocol configs/prospective.toml --root artifacts/prospective/ideological-reproduction --stage $stage
+    if ($LASTEXITCODE -ne 0) { throw "Prospective stage failed: $stage" }
+}
+```
+
+The declaration precedes acquisition. Only pre-2018 graphs, targets and features
+are prepared before fitting. All models, source and sample hashes freeze before
+the evaluation stage extends metadata and constructs 2018 targets. An unchanged
+development prefix is mandatory. Completed stage outputs are immutable and a
+failed attempt is preserved. Do not edit scientific source between fit and
+evaluate. Resource journals record sampled process-tree RSS, disk and exit status.
+
+The `review` stage prepares a separate development structural panel beside the
+study directory. A supplied technical assessment can be validated using
+`reddit-sna assess-structure --panel <panel> --submission <actual-submission.json>
+--output <new-output>`. This tool validates evidence and explicitly non-human
+provenance. It does not manufacture independent human review. For actual reviewer
+submissions use the separate procedure in `LABEL_REVIEW.md`.
+
+The executed core notebook shows the measured run `artifacts/prospective/ideological-001`.
+When reproducing under a different ID, update its reader path after completing
+the stages. Saved notebook outputs support GitHub viewing. Executing its readers
+requires the original, component and prospective artifacts referenced by the
+notebook. Raw new-cohort archives and private assessment cases are kept local.
 
 ## Contents
 

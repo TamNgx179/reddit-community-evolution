@@ -34,6 +34,18 @@ def main(argv: list[str] | None = None) -> int:
     )
     subparsers = parser.add_subparsers(dest="command", required=True)
     subparsers.add_parser("pipelines", help="List independent pipelines and implementation status")
+    structural = subparsers.add_parser("assess-structure", help="Validate a source-bound supplementary technical assessment without certifying human review")
+    for flag in ("panel", "submission", "output"):
+        structural.add_argument("--"+flag,type=Path,required=True)
+    prospective = subparsers.add_parser("prospective-study", help="Run a pre-acquisition declared new-corpus replication without final tuning")
+    for flag in ("protocol", "root"):
+        prospective.add_argument("--"+flag,type=Path,required=True)
+    prospective.add_argument("--stage",choices=("acquire","develop","fit","evaluate","review"),required=True)
+    prospective.add_argument("--artifact-root",type=Path,default=Path("artifacts"))
+    components = subparsers.add_parser("component-study", help="Run matched hierarchy and grouped dynamics controls without selecting a new primary")
+    for flag in ("protocol", "original", "external", "output"):
+        components.add_argument("--"+flag, type=Path, required=True)
+    components.add_argument("--artifact-root", type=Path, default=Path("artifacts"))
     continuity = subparsers.add_parser("audit-continuity", help="Audit development-only 1/2/3-month observability without relabeling")
     for flag in ("protocol", "study", "output"):
         continuity.add_argument("--"+flag, type=Path, required=True)
@@ -131,6 +143,18 @@ def main(argv: list[str] | None = None) -> int:
             print(f"{pipeline.value}: {status} ({description})")
         return 0
     try:
+        if args.command == "assess-structure":
+            from reddit_sna.evaluation.structural_assessment import complete_assessment
+            print(json.dumps(complete_assessment(args.panel,args.submission,args.output)))
+            return 0
+        if args.command == "prospective-study":
+            from reddit_sna.pipelines.prospective import run
+            print(json.dumps(run(args.protocol,args.root,args.stage,args.artifact_root)))
+            return 0
+        if args.command == "component-study":
+            from reddit_sna.pipelines.components import run
+            print(json.dumps({"component_output":run(args.protocol,args.original,args.external,args.output,args.artifact_root)}))
+            return 0
         if args.command == "audit-continuity":
             from reddit_sna.pipelines.longitudinal import run_audit
             try:

@@ -1,0 +1,13 @@
+schema_version = 1
+protocol_id = "controlled-components-v1"
+validation_start = "2017-07"
+test_start = "2018-01"
+end = "2018-10"
+seeds = [42, 43, 44]
+bootstrap_draws = 2000
+block_length = 3
+bootstrap_seed = 2026
+working_budget_gib = 2
+memory_budget_gib = 4
+minimum_free_gib = 2
+exposure = "retrospective_component_analysis_no_new_primary_selection"
