@@ -206,14 +206,72 @@ Reddit score enters features. Scaling and model fit use training rows only.
 
 GED adaptation and Jaccard labels remain algorithmic pseudo-labels. Ground-truth
 tracking verification on a planted benchmark remains the other pair's task.
-HeTCo, original GED social-position iteration and original pair event rules are
-not implemented here. Subreddit/thread features need a separately agreed causal
+Full HeTCo, original GED social-position iteration and original pair event rules are
+not implemented here; HeTCo v1 below is a lightweight group-node attention variant.
+Subreddit/thread features need a separately agreed causal
 input contract and are not silently inferred from complete future threads.
 
 Previously inspected held-out data cannot now become a fresh confirmatory test.
 The new implementation's held-out scores are descriptive development results.
 For any later scientific comparison, freeze the feature/label definitions and
 declare an untouched evaluation period in advance. No parameter search is run.
+
+## HeTCo v1 group-node attention
+
+`reddit-sna hetco` consumes a completed `research` run and its preparation.
+It reuses that run's samples, labels, windows and seeds and reads the reference
+B4/B5/HeTCo_v0 predictions without refitting them, so every comparison has
+identical keys.
+
+Member nodes (`features/members.py`) carry seven attributes known at t:
+log records, log reply strength in R, internal share of that strength, log
+distinct reply partners, log tenure (active months up to t), previous-month
+activity and corpus count. Records after t, t+1 membership, tracking links and
+labels are never read.
+
+The model (`models/hetco.py`, NumPy) scores members with
+`alpha_i = softmax_i(v . tanh(W x_i + b))`. It concatenates `sum_i alpha_i x_i`
+with the community attributes and fits a six-class softmax head using
+class-balanced cross-entropy, L2 1e-3 and 300 full-batch Adam steps at 0.01,
+with hidden size 8. Settings are fixed in `HETCO` and were not searched.
+Scaling uses training rows only. The matched ablations are:
+
+- A7 replaces attention with uniform mean pooling.
+- A1v1/A4v1/A6v1 remove context, dynamics or lag community inputs, as A1/A4/A6 do.
+
+This follows the group-node attention idea of Revelle et al. (2021). It is not
+their full graph neural network.
+
+HeTCo v2 keeps the same inputs and optimizer and adds two options:
+
+- **Class weighting:** `balanced` (n / (K·count)), `sqrt` (the square root of
+  balanced) or `none`.
+- **Head:** `flat` (one six-class softmax) or `hierarchical`. The hierarchical
+  head is a sigmoid for dissolve versus other, times a five-class softmax for the
+  other events, conditional on other. It is trained as binary cross-entropy plus
+  five-class cross-entropy on non-dissolve rows, with weights computed per head.
+
+The six combinations (`GRID` in `pipelines/hetco.py`) are declared before fitting.
+Each is scored at the rolling origins before `test_start`; the highest seed-mean
+pooled macro-F1 is selected, with ties resolved by grid order. The selected
+configuration is written to `selection.csv` and the manifest before the main
+fits. `A7v2_mean_pool` is the same selected configuration with uniform pooling.
+HeTCo v4 (`HeTCo_v4`, `A7v4_mean_pool`) fixes the v2 head and weighting
+(balanced, hierarchical). It appends `EXTENDED_FEATURES` to each member row:
+
+- `log_coreness`: log1p of the k-core number in undirected R_t (igraph).
+- `tie_persistence`: the share of t partners who were already partners at t-1.
+- `comember_persistence`: the share of other current co-members who shared the
+  member's t-1 community.
+- `log_bridging`: log1p of the number of other communities among t partners.
+- `reciprocity`: the share of directed reply targets who also reply at t.
+- `observed_from_start`: users active in the first month, whose tenure is
+  left-censored.
+
+Only months t and t-1 are read.
+`evaluation.json` also stores `main_intervals`, a paired community-level
+bootstrap on the main window, alongside the rolling month-block `intervals`.
+Use `--model` to run a subset of models.
 
 ## Jaccard fallback semantics
 

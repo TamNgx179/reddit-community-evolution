@@ -10,11 +10,225 @@ The sections below preserve earlier baseline and handoff evidence. Their indepen
 
 ## Contents
 
+- [HeTCo v1 development comparison](#hetco-v1-development-comparison)
+- [HeTCo v2: weighting and hierarchical head](#hetco-v2-weighting-and-hierarchical-head-chosen-on-inner-origins)
+- [HeTCo v3: ensemble with B4 (dropped)](#hetco-v3-ensemble-with-b4-tried-dropped)
+- [HeTCo v4: network-position and persistence features](#hetco-v4-network-position-and-persistence-member-features)
 - [Final delivery verification](#final-delivery-verification)
 - [Current event support and scores](#current-event-support-and-scores)
 - [External evidence still required](#external-evidence-still-required)
 - [Historical evidence](#historical-evidence)
 - [Presentation outline](#presentation-outline)
+
+## HeTCo v1 development comparison
+
+Run `artifacts/hetco/hetco-v1-002` (local) was built on research run
+`artifacts/research/midterm-thanh-001`. That research run uses the preparation
+`reddit-2015-reproduced-v1` and the forecast `forecast-ged-history-v3`.
+Figures are in [reports/figures/hetco-v1-002](../reports/figures/hetco-v1-002).
+Scores are the mean of seeds 42/43/44 on inspected 2015 data, so they are
+development evidence only. The main window covers label months 2015-10 to 2015-12
+(571 samples). The rolling window covers six origins from 2015-07 to 2015-12
+(982 samples).
+
+| Model | Main macro-F1 | Main bal. acc. | Rolling macro-F1 | Rolling bal. acc. |
+|---|---|---|---|---|
+| B4_logreg | **0.361** | 0.482 | **0.378** | 0.463 |
+| B5_matched_boosting | 0.289 | 0.453 | 0.278 | 0.399 |
+| HeTCo_v0 | 0.291 | 0.483 | 0.322 | 0.476 |
+| HeTCo_v1 | 0.283 | 0.554 | 0.311 | 0.528 |
+| A7_mean_pool | 0.268 | 0.527 | 0.310 | **0.573** |
+| A1v1_no_context | 0.279 | 0.550 | 0.308 | 0.532 |
+| A4v1_no_dynamics | 0.288 | **0.561** | 0.321 | 0.552 |
+| A6v1_no_lag | 0.279 | 0.532 | 0.305 | 0.534 |
+
+The table below gives 95% rolling-month block-bootstrap intervals for the
+macro-F1 difference (block 2, 1000 draws).
+
+| Difference | Interval |
+|---|---|
+| HeTCo_v1 − B4 | [−0.081, −0.046] |
+| HeTCo_v1 − B5 | [−0.014, 0.110] |
+| HeTCo_v1 − HeTCo_v0 | [−0.051, 0.002] |
+| A7/A1v1/A4v1/A6v1 − HeTCo_v1 | each interval contains 0 |
+
+Findings:
+
+- B4 logistic regression remains the best model on macro-F1, and HeTCo_v1 does
+  not beat it.
+- HeTCo_v1 has a higher balanced accuracy than every reference model. It recalls
+  more rare events, but its precision is lower.
+- Attention does not measurably beat mean pooling. No single input group,
+  removed on its own, changes macro-F1 beyond the bootstrap noise.
+- Attention concentrates on members with high reply strength and many partners.
+  These members have a lower internal share and a shorter tenure.
+- In communities with more than about 100 members, the effective member count
+  (`1/sum alpha^2`) is only a few percent of the community size. HeTCo_v1
+  therefore reads hub-like, outward-facing members rather than the whole group.
+- Two runs (001 and 002) gave identical HeTCo_v1 scores.
+
+### HeTCo v2: weighting and hierarchical head chosen on inner origins
+
+v1 lost mainly through precision. Balanced class weights moved most true
+dissolve communities into grow or merge. Pooled over seeds, v1 predicted only
+835 of 1575 dissolve cases as dissolve.
+
+v2 (`artifacts/hetco/hetco-v2-001`, figures in
+[reports/figures/hetco-v2-001](../reports/figures/hetco-v2-001)) declares six
+configurations before fitting. These are {balanced, sqrt, none} class weights ×
+{flat, hierarchical} head. Each configuration is fitted at origins 2015-07, 08
+and 09, using label months strictly before 2015-10.
+
+| Configuration | Inner macro-F1 |
+|---|---|
+| balanced / flat (= v1) | 0.325 |
+| sqrt / flat | 0.416 |
+| none / flat | 0.376 |
+| **balanced / hierarchical (selected)** | **0.420** |
+| sqrt / hierarchical | 0.377 |
+| none / hierarchical | 0.393 |
+
+The selected configuration is then fitted on the windows above. The rolling
+months 2015-07 to 09 were used for selection, so v2 rolling scores are
+optimistic.
+
+**Exposure note.** The selection procedure never reads the main window
+(2015-10 to 12). However, the two v2 options were proposed after inspecting
+v1's per-class errors and confusion on that same main window. The main window
+is therefore not a clean test for v2. It is development evidence reached after
+one diagnostic look. Only a frozen v2 run on an untouched period can support an
+improvement claim.
+
+| Model | Main macro-F1 | Main bal. acc. | Rolling macro-F1 |
+|---|---|---|---|
+| B4_logreg | 0.361 | 0.482 | 0.378 |
+| HeTCo_v1 | 0.283 | 0.554 | 0.311 |
+| **HeTCo_v2** | **0.365** | 0.534 | **0.398** |
+| A7v2_mean_pool | 0.389 | 0.548 | 0.402 |
+
+The table below gives rolling block-bootstrap intervals for the macro-F1
+difference.
+
+| Difference | Interval | Share above 0 |
+|---|---|---|
+| HeTCo_v2 − B4 | [−0.003, 0.050] | 0.93 |
+| HeTCo_v2 − B5 | [0.066, 0.206] | 1.00 |
+| HeTCo_v2 − HeTCo_v0 | [0.054, 0.086] | 1.00 |
+| HeTCo_v2 − HeTCo_v1 | [0.075, 0.107] | 1.00 |
+| A7v2_mean_pool − HeTCo_v2 | [−0.050, 0.031] | 0.69 |
+
+The main window has no month-block interval, because it contains only three
+months. The table below uses a paired bootstrap over its 571 communities
+(1000 draws, seed 2026, `community_delta` in `pipelines/hetco.py`). This
+bootstrap ignores dependence within a month, so its intervals are, if anything,
+too narrow.
+
+| Main-window difference | Observed | Interval | Share above 0 |
+|---|---|---|---|
+| HeTCo_v2 − B4 | +0.005 | [−0.060, 0.068] | 0.56 |
+| HeTCo_v2 − B5 | +0.076 | [0.011, 0.140] | 0.99 |
+| HeTCo_v2 − HeTCo_v1 | +0.082 | [0.036, 0.129] | 1.00 |
+| A7v2_mean_pool − HeTCo_v2 | +0.023 | [−0.042, 0.089] | 0.76 |
+| A7v2_mean_pool − B4 | +0.028 | [−0.018, 0.075] | 0.86 |
+
+Findings:
+
+- **HeTCo_v2 matches B4; it does not beat it.** On the main window, v2 is
+  above B4 for every seed (0.366, 0.358 and 0.372 against 0.361). The +0.005
+  margin is a coin flip under resampling: 56% of draws are positive and the
+  interval is ±0.06. The rolling interval also includes 0.
+- HeTCo_v2 clearly beats B5, HeTCo_v0 and HeTCo_v1.
+- The gain comes from the hierarchical head. Dissolve recall recovers to
+  1373/1575, while grow and merge get nonzero F1 (0.16 and 0.12). B4 never
+  predicts either class correctly.
+- With the same head, mean pooling (A7v2) scores slightly higher than
+  attention, although the difference is not significant. Member information
+  combined with the hierarchical head helps. Learned attention, the defining
+  element of group-node attention, is not justified on this pilot over a
+  uniform member average.
+- The hierarchical dissolve-versus-other head already appears in the proposed
+  model of the integrated report. The new contribution here is therefore
+  member-level pooling, and its effect is not yet distinguishable from noise.
+- Every claim of improvement still requires a frozen configuration and an
+  untouched evaluation period.
+
+### HeTCo v3: ensemble with B4 (tried, dropped)
+
+A pre-declared mixture was tested (declaration committed in `b617564`). It
+used w·p_HeTCo + (1−w)·p_B4 with w ∈ {0, .25, .5, .75, 1}, selected on
+2015-07..09, and a B4+B5 control. Selection chose w = 0.25, which changed no B4
+decision outside the selection months: main macro-F1 was 0.361, identical to B4.
+The B4+B5 control scored below B4 (0.356). Because v3 did not exceed the
+baseline, it was removed from the code.
+
+### HeTCo v4: network-position and persistence member features
+
+v4 changes only the member attributes. It adds six past-only features
+(`EXTENDED_FEATURES` in `features/members.py`):
+
+- k-core coreness in R_t
+- tie persistence from t-1
+- co-member persistence: the share of current co-members who shared the
+  member's t-1 community
+- bridging to other communities
+- reply reciprocity in directed R_t
+- a left-censoring flag for users active in the first month
+
+The head and weighting stay fixed at the v2 inner selection (balanced,
+hierarchical), so nothing is searched. The feature set was fixed before the v4
+run and was not revised after it. Run: `artifacts/hetco/hetco-v4-001`; figures:
+[reports/figures/hetco-v4-001](../reports/figures/hetco-v4-001). A visual
+walkthrough is in the executed notebook
+[06_hetco_study.ipynb](../notebooks/core/06_hetco_study.ipynb). It covers the
+dataset, one real community with its members' attention and reply graph, the
+model comparison and class-level examples.
+
+Accuracy moves the other way. B4 has accuracy 0.933 because it predicts
+dissolve almost everywhere; v4 has 0.869. There are 9 test communities that v4
+gets right and B4 gets wrong, and 42 that go the other way, mostly dissolve.
+v4 wins macro-F1 because it recovers grow and merge (F1 0.15 each, against 0
+for B4).
+
+| Model | Main macro-F1 | Main per seed | Main bal. acc. | Rolling macro-F1 |
+|---|---|---|---|---|
+| B4_logreg | 0.361 | 0.361 / 0.361 / 0.361 | 0.482 | 0.378 |
+| HeTCo_v2 | 0.365 | 0.366 / 0.358 / 0.372 | 0.534 | 0.398 |
+| **HeTCo_v4** | **0.398** | 0.406 / 0.405 / 0.381 | **0.547** | 0.392 |
+| A7v4_mean_pool | 0.349 | — | 0.507 | 0.375 |
+
+The next table compares v4 and B4 month by month over the rolling origins.
+Each value is the seed-mean macro-F1. Months 10–12 were never used for any
+selection.
+
+| Month | 07 | 08 | 09 | 10 | 11 | 12 |
+|---|---|---|---|---|---|---|
+| B4 | 0.398 | 0.493 | 0.320 | 0.419 | 0.313 | 0.398 |
+| HeTCo_v4 | 0.395 | 0.470 | 0.329 | **0.432** | **0.366** | **0.406** |
+
+The table below gives intervals for the macro-F1 difference.
+
+| Difference | Main community bootstrap | Rolling month blocks |
+|---|---|---|
+| HeTCo_v4 − B4 | +0.037, [−0.035, 0.110], 82% > 0 | [0.001, 0.030], 99% > 0 |
+| HeTCo_v4 − HeTCo_v2 | +0.032, [−0.012, 0.076], 91% > 0 | [−0.049, 0.029] |
+| A7v4_mean_pool − HeTCo_v4 | −0.049, [−0.110, 0.016], 7% > 0 | [−0.044, 0.036] |
+
+Findings:
+
+- **HeTCo_v4 is above B4.** On the main window it gains +0.037 macro-F1, with
+  every seed above B4, and it also leads on all three unselected rolling
+  months. It is the first variant whose rolling month-block interval excludes
+  zero against B4. The main-window community interval still includes zero, so
+  the honest statement is **"above B4 on every check, by a margin that the
+  2015 pilot cannot yet confirm"**.
+- **Attention now matters.** With the persistence and position features,
+  attention beats mean pooling by 0.049 on the main window (93% of draws). The
+  attention gain appears only once members carry relational information.
+- The gain comes from the rare classes: shrink 0.39→0.48, merge 0.12→0.15
+  and split 0.61→0.67 against v2. Dissolve stays at 0.94.
+- **Exposure.** The v4 feature idea came after inspecting v1/v2 behaviour on
+  this pilot, and the head/weighting were chosen on 07–09. Confirmation needs
+  the frozen v4 on an untouched period.
 
 ## Baseline provenance
 

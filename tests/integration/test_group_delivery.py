@@ -125,14 +125,16 @@ class GroupCompatibilityTests(unittest.TestCase):
 
     def test_source_does_not_depend_on_retired_report_or_document_folders(self):
         self.assertFalse((PROJECT / "document").exists())
-        # Seven original, three external and three continuity-audit figures.
-        # Keep the retired-report guard while permitting those published assets.
+        # Seven original, three external, three continuity-audit and five figures
+        # per HeTCo run. Keep the retired-report guard while permitting those published assets.
         figures = ("comparison", "monthly", "support", "confusion", "flow",
                    "graph_scale", "community_graph")
         expected = {"WEEK1_REPORT.md"} | {
             f"figures/temporal-study-001/{name}.png" for name in figures}
         expected |= {f"figures/confirmation-001/{name}.png" for name in ("comparison","monthly","support")}
         expected |= {f"figures/continuity-001/{name}.png" for name in ("followup", "observation", "repeatability")}
+        expected |= {f"figures/{run}/{name}.png" for run in ("hetco-v1-002", "hetco-v2-001", "hetco-v4-001")
+                     for name in ("comparison", "intervals", "monthly", "confusion", "attention")}
         actual = {p.relative_to(PROJECT / "reports").as_posix()
                   for p in (PROJECT / "reports").rglob("*") if p.is_file()}
         self.assertEqual(actual, expected)

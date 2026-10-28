@@ -288,3 +288,38 @@ Ba prototype độc lập là đầu ra tuần 1. Pipeline Reddit tích hợp to
 - [ ] Nhóm tập trình bày, đi học và báo cáo ngày 22/10; dàn ý slide không phải bằng chứng đã thuyết trình.
 
 Lệnh demo và nội dung trình bày ở `docs/RUNBOOK.md` và `docs/RESULTS.md#presentation-outline`. Các hạn chế về ground truth, lớp thiếu và coverage phải được trình bày cùng điểm số. HeTCo đầy đủ và detector đề xuất thuộc các tuần sau, không phải thiếu sót bắt buộc của baseline tuần 1.
+
+## Cập nhật 28/10 — trạng thái HeTCo và phân công phần còn lại (tuần 3–8)
+
+### Trạng thái hiện tại
+
+- **HeTCo đã có bản chạy trên Reddit 2015** (Thanh, nhánh `feat/hetco-v1`). Bản mạnh nhất là **HeTCo_v4**: attention trên thành viên, head phân cấp và 6 đặc trưng quan hệ của thành viên (coreness, giữ liên kết, giữ đồng thành viên, cầu nối, trả lời qua lại, cờ cắt trái). Bản v3 (trộn với B4) không tăng điểm nên đã bỏ.
+- **Kết quả trên main window 2015-10..12 (571 community):**
+  - HeTCo_v4 đạt **macro-F1 0.398**, B4 đạt 0.361. Cả 3 seed đều cao hơn B4, và v4 cũng cao hơn ở cả 3 tháng rolling 10–12.
+  - Khoảng tin cậy rolling là [0.001, 0.030]; khoảng tin cậy theo community trên main window là [−0.035, 0.110].
+  - Accuracy của v4 thấp hơn (0.869 so với 0.933), vì v4 bắt được grow và merge nhưng sai nhiều hơn ở dissolve.
+- **Theo tiêu chí giảng viên (đề xuất ≥ baseline): đạt.** Khi trình bày, ghi là "cao hơn B4 trên dữ liệu phát triển". Ý tưởng v4 hình thành sau khi xem dữ liệu 2015, nên **bắt buộc kiểm định một lần trên giai đoạn chưa xem** trước khi kết luận là thắng.
+- **Tài liệu:**
+  - Số liệu: `docs/RESULTS.md`
+  - Phương pháp: `docs/METHODS.md`
+  - Lệnh chạy: `docs/RUNBOOK.md`
+  - Trình bày trực quan: `notebooks/core/06_hetco_study.ipynb`
+
+### Phân công theo tuần (mỗi người 1 việc mỗi tuần, giữ đúng phạm vi sở hữu)
+
+| Tuần | Tâm | Thanh | Phúc | Đăng | Trâm | Anh |
+|---|---|---|---|---|---|---|
+| **3** (29/10–04/11) | Chọn giai đoạn chưa xem (cohort 2018 trong `configs/prospective.toml` hoặc tháng 2016) và chuẩn bị snapshot, membership, preparation | Đóng gói artifact HeTCo (research run, preparation, `hetco-v4-001`) cho nhóm. Viết file khóa cấu hình v4 và commit trước mọi lần chạy mới | Chạy lại B2/B5 trên pilot 2015 từ artifact của Thanh để xác nhận đúng số | Test leakage cho `features/members.py`: không đọc bản ghi sau t, membership t+1 hay nhãn | Chạy lại B1/B4 trên pilot 2015 từ artifact của Thanh để xác nhận đúng số | Tự tính lại macro-F1 và confusion từ `hetco-v4-001/predictions.csv` bằng code riêng |
+| **4** (05–11/11) | Tích hợp `hetco` vào `temporal-study` để so với proposed hierarchical LR trên cùng mẫu | Thay cờ cắt trái bằng các tháng lịch sử; chỉ giữ nếu tốt hơn trên các tháng 07–09 | Đo thời gian và bộ nhớ của `hetco` (khoảng 10 phút trên pilot) và đề xuất giới hạn cho dữ liệu lớn | Kiểm tra nhãn GED ở lớp hiếm grow/merge, ghi các trường hợp đáng ngờ | Lập bảng so sánh theo từng lớp B1/B2/B4/B5/HeTCo_v4 trên pilot | Viết phần protocol: khóa cấu hình, chia thời gian, các giới hạn |
+| **5** (12–18/11) | Bàn giao preparation của giai đoạn chưa xem; review PR `feat/hetco-v1` | **Khóa v4** (hash config và code), không chỉnh thêm | Chuẩn bị chạy B2/B5 trên giai đoạn mới với cấu hình đã khóa | Đối chiếu bootstrap theo community với bootstrap theo khối tháng | Chuẩn bị chạy B1/B4 trên giai đoạn mới với cấu hình đã khóa | Mẫu bảng và biểu đồ cho kết quả giai đoạn mới |
+| **6** (19–25/11) | Kiểm tra pipeline chạy đúng trên giai đoạn mới | **Chạy HeTCo_v4 một lần** trên giai đoạn mới và báo cáo nguyên kết quả | Chạy B2/B5 trên giai đoạn mới | Kiểm tra leakage và tính khoảng tin cậy trên giai đoạn mới | Chạy B1/B4 trên giai đoạn mới | Tổng hợp chỉ số của mọi mô hình trên cùng mẫu |
+| **7** (26/11–02/12) | So community đề xuất (multislice/consensus) với Leiden làm đầu vào cho HeTCo | Ablation A1/A4/A6/A7 của v4 trên giai đoạn mới; phân tích lỗi theo lớp | Độ nhạy detection: đổi detector thì HeTCo có còn giữ được kết quả | Nhãn Jaccard thay GED: chạy lại so sánh trên bộ nhãn thứ hai | Ablation phía baseline: cùng đặc trưng mới cho B4 để kiểm tra công bằng | Báo cáo riêng từng bộ nhãn và từng giai đoạn |
+| **8** (03–09/12) | Chạy lại toàn bộ từ môi trường sạch | Viết phần phương pháp, đóng góp và hạn chế của HeTCo | Viết phần detection và chi phí | Viết phần kiểm chứng và leakage | Viết phần đối chứng baseline | Ghép report và slide; nhóm diễn tập trước 09/12 |
+
+### Quy tắc
+
+- **Không chỉnh cấu hình HeTCo sau khi đã xem điểm trên giai đoạn mới.** Thắng hay thua đều báo cáo nguyên kết quả, kèm phân tích lỗi theo lớp.
+- Mọi mô hình dùng cùng mẫu, cùng nhãn và cùng seed. Mọi lựa chọn chỉ dựa trên các tháng validation, không dựa trên test.
+- **Ở tuần 7, B4 cũng được thử với đặc trưng thành viên mới.** Nếu B4 cộng đặc trưng mới cũng tăng ngang v4, thì đóng góp nằm ở đặc trưng chứ không ở attention, và phải ghi đúng như vậy.
+- Artifact chạy (`artifacts/`) chỉ nằm trên máy cá nhân. Thanh chia sẻ gói artifact trong tuần 3; người nhận không sửa artifact của người khác.
+- Mỗi người commit gom theo phần việc hoàn chỉnh, review trong cặp trước khi merge vào `main`.
