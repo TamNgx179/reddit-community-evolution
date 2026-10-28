@@ -129,6 +129,22 @@ def _block_delta(monthly, months, name, reference, seeds, settings):
                 high=float(np.percentile(deltas, 97.5)), share_positive=float(np.mean(np.array(deltas) > 0)))
 
 
+def load_samples(research_run, preparation):
+    """Research samples with each community's past-only member attribute bag."""
+    samples = read_table(research_run / "samples.csv")
+    detection = json.loads((preparation / "detection.json").read_text(encoding="utf-8"))
+    months = sorted({r["feature_month"] for r in samples})
+    groups = {}
+    for month in months:
+        groups[month] = defaultdict(set)
+        for r in read_table(preparation / f"memberships/{month}/membership-seed{detection['canonical_seed']}.csv"):
+            groups[month][r["community_id"]].add(r["user_id"])
+    bags = member_features(preparation / "normalized.sqlite", preparation / "snapshots", months, groups)
+    for r in samples:
+        r["bag"] = np.asarray(bags[(r["feature_month"], r["community_id"])])
+    return samples
+
+
 def run_hetco(research_run, preparation, artifact_root, run_id, models=None):
     """`models` optionally restricts the run to a subset of MODELS (default: all)."""
     started = perf_counter()
@@ -152,17 +168,7 @@ def run_hetco(research_run, preparation, artifact_root, run_id, models=None):
                     scope="lightweight group-node attention after Revelle et al. 2021; not the full original GNN")
     save_json(output / "manifest.json", manifest)
     try:
-        samples = read_table(research_run / "samples.csv")
-        detection = json.loads((preparation / "detection.json").read_text(encoding="utf-8"))
-        months = sorted({r["feature_month"] for r in samples})
-        groups = {}
-        for month in months:
-            groups[month] = defaultdict(set)
-            for r in read_table(preparation / f"memberships/{month}/membership-seed{detection['canonical_seed']}.csv"):
-                groups[month][r["community_id"]].add(r["user_id"])
-        bags = member_features(preparation / "normalized.sqlite", preparation / "snapshots", months, groups)
-        for r in samples:
-            r["bag"] = np.asarray(bags[(r["feature_month"], r["community_id"])])
+        samples = load_samples(research_run, preparation)
         if any(spec["head"] is None for spec in models.values()):
             selection, (weight, head) = select_v2(samples, protocol)
             write_table(output / "selection.csv", selection)
