@@ -2,6 +2,72 @@
 
 Commands run from the repository root. Use a new immutable output ID for each run. For definitions and CSV contracts see [methods](METHODS.md); for measured evidence see [results](RESULTS.md).
 
+The current midterm narrative is the [integrated report](../reports/WEEK1_REPORT.md).
+The supplementary component study uses eight fixed configurations with the
+original primary LR settings. It does not add headline baselines or replace
+the primary using exposed outcomes:
+
+```powershell
+reddit-sna component-study --protocol configs/components.toml --original artifacts/temporal/activity-study-001 --external artifacts/confirmation/political-cohort-001 --output artifacts/components/controlled-new
+```
+
+Use a new output path. Historical samples, source manifests and prepared blinded
+review payloads are prerequisites. The output contains per-sample predictions,
+matched full-minus-control differences, temporal uncertainty and blank review
+forms. These exposed-period analyses are separate from a future frozen cohort
+and actual independent human assessment. Reproduction of the original primary
+and A1 final predictions is required before component results are interpreted.
+
+After a completed original/external temporal study, run the development-only audit:
+
+```powershell
+reddit-sna audit-continuity --protocol configs/continuity_audit.toml --study artifacts/temporal/activity-study-001 --output artifacts/validation/continuity-original-002
+reddit-sna audit-continuity --protocol configs/continuity_audit.toml --study artifacts/confirmation/political-cohort-001 --output artifacts/validation/continuity-external-002
+```
+
+These paths identify the runs displayed in the notebook. Existing destinations
+are refused. To reproduce, choose new output IDs and update the notebook's local
+reader paths. Source stores and memberships are local prerequisites; outputs
+saved in the committed notebook allow GitHub viewing without those stores.
+The audit observes only pre-2018 data and changes no model, target or feature.
+
+## Predeclared new-cohort replication
+
+`configs/prospective.toml` fixes Anarchism, Libertarian and GreenParty and their
+checked Cornell source URLs and compressed sizes. The 35-field candidate drops
+only record/reply growth. Five transferred baselines, the original 37-field
+model, no-D and a matched flat 35-field control remain in the comparison.
+There is no search over the new final outcomes.
+
+Run these stages in order from the repository root, using one new output ID:
+
+```powershell
+foreach ($stage in @('acquire', 'develop', 'fit', 'evaluate', 'review')) {
+    & .\.venv\Scripts\python.exe -m reddit_sna prospective-study --protocol configs/prospective.toml --root artifacts/prospective/ideological-reproduction --stage $stage
+    if ($LASTEXITCODE -ne 0) { throw "Prospective stage failed: $stage" }
+}
+```
+
+The declaration precedes acquisition. Only pre-2018 graphs, targets and features
+are prepared before fitting. All models, source and sample hashes freeze before
+the evaluation stage extends metadata and constructs 2018 targets. An unchanged
+development prefix is mandatory. Completed stage outputs are immutable and a
+failed attempt is preserved. Do not edit scientific source between fit and
+evaluate. Resource journals record sampled process-tree RSS, disk and exit status.
+
+The `review` stage prepares a separate development structural panel beside the
+study directory. A supplied technical assessment can be validated using
+`reddit-sna assess-structure --panel <panel> --submission <actual-submission.json>
+--output <new-output>`. This tool validates evidence and explicitly non-human
+provenance. It does not manufacture independent human review. For actual reviewer
+submissions use the separate procedure in `LABEL_REVIEW.md`.
+
+The executed core notebook shows the measured run `artifacts/prospective/ideological-001`.
+When reproducing under a different ID, update its reader path after completing
+the stages. Saved notebook outputs support GitHub viewing. Executing its readers
+requires the original, component and prospective artifacts referenced by the
+notebook. Raw new-cohort archives and private assessment cases are kept local.
+
 ## Contents
 
 - [Fresh checkout](#fresh-checkout)
@@ -21,7 +87,7 @@ Use Python 3.11+ and Git LFS. In PowerShell at the repository root:
 git lfs install
 git lfs pull --include="data/raw/*.zip" --exclude=""
 python -m venv .venv
-& .\.venv\Scripts\python.exe -m pip install -e '.[graph,forecast,evaluation,prediction,notebook]'
+& .\.venv\Scripts\python.exe -m pip install -e '.[graph,forecast,notebook]'
 & .\.venv\Scripts\python.exe -m ipykernel install --prefix .venv --name reddit-sna --display-name 'Reddit SNA (.venv)'
 & .\.venv\Scripts\python.exe -m reddit_sna week1 --config configs/core.toml --run-id week1-demo
 ```
@@ -120,7 +186,7 @@ Normalization audits raw inputs again. Downstream stages verify completed source
 
 ## Notebooks and kernels
 
-Open [01_reddit_pilot.ipynb](../notebooks/core/01_reddit_pilot.ipynb) for preparation/detection, then [02_core_forecast.ipynb](../notebooks/core/02_core_forecast.ipynb) for verified tracking/forecast results. Follow [the complete week-one demo](RUNBOOK.md) to create the required artifacts from a fresh checkout. The three `00_research_plan.ipynb` files are templates and deliberately raise `NotImplementedError`.
+Open [01_reddit_pilot.ipynb](../notebooks/core/01_reddit_pilot.ipynb) for preparation/detection, then [02_core_forecast.ipynb](../notebooks/core/02_core_forecast.ipynb) for verified tracking/forecast results. Follow [the complete week-one demo](RUNBOOK.md) to create the required artifacts from a fresh checkout.
 
 1. Install dependencies using the commands above.
 2. Register a project-local kernel if needed:
@@ -225,7 +291,7 @@ Additional current checks verify GED ambiguity/history, future-append invariance
 & .\.venv\Scripts\python.exe scripts/package_forecast.py --run artifacts/core/week1-demo/forecast --output artifacts/core/forecast-handoff-001.zip
 ```
 
-The local ZIP includes verified forecast outputs and canonical navigation documents and the single group report in their repository layout. Document-to-document links work after extraction. Notebook links require the repository checkout; notebooks and preparation artifacts are not included. It excludes raw datasets, private identities and annotation packages. Create the matching local preparation artifacts before replaying notebook or raw-demo commands.
+The local ZIP includes verified forecast outputs and all six navigation documents in their repository layout. Document-to-document links work after extraction. Notebook links require the repository checkout; notebooks and preparation artifacts are not included. It excludes raw datasets, private identities and annotation packages. Create the matching local preparation artifacts before replaying notebook or raw-demo commands.
 
 ## Environment constraints and interpretation
 
@@ -233,58 +299,4 @@ Run the full synthetic suite using `python -m unittest discover -s tests -v`. Se
 
 Read `summary.json`, forecast `quality.json` and `metrics.json` together. Keep zero-support events and the excluded population visible. Scores measure prediction of tracker-derived pseudo-labels, not independently established social events. Previously inspected 2015 held-out scores remain descriptive. Do not compare Jaccard/GED scores as a controlled improvement because their eligible populations and label references differ.
 
-Use `LABEL_REVIEW.md` to prepare independent review, `experiments/followup_protocol.toml` for the pending follow-up protocol and `RESULTS.md#presentation-outline` for the pair's presentation outline. Software evidence does not establish annotation completion, attendance, accepted collaborator invitations or paper novelty.
-
-
-## Complete independent synthetic detection and tracking
-
-Use the declared extras in a new checkout:
-
-```powershell
-& .\.venv\Scripts\python.exe -m pip install -e '.[graph,forecast,evaluation,prediction,notebook]'
-& .\.venv\Scripts\python.exe -m reddit_sna synthetic-week1 --config configs/detection_development.toml --run-id week1-synthetic-demo
-```
-
-The run ID must be new. No legacy ZIP is required. The command creates `artifacts/detection-tracking/week1-synthetic-demo/` with an isolated generation workspace, verified development/evaluation bundle, tracking runs for both routes/splits, eight figure families and `pair-reference.json`. This is a current descriptive rerun of already inspected recipes. Existing artifacts and historical pins are preserved. A local source freeze precedes local evaluation; it is not evidence of historical partner acceptance or a scientifically unseen test.
-
-Open `notebooks/detection_tracking/01_synthetic_demo.ipynb`, select the project environment and restart/run all. Its default reference is the run above. To use another run, set `REDDIT_SYNTHETIC_REFERENCE` to that run's `pair-reference.json` before starting the kernel. All fourteen code cells read verified outputs and show eight figure families. Source notebooks for the synthetic pairs are output-free; execution reports are local.
-
-Automated fresh-kernel replay:
-
-```powershell
-& .\.venv\Scripts\python.exe scripts/replay_synthetic_notebook.py --project . --bundle artifacts/detection-tracking/week1-synthetic-demo/bundle --reference artifacts/detection-tracking/week1-synthetic-demo/pair-reference.json --tracking-development artifacts/detection-tracking/week1-synthetic-demo/tracking/development --tracking-evaluation artifacts/detection-tracking/week1-synthetic-demo/tracking/evaluation --output artifacts/detection-tracking/synthetic-notebook-001 --report artifacts/verification/synthetic-notebook-001
-```
-
-Output/report and sibling `-cases`/`-tracking` directories must be new. Legacy T02 recipients may continue using `scripts/run_tracking_handoff.py` with the exact old input, and use `configs/legacy-handoff-reference.json` as the explicit notebook reference. `configs/legacy-replay-constraints-py312.txt` preserves the author's historical Python 3.12 replay environment snapshot; it does not redefine the current installation or certify all platforms. Do not change historical pins or reseal old freezes to make current outputs look historical.
-
-## Complete independent synthetic prediction
-
-```powershell
-& .\.venv\Scripts\python.exe -m reddit_sna.pipelines.prediction --config configs/prediction.toml --run-id week1-prediction-demo
-```
-
-This needs the `prediction` extra, including declared pandas/numpy/scikit-learn dependencies. Outputs live under `artifacts/prediction/week1-prediction-demo/`; a complete run has samples/catalog, split/summary, predictions, models/config, metrics/per-class/confusions and a manifest whose evaluation stage is complete. The historical status name is `complete_through_baselines`.
-
-Open `notebooks/prediction/01_baseline_demo.ipynb` for verified results, class support, both F1 conventions, each baseline's test confusion and actual errors. Set `REDDIT_PREDICTION_RUN` to another repository-relative run path when needed. Restart/run all six code cells. Neither this table nor its results are Reddit observations.
-
-## Group report and publication
-
-`reports/` contains only [WEEK1_REPORT.md](../reports/WEEK1_REPORT.md). It records individual responsibilities, three independent demonstrations, actual result provenance, error analysis and pending research obligations. Former role-specific report/spec folders were consolidated; originals remain in the maintainer's local verification record, not as product dependencies. Keep private identities, annotation cases and runtime artifacts local. A software check cannot establish attendance, original partner acceptance or human labels.
-
-## Midterm research: explicit inputs and a frozen development protocol
-
-Install the new research extra together with graph and notebook requirements:
-
-```powershell
-& .\.venv\Scripts\python.exe -m pip install -e '.[graph,forecast,evaluation,prediction,research,notebook]'
-& .\.venv\Scripts\python.exe -m reddit_sna research --protocol configs/midterm.toml --preparation-run artifacts/core/week1-demo-input --forecast-run artifacts/core/week1-group-core-001/forecast --run-id midterm-context-003
-& .\.venv\Scripts\python.exe -m reddit_sna synthetic-week1 --config configs/detection_development.toml --protocol configs/benchmark_midterm_protocol.json --run-id midterm-harder-003
-```
-
-These input names identify the previously verified local core runs; they are not bundled runtime data on a new machine. If absent, build a fresh annual core run using `week1`, then pass its `-input` preparation and `forecast` directory explicitly. Keep the protocol's October test boundary and twelve-month source scope. Every output ID must be new. The research command cannot overwrite a run, silently substitute a source or claim a new raw scan from replay.
-
-The research output is `artifacts/research/<run-id>/`: protocol TOML/resolved JSON, eligible samples, predictions, models, fit schedule, independent evaluation/comparison, quality and manifest. Model files are trusted local products; consumers do not unpickle untrusted files. `reporting.research.export_figures(run, new_output)` writes seven figure families into a new separate directory.
-
-Run `notebooks/core/03_midterm_research.ipynb` from the repository root with the project kernel. Set `REDDIT_SNA_PROJECT` if the notebook server starts elsewhere and `REDDIT_RESEARCH_RUN` when selecting a different explicit run. Restart/run all; the notebook verifies every input before displaying derived metrics/figures. New notebook execution outputs remain local unless separately authorized for publication.
-
-The harder synthetic output retains the same bundle/reference/tracking/report layout as the original easy demo, using its own schema-2 recipe/protocol and new run ID. The default `synthetic-week1` invocation still selects the original easy recipe. Neither a new run ID nor the local freeze makes already inspected evaluation recipes scientifically unseen.
+Use `LABEL_REVIEW.md` to prepare independent review and the [integrated report](../reports/WEEK1_REPORT.md#113-research-decision) for the current follow-up priorities. Executable study protocols are in `configs/`; `RESULTS.md#presentation-outline` retains the historical pair presentation outline. Software evidence does not establish annotation completion, attendance, accepted collaborator invitations or paper novelty.

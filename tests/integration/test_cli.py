@@ -29,8 +29,14 @@ class CliTests(ProjectCase):
         self.assertEqual(listing.returncode, 0, listing.stderr)
         self.assertIn("core: prepare/forecast/week1 implemented", listing.stdout)
         self.assertIn("generic run remains planned", listing.stdout)
-        self.assertIn("detection-tracking: generation/detection/tracking/synthetic-week1 implemented", listing.stdout)
-        self.assertIn("prediction: table/split/baselines/evaluation implemented", listing.stdout)
+        self.assertIn(
+            "detection-tracking: generation/detection/tracking/synthetic-week1 implemented",
+            listing.stdout,
+        )
+        self.assertIn(
+            "prediction: table/split/baselines/evaluation implemented",
+            listing.stdout,
+        )
 
     def test_config_check_reports_resolved_paths_without_writing(self):
         result = self.cli("check", "--config", self.config("core"))

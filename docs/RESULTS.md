@@ -1,6 +1,12 @@
 # Results and research evidence
 
-The current work completes reproducible baseline delivery, not the entire research proposal. Ownership is recorded in ../PHAN-CONG-SNA-8-TUAN.md. The technical demonstration is independent of the other two pairs.
+For the current full-study midterm results, external replication and longitudinal
+measurement audit, read the [integrated research report](../reports/WEEK1_REPORT.md)
+and [executed notebook](../notebooks/core/05_temporal_activity_study.ipynb).
+The pilot and earlier handoff evidence below is historical and uses different
+reference targets. Its scores must not be compared as a controlled improvement.
+
+The sections below preserve earlier baseline and handoff evidence. Their independent pair demos use different reference targets. The integrated report linked above describes the current Midterm 1 study. Ownership remains in ../PHAN-CONG-SNA-8-TUAN.md.
 
 ## Contents
 
@@ -356,7 +362,3 @@ Historical reference values reproduced at aa110ac: 2,320 feature rows, 2,065 sou
 Explain that grow and merge recall were zero in the historical model despite its higher aggregate score. The 2015 held-out period was already inspected, so scores are descriptive. Jaccard versus GED scores use different reference labels/populations and are not a controlled improvement. No claim of full original GED, HeTCo, social ground truth or paper novelty is justified yet.
 
 Rehearse a missing-dependency or missing-artifact explanation, immutable output behavior and how to reproduce the notebook from the new demo. Each contributor should explain their own modules, tests, scientific assumptions and remaining limitations. Record actual attendance/rehearsal/peer review only after they occur.
-
-## Integrated group delivery
-
-The sections above retain the 17 October core evidence. The current six-member, three-pipeline delivery and fresh combined verification are recorded in [the group week-one report](../reports/WEEK1_REPORT.md). Its current-run provenance supersedes old status descriptions without changing historical metrics or hashes.

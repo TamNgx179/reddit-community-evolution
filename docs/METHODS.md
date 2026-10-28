@@ -13,7 +13,7 @@ Read [the runbook](RUNBOOK.md) for commands and [results](RESULTS.md) for execut
 - [Features and timing](#features-and-timing)
 - [Jaccard fallback](#jaccard-fallback-semantics)
 
-One functional package, `src/reddit_sna`, serves CLI and notebooks. The implemented core-pair baseline connects ZIP audit → normalization → monthly R → Independent Leiden → Jaccard/GED adaptation → current/history features → temporal baselines → verified evaluation. Full final HeTCo, original GED and heterogeneous/temporal detection remain planned; the separate preliminary context/history forecasting prototype is described below; the independent synthetic pair demos are implemented. Filenames describe responsibilities; ownership is in the administrative assignment.
+One functional package, `src/reddit_sna`, serves CLI and notebooks. The implemented core-pair baseline connects ZIP audit → normalization → monthly R → Independent Leiden → Jaccard/GED adaptation → current/history features → temporal baselines → verified evaluation. Synthetic detection/tracking demos, the activity-dynamics forecast and fixed external replication are implemented. Full HeTCo, verbatim original GED and heterogeneous/temporal detection remain planned. See the [integrated research report](../reports/WEEK1_REPORT.md) for the current task, five baselines, proposed model and measured limitations. Filenames describe responsibilities; ownership is in the administrative assignment.
 
 ## Dependencies and boundaries
 
@@ -33,6 +33,10 @@ Algorithm modules never import CLI or pipelines. The dedicated week-one orchestr
 |---|---|
 | `data/archive.py` | Explicit ZIP allowlist, streaming SHA-256, full member CRC and sampled schema audit |
 | `data/normalize.py` | Full-row validation, UTC cutoff, namespaced record IDs and indexed SQLite metadata |
+| `data/observability.py` | Read-only authored/post/comment/reply-endpoint channels within declared corpora |
+| `evaluation/longitudinal.py` | Development-only 1/2/3-month direct matching and censored/unknown denominators; never predictive features |
+| `pipelines/longitudinal.py` | Verified development sources, resource-monitored audit, saved seed-ARI reconstruction |
+| `reporting/longitudinal.py` | Aggregate audit figures and separately scoped archived matched-flat diagnostic |
 | `graphs/audit.py` | Complete corpus-month support and exclusive reply outcomes |
 | `graphs/snapshots.py` | Child-month directed replies, symmetric R, users, isolates and coverage |
 | `graphs/provenance.py` | Cohort month/schema validation, month hashes and protocol-bound references |
@@ -42,8 +46,8 @@ Algorithm modules never import CLI or pipelines. The dedicated week-one orchestr
 | `evaluation/causality.py` | Explicitly aligned past graph/partition comparisons through a cutoff |
 | `pipelines/preparation.py` | One stage or raw-to-membership orchestration; stops before tracking |
 | `pipelines/core.py` | Planned complete Reddit pipeline, explicitly unfinished |
-| `pipelines/detection_tracking.py`, `pipelines/synthetic_week1.py` | Synthetic development detection plus complete two-split generation/tracking/report demo |
-| `pipelines/prediction.py` | Synthetic community table, temporal split, Majority/Persistence/Logistic Regression and evaluation |
+| `pipelines/detection_tracking.py` | Planned independent synthetic graph demo |
+| `pipelines/prediction.py` | Planned independent synthetic table demo |
 | `tracking/`, `features/` | Jaccard/GED adaptation, current snapshot features and past-only lineage history |
 | `pipelines/forecast.py`, `pipelines/week1.py` | Temporal baseline training/evaluation and full raw/replay demo orchestration |
 | `reporting/forecast.py`, `reporting/forecast_handoff.py` | Independent table/metric verification, six figure families and source-bound exports |
@@ -52,7 +56,7 @@ Algorithm modules never import CLI or pipelines. The dedicated week-one orchestr
 
 ## Notebooks and reporting
 
-The three notebook directories support independent pair prototypes. `00_research_plan.ipynb` files are deliberately unfinished templates. `core/01_reddit_pilot.ipynb` is executable with an installed graph/notebook environment: it checks the actual kernel, resolves repository paths, replays verified results or rebuilds from raw, displays diagnostics and exports figures. Follow the setup in README. No `sys.path` modification is allowed.
+The notebook directories retain the completed independent pair prototypes. `core/01_reddit_pilot.ipynb` is executable with an installed graph/notebook environment: it checks the actual kernel, resolves repository paths, replays verified results or rebuilds from raw, displays diagnostics and exports figures. Follow the setup in README. No `sys.path` modification is allowed.
 
 Keep exploratory prototypes in notebooks until stable. Reusable replay, validation and plotting belong in the package and are behavior-tested independently. Restart and run all cells before handing off; store executed copies/figures in fresh local artifact folders and commit only explicitly reviewed execution snapshots in the two core notebooks; keep standalone artifacts local. Plots are derived from recorded aggregates, never hardcoded scientific results. Network sampling is display-only; full graph data determine metrics and memberships.
 
@@ -97,7 +101,7 @@ Reporting treats manifests as trusted local inputs and checks changes relative t
 
 The supplied rubric allocates A1/A2 50% each and requires paper potential for maximum project credit. Distinguish software correctness, method validation on controlled truth, and out-of-time Reddit results. Passing tests or arranging source does not establish the latter two, novelty or a grade.
 
-`experiments/study.toml` is a draft task/graph/label/split/hypothesis/fairness design. Experiment E1–E5, ablation A1–A7, feature and literature catalogs are planning records; CLI does not enforce them. The single `reports/WEEK1_REPORT.md` records current contributions and evidence; administrative contribution claims do not certify attendance or human acceptance. Every final result must trace to data/version/reference/config/seed/environment/prediction keys and exclusions.
+The [integrated report](../reports/WEEK1_REPORT.md) is the single source for research questions, experiment purposes, feature groups, comparisons, references and future priorities. Executable protocols live in `configs/temporal_study.toml`, `configs/confirmation.toml` and `configs/continuity_audit.toml`. Earlier draft registries are superseded. Every result must trace to its data, reference, configuration, seed, environment, prediction keys and exclusions; planning documents alone are not evidence of execution.
 
 | Next component | Evidence required before claiming completion |
 |---|---|
@@ -238,49 +242,3 @@ search. Macro-F1 and confusion matrices always use the six declared event classe
 absent classes receive zero F1. Per-class support is included. Labels are
 tracker-derived pseudo-labels, so these metrics evaluate prediction of this rule,
 not tracking accuracy against independently annotated truth.
-
-
-## Independent synthetic pair contracts
-
-`benchmarks/config.py`, `scenarios.py`, `dynamic.py`, `graphs.py` and `io.py` generate fixed synthetic memberships/events/links and weighted undirected graph snapshots. Ground truth is defined by the generator, not inferred by the tracker being scored. Dataset identity includes split/scenario/difficulty/generator seed; community IDs are local. Development seeds 11/12/13 and evaluation seeds 101/102/103 are disjoint. The baseline uses p_in=0.50 and p_out=0.02; this is an easy regime, not broad generalization evidence.
-
-`detection/leiden.py` also adapts these public graph/nodes inputs to Independent Leiden; detector seeds 0/1/2 use canonical 0. `evaluation/detection.py` aligns node populations, reports coverage, and computes AMI on eligible partitions. Undefined scores retain a null reason, including constant truth. A null score is neither zero nor perfect detection. Seeds are diagnostics within a dataset, not independent datasets.
-
-The synthetic `tracking.jaccard.track()` API uses Jaccard >=0.30 and a 10% size tolerance; split takes precedence over merge. The existing Reddit `transitions()` API retains threshold 0.25 and exact-size grow/shrink decisions. They are separate protocols with different return contracts. Do not replace one with the other during integration. Final unobserved successors are not fabricated dissolve labels.
-
-`tracking/membership.py` validates multi-month memberships. `evaluation/tracking.py` performs deterministic greedy one-to-one source mapping for scoring only; ground truth never changes tracker assignments. Unmatched truth remains an error column, and extra detector groups remain diagnostics. `reporting/tracking_demo.py` independently reconstructs per-class scores/confusions and pools keys qualified by dataset/reference/month/source. Mean-dataset fixed-six-class F1 differs from pooled F1; both are reported.
-
-`pipelines/synthetic_week1.py` creates an isolated current run: generation/development -> source/version freeze -> evaluation -> two verified tracking routes -> figures. A new local chronological freeze is not a retroactive certification of historical work and not proof of an unseen scientific test, because recipes were inspected before integration. Original T02 replay keeps its fixed pins. New current-run replay accepts an explicit manifest reference produced by its parent run, not a silently substituted historical hash.
-
-## Synthetic prediction table contract
-
-`benchmarks/community_table.py` supplies a reproducible synthetic community-month table. `evaluation/splits.py` assigns whole label-month train/validation/test groups; final unlabeled observations stay counted separately. `sample_checks.py` checks keys, schema, availability, labels, splits and missing-value constraints. Majority uses the training majority, Persistence uses only available past labels with a Majority fallback, and Logistic Regression fits its scaler/model on training rows. This does not make the synthetic label mechanism a realistic model of Reddit.
-
-`evaluation/metrics.py` exports `macro_f1` across present truth classes and `macro_f1_six` across all declared events, plus balanced accuracy, per-class support and six-class confusion matrices. `reporting/prediction.py` checks hashes and full prediction keys and recomputes metrics/confusions before plotting. The baseline pipeline status `complete_through_baselines` includes its completed evaluation stage and does not claim B2/B5/HeTCo implementation.
-
-## Midterm context/history research contract
-
-`research` is a separate, fixed-reference development experiment. It does not change the three original pair demos or claim to implement full T/temporal/consensus detection. **HeTCo-v0** is this project's preliminary feature-based context/history forecaster, not a reproduced external algorithm or a novelty claim.
-
-The command verifies a canonical preparation store and a completed GED/history forecast, including manifest linkage, identity scope, month cohort and membership reference. Every variant uses the same eligible sample keys and label-reference ID. `configs/midterm.toml` is strictly validated and copied/resolved into the output before the first fit. The run records the protocol hash, freeze/first-fit timestamps, source/code/dependency hashes, model inventory, predictions, fit windows, exclusions and resource scope. Previously inspected 2015 data remain development data after this freeze.
-
-Feature blocks are S (five structural features), H (seven past-only history features), L (lagged predecessor structure and missing flag), and C (four context attributes). For each community C at t:
-
-| Context attribute | Exact observation and formula |
-|---|---|
-| subreddit_entropy | Authored-record corpus frequencies among community members in t; `-sum(p*log(p))/log(15)`; zero without observed authored records |
-| thread_activity | `log1p(number of distinct roots authored in t by members / community size)` |
-| active_member_fraction | Distinct members authoring valid-user records in t / community size |
-| co_thread_external_exposure | Across roots observed in t, let a be distinct community participants and n all valid-user participants; `sum(a*(n-a))/sum(a*(n-1))`, zero if denominator is zero |
-
-Only records whose stored month and UTC timestamp agree with t are accepted. Corpus IDs must belong to the declared 15-corpus inventory. Thread participants are unique within the current month, including valid authors outside the detected partition; no future thread completion is consumed. Exposure uses counts instead of generating a quadratic co-thread clique, and therefore does not constitute T-layer graph detection.
-
-L contains equal-predecessor means of size, density and internal weight from accepted t−1→t links, plus `lag_missing`. Missing history has zero lag values and a flag. Persistence uses eligible predecessor source events already known at t, with deterministic majority/lexical tie resolution; absent history falls back to training Majority. Outgoing t→t+1 labels cannot enter these inputs.
-
-B1 Majority/Persistence and B4 LR provide simple controls; B2 is a project Random Forest adaptation. B5, HeTCo-v0 and ablations share the exact boosting family, parameters, seeds and zero-search budget. B5 uses S+H+L; HeTCo-v0 adds C; A1 removes C and must reproduce B5 predictions exactly; A4 removes four membership-dynamics rates; A6 removes L. B4 uses the existing S+H features. Single-class training is explicitly recorded as a Majority fallback.
-
-Main evaluation preserves the October–December 2015 label-month holdout. Six rolling diagnostics for July–December fit earlier label months only, with no test-driven tuning. Primary scoring is fixed-six-class macro-F1; also report present-class macro-F1, supported-class balanced accuracy, per-class precision/recall/F1/support, confusion matrices, monthly scores and fallback/exclusion counts. The independent reporting consumer reconstructs these from complete matched prediction keys and rejects semantic inconsistencies even if a file hash is updated.
-
-No interval is provided for the three-month main holdout under this protocol. Exploratory rolling uncertainty uses paired moving month blocks (length 2, 1,000 draws, seed 2026); seed-specific pooled deltas versus B5 are averaged inside each draw. All variants use the same resampled months. Six inspected months provide limited support: this is not an unseen confidence claim or confirmation of H3. Native peak memory is unmeasured and remains null with a reason; fit wall times include serialization/reload checks.
-
-The harder synthetic diagnostic uses recipe/protocol schema 2, difficulty `harder`, p_in=.25, p_out=.10, development seeds 21/22/23 and evaluation seeds 201/202/203. Its graph sampler semantics remain unchanged. Schema 1 retains its original `easy` restriction and archived hashes/pins. Both regimes report detection and truth/detector tracking separately; a harder baseline run does not complete the proposed temporal/consensus H1 experiment.

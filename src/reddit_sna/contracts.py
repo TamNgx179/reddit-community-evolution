@@ -38,6 +38,14 @@ def next_month(month: str) -> str:
     return date(current.year, current.month + 1, 1).strftime("%Y-%m")
 
 
+def shift_month(month: str, delta: int) -> str:
+    """Shift a validated calendar month without approximating day lengths."""
+    next_month(month)
+    year, number = map(int, month.split('-'))
+    year, number = divmod(year * 12 + number - 1 + delta, 12)
+    return f'{year:04d}-{number + 1:02d}'
+
+
 def _identifiers(*values: str) -> None:
     if any(not isinstance(value, str) or not value.strip() for value in values):
         raise ValueError("identifiers must be nonempty strings")
