@@ -31,6 +31,12 @@ reddit-sna hetco --research-run artifacts/research/midterm-thanh-001 --preparati
 The v2 run selects its configuration on the inner origins, then fits. It takes
 about 10 minutes.
 
+The v3 ensemble only runs from a committed, unchanged declaration:
+
+```powershell
+reddit-sna hetco-ensemble --declaration configs/hetco_ensemble.toml --research-run artifacts/research/midterm-thanh-001 --preparation-run artifacts/core/reddit-2015-reproduced-v1 --run-id hetco-v3-001
+```
+
 After a completed original/external temporal study, run the development-only audit:
 
 ```powershell

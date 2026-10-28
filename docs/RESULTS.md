@@ -12,6 +12,7 @@ The sections below preserve earlier baseline and handoff evidence. Their indepen
 
 - [HeTCo v1 development comparison](#hetco-v1-development-comparison)
 - [HeTCo v2: weighting and hierarchical head](#hetco-v2-weighting-and-hierarchical-head-chosen-on-inner-origins)
+- [HeTCo v3: pre-declared ensemble with B4](#hetco-v3-pre-declared-ensemble-with-b4)
 - [Final delivery verification](#final-delivery-verification)
 - [Current event support and scores](#current-event-support-and-scores)
 - [External evidence still required](#external-evidence-still-required)
@@ -150,7 +151,54 @@ Findings:
 - Every claim of improvement still requires a frozen configuration and an
   untouched evaluation period.
 
-## Baseline provenance
+### HeTCo v3: pre-declared ensemble with B4
+
+The declaration `configs/hetco_ensemble.toml` was committed and pushed in
+`b617564` before any v3 fit. It fixed these choices:
+
+- **Candidates:** 10 HeTCo options, made of 2 poolings × 5 mixing weights. The
+  final probability is w·p_HeTCo + (1−w)·p_B4, with w ∈ {0, .25, .5, .75, 1};
+  w = 0 is pure B4.
+- **Fairness control:** 5 B4+B5 mixtures with the same weights.
+- **Probabilities:** averaged over seeds 42/43/44.
+- **Selection:** label months 2015-07..09 only. Ties go to the smaller HeTCo weight.
+
+The run also refitted B4 and B5 and checked that their predictions equal the
+research run's. The result is `artifacts/hetco/hetco-v3-001` (local, 3 minutes).
+
+Selection chose attention pooling with w = 0.25 (selection macro-F1 0.399
+against 0.374 for pure B4). The control chose w = 0.5 (0.382).
+
+| Model | Main macro-F1 | Rolling 10–12 macro-F1 | Selection months 07–09 |
+|---|---|---|---|
+| B4_logreg | 0.361 | 0.379 | 0.374 |
+| HeTCo_v2_seedavg | 0.363 | 0.378 | 0.396 |
+| **HeTCo_v3 (0.25·HeTCo + 0.75·B4)** | **0.361** | **0.379** | 0.399 |
+| Control_B4_B5 | 0.356 | 0.338 | 0.382 |
+
+Rolling 10–12 refers to the rolling origins that selection did not read. Main
+window intervals use a paired community bootstrap:
+
+| Difference | Observed | Interval |
+|---|---|---|
+| HeTCo_v3 − B4 | 0.000 | [0.000, 0.000] |
+| Control − B4 | −0.005 | [−0.018, 0.001] |
+| HeTCo_v3 − Control | +0.005 | [−0.001, 0.018] |
+| HeTCo_v2_seedavg − B4 | +0.003 | [−0.060, 0.066] |
+
+Findings:
+
+- **The ensemble does not raise the score.** On every month outside selection,
+  the selected 0.25 HeTCo weight changes no B4 decision. v3 is therefore
+  identical to B4: equal to the baseline, not above it. The +0.025 gain on
+  07–09 was selection fit and did not transfer.
+- Generic ensembling is worse. The B4+B5 control falls below B4 on both the
+  main window and the unselected rolling months.
+- The seed-averaged HeTCo_v2 alone remains at the baseline (0.363 against
+  0.361, within noise).
+- Conclusion on the 2015 pilot: HeTCo variants reach but do not exceed B4.
+  Further gains need new information (more training data or better member
+  features), not more mixing or tuning on 2015.
 
 At main aa110ac on 17 October 2026, all 148 tests passed without skips. An independent forecast from the original producer's twelve-month annual inputs completed in 54.269 seconds and reproduced 1,333 eligible samples, 762/571 train/test rows and macro-F1 0.159672/0.360540 for Majority/Logistic Regression. Reloaded models reproduced all saved predictions. This was verified-input replay, not a raw rescan.
 
