@@ -12,7 +12,8 @@ The sections below preserve earlier baseline and handoff evidence. Their indepen
 
 - [HeTCo v1 development comparison](#hetco-v1-development-comparison)
 - [HeTCo v2: weighting and hierarchical head](#hetco-v2-weighting-and-hierarchical-head-chosen-on-inner-origins)
-- [HeTCo v3: pre-declared ensemble with B4](#hetco-v3-pre-declared-ensemble-with-b4)
+- [HeTCo v3: ensemble with B4 (dropped)](#hetco-v3-ensemble-with-b4-tried-dropped)
+- [HeTCo v4: network-position and persistence features](#hetco-v4-network-position-and-persistence-member-features)
 - [Final delivery verification](#final-delivery-verification)
 - [Current event support and scores](#current-event-support-and-scores)
 - [External evidence still required](#external-evidence-still-required)
@@ -151,54 +152,85 @@ Findings:
 - Every claim of improvement still requires a frozen configuration and an
   untouched evaluation period.
 
-### HeTCo v3: pre-declared ensemble with B4
+### HeTCo v3: ensemble with B4 (tried, dropped)
 
-The declaration `configs/hetco_ensemble.toml` was committed and pushed in
-`b617564` before any v3 fit. It fixed these choices:
+A pre-declared mixture was tested (declaration committed in `b617564`). It
+used w·p_HeTCo + (1−w)·p_B4 with w ∈ {0, .25, .5, .75, 1}, selected on
+2015-07..09, and a B4+B5 control. Selection chose w = 0.25, which changed no B4
+decision outside the selection months: main macro-F1 was 0.361, identical to B4.
+The B4+B5 control scored below B4 (0.356). Because v3 did not exceed the
+baseline, it was removed from the code.
 
-- **Candidates:** 10 HeTCo options, made of 2 poolings × 5 mixing weights. The
-  final probability is w·p_HeTCo + (1−w)·p_B4, with w ∈ {0, .25, .5, .75, 1};
-  w = 0 is pure B4.
-- **Fairness control:** 5 B4+B5 mixtures with the same weights.
-- **Probabilities:** averaged over seeds 42/43/44.
-- **Selection:** label months 2015-07..09 only. Ties go to the smaller HeTCo weight.
+### HeTCo v4: network-position and persistence member features
 
-The run also refitted B4 and B5 and checked that their predictions equal the
-research run's. The result is `artifacts/hetco/hetco-v3-001` (local, 3 minutes).
+v4 changes only the member attributes. It adds six past-only features
+(`EXTENDED_FEATURES` in `features/members.py`):
 
-Selection chose attention pooling with w = 0.25 (selection macro-F1 0.399
-against 0.374 for pure B4). The control chose w = 0.5 (0.382).
+- k-core coreness in R_t
+- tie persistence from t-1
+- co-member persistence: the share of current co-members who shared the
+  member's t-1 community
+- bridging to other communities
+- reply reciprocity in directed R_t
+- a left-censoring flag for users active in the first month
 
-| Model | Main macro-F1 | Rolling 10–12 macro-F1 | Selection months 07–09 |
-|---|---|---|---|
-| B4_logreg | 0.361 | 0.379 | 0.374 |
-| HeTCo_v2_seedavg | 0.363 | 0.378 | 0.396 |
-| **HeTCo_v3 (0.25·HeTCo + 0.75·B4)** | **0.361** | **0.379** | 0.399 |
-| Control_B4_B5 | 0.356 | 0.338 | 0.382 |
+The head and weighting stay fixed at the v2 inner selection (balanced,
+hierarchical), so nothing is searched. The feature set was fixed before the v4
+run and was not revised after it. Run: `artifacts/hetco/hetco-v4-001`; figures:
+[reports/figures/hetco-v4-001](../reports/figures/hetco-v4-001). A visual
+walkthrough is in the executed notebook
+[06_hetco_study.ipynb](../notebooks/core/06_hetco_study.ipynb). It covers the
+dataset, one real community with its members' attention and reply graph, the
+model comparison and class-level examples.
 
-Rolling 10–12 refers to the rolling origins that selection did not read. Main
-window intervals use a paired community bootstrap:
+Accuracy moves the other way. B4 has accuracy 0.933 because it predicts
+dissolve almost everywhere; v4 has 0.869. There are 9 test communities that v4
+gets right and B4 gets wrong, and 42 that go the other way, mostly dissolve.
+v4 wins macro-F1 because it recovers grow and merge (F1 0.15 each, against 0
+for B4).
 
-| Difference | Observed | Interval |
+| Model | Main macro-F1 | Main per seed | Main bal. acc. | Rolling macro-F1 |
+|---|---|---|---|---|
+| B4_logreg | 0.361 | 0.361 / 0.361 / 0.361 | 0.482 | 0.378 |
+| HeTCo_v2 | 0.365 | 0.366 / 0.358 / 0.372 | 0.534 | 0.398 |
+| **HeTCo_v4** | **0.398** | 0.406 / 0.405 / 0.381 | **0.547** | 0.392 |
+| A7v4_mean_pool | 0.349 | — | 0.507 | 0.375 |
+
+The next table compares v4 and B4 month by month over the rolling origins.
+Each value is the seed-mean macro-F1. Months 10–12 were never used for any
+selection.
+
+| Month | 07 | 08 | 09 | 10 | 11 | 12 |
+|---|---|---|---|---|---|---|
+| B4 | 0.398 | 0.493 | 0.320 | 0.419 | 0.313 | 0.398 |
+| HeTCo_v4 | 0.395 | 0.470 | 0.329 | **0.432** | **0.366** | **0.406** |
+
+The table below gives intervals for the macro-F1 difference.
+
+| Difference | Main community bootstrap | Rolling month blocks |
 |---|---|---|
-| HeTCo_v3 − B4 | 0.000 | [0.000, 0.000] |
-| Control − B4 | −0.005 | [−0.018, 0.001] |
-| HeTCo_v3 − Control | +0.005 | [−0.001, 0.018] |
-| HeTCo_v2_seedavg − B4 | +0.003 | [−0.060, 0.066] |
+| HeTCo_v4 − B4 | +0.037, [−0.035, 0.110], 82% > 0 | [0.001, 0.030], 99% > 0 |
+| HeTCo_v4 − HeTCo_v2 | +0.032, [−0.012, 0.076], 91% > 0 | [−0.049, 0.029] |
+| A7v4_mean_pool − HeTCo_v4 | −0.049, [−0.110, 0.016], 7% > 0 | [−0.044, 0.036] |
 
 Findings:
 
-- **The ensemble does not raise the score.** On every month outside selection,
-  the selected 0.25 HeTCo weight changes no B4 decision. v3 is therefore
-  identical to B4: equal to the baseline, not above it. The +0.025 gain on
-  07–09 was selection fit and did not transfer.
-- Generic ensembling is worse. The B4+B5 control falls below B4 on both the
-  main window and the unselected rolling months.
-- The seed-averaged HeTCo_v2 alone remains at the baseline (0.363 against
-  0.361, within noise).
-- Conclusion on the 2015 pilot: HeTCo variants reach but do not exceed B4.
-  Further gains need new information (more training data or better member
-  features), not more mixing or tuning on 2015.
+- **HeTCo_v4 is above B4.** On the main window it gains +0.037 macro-F1, with
+  every seed above B4, and it also leads on all three unselected rolling
+  months. It is the first variant whose rolling month-block interval excludes
+  zero against B4. The main-window community interval still includes zero, so
+  the honest statement is **"above B4 on every check, by a margin that the
+  2015 pilot cannot yet confirm"**.
+- **Attention now matters.** With the persistence and position features,
+  attention beats mean pooling by 0.049 on the main window (93% of draws). The
+  attention gain appears only once members carry relational information.
+- The gain comes from the rare classes: shrink 0.39→0.48, merge 0.12→0.15
+  and split 0.61→0.67 against v2. Dissolve stays at 0.94.
+- **Exposure.** The v4 feature idea came after inspecting v1/v2 behaviour on
+  this pilot, and the head/weighting were chosen on 07–09. Confirmation needs
+  the frozen v4 on an untouched period.
+
+## Baseline provenance
 
 At main aa110ac on 17 October 2026, all 148 tests passed without skips. An independent forecast from the original producer's twelve-month annual inputs completed in 54.269 seconds and reproduced 1,333 eligible samples, 762/571 train/test rows and macro-F1 0.159672/0.360540 for Majority/Logistic Regression. Reloaded models reproduced all saved predictions. This was verified-input replay, not a raw rescan.
 

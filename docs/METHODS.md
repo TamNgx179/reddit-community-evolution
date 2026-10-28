@@ -256,6 +256,19 @@ Each is scored at the rolling origins before `test_start`; the highest seed-mean
 pooled macro-F1 is selected, with ties resolved by grid order. The selected
 configuration is written to `selection.csv` and the manifest before the main
 fits. `A7v2_mean_pool` is the same selected configuration with uniform pooling.
+HeTCo v4 (`HeTCo_v4`, `A7v4_mean_pool`) fixes the v2 head and weighting
+(balanced, hierarchical). It appends `EXTENDED_FEATURES` to each member row:
+
+- `log_coreness`: log1p of the k-core number in undirected R_t (igraph).
+- `tie_persistence`: the share of t partners who were already partners at t-1.
+- `comember_persistence`: the share of other current co-members who shared the
+  member's t-1 community.
+- `log_bridging`: log1p of the number of other communities among t partners.
+- `reciprocity`: the share of directed reply targets who also reply at t.
+- `observed_from_start`: users active in the first month, whose tenure is
+  left-censored.
+
+Only months t and t-1 are read.
 `evaluation.json` also stores `main_intervals`, a paired community-level
 bootstrap on the main window, alongside the rolling month-block `intervals`.
 Use `--model` to run a subset of models.

@@ -53,6 +53,7 @@ class HeTCoPipelineTests(unittest.TestCase):
                                     **{f: (c + 1) * (i + 1) / 10 for i, f in enumerate(FULL)}))
             _write(preparation / f"memberships/{month}/membership-seed0.csv", members)
             _write(preparation / f"snapshots/{month}/R.csv", edges)
+            _write(preparation / f"snapshots/{month}/directed_R.csv", edges)
         db.commit()
         db.close()
         protocol = dict(test_start="2015-04", rolling_months=["2015-03", "2015-04"], seeds=[42, 43],

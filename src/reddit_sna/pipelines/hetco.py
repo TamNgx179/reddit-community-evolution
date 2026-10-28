@@ -19,13 +19,13 @@ from reddit_sna.config import validate_run_id
 from reddit_sna.data.archive import digest_file
 from reddit_sna.evaluation.research import EVENTS, KEY, matrix_score, score
 from reddit_sna.evaluation.research_protocol import FULL, VARIANTS
-from reddit_sna.features.members import MEMBER_FEATURES, member_features
+from reddit_sna.features.members import EXTENDED_FEATURES, MEMBER_FEATURES, member_features
 from reddit_sna.models.hetco import CLASS_WEIGHTS, HEADS, HETCO, fit_hetco, predict_hetco
 from reddit_sna.pipelines.research import read_table, save_json, write_table
 
 
-def _spec(pooling, fields, class_weight="balanced", head="flat"):
-    return dict(pooling=pooling, fields=tuple(fields), class_weight=class_weight, head=head)
+def _spec(pooling, fields, class_weight="balanced", head="flat", members="base"):
+    return dict(pooling=pooling, fields=tuple(fields), class_weight=class_weight, head=head, members=members)
 
 
 # Each v1 ablation removes exactly one input group from HeTCo_v1 and keeps settings.
@@ -35,7 +35,11 @@ MODELS = {"HeTCo_v1": _spec("attention", FULL), "A7_mean_pool": _spec("mean", FU
           "A4v1_no_dynamics": _spec("attention", VARIANTS["A4_no_dynamics"]),
           "A6v1_no_lag": _spec("attention", VARIANTS["A6_no_lag"]),
           "HeTCo_v2": _spec("attention", FULL, None, None),
-          "A7v2_mean_pool": _spec("mean", FULL, None, None)}
+          "A7v2_mean_pool": _spec("mean", FULL, None, None),
+          # v4 changes only the member attributes; head/weighting are fixed to
+          # the v2 inner selection (balanced, hierarchical), so nothing is searched.
+          "HeTCo_v4": _spec("attention", FULL, "balanced", "hierarchical", "extended"),
+          "A7v4_mean_pool": _spec("mean", FULL, "balanced", "hierarchical", "extended")}
 REFERENCES = ("B4_logreg", "B5_matched_boosting", "HeTCo_v0")
 # Declared before any v2 fit; ties keep this order. Simplest candidates come first.
 GRID = tuple((weight, head) for head in HEADS for weight in CLASS_WEIGHTS)
@@ -76,11 +80,11 @@ def community_delta(units, name, reference, seeds, draws=1000, seed=2026):
 
 
 def _fit_predict(spec, train, test, seed):
-    fields = spec["fields"]
-    fitted = fit_hetco([r["bag"] for r in train], [[float(r[f]) for f in fields] for r in train],
+    fields, bag = spec["fields"], "bag_extended" if spec.get("members") == "extended" else "bag"
+    fitted = fit_hetco([r[bag] for r in train], [[float(r[f]) for f in fields] for r in train],
                        [r["label"] for r in train], seed, spec["pooling"],
                        class_weight=spec["class_weight"], head=spec["head"])
-    predicted, _, alpha = predict_hetco(fitted, [r["bag"] for r in test],
+    predicted, _, alpha = predict_hetco(fitted, [r[bag] for r in test],
                                         [[float(r[f]) for f in fields] for r in test])
     return fitted, predicted, alpha
 
@@ -129,8 +133,11 @@ def _block_delta(monthly, months, name, reference, seeds, settings):
                 high=float(np.percentile(deltas, 97.5)), share_positive=float(np.mean(np.array(deltas) > 0)))
 
 
-def load_samples(research_run, preparation):
-    """Research samples with each community's past-only member attribute bag."""
+def load_samples(research_run, preparation, extended=False):
+    """Research samples with each community's past-only member attribute bag.
+
+    With `extended`, `bag_extended` adds EXTENDED_FEATURES after the base columns.
+    """
     samples = read_table(research_run / "samples.csv")
     detection = json.loads((preparation / "detection.json").read_text(encoding="utf-8"))
     months = sorted({r["feature_month"] for r in samples})
@@ -139,9 +146,14 @@ def load_samples(research_run, preparation):
         groups[month] = defaultdict(set)
         for r in read_table(preparation / f"memberships/{month}/membership-seed{detection['canonical_seed']}.csv"):
             groups[month][r["community_id"]].add(r["user_id"])
-    bags = member_features(preparation / "normalized.sqlite", preparation / "snapshots", months, groups)
+    bags = member_features(preparation / "normalized.sqlite", preparation / "snapshots", months, groups,
+                           extended=extended)
+    width = len(MEMBER_FEATURES)
     for r in samples:
-        r["bag"] = np.asarray(bags[(r["feature_month"], r["community_id"])])
+        full = np.asarray(bags[(r["feature_month"], r["community_id"])])
+        r["bag"] = full[:, :width]
+        if extended:
+            r["bag_extended"] = full
     return samples
 
 
@@ -168,7 +180,8 @@ def run_hetco(research_run, preparation, artifact_root, run_id, models=None):
                     scope="lightweight group-node attention after Revelle et al. 2021; not the full original GNN")
     save_json(output / "manifest.json", manifest)
     try:
-        samples = load_samples(research_run, preparation)
+        samples = load_samples(research_run, preparation,
+                               extended=any(s.get("members") == "extended" for s in models.values()))
         if any(spec["head"] is None for spec in models.values()):
             selection, (weight, head) = select_v2(samples, protocol)
             write_table(output / "selection.csv", selection)
@@ -181,7 +194,9 @@ def run_hetco(research_run, preparation, artifact_root, run_id, models=None):
         windows =[("main", protocol["test_start"]), *[("rolling", m) for m in protocol["rolling_months"]]]
         predictions, fits, attention = [], [], []
         # Attention profile of the newest attention model in this run.
-        attended = next((n for n in ("HeTCo_v2", "HeTCo_v1") if n in models), None)
+        attended = next((n for n in ("HeTCo_v4", "HeTCo_v2", "HeTCo_v1") if n in models), None)
+        extended = attended is not None and models[attended].get("members") == "extended"
+        names = MEMBER_FEATURES + EXTENDED_FEATURES if extended else MEMBER_FEATURES
         for window, boundary in windows:
             train = [r for r in samples if r["label_month"] < boundary]
             test = [r for r in samples if (r["label_month"] >= boundary if window == "main"
@@ -199,14 +214,14 @@ def run_hetco(research_run, preparation, artifact_root, run_id, models=None):
                                        for r, p in zip(test, predicted))
                     if window == "main" and name == attended and seed == protocol["seeds"][0]:
                         for r, a in zip(test, alpha):
-                            bag = r["bag"]
+                            bag = r["bag_extended"] if extended else r["bag"]
                             attention.append(dict(feature_month=r["feature_month"], community_id=r["community_id"],
                                                   label=r["label"], size=len(a), max_attention=float(a.max()),
                                                   effective_members=float(1.0 / np.sum(a ** 2)),
                                                   **{f"weighted_{f}": float(a @ bag[:, i])
-                                                     for i, f in enumerate(MEMBER_FEATURES)},
+                                                     for i, f in enumerate(names)},
                                                   **{f"mean_{f}": float(bag[:, i].mean())
-                                                     for i, f in enumerate(MEMBER_FEATURES)}))
+                                                     for i, f in enumerate(names)}))
         write_table(output / "predictions.csv", predictions)
         if attention:
             write_table(output / "attention.csv", attention)
@@ -236,11 +251,11 @@ def run_hetco(research_run, preparation, artifact_root, run_id, models=None):
                                                                  if k in ("n", "macro_f1_six")})
                           for (m, s, month), rows in sorted(monthly.items())]
         # Full models face every reference; each ablation faces its own full model.
-        bases = [n for n in ("HeTCo_v1", "HeTCo_v2") if n in models]
+        bases = [n for n in ("HeTCo_v1", "HeTCo_v2", "HeTCo_v4") if n in models]
         pairs = [(name, reference) for name in bases for reference in REFERENCES]
-        pairs += [(name, "HeTCo_v2" if name.endswith("v2_mean_pool") else "HeTCo_v1")
-                  for name in models if name not in bases]
-        pairs += [("HeTCo_v2", "HeTCo_v1")] if len(bases) == 2 else []
+        pairs += [(name, next((b for b in ("HeTCo_v2", "HeTCo_v4") if name.endswith(b[-2:] + "_mean_pool")),
+                              "HeTCo_v1")) for name in models if name not in bases]
+        pairs += [(later, earlier) for i, later in enumerate(bases) for earlier in bases[:i]]
         pairs = [(a, b) for a, b in pairs if b in models or b in REFERENCES]
         intervals = [_block_delta(monthly, protocol["rolling_months"], name, reference,
                                   protocol["seeds"], protocol["bootstrap"]) for name, reference in pairs]

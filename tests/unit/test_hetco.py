@@ -7,7 +7,7 @@ import unittest
 
 import numpy as np
 
-from reddit_sna.features.members import MEMBER_FEATURES, member_features
+from reddit_sna.features.members import EXTENDED_FEATURES, MEMBER_FEATURES, member_features
 from reddit_sna.models import hetco
 from reddit_sna.models.hetco import fit_hetco, predict_hetco
 
@@ -115,6 +115,10 @@ class MemberFeatureTests(unittest.TestCase):
             (root / month / "R.csv").write_text(
                 "month,source_user_id,target_user_id,weight\n"
                 + "".join(f"{month},{s},{t},{w}\n" for s, t, w in edges), encoding="utf-8")
+            directed = [("a", "b"), ("b", "a"), ("c", "b")] if edges else []
+            (root / month / "directed_R.csv").write_text(
+                "month,source_user_id,target_user_id,weight\n"
+                + "".join(f"{month},{s},{t},1\n" for s, t in directed), encoding="utf-8")
 
     def test_values_use_only_current_and_earlier_months(self):
         groups = {"2015-01": {"g": {"a"}}, "2015-02": {"g": {"a", "b"}, "h": {"c"}}}
@@ -132,6 +136,27 @@ class MemberFeatureTests(unittest.TestCase):
         self.assertAlmostEqual(row["log_tenure"], np.log1p(2))
         self.assertAlmostEqual(dict(zip(MEMBER_FEATURES, b))["internal_share"], 0.75)
         self.assertEqual(dict(zip(MEMBER_FEATURES, b))["corpus_count"], 2.0)
+
+    def test_extended_values_are_past_only_and_append_base_columns(self):
+        groups = {"2015-01": {"g": {"a", "b"}}, "2015-02": {"g": {"a", "b"}, "h": {"c"}}}
+        results = []
+        for future in (False, True):
+            with tempfile.TemporaryDirectory() as tmp:
+                root = Path(tmp)
+                self._build(root, future)
+                results.append(member_features(root / "normalized.sqlite", root, ["2015-01", "2015-02"],
+                                               groups, extended=True))
+        self.assertEqual(results[0], results[1])
+        names = MEMBER_FEATURES + EXTENDED_FEATURES
+        a, b = (dict(zip(names, row)) for row in results[0][("2015-02", "g")])
+        self.assertEqual(len(results[0][("2015-02", "g")][0]), len(names))
+        self.assertAlmostEqual(a["log_coreness"], np.log1p(1))
+        self.assertEqual(a["tie_persistence"], 0.0)
+        self.assertEqual(a["comember_persistence"], 1.0)
+        self.assertEqual(a["reciprocity"], 1.0)
+        self.assertAlmostEqual(b["log_bridging"], np.log1p(1))
+        self.assertEqual(b["observed_from_start"], 0.0)
+        self.assertEqual(a["observed_from_start"], 1.0)
 
 
 if __name__ == "__main__":

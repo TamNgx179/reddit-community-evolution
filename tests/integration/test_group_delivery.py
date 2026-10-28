@@ -133,7 +133,7 @@ class GroupCompatibilityTests(unittest.TestCase):
             f"figures/temporal-study-001/{name}.png" for name in figures}
         expected |= {f"figures/confirmation-001/{name}.png" for name in ("comparison","monthly","support")}
         expected |= {f"figures/continuity-001/{name}.png" for name in ("followup", "observation", "repeatability")}
-        expected |= {f"figures/{run}/{name}.png" for run in ("hetco-v1-002", "hetco-v2-001")
+        expected |= {f"figures/{run}/{name}.png" for run in ("hetco-v1-002", "hetco-v2-001", "hetco-v4-001")
                      for name in ("comparison", "intervals", "monthly", "confusion", "attention")}
         actual = {p.relative_to(PROJECT / "reports").as_posix()
                   for p in (PROJECT / "reports").rglob("*") if p.is_file()}

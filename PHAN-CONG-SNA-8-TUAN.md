@@ -291,19 +291,19 @@ Lệnh demo và nội dung trình bày ở `docs/RUNBOOK.md` và `docs/RESULTS.m
 
 ## Cập nhật 28/10 — trạng thái HeTCo và chia phần việc còn lại
 
-**Đã xong (Thanh, nhánh `feat/hetco-v1`):** HeTCo_v1 (attention trên thành viên) và HeTCo_v2 (trọng số lớp và head phân cấp, chọn cấu hình trên các tháng 07–09). Có ablation A1/A4/A6/A7, bootstrap theo khối tháng và theo community, test, hình trong `reports/figures/hetco-v*`. Chi tiết ở `docs/RESULTS.md#hetco-v1-development-comparison`.
+**Đã xong (Thanh, nhánh `feat/hetco-v1`):** HeTCo_v1 (attention trên thành viên), HeTCo_v2 (trọng số lớp và head phân cấp, chọn cấu hình trên các tháng 07–09) và HeTCo_v4 (thêm 6 đặc trưng thành viên: coreness, giữ liên kết, giữ đồng thành viên, cầu nối, trả lời qua lại, cờ cắt trái). Bản v3 (trộn với B4) đã thử nhưng không tăng điểm nên bỏ. Có ablation A1/A4/A6/A7, bootstrap theo khối tháng và theo community, test, hình trong `reports/figures/hetco-v*`. Chi tiết ở `docs/RESULTS.md`.
 
-**Kết quả hiện tại:** trên main window 2015-10..12, HeTCo_v2 đạt macro-F1 0.365, B4 đạt 0.361. Theo tiêu chí của giảng viên (phương pháp đề xuất phải ≥ baseline), v2 đã đạt. Tuy nhiên chênh lệch là +0.005 với khoảng tin cậy [−0.06, +0.07], nên chỉ được trình bày là **ngang B4**, không phải thắng. Attention chưa tốt hơn lấy trung bình. Ý tưởng của v2 xuất phát từ việc xem lỗi trên tập test 2015, nên cần kiểm định lại trên giai đoạn chưa xem.
+**Kết quả hiện tại:** trên main window 2015-10..12, **HeTCo_v4 đạt macro-F1 0.398, B4 đạt 0.361** (+0.037). Cả 3 seed đều cao hơn B4, và v4 cũng cao hơn B4 ở cả 3 tháng rolling 10–12 không dùng để chọn. Đây là bản đầu tiên có khoảng tin cậy rolling vượt B4 ([0.001, 0.030]); khoảng tin cậy theo community trên main window vẫn chứa 0 ([−0.035, 0.110]). Theo tiêu chí của giảng viên (phương pháp đề xuất phải ≥ baseline), v4 đạt và vượt. Với đặc trưng mới, attention đã tốt hơn lấy trung bình. Vẫn cần khóa v4 và kiểm định trên giai đoạn chưa xem, vì ý tưởng v4 hình thành sau khi xem kết quả 2015.
 
 **Phần còn lại, mỗi người 2 việc, giữ đúng phạm vi sở hữu:**
 
 | Người | Việc | Hạn |
 |---|---|---|
 | **Tâm** | (1) Chuẩn bị giai đoạn đánh giá chưa xem cho HeTCo: cohort 2018 trong `configs/prospective.toml`, hoặc các tháng 2016 nếu dữ liệu đủ. Gồm snapshot, membership và preparation. (2) Tích hợp `hetco` vào `temporal-study` để so HeTCo với proposed hierarchical LR trên cùng mẫu, đồng thời review PR `feat/hetco-v1`. | 04/11 |
-| **Thanh** | (1) Sửa tenure bị cắt trái bằng cách dùng các tháng đầu làm lịch sử, và khai báo trước một biến thể attention ghép trung bình; chọn bằng các tháng 07–09, không nhìn test. (2) Khóa cấu hình v2 (file config có hash, commit trước khi chạy) rồi chạy một lần trên giai đoạn chưa xem của Tâm. Thắng hay thua đều báo cáo nguyên kết quả. | 11/11 |
+| **Thanh** | (1) Đã thêm cờ cắt trái và đặc trưng quan hệ trong v4; tiếp theo dùng các tháng đầu làm lịch sử thay cho cờ. (2) Khóa cấu hình v4 (file config có hash, commit trước khi chạy) rồi chạy một lần trên giai đoạn chưa xem của Tâm. Thắng hay thua đều báo cáo nguyên kết quả. | 11/11 |
 | **Phúc** | (1) Chạy B2/B5 trên giai đoạn chưa xem với cấu hình đã khóa và cùng mẫu với HeTCo. (2) Đo thời gian và bộ nhớ của `hetco` (khoảng 10 phút trên pilot 2015) và đề xuất giới hạn khi chạy nhiều corpus hơn. | 11/11 |
 | **Đăng** | (1) Test leakage cho `features/members.py`: xác nhận không đọc bản ghi sau t, membership t+1 hay nhãn. Kiểm tra nhãn ở lớp hiếm grow/merge. (2) Đối chiếu bootstrap theo community (`community_delta`) với bootstrap theo khối tháng, và ghi rõ giới hạn khi phụ thuộc trong cùng tháng. | 11/11 |
-| **Trâm** | (1) Chạy B1/B4 trên giai đoạn chưa xem, cùng mẫu và cấu hình đã khóa. (2) Lập bảng so sánh B1/B2/B4/B5/HeTCo_v2 theo từng lớp; B4 là baseline mạnh nhất cần vượt. | 11/11 |
-| **Anh** | (1) Đánh giá độc lập predictions HeTCo, gồm `artifacts/hetco/hetco-v2-001/predictions.csv` và bản chạy trên giai đoạn chưa xem; tính lại macro-F1 và confusion bằng code của mình. (2) Đưa phần HeTCo vào report và slide, ghi đúng "ngang B4 trên dữ liệu phát triển" kèm các giới hạn. | 18/11 |
+| **Trâm** | (1) Chạy B1/B4 trên giai đoạn chưa xem, cùng mẫu và cấu hình đã khóa. (2) Lập bảng so sánh B1/B2/B4/B5/HeTCo_v4 theo từng lớp; B4 là baseline mạnh nhất cần vượt. | 11/11 |
+| **Anh** | (1) Đánh giá độc lập predictions HeTCo, gồm `artifacts/hetco/hetco-v4-001/predictions.csv` và bản chạy trên giai đoạn chưa xem; tính lại macro-F1 và confusion bằng code của mình. (2) Đưa phần HeTCo vào report và slide, ghi đúng "HeTCo_v4 cao hơn B4 trên dữ liệu phát triển, chưa kiểm định trên giai đoạn mới" kèm các giới hạn. | 18/11 |
 
 **Quy tắc:** không chỉnh cấu hình HeTCo sau khi đã xem điểm trên giai đoạn chưa xem. Mọi mô hình dùng cùng mẫu, cùng nhãn và cùng seed. Nếu HeTCo thấp hơn B4 trên giai đoạn mới thì vẫn báo cáo, đồng thời phân tích lỗi theo lớp.
