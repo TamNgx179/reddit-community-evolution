@@ -18,6 +18,19 @@ forms. These exposed-period analyses are separate from a future frozen cohort
 and actual independent human assessment. Reproduction of the original primary
 and A1 final predictions is required before component results are interpreted.
 
+HeTCo v1 runs on the exact samples of a completed `research` run. It takes
+about 12 minutes on the 2015 pilot:
+
+```powershell
+reddit-sna research --protocol configs/midterm.toml --preparation-run artifacts/core/reddit-2015-reproduced-v1 --forecast-run artifacts/core/forecast-ged-history-v3 --run-id midterm-thanh-001
+reddit-sna hetco --research-run artifacts/research/midterm-thanh-001 --preparation-run artifacts/core/reddit-2015-reproduced-v1 --run-id hetco-v1-002
+python -c "from reddit_sna.reporting.hetco import export_figures; export_figures('artifacts/hetco/hetco-v1-002', 'reports/figures/hetco-v1-002')"
+reddit-sna hetco --research-run artifacts/research/midterm-thanh-001 --preparation-run artifacts/core/reddit-2015-reproduced-v1 --run-id hetco-v2-001 --model HeTCo_v1 --model HeTCo_v2 --model A7v2_mean_pool
+```
+
+The v2 run selects its configuration on the inner origins, then fits. It takes
+about 10 minutes.
+
 After a completed original/external temporal study, run the development-only audit:
 
 ```powershell

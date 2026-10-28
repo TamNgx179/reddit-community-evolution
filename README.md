@@ -11,7 +11,7 @@ These references provide attribution; they do not assign a new license to Reddit
 
 Research package for detecting, tracking and forecasting Reddit **user communities**. Subreddits are activity contexts, not ground-truth community labels.
 
-The core baseline runs **raw ZIPs → audited normalization → monthly reply graphs → Independent Leiden → GED adaptation → current/past-only features → temporal forecasting → verified evaluation and figures**. Independent detection/tracking and prediction demos are also implemented. Full HeTCo, original GED and multislice/consensus remain planned. The generic `run` entrypoint remains unfinished; use `week1` for the core baseline or `temporal-study` for the full chronological experiment.
+The core baseline runs **raw ZIPs → audited normalization → monthly reply graphs → Independent Leiden → GED adaptation → current/past-only features → temporal forecasting → verified evaluation and figures**. Independent detection/tracking and prediction demos are also implemented. A lightweight HeTCo v1 (group-node attention, `hetco` command) is implemented as a supplementary comparison; full HeTCo, original GED and multislice/consensus remain planned. The generic `run` entrypoint remains unfinished; use `week1` for the core baseline or `temporal-study` for the full chronological experiment.
 
 ## Quick start
 

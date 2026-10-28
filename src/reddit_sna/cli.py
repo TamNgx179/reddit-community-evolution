@@ -81,6 +81,12 @@ def main(argv: list[str] | None = None) -> int:
     research.add_argument("--forecast-run", type=Path, required=True)
     research.add_argument("--artifact-root", type=Path, default=Path("artifacts"))
     research.add_argument("--run-id", required=True)
+    hetco = subparsers.add_parser("hetco", help="Fit HeTCo v1 group-node attention on a completed research run's samples")
+    hetco.add_argument("--research-run", type=Path, required=True)
+    hetco.add_argument("--preparation-run", type=Path, required=True)
+    hetco.add_argument("--artifact-root", type=Path, default=Path("artifacts"))
+    hetco.add_argument("--run-id", required=True)
+    hetco.add_argument("--model", action="append", help="Restrict to these HeTCo models (repeatable); default all")
     demo = subparsers.add_parser("week1", help="Run the core-pair raw/replay to verified forecast and figures")
     demo.add_argument("--config", type=Path, required=True)
     demo.add_argument("--run-id", required=True)
@@ -188,6 +194,11 @@ def main(argv: list[str] | None = None) -> int:
             from reddit_sna.pipelines.research import run_research
             output = run_research(args.protocol, args.preparation_run, args.forecast_run, args.artifact_root, args.run_id)
             print(json.dumps({"research_output": str(output), "scope": "inspected development; preliminary proposed variant"}))
+            return 0
+        if args.command == "hetco":
+            from reddit_sna.pipelines.hetco import run_hetco
+            output = run_hetco(args.research_run, args.preparation_run, args.artifact_root, args.run_id, args.model)
+            print(json.dumps({"hetco_output": str(output), "scope": "inspected development; supplementary HeTCo v1"}))
             return 0
         if args.command == "synthetic-week1":
             from reddit_sna.pipelines.synthetic_week1 import run_demo
