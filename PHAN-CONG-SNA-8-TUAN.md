@@ -289,21 +289,37 @@ Ba prototype độc lập là đầu ra tuần 1. Pipeline Reddit tích hợp to
 
 Lệnh demo và nội dung trình bày ở `docs/RUNBOOK.md` và `docs/RESULTS.md#presentation-outline`. Các hạn chế về ground truth, lớp thiếu và coverage phải được trình bày cùng điểm số. HeTCo đầy đủ và detector đề xuất thuộc các tuần sau, không phải thiếu sót bắt buộc của baseline tuần 1.
 
-## Cập nhật 28/10 — trạng thái HeTCo và chia phần việc còn lại
+## Cập nhật 28/10 — trạng thái HeTCo và phân công phần còn lại (tuần 3–8)
 
-**Đã xong (Thanh, nhánh `feat/hetco-v1`):** HeTCo_v1 (attention trên thành viên), HeTCo_v2 (trọng số lớp và head phân cấp, chọn cấu hình trên các tháng 07–09) và HeTCo_v4 (thêm 6 đặc trưng thành viên: coreness, giữ liên kết, giữ đồng thành viên, cầu nối, trả lời qua lại, cờ cắt trái). Bản v3 (trộn với B4) đã thử nhưng không tăng điểm nên bỏ. Có ablation A1/A4/A6/A7, bootstrap theo khối tháng và theo community, test, hình trong `reports/figures/hetco-v*`. Chi tiết ở `docs/RESULTS.md`.
+### Trạng thái hiện tại
 
-**Kết quả hiện tại:** trên main window 2015-10..12, **HeTCo_v4 đạt macro-F1 0.398, B4 đạt 0.361** (+0.037). Cả 3 seed đều cao hơn B4, và v4 cũng cao hơn B4 ở cả 3 tháng rolling 10–12 không dùng để chọn. Đây là bản đầu tiên có khoảng tin cậy rolling vượt B4 ([0.001, 0.030]); khoảng tin cậy theo community trên main window vẫn chứa 0 ([−0.035, 0.110]). Theo tiêu chí của giảng viên (phương pháp đề xuất phải ≥ baseline), v4 đạt và vượt. Với đặc trưng mới, attention đã tốt hơn lấy trung bình. Vẫn cần khóa v4 và kiểm định trên giai đoạn chưa xem, vì ý tưởng v4 hình thành sau khi xem kết quả 2015.
+- **HeTCo đã có bản chạy trên Reddit 2015** (Thanh, nhánh `feat/hetco-v1`). Bản mạnh nhất là **HeTCo_v4**: attention trên thành viên, head phân cấp và 6 đặc trưng quan hệ của thành viên (coreness, giữ liên kết, giữ đồng thành viên, cầu nối, trả lời qua lại, cờ cắt trái). Bản v3 (trộn với B4) không tăng điểm nên đã bỏ.
+- **Kết quả trên main window 2015-10..12 (571 community):**
+  - HeTCo_v4 đạt **macro-F1 0.398**, B4 đạt 0.361. Cả 3 seed đều cao hơn B4, và v4 cũng cao hơn ở cả 3 tháng rolling 10–12.
+  - Khoảng tin cậy rolling là [0.001, 0.030]; khoảng tin cậy theo community trên main window là [−0.035, 0.110].
+  - Accuracy của v4 thấp hơn (0.869 so với 0.933), vì v4 bắt được grow và merge nhưng sai nhiều hơn ở dissolve.
+- **Theo tiêu chí giảng viên (đề xuất ≥ baseline): đạt.** Khi trình bày, ghi là "cao hơn B4 trên dữ liệu phát triển". Ý tưởng v4 hình thành sau khi xem dữ liệu 2015, nên **bắt buộc kiểm định một lần trên giai đoạn chưa xem** trước khi kết luận là thắng.
+- **Tài liệu:**
+  - Số liệu: `docs/RESULTS.md`
+  - Phương pháp: `docs/METHODS.md`
+  - Lệnh chạy: `docs/RUNBOOK.md`
+  - Trình bày trực quan: `notebooks/core/06_hetco_study.ipynb`
 
-**Phần còn lại, mỗi người 2 việc, giữ đúng phạm vi sở hữu:**
+### Phân công theo tuần (mỗi người 1 việc mỗi tuần, giữ đúng phạm vi sở hữu)
 
-| Người | Việc | Hạn |
-|---|---|---|
-| **Tâm** | (1) Chuẩn bị giai đoạn đánh giá chưa xem cho HeTCo: cohort 2018 trong `configs/prospective.toml`, hoặc các tháng 2016 nếu dữ liệu đủ. Gồm snapshot, membership và preparation. (2) Tích hợp `hetco` vào `temporal-study` để so HeTCo với proposed hierarchical LR trên cùng mẫu, đồng thời review PR `feat/hetco-v1`. | 04/11 |
-| **Thanh** | (1) Đã thêm cờ cắt trái và đặc trưng quan hệ trong v4; tiếp theo dùng các tháng đầu làm lịch sử thay cho cờ. (2) Khóa cấu hình v4 (file config có hash, commit trước khi chạy) rồi chạy một lần trên giai đoạn chưa xem của Tâm. Thắng hay thua đều báo cáo nguyên kết quả. | 11/11 |
-| **Phúc** | (1) Chạy B2/B5 trên giai đoạn chưa xem với cấu hình đã khóa và cùng mẫu với HeTCo. (2) Đo thời gian và bộ nhớ của `hetco` (khoảng 10 phút trên pilot 2015) và đề xuất giới hạn khi chạy nhiều corpus hơn. | 11/11 |
-| **Đăng** | (1) Test leakage cho `features/members.py`: xác nhận không đọc bản ghi sau t, membership t+1 hay nhãn. Kiểm tra nhãn ở lớp hiếm grow/merge. (2) Đối chiếu bootstrap theo community (`community_delta`) với bootstrap theo khối tháng, và ghi rõ giới hạn khi phụ thuộc trong cùng tháng. | 11/11 |
-| **Trâm** | (1) Chạy B1/B4 trên giai đoạn chưa xem, cùng mẫu và cấu hình đã khóa. (2) Lập bảng so sánh B1/B2/B4/B5/HeTCo_v4 theo từng lớp; B4 là baseline mạnh nhất cần vượt. | 11/11 |
-| **Anh** | (1) Đánh giá độc lập predictions HeTCo, gồm `artifacts/hetco/hetco-v4-001/predictions.csv` và bản chạy trên giai đoạn chưa xem; tính lại macro-F1 và confusion bằng code của mình. (2) Đưa phần HeTCo vào report và slide, ghi đúng "HeTCo_v4 cao hơn B4 trên dữ liệu phát triển, chưa kiểm định trên giai đoạn mới" kèm các giới hạn. | 18/11 |
+| Tuần | Tâm | Thanh | Phúc | Đăng | Trâm | Anh |
+|---|---|---|---|---|---|---|
+| **3** (29/10–04/11) | Chọn giai đoạn chưa xem (cohort 2018 trong `configs/prospective.toml` hoặc tháng 2016) và chuẩn bị snapshot, membership, preparation | Đóng gói artifact HeTCo (research run, preparation, `hetco-v4-001`) cho nhóm. Viết file khóa cấu hình v4 và commit trước mọi lần chạy mới | Chạy lại B2/B5 trên pilot 2015 từ artifact của Thanh để xác nhận đúng số | Test leakage cho `features/members.py`: không đọc bản ghi sau t, membership t+1 hay nhãn | Chạy lại B1/B4 trên pilot 2015 từ artifact của Thanh để xác nhận đúng số | Tự tính lại macro-F1 và confusion từ `hetco-v4-001/predictions.csv` bằng code riêng |
+| **4** (05–11/11) | Tích hợp `hetco` vào `temporal-study` để so với proposed hierarchical LR trên cùng mẫu | Thay cờ cắt trái bằng các tháng lịch sử; chỉ giữ nếu tốt hơn trên các tháng 07–09 | Đo thời gian và bộ nhớ của `hetco` (khoảng 10 phút trên pilot) và đề xuất giới hạn cho dữ liệu lớn | Kiểm tra nhãn GED ở lớp hiếm grow/merge, ghi các trường hợp đáng ngờ | Lập bảng so sánh theo từng lớp B1/B2/B4/B5/HeTCo_v4 trên pilot | Viết phần protocol: khóa cấu hình, chia thời gian, các giới hạn |
+| **5** (12–18/11) | Bàn giao preparation của giai đoạn chưa xem; review PR `feat/hetco-v1` | **Khóa v4** (hash config và code), không chỉnh thêm | Chuẩn bị chạy B2/B5 trên giai đoạn mới với cấu hình đã khóa | Đối chiếu bootstrap theo community với bootstrap theo khối tháng | Chuẩn bị chạy B1/B4 trên giai đoạn mới với cấu hình đã khóa | Mẫu bảng và biểu đồ cho kết quả giai đoạn mới |
+| **6** (19–25/11) | Kiểm tra pipeline chạy đúng trên giai đoạn mới | **Chạy HeTCo_v4 một lần** trên giai đoạn mới và báo cáo nguyên kết quả | Chạy B2/B5 trên giai đoạn mới | Kiểm tra leakage và tính khoảng tin cậy trên giai đoạn mới | Chạy B1/B4 trên giai đoạn mới | Tổng hợp chỉ số của mọi mô hình trên cùng mẫu |
+| **7** (26/11–02/12) | So community đề xuất (multislice/consensus) với Leiden làm đầu vào cho HeTCo | Ablation A1/A4/A6/A7 của v4 trên giai đoạn mới; phân tích lỗi theo lớp | Độ nhạy detection: đổi detector thì HeTCo có còn giữ được kết quả | Nhãn Jaccard thay GED: chạy lại so sánh trên bộ nhãn thứ hai | Ablation phía baseline: cùng đặc trưng mới cho B4 để kiểm tra công bằng | Báo cáo riêng từng bộ nhãn và từng giai đoạn |
+| **8** (03–09/12) | Chạy lại toàn bộ từ môi trường sạch | Viết phần phương pháp, đóng góp và hạn chế của HeTCo | Viết phần detection và chi phí | Viết phần kiểm chứng và leakage | Viết phần đối chứng baseline | Ghép report và slide; nhóm diễn tập trước 09/12 |
 
-**Quy tắc:** không chỉnh cấu hình HeTCo sau khi đã xem điểm trên giai đoạn chưa xem. Mọi mô hình dùng cùng mẫu, cùng nhãn và cùng seed. Nếu HeTCo thấp hơn B4 trên giai đoạn mới thì vẫn báo cáo, đồng thời phân tích lỗi theo lớp.
+### Quy tắc
+
+- **Không chỉnh cấu hình HeTCo sau khi đã xem điểm trên giai đoạn mới.** Thắng hay thua đều báo cáo nguyên kết quả, kèm phân tích lỗi theo lớp.
+- Mọi mô hình dùng cùng mẫu, cùng nhãn và cùng seed. Mọi lựa chọn chỉ dựa trên các tháng validation, không dựa trên test.
+- **Ở tuần 7, B4 cũng được thử với đặc trưng thành viên mới.** Nếu B4 cộng đặc trưng mới cũng tăng ngang v4, thì đóng góp nằm ở đặc trưng chứ không ở attention, và phải ghi đúng như vậy.
+- Artifact chạy (`artifacts/`) chỉ nằm trên máy cá nhân. Thanh chia sẻ gói artifact trong tuần 3; người nhận không sửa artifact của người khác.
+- Mỗi người commit gom theo phần việc hoàn chỉnh, review trong cặp trước khi merge vào `main`.
