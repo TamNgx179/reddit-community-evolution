@@ -1,100 +1,156 @@
-# Phân công công việc SNA trong 8 tuần
+# Phân công SNA: từ Midterm 1 đến Midterm 2 và cuối kỳ
 
-**Đề tài:** How Online Communities Change Over Time.
+**Đề tài:** How Online Communities Change Over Time. **Cập nhật:** 29/10/2026.
 
-**Thời gian:** 15/10–09/12/2026. Báo cáo tiến độ lần đầu vào **22/10/2026**, hoàn thành đầu ra tuần 1 trước tối 21/10. Các mốc sau là lịch nội bộ.
+**Midterm 2 dự kiến: 12/11/2026**, theo thời hạn hai tuần nhóm cung cấp. Chốt nội dung và kết quả trước 10/11, nghiệm thu bản nộp và demo ngày 11/11. Đây là lịch làm việc nội bộ, điều chỉnh nếu lịch chính thức thay đổi. Mốc cuối kỳ nội bộ vẫn là 09/12.
 
-Mỗi người có nhiệm vụ riêng và cùng người trong cặp hoàn thành một đầu ra chung. Tâm–Thanh làm core, Phúc–Đăng làm detection/tracking đối chứng, Trâm–Anh làm dự báo/đánh giá. **Tuần 1, mỗi cặp triển khai và trình bày demo riêng cho ngày 22/10, không cần đầu ra từ cặp khác.** Baseline và mô hình phân tích cần có code chạy được, ghi rõ dùng dữ liệu thật hay giả lập. Từ tuần 2 mới ghép các đầu ra để so sánh trên cùng dữ liệu.
+Tâm–Thanh giữ core. Phúc–Đăng phụ trách kiểm chứng graph/nhãn và coverage. Trâm–Anh phụ trách đối chứng, phân tích lỗi và tổng hợp bằng chứng. Mỗi người có việc và đầu ra riêng, mỗi cặp chịu trách nhiệm một gói bàn giao chung. Kế hoạch này thay thế các lịch tuần 3–8 và cập nhật 28/10 trước đây.
 
-### Định hướng chất lượng theo rubric giảng viên
+## 1. Mục tiêu Midterm 2
 
-A1 thi lý thuyết 50%; A2 đồ án 50%. Điểm tối đa của đồ án đòi hỏi tiềm năng paper và quá trình tham gia. Nhóm định hướng nghiên cứu có phân tích SNA: tính mới cần kiểm chứng bằng related work; không xem source chạy được hoặc nhiều thuật toán là đủ.
+Đi từ **kiểm tra nhãn → phạm vi áp dụng → phân tích lỗi → một cải tiến có lý do → ablation khớp cấu hình**. Không coi thêm mô hình phức tạp hoặc tăng điểm trên một kỳ đã xem là mục tiêu độc lập.
 
-Mỗi cặp ghi câu hỏi, đầu vào, protocol, đối chứng, kết quả và phần phản biện trong notebook demo thuộc thư mục của mình. Bản tổng hợp Midterm 1 nằm ở `notebooks/core/05_temporal_activity_study.ipynb` và `reports/WEEK1_REPORT.md`. Cấu hình thực chạy nằm trong `configs/`; danh sách thí nghiệm và hướng nghiên cứu tiếp theo được gom vào report, không tạo phụ thuộc output giữa các cặp tuần 1.
-
-Các mốc giữa/cuối kỳ cần kiểm chứng graph/coverage, tracker trên ground truth, split theo toàn tháng nhãn, đối chứng cùng mẫu/nhãn/budget, ablation có mục tiêu và phân tích lỗi/giới hạn. Test phần mềm không thay cho bằng chứng SNA. Xem docs/METHODS.md để biết thành phần source và câu hỏi cần bảo vệ.
-## 1. Phần việc sở hữu
-
-| Người | Trách nhiệm chính |
-|---|---|
-| **Tâm** | Tạo GitHub, dựng cấu trúc và môi trường, tái sử dụng pipeline dữ liệu. Tạo snapshot và hai tầng R/T. Triển khai detector đề xuất gồm multislice và consensus, tích hợp pipeline |
-| **Thanh** | Triển khai GED thích nghi, đặc trưng community và HeTCo. Quản lý lịch sử thành viên, thời điểm biết đặc trưng và ablation của phương pháp chính |
-| **Phúc** | Triển khai detector đối chứng, benchmark động và B6 trên graph con. Phụ trách B2 Random Forest/B5 Structural Gradient Boosting, kiểm tra chi phí và độ nhạy detection |
-| **Đăng** | Triển khai Jaccard, kiểm chứng nhãn và chất lượng dữ liệu. Phụ trách bộ đánh giá nâng cao gồm test leakage, bootstrap theo thời gian và chạy thí nghiệm H2 |
-| **Trâm** | Triển khai B1 Majority/Persistence và B4 Logistic Regression. Chạy các baseline bằng cấu hình đã bàn giao, quản lý kết quả, so sánh ablation và viết phần đối chứng |
-| **Anh** | Tính chỉ số cơ bản, kiểm tra bảng mẫu, vẽ biểu đồ và tổng hợp kết quả. Viết phần protocol từ quy trình đã chốt, ghép báo cáo/slide và chuẩn bị trình bày |
-
-Tâm–Thanh giữ core. Phúc và Đăng nhận thêm phần triển khai/tính toán nặng, Trâm và Anh có phần việc thực hành riêng nhưng thiên về baseline cơ bản, chạy cấu hình có sẵn, kết quả và báo cáo. Rà soát khối lượng hằng tuần để tránh dồn quá nhiều việc cho một người. Ưu tiên tái sử dụng script và thư viện, triển khai bản tối thiểu trước khi mở rộng.
-
-### Cấu trúc GitHub do Tâm thiết lập
-
-```text
-reddit-community-evolution/
-├── README.md
-├── docs/                      # METHODS, RUNBOOK, RESULTS, LABEL_REVIEW
-├── pyproject.toml              # Package và dependencies
-├── .gitignore
-├── configs/                    # Cấu hình runtime ba nhóm
-├── notebooks/                  # Thử nghiệm và trình bày bằng .ipynb
-│   ├── core/                   # Tâm–Thanh
-│   ├── detection_tracking/     # Phúc–Đăng
-│   └── prediction/             # Trâm–Anh
-├── src/reddit_sna/
-│   ├── cli.py                  # Tâm điều phối giao diện chung
-│   ├── config.py               # TOML, path và cấu hình từng lần chạy
-│   ├── contracts.py            # Schema dữ liệu chung, không chứa kết quả nhóm khác
-│   ├── artifacts.py            # Output theo pipeline/run_id, không ghi đè
-│   ├── data/                   # Tâm: corpus, chuẩn hóa, identity/audit
-│   ├── graphs/                 # Tâm: graph dị thể, snapshot R/T, projection/coverage
-│   ├── detection/              # Phúc: đối chứng; Tâm: temporal/consensus
-│   ├── tracking/               # Đăng: Jaccard; Thanh: GED
-│   ├── features/               # Thanh
-│   ├── models/                 # Trâm: B1/B4; Phúc: B2/B5; Thanh: HeTCo
-│   ├── evaluation/             # Anh: chỉ số; Đăng: leakage/bootstrap
-│   ├── benchmarks/             # Phúc: mạng động; Trâm: bảng mẫu
-│   └── pipelines/
-│       ├── core.py             # Tâm–Thanh
-│       ├── detection_tracking.py # Phúc–Đăng
-│       └── prediction.py       # Trâm–Anh
-├── tests/
-│   ├── unit/
-│   ├── integration/
-│   └── fixtures/               # Dữ liệu tổng hợp nhỏ
-├── data/                       # Dataset đã duyệt qua Git/LFS; khóa riêng giữ local
-├── artifacts/                  # Output riêng <pipeline>/<run_id>, không commit
-└── reports/                    # Bảng claim/evidence và đóng góp dạng CSV
-```
-
-Source chia theo chức năng để dùng lại khi tích hợp; mỗi nhóm có pipeline, config và output riêng, không phụ thuộc artifact nhóm khác trong tuần 1. Mỗi nhóm có thể phát triển và demo bằng notebook riêng, chạy lại được từ kernel sạch theo thứ tự cell. Logic đã ổn định hoặc cần dùng lại chuyển vào src/reddit_sna; notebook import lại, không copy source. Demo notebook đủ input đến evaluation được chấp nhận trong phạm vi nhóm; CLI tiếp tục phục vụ tự động hóa và tích hợp. Thêm thuật toán vào module tương ứng, không tạo cây proposed/baseline hoặc thư mục source theo tên người. Tâm tạo repository, mời năm thành viên còn lại và hướng dẫn cài đặt. Theo quyết định công bố dữ liệu sau đó của chủ repo, 15 corpus gốc và processed lịch sử đã được đưa lên Git/LFS kèm checksum. Khóa riêng, bảng ánh xạ danh tính, `.venv`, artifact runtime và bộ mẫu chấm nhãn vẫn giữ local.
-
-## 2. Ranh giới công việc và cách làm song song
-
-- Trong tuần 1, từng cặp tự chuẩn bị dữ liệu mẫu và thống nhất giao diện nội bộ. Tâm và Thanh không cần cung cấp features/nhãn cho Trâm và Anh ở mốc này.
-- Tâm–Thanh tự chạy core tối thiểu từ Reddit pilot đến đánh giá bằng detector và chỉ số thư viện. Phúc–Đăng tự sinh benchmark để chạy và đánh giá detection/tracking. Trâm–Anh tự tạo bảng community–tháng để chạy baseline và đánh giá. Mỗi cặp tự có đủ đầu vào và code cho demo của mình.
-- Trong 19–21/10, mỗi cặp ghép, đánh giá và chạy lại demo của mình. Mỗi nhóm dùng thư mục code, cấu hình và output riêng, không ghi đè artifact của nhóm khác. Từ tuần 2 mới thống nhất schema và bàn giao để tích hợp chung.
-- Fixture chỉ phục vụ phát triển và test, không được trình bày như kết quả Reddit. Khi chưa có artifact thật, vẫn hoàn thiện code bằng fixture.
-- Người nhận báo lỗi qua issue, người sở hữu sửa module. Đổi schema cần thông báo và cập nhật phiên bản.
-- Tuần 1 có ba demo riêng phục vụ 22/10, tuần 2 bàn giao và ghép thử, tuần 3 chạy pilot chung, tuần 4 hoàn thiện luồng chính. Người nhận tiếp tục test bằng fixture nếu bàn giao chậm. Không gọi demo giả lập là kết quả Reddit.
-
-**Bảng bàn giao dưới đây áp dụng từ tuần 2, không phải phụ thuộc của tuần 1.** Trong tuần 1, slide và kết quả cũng do từng cặp tự chuẩn bị; Anh phụ trách phần của nhóm Trâm–Anh.
-
-| Artifact | Người xuất | Người sử dụng |
+| Góp ý của giảng viên | Việc cần hoàn thành | Bằng chứng để nghiệm thu |
 |---|---|---|
-| Snapshot và hai tầng R/T | Tâm | Thanh, Phúc, Đăng |
-| Community đề xuất | Tâm | Thanh, Đăng, Anh |
-| Community đối chứng | Phúc | Thanh, Đăng, Anh |
-| Nhãn GED | Thanh | Trâm, Đăng, Anh |
-| Nhãn Jaccard | Đăng | Thanh, Trâm, Anh |
-| Đặc trưng community và cờ ablation | Thanh | Trâm, Anh |
-| Benchmark có phân hoạch và sự kiện chuẩn | Phúc | Tâm, Thanh, Đăng, Anh |
-| Dự đoán HeTCo | Thanh | Đăng, Anh |
-| Mã B2/B5 và cấu hình | Phúc | Trâm |
-| Dự đoán baseline | Trâm chạy, Phúc hỗ trợ kỹ thuật | Đăng, Anh |
-| Kiểm tra leakage và khoảng tin cậy | Đăng | Anh |
+| Nhãn phụ thuộc detector và tracker | Hai người kiểm tra độc lập các ca dissolve, unresolved và ca grow/merge khó. Phân biệt mất quan sát với mất liên tục cấu trúc | Phiếu thật có lý do, mức tự tin, độ đồng thuận và biên bản xử lý bất đồng |
+| Unresolved bị loại nhiều | Tính coverage đúng mẫu số, tách censored. So sánh phần được dự báo với phần bị loại | Bảng theo tháng/cohort, phân tầng kích thước và lịch sử, coverage theo community–tháng và member–tháng |
+| Proposed chưa hơn HGB nhất quán | Phân tích theo lớp/tháng, các ca proposed đúng–HGB sai và ngược lại, đặc biệt grow/merge → dissolve | Dự báo ghép đúng khóa, bảng bốn nhóm đúng/sai, ca minh họa và thuộc tính tại t |
+| Cần chọn cải tiến từ nguyên nhân lỗi | Chọn tối đa một giả thuyết chính sau khi có ba gói chẩn đoán trên | Lý do chọn, protocol khóa trước fit, đối chứng cùng đặc trưng và ablation chỉ đổi thành phần mục tiêu |
 
-Từ tuần 2 dùng khóa ghép mẫu `reference_id + month + community_id` để tích hợp. Chia tập theo tháng xảy ra sự kiện cần dự báo. Features chỉ dùng dữ liệu biết đến t. Nhãn GED/Jaccard là các bộ tham chiếu riêng. Benchmark chọn tham số tách khỏi benchmark đánh giá. So sánh trên pilot chung cần features/nhãn từ Thanh, demo baseline tuần 1 dùng bảng riêng do Trâm chuẩn bị.
+Mức hoàn thành được xác định bằng đầu ra kiểm tra được và cách giải thích kết quả, không bằng cam kết proposed phải thắng mọi baseline. Kết luận vẫn bám kết quả thật.
 
-## 3. Công việc từng tuần
+## 2. Trạng thái đã kiểm tra trước khi lập kế hoạch
+
+- Lần tái lập 2016 đã hoàn tất đủ `prepare → forecast → research → hetco`. 13 tests HeTCo pass, 48 điểm được tính lại từ prediction CSV. Không còn job dở của lần chạy này.
+- HeTCo V4 trên kỳ chính 10–12/2016 đạt 0,3468 so với LR 0,3250. V4 thắng 2/3 seed và 3/6 tháng rolling, CI rolling của chênh lệch là [−0,0392, 0,1025]. Mean pooling đạt 0,3816 và có độ lệch chuẩn giữa seed 0,0044, so với 0,0365 của attention. Đây là kết quả chẩn đoán, chưa phải căn cứ đổi primary sau khi nhìn điểm.
+- Năm 2016 và các cohort 2018 đã xuất hiện trong nghiên cứu trước. Không ghi chúng là kỳ chưa từng xem. Bảng 2015, 2016 và nghiên cứu ba cohort được báo riêng theo reference và protocol.
+- Audit nghiên cứu gốc: 7.490/11.562 chuyển tiếp có nhãn đủ điều kiện, tương ứng coverage community–tháng 64,78%. Có 4.072 unresolved và 183 cộng đồng cuối kỳ censored được đếm riêng. Coverage member–tháng là 79,31%, không phải tỷ lệ người dùng duy nhất.
+- Trên final gốc: 1.269/1.832 chuyển tiếp được đánh giá, 563 unresolved, 183 censored riêng. So proposed LR dynamic với HGB dynamic: 29 ca chỉ proposed đúng, 35 ca chỉ HGB đúng, 86 ca cả hai sai và 1.119 ca cả hai đúng trên 1.269 ca mỗi seed. Ba seed cho cùng các nhóm này, không đếm thành 3.807 ca độc lập. Các số đếm đúng/sai không thay thế Macro-F1.
+- Trung vị kích thước của cả phần được đánh giá và phần unresolved đều bằng 2. Cờ `history_missing` xuất hiện trên hơn 90% mẫu đủ điều kiện của nghiên cứu gốc. Cờ này nói về predecessor/lineage, không đồng nghĩa lịch sử hoạt động của thành viên trong D bị thiếu. Cần phân tầng nhóm nhỏ và kiểm tra cách duy trì lineage trước khi kết luận tracker sai hoặc thay cách dùng lịch sử.
+
+Nguồn kết quả và phạm vi so sánh: [RESULTS](docs/RESULTS.md). Phương pháp: [METHODS](docs/METHODS.md). Lệnh chạy: [RUNBOOK](docs/RUNBOOK.md). Quy trình đánh giá nhãn: [LABEL_REVIEW](docs/LABEL_REVIEW.md).
+
+**Dọn phần còn dở:** giữ artifact, prediction, notebook và kết quả bất lợi để truy vết. V3 ensemble đã bỏ khỏi code, không cần xóa lại. V1/V2 và hình pilot được giữ làm bằng chứng lịch sử, không chạy lại mặc định. Chỉ gọi các model nằm trong allowlist của protocol mới. Không xóa dữ liệu hay chạy lại raw/Leiden chỉ để đổi tên hoặc lập phân công. Hợp nhất lịch cũ vào kế hoạch hiện tại thay vì nối thêm nhiều bảng mâu thuẫn.
+
+## 3. Quyền sở hữu và đầu ra của ba cặp
+
+| Người | Phần chịu trách nhiệm | Đầu ra cá nhân |
+|---|---|---|
+| Tâm | Core dữ liệu, graph, cache/artifact, giao diện và tích hợp. Bảo đảm cutoff, reference và phiên bản dữ liệu. Điều tra lineage/history cùng Thanh | Gói input đóng băng, manifest/schema, lệnh chạy lại, kiểm tra cutoff và bản tích hợp |
+| Thanh | Core nhãn GED, features và proposed. Điều tra tầng dissolve, lịch sử và độ nhạy seed. Thực hiện duy nhất cải tiến đã có bằng chứng | Bản phân tích cơ chế lỗi, cấu hình khóa, implementation kèm tests và ablation |
+| Phúc | Kiểm tra graph và coverage, reviewer nhãn thứ nhất. Giữ sở hữu detector đối chứng, Random Forest và HGB, hỗ trợ đối chứng khớp đặc trưng | Coverage theo quy mô mạng, phiếu đánh giá thật, kiểm tra graph và cấu hình RF/HGB |
+| Đăng | Reviewer nhãn thứ hai, kiểm tra sự kiện và observation. Giữ leakage, bootstrap theo thời gian và tính đúng của denominator | Phiếu độc lập, agreement/bất đồng, phân biệt unresolved/censored và audit đánh giá |
+| Trâm | Giữ Majority/Persistence/LR và chạy baseline bằng cấu hình khóa. Ghép proposed–HGB và kiểm tra các ca lỗi | Prediction đối chứng, bảng bốn nhóm đúng/sai, phân tích lớp và ca minh họa |
+| Anh | Tính lại metric, phân tích theo tháng/nhóm kích thước/lịch sử. Tổng hợp claim–evidence, biểu đồ và báo cáo/demo | Bảng/biểu đồ kiểm chứng, so sánh cùng mẫu, diễn giải kết quả và bản báo cáo thống nhất |
+
+Không chuyển việc sửa core sang Phúc–Đăng hoặc Trâm–Anh. Hai cặp này cung cấp bằng chứng và tái lập độc lập, Tâm–Thanh chịu trách nhiệm sửa pipeline, tracker, features và proposed nếu phát hiện vấn đề.
+
+### Giao diện bàn giao để làm song song
+
+Tâm bàn giao snapshot artifact đã có ngay 29–30/10. Mọi cặp làm trên bản chỉ đọc có manifest, không chờ mô hình cải tiến. Phúc–Đăng dùng graph/membership/observation và bộ ca mù. Trâm–Anh dùng labels/features/predictions đóng băng. Tâm–Thanh dùng bản core riêng để chẩn đoán. Các cặp không ghi đè output của nhau.
+
+Khóa ghép đầy đủ là `reference_id + feature_month + community_id + label_month + label_reference_id`. Thêm `model + seed + window` cho dự báo. `community_id` chỉ có nghĩa trong snapshot. Giữ tách ba nghiên cứu: full-study LR–HGB, HeTCo pilot 2015 và tái lập 2016. B4 trong pilot là LR, không được nhầm với ký hiệu baseline của bảng full-study.
+
+Runtime output theo cặp và `run_id` riêng trong `artifacts/`. Phiếu chấm và answer key giữ local, chỉ công bố tổng hợp phù hợp. Notebook và báo cáo kỹ thuật dùng tiếng Anh. Phân công hành chính dùng tiếng Việt. Implementation và tests tương ứng đi cùng commit, chỉ đưa file sản phẩm cần thiết vào commit.
+
+## 4. Tuần 3 — 29/10–04/11: chẩn đoán trước khi cải tiến
+
+| Người | Việc thực hiện | Đầu ra bắt buộc trước 04/11 |
+|---|---|---|
+| Tâm | Đóng băng hai gói full-study và 2016. Chuẩn bị bộ ca mù mới và giữ answer key riêng. Kiểm tra ID, predecessor và cách reset tuổi/lịch sử trên ca thật | Manifest, inventory, khóa mẫu và sơ đồ lineage kèm ca truy vết. Các cặp chạy được từ artifact đã có |
+| Thanh | Rà ca grow/merge bị tầng đầu dự báo dissolve. Kiểm tra khi nào history thiếu, chuỗi bị reset và attention dao động theo seed. Đối chiếu no-D/flat đã có trên cùng mẫu | Bảng cơ chế lỗi với bằng chứng tại t. Đề xuất tối đa một thay đổi, chưa tự thay nhãn hoặc chọn model theo final |
+| Phúc | Rà 6 ca thử để kiểm tra đủ bằng chứng. Sau khi chốt hướng dẫn, chấm độc lập bộ ca chính. Tính coverage theo tháng, kích thước và member–tháng | Phiếu reviewer 1, bảng coverage và danh sách thiếu bằng chứng graph/quan sát |
+| Đăng | Chấm cùng bộ ca độc lập, không trao đổi trước khi nộp. Kiểm tra successor quan sát được, censored và các lỗi leakage/denominator. Chỉ mở key sau khi khóa hai phiếu | Phiếu reviewer 2, agreement trước thảo luận, bảng bất đồng và biên bản xử lý |
+| Trâm | Đối chiếu toàn bộ ca proposed–HGB trên final đã quan sát. Xuất bốn nhóm đúng/sai theo seed, phân tích grow/merge → dissolve. Đọc sâu 12–16 ca đại diện, nêu quy tắc chọn | Bảng ghép 1.269 ca/seed, danh sách 64 ca bất đồng, ví dụ đúng–sai hai chiều và kiểm tra RF/HGB |
+| Anh | Tái tính Macro-F1/F1/recall/support và confusion theo lớp/tháng. Phân tầng nhóm 2 người, 3–4, 5–20 và trên 20, lịch sử có/thiếu. Tổng hợp ca nào được lợi từ D hoặc hai tầng | Bảng lớp/tháng/strata, biểu đồ coverage và bản kết luận chẩn đoán ngắn |
+
+### Quy trình kiểm tra nhãn
+
+- Mục tiêu bộ chính là 60 ca development: 24 dissolve, 24 unresolved, 6 grow và 6 merge. Điều chỉnh quota theo số ca thực có, ghi rõ số lấy được. Không đưa 6 ca thử vào số kiểm chứng chính. Mẫu này để chẩn đoán, không suy ra độ chính xác toàn dataset bằng trung bình không trọng số.
+- Tâm chọn mẫu có seed, phân bố qua các tháng và kích thước, giữ mapping/nhãn máy/ngưỡng/prediction ngoài gói reviewer. Không dùng chính bộ ca error analysis do prediction chọn làm bằng chứng review đại diện.
+- Bằng chứng gồm membership, topology tiền nhiệm/kế nhiệm, cạnh liên quan và coverage. Bỏ tóm tắt top-k gây thiếu predecessor hoặc đánh dấu rõ dữ liệu bị cắt. Theo dõi thêm tối đa ba tháng ở ca dissolve khi đủ quan sát, tách khỏi định nghĩa nhãn một bước. Bằng chứng tương lai chỉ dùng đánh giá ca, không trở thành feature.
+- Phúc và Đăng thực sự đọc và điền nhãn/độ tự tin/lý do trong hai phiếu riêng. Ghi exposure và vai trò từng người. Hai phiếu được khóa trước khi so sánh hoặc mở answer key. Sau đó tính raw agreement, confusion gồm unresolved và Cohen kappa khi xác định được. Giữ cả phiếu gốc và quyết định đồng thuận sau thảo luận.
+- Cho phép kết luận thiếu bằng chứng hoặc unresolved. Phân biệt phù hợp quy tắc máy, hợp lý về cấu trúc quan sát và tồn tại xã hội. Kiểm tra tự động không được ghi thành kiểm chứng bởi người thật.
+
+### Quy trình coverage và lỗi
+
+- Coverage community–tháng = eligible / (eligible + unresolved) trên các chuyển tiếp quan sát được. Censored cuối kỳ có số đếm riêng. Báo cả coverage ở graph/user để người ngoài graph không bị biến thành cộng đồng dissolve.
+- Báo thêm member–tháng có trọng số kích thước, nói rõ có lặp người dùng qua các tháng. So sánh phân phối kích thước, mật độ trong cùng strata kích thước, tuổi/lịch sử, activity và observation. Không dùng riêng trung vị để kết luận hai nhóm giống nhau.
+- Macro-F1 chỉ áp dụng cho tập có nhãn resolved. Không ép unresolved thành dissolve, không bỏ ca khó khỏi mẫu số để tăng điểm. Báo subgroup nhóm nhỏ riêng nhưng giữ nguyên kết quả primary.
+- Tính riêng lỗi tầng dissolve và lỗi tầng năm sự kiện còn lại. So sánh proposed-only, HGB-only, both-wrong, both-correct theo lớp/tháng và history. Không cộng ba seed thành ba lần số ca độc lập, không suy ra nguyên nhân chỉ từ tương quan feature.
+
+**Mốc quyết định 04/11:** ba cặp bàn giao cùng một bản chẩn đoán. Tâm–Thanh chọn một giả thuyết chính, chỉ ra nhóm ca được kỳ vọng cải thiện và đối chứng nào có thể bác bỏ giả thuyết. Nếu có lỗi pipeline/nhãn thật, sửa tính đúng trước rồi chạy lại mọi mô hình trên reference mới.
+
+## 5. Tuần 4 — 05–11/11: một cải tiến, ablation và bản nộp
+
+| Người | Việc thực hiện | Đầu ra bắt buộc |
+|---|---|---|
+| Tâm | Chốt schema/reference, cache feature để tránh dựng lại raw/Leiden. Tích hợp runner khớp mẫu, kiểm tra split và tái lập. Xử lý lỗi core cùng Thanh | Gói chạy có manifest, source/config hash, log và kiểm tra đầu vào/output |
+| Thanh | Thực hiện đúng giả thuyết đã chọn. Khóa cấu hình và tuning budget trên development/validation. Chạy primary và ablation, giữ nguyên cả kết quả bất lợi | Proposed phiên bản khai báo, tests tương ứng, dự báo và bảng ablation khớp |
+| Phúc | Hoàn tất coverage và review, rà ca nghi ngờ graph. Bàn giao HGB với cùng đặc trưng khi cần kiểm tra công bằng, không mở thêm detector | Báo cáo nhãn/coverage, đối chứng HGB khớp và runtime theo lượt đo |
+| Đăng | Kiểm tra lại cutoff, key/label joins, cùng mẫu giữa model và bootstrap theo khối tháng. Kiểm tra version khi có sửa nhãn | Audit leakage/denominator, CI ghép cặp và kết quả review/adjudication thật |
+| Trâm | Chạy năm baseline tham chiếu theo protocol, chỉ refit khi input/model/reference đổi. Đối chiếu proposed với HGB mạnh nhất và LR, tái kiểm tra ca mục tiêu | Bảng so sánh primary, per-class/per-month và paired wins/losses sau cải tiến |
+| Anh | Ghép một báo cáo mở rộng từ Mini Proposal, bổ sung bảng nhãn/coverage/error analysis và ablation. Hoàn thiện notebook/demo từ output đã lưu | Report, notebook có hình/output, bảng claim–evidence và gói code/log cần thiết |
+
+### Cải tiến được phép lựa chọn sau chẩn đoán
+
+| Nếu bằng chứng chỉ ra | Hướng Tâm–Thanh ưu tiên | Kiểm tra bắt buộc |
+|---|---|---|
+| Lỗi ID/cutoff/lineage hoặc thiếu bằng chứng predecessor | Sửa semantics/bug core, giữ phiên bản reference cũ để đối chiếu | Tests tái hiện, dữ liệu/label mới có reference mới, mọi baseline chạy lại cùng reference |
+| History có ích khi quan sát đủ nhưng nhiễu khi thiếu | Rà định nghĩa/cờ observation hoặc cách dùng lịch sử có điều kiện | Full so với no-D khớp, strata quan sát đủ/thiếu, không dùng dữ liệu tương lai để điền lịch sử |
+| Tầng đầu bỏ sót grow/merge thành dissolve | Rà loss/class weighting hoặc quy tắc quyết định trên validation | Hai tầng so với flat với cùng feature/scaler/budget, recall và false alarms từng lớp |
+| Attention dao động, mean pooling có tín hiệu tốt hơn | Ưu tiên tổng hợp thành viên đơn giản. Dùng LR/HGB với cùng thuộc tính thành viên tổng hợp để tách hiệu ứng feature khỏi kiến trúc | Community-only so với community+member trên cùng head. Flat so với hierarchical trên cùng feature. Giữ attention/mean-pool đã chạy như bằng chứng chẩn đoán |
+
+Chỉ chọn một hàng chính cho Midterm 2. Không mặc định mean pooling là primary mới sau khi đã xem điểm 2016. Nếu chọn hướng pooling, kiểm tra nhỏ dạng 2×2: flat/hierarchical × community-only/community+member, cùng scaler, seed và budget, kèm HGB khớp thuộc tính khi kiểm tra đóng góp. Không gộp các thay đổi nhãn, detector và mô hình vào một lượt rồi gọi đó là ablation.
+
+### Mốc hoàn thành trong tuần
+
+| Ngày | Điều kiện hoàn thành |
+|---|---|
+| 05/11 | Khóa giả thuyết, feature schema, nguồn/split, metric và danh sách hữu hạn lượt chạy trước fit |
+| 06–08/11 | Chạy các đối chứng/ablation cần thiết. Sửa bug đúng workflow, giữ implementation và tests cùng commit |
+| 09/11 | Chốt kết quả, rà paired cases và kiểm tra số liệu. Không thêm mô hình mới sau mốc này |
+| 10/11 | Hoàn tất report, notebook và bảng bằng chứng, ghi rõ phần development/replication |
+| 11/11 | Tái lập từ artifact đóng băng, nghiệm thu PDF/code/logs và demo. Mỗi người giải thích được phần mình |
+| 12/11 dự kiến | Nộp/báo cáo Midterm 2 theo lịch chính thức |
+
+Nguồn/giai đoạn xác nhận mới chỉ được gọi là chưa xem khi đã kiểm tra lịch sử tiếp xúc, khóa protocol trước khi mở kết quả và đủ thời gian xử lý. Nếu chưa xác minh được, báo đúng là đánh giá development/replication. Không biến 2016 hay cohort 2018 đã xem thành test mới bằng đổi tên folder.
+
+## 6. Checklist nghiệm thu Midterm 2
+
+- [ ] Có hai phiếu review thật, độc lập trước khi mở key, cùng rubric và bằng chứng đủ để đánh giá dissolve/unresolved. Có số ca/strata, agreement và cách xử lý bất đồng.
+- [ ] Coverage có đúng mẫu số, censored riêng, bảng theo tháng/quy mô và so sánh eligible–unresolved. Có coverage member–tháng với định nghĩa rõ.
+- [ ] Phân tích proposed–HGB đầy đủ bốn nhóm đúng/sai, lớp/tháng và ca grow/merge → dissolve, không chỉ trình bày ca proposed đúng.
+- [ ] Cải tiến nối được với một cơ chế lỗi có bằng chứng. Ablation và đối chứng khớp đặc trưng tách được feature khỏi kiến trúc.
+- [ ] Cùng key, label, split, seed và ngân sách chọn cấu hình. Mọi thay đổi reference được version và chạy lại đúng các tầng phụ thuộc.
+- [ ] Report đi một mạch Problem → RQ → input/output → graph/labels → coverage/evaluation → baseline/proposed → kết quả/diễn giải. Code/logs và notebook khớp số liệu.
+- [ ] Phân biệt việc đã làm với kế hoạch và việc cần người thật. Không cam kết điểm số, social ground truth hoặc ưu thế ổn định nếu bằng chứng chưa hỗ trợ.
+
+## 7. Sau Midterm 2 đến cuối kỳ
+
+| Tuần | Tâm–Thanh: core | Phúc–Đăng: graph/nhãn/kiểm chứng | Trâm–Anh: đối chứng/kết quả |
+|---|---|---|---|
+| 5 — 12–18/11 | Tâm chốt nguồn/split cho lần xác nhận phù hợp sau phản hồi. Thanh khóa đúng một phiên bản proposed | Phúc rà graph/cohort. Đăng khóa nhãn, eligibility và protocol đánh giá | Trâm khóa baseline và budget. Anh chuẩn bị bảng kết quả theo protocol |
+| 6 — 19–25/11 | Tâm chạy pipeline từ nguồn đã xác nhận. Thanh chạy proposed một lần theo cấu hình khóa | Phúc kiểm tra tài nguyên và graph. Đăng tái kiểm tra leakage, coverage và CI | Trâm chạy baseline cùng mẫu. Anh tính lại metric và đối chiếu bằng chứng |
+| 7 — 26/11–02/12 | Tâm chỉ thêm độ nhạy detector nếu chẩn đoán cho thấy cần và đủ budget. Thanh chạy ablation mục tiêu, không retune theo kỳ xác nhận | Phúc giữ benchmark detection. Đăng đối chiếu reference/observation và kiểm chứng ca mới | Trâm đối chứng khớp feature/reference. Anh phân tích kết quả xác nhận, giữ riêng các nghiên cứu |
+| 8 — 03–09/12 | Tâm tái lập và đóng gói. Thanh hoàn thiện phương pháp và diễn giải | Phúc viết graph/chi phí. Đăng hoàn thiện nhãn/coverage/leakage và bằng chứng review | Trâm chốt baseline/kết quả. Anh hợp nhất report và notebook/demo, cả nhóm nghiệm thu |
+
+Multislice, consensus, B6, ensemble và thay nhãn Jaccard toàn kỳ không còn là việc bắt buộc trước Midterm 2. Chỉ mở khi góp ý/chẩn đoán tạo ra câu hỏi rõ, có đối chứng và thời gian kiểm chứng. Giữ sở hữu module cũ, không dồn các việc mở rộng vào giai đoạn cuối.
+
+## 8. Quy tắc làm việc và bàn giao
+
+- Review kỹ thuật trong từng cặp trước khi bàn giao. Tâm điều phối tích hợp, người sở hữu sửa module. Không yêu cầu nhóm khác tự sửa core để chạy được.
+- Đầu ra chung của cặp gồm schema/input version, lệnh hoặc notebook chạy được, cấu hình, log, bảng/hình và diễn giải ngắn. Kết quả fixture, Reddit và review người thật được ghi đúng nguồn.
+- Tận dụng artifact đã có. Chỉ dựng lại raw/graph khi nguồn hoặc semantics đổi. Đổi report hoặc phân công không phải lý do chạy lại thí nghiệm nặng.
+- Không bỏ unresolved hoặc negative results khỏi hồ sơ. Không chọn tháng/seed/đối chứng thuận lợi sau khi nhìn điểm. Nếu cải tiến không vượt ổn định, báo đúng điều kiện có ích và bằng chứng còn cần kiểm tra.
+- Không tạo thư mục source theo tên người, không nhân bản file phân công. Notebook import logic từ `src/reddit_sna`, không copy implementation. Không bắt buộc làm slide cho Midterm 2 trong kế hoạch này.
+
+## 9. Lưu trữ kế hoạch Midterm 1
+
+<details>
+<summary>Kế hoạch tuần 1–2 cũ, giữ để truy vết. Không dùng phần này làm lịch công việc hiện tại.</summary>
+
+Các checklist dưới đây thuộc kế hoạch lịch sử, không tự xác nhận hoàn thành. Quy tắc về artifact, review, staging và tiến độ hiện hành ở các mục phía trên được ưu tiên.
 
 ### Tuần 1 — 15–21/10: ba prototype độc lập, báo cáo ngày 22/10
 
@@ -168,114 +224,6 @@ Mỗi nhóm hoàn thành một prototype từ đầu vào riêng đến kết qu
 
 **Bàn giao cuối tuần 2:** Phúc gửi benchmark/membership cho Tâm–Thanh và B5 cho Trâm. Thanh gửi features/nhãn cho Trâm, Đăng kiểm tra tính hợp lệ. Anh cung cấp chỉ số cơ bản và bảng kết quả, Đăng cung cấp test leakage. Chạy thử pilot sau thay đổi, chưa yêu cầu chạy hết corpus.
 
-### Tuần 3 — 29/10–04/11: mở rộng pilot và phương pháp đề xuất
-
-| Người | Công việc | Đầu ra |
-|---|---|---|
-| **Tâm** | Chạy snapshot/multislice trên các tháng pilot liên tiếp, thêm consensus và đo tài nguyên | Community đề xuất pilot, thời gian/bộ nhớ |
-| **Thanh** | Ghép GED, features và HeTCo. Kiểm tra lịch sử thành viên và thời điểm biết đặc trưng | Nhãn, features và dự đoán HeTCo pilot |
-| **Phúc** | Chạy detector đối chứng, đánh giá AMI và triển khai B2 thích nghi bằng Random Forest. Bàn giao B2/B5 cùng cấu hình cho Trâm | Community đối chứng, B2/B5 và chất lượng detection |
-| **Đăng** | Đánh giá Jaccard/GED, kiểm tra nhãn/mẫu mất khi ghép và test leakage trong pilot | Bảng lỗi tracking và kiểm tra tích hợp |
-| **Trâm** | Chạy B1/B2/B4/B5 bằng chương trình đã có, kiểm tra file dự đoán và lưu cấu hình | Dự đoán baseline pilot |
-| **Anh** | Tính chỉ số cơ bản từ dự đoán, vẽ bảng/biểu đồ và ghi phạm vi pilot | Báo cáo kết quả sơ bộ |
-
-**Ghép việc tuần 3:** đầu tuần Tâm xuất pilot, Phúc tạo community đối chứng và Đăng kiểm tra snapshot. Giữa tuần Thanh bàn giao features/nhãn pilot để Trâm chạy baseline. Anh đánh giá dự đoán của Thanh và Trâm cuối tuần. Trong lúc chờ artifact, từng người tiếp tục test bằng fixture, không đổi phạm vi sở hữu.
-
-### Tuần 4 — 05–11/11: mở rộng dữ liệu và chốt quy trình
-
-| Người | Công việc | Đầu ra |
-|---|---|---|
-| **Tâm** | Hoàn thiện snapshot 45 tháng, kiểm tra tháng nặng và chọn cấu hình detector đề xuất trên benchmark/train | Manifest toàn kỳ và cấu hình detector |
-| **Thanh** | Hoàn thiện GED/features/lịch sử, chọn ngưỡng tracking trên benchmark/train và hoàn thiện HeTCo | Nhãn/features phiên bản chính, core hoàn chỉnh |
-| **Phúc** | Chọn cấu hình detector đối chứng, chạy B6 trên graph con, kiểm tra độ phân giải | Cấu hình đối chứng và kết quả B6 |
-| **Đăng** | Chốt Jaccard, test sự kiện mơ hồ và triển khai bootstrap ghép cặp theo khối thời gian. Kiểm tra split và mẫu cuối kỳ thiếu nhãn | Tracker cố định, bộ đánh giá nâng cao |
-| **Trâm** | Lập danh sách lượt chạy theo cấu hình đã chốt, kiểm tra kết quả thiếu/lỗi và quản lý bảng baseline | Lịch chạy và bảng kiểm tra baseline |
-| **Anh** | Tổng hợp phân phối sáu lớp, số mẫu và mô tả protocol từ kiểm tra của Đăng | Bảng thống kê và phần protocol |
-
-**Ghép việc tuần 4:** Tâm bàn giao snapshot theo tháng, Phúc bàn giao community đối chứng, Thanh xuất features/nhãn cho từng bộ tham chiếu. Đăng kiểm tra nhãn và phân phối lớp, Trâm–Anh kiểm tra bảng ghép và split. Cuối tuần chốt phiên bản dữ liệu, schema và protocol dùng cho thực nghiệm.
-
-**Mốc tích hợp chính:** đủ snapshot, community, nhãn và features. Nếu quá nặng, dùng phạm vi định trước và ghi rõ giới hạn, không chọn phạm vi thuận lợi sau khi xem điểm.
-
-### Tuần 5 — 12–18/11: chạy train/validation
-
-| Người | Công việc | Đầu ra |
-|---|---|---|
-| **Tâm** | Chạy detector đề xuất, hoàn thiện cờ bỏ thread/liên kết thời gian/consensus | Community chính và công tắc A2/A3/A5 |
-| **Thanh** | Xuất nhãn/features, tinh chỉnh HeTCo và chuẩn bị hiệu chỉnh xác suất theo validation | Cấu hình HeTCo, kết quả validation |
-| **Phúc** | Chạy Experiment 2, kiểm chứng H1. Chốt cách tinh chỉnh B2/B5 và xử lý mất cân bằng lớp với cùng ngân sách như HeTCo | Detection và cấu hình baseline nâng cao |
-| **Đăng** | Kiểm chứng tracking, đối chiếu mẫu Reddit độc lập với Phúc. Chạy Experiment 3 trong train bằng baseline để kiểm chứng H2 | Báo cáo tracking, kết quả leakage |
-| **Trâm** | Chạy lịch tinh chỉnh baseline đã thống nhất, lưu kết quả validation và chuẩn bị danh sách lượt chạy ablation | Kết quả validation và lịch ablation |
-| **Anh** | Tổng hợp kết quả validation/leakage, vẽ biểu đồ và viết phần tiến độ/hạn chế | Bảng biểu và báo cáo cập nhật |
-
-**Ghép việc tuần 5:** Thanh cung cấp features cho Trâm, Phúc chốt cấu hình B2/B5, Trâm thực hiện các lượt chạy. Đăng kiểm tra leakage bằng baseline, không cần đợi HeTCo tinh chỉnh xong. Thanh và Phúc thống nhất ngân sách, Đăng kiểm tra tính công bằng, Anh tổng hợp bảng kết quả đã xác nhận.
-
-### Tuần 6 — 19–25/11: khóa cấu hình và đánh giá test
-
-| Người | Công việc | Đầu ra |
-|---|---|---|
-| **Tâm** | Khóa detector, xuất community test chỉ từ cửa sổ quá khứ, lưu phiên bản pipeline | Community test đề xuất và manifest |
-| **Thanh** | Xuất features/nhãn đúng thời điểm, khóa HeTCo rồi chạy test | Dự đoán HeTCo và cấu hình đã khóa |
-| **Phúc** | Xuất community Independent Leiden với cấu hình đã chốt, kiểm tra cấu hình B2/B5 và xử lý lỗi triển khai khi Trâm chạy | Community tham chiếu thay thế và baseline được kiểm tra |
-| **Đăng** | Kiểm tra nhãn test, xuất Jaccard riêng và tính khoảng tin cậy/chênh lệch HeTCo–B5 bằng bootstrap | Nhãn đối chứng và kết quả đánh giá nâng cao |
-| **Trâm** | Khóa baseline, chạy B1/B2/B4/B5 trên cùng mẫu/nhãn với HeTCo | Dự đoán baseline test |
-| **Anh** | Tính chỉ số cơ bản từng lớp/tháng, ghép khoảng tin cậy do Đăng xuất và vẽ bảng/biểu đồ | Bảng Experiment 4 và trình bày kết quả H3 |
-
-**Ghép việc tuần 6:** Tâm/Phúc xuất community, Thanh xuất features/nhãn, Đăng kiểm tra nhãn. Thanh và Trâm chạy mô hình, Đăng tính đánh giá nâng cao, Anh tổng hợp chỉ số và bảng biểu. Phúc xử lý lỗi B2/B5, không yêu cầu Trâm sửa thuật toán. Khóa cấu hình trước test.
-
-Không học lại từ nhãn test hoặc đổi ngưỡng theo kết quả test. Nhãn tháng kế tiếp chỉ dùng đánh giá. Mẫu cuối corpus không có nhãn kế tiếp được loại khỏi dự báo và ghi rõ số lượng.
-
-### Tuần 7 — 26/11–02/12: ablation và độ nhạy
-
-| Người | Công việc | Đầu ra |
-|---|---|---|
-| **Tâm** | Chạy A2/A3/A5 bằng detector đề xuất, đo tài nguyên và kiểm tra tái lập | Artifact ablation detection và chi phí |
-| **Thanh** | Chạy HeTCo A1/A4/A6, tạo features cho community/nhãn thay thế | Dự đoán ablation, features tham chiếu riêng |
-| **Phúc** | Đánh giá AMI/sự kiện benchmark của A2/A3/A5, chạy độ phân giải A7 và hỗ trợ kỹ thuật B2/B5 trên bộ nhãn thay thế | Ablation phân hoạch và đối chứng dự báo hợp lệ |
-| **Đăng** | Chạy tracker A7/B3, phân tích sai khác GED–Jaccard và độ nhạy khoảng tin cậy | Bộ nhãn thay thế, sai khác tracking và độ bất định |
-| **Trâm** | Chạy baseline trên các bộ tham chiếu thay thế, so sánh ablation với HeTCo | Kết quả đối chứng/ablation dự báo |
-| **Anh** | Tổng hợp Experiment 5 từ artifact đã kiểm tra, vẽ biểu đồ và viết kết luận H1–H3 để người phụ trách xác nhận | Bảng tổng hợp, biểu đồ và dự thảo kết luận |
-
-A1/A4/A6 giữ cùng mẫu/nhãn. A2/A3/A5 chủ yếu đánh giá detection/tracking. Nếu dự báo với phân hoạch mới, Thanh và Trâm chạy lại HeTCo/baseline trên cùng nhãn mới, Anh báo cáo riêng từng bộ tham chiếu.
-
-**Ghép việc tuần 7:** Tâm gửi phân hoạch cho Thanh, Phúc đánh giá detection và hỗ trợ kỹ thuật baseline. Đăng gửi nhãn Jaccard cho Thanh, nhận dự đoán của Thanh/Trâm để tính khoảng tin cậy. Anh nhận kết quả đã kiểm tra để tổng hợp riêng từng bộ nhãn. Chạy A1/A4/A6 song song với kiểm tra phân hoạch.
-
-### Tuần 8 — 03–09/12: tái lập và hoàn thiện bàn giao
-
-| Người | Công việc | Đầu ra |
-|---|---|---|
-| **Tâm** | Thử môi trường sạch, hoàn thiện README/lệnh chạy. Viết pipeline, kiến trúc, detector đề xuất | Repository bàn giao và báo cáo core |
-| **Thanh** | Rà soát GED/features/HeTCo, viết phương pháp chính, đóng góp và hạn chế | Phần tracking/features/HeTCo hoàn chỉnh |
-| **Phúc** | Kiểm tra tái lập detector/B2/B5, viết benchmark, đối chứng detection và H1. Bàn giao mô tả B2/B5 cho Trâm | Module đối chứng hoàn chỉnh và báo cáo kỹ thuật |
-| **Đăng** | Kiểm tra lại leakage/bootstrap, viết kiểm chứng dữ liệu/nhãn và H2. Xác nhận bảng số liệu/khoảng tin cậy với Anh | Bộ đánh giá nâng cao và phần kiểm chứng |
-| **Trâm** | Viết baseline, kết quả dự báo/ablation, chuẩn bị demo so sánh mô hình | Phần đối chứng và kết quả H3 |
-| **Anh** | Biên tập protocol từ nội dung Đăng bàn giao, ghép bảng biểu/báo cáo/slide và kiểm tra trình bày | Báo cáo tổng hợp, slide và kịch bản trình bày |
-
-Cả sáu người diễn tập và giải thích được phần mình. Không thêm thí nghiệm sát hạn nếu chưa đủ thời gian kiểm tra lại kết luận.
-
-**Ghép việc tuần 8:** từng người bàn giao phần báo cáo, bảng/hình và lệnh demo trước 06/12. Anh ghép báo cáo/slide, Tâm kiểm tra pipeline từ môi trường sạch. Người sở hữu sửa lỗi được phát hiện, các cặp review phần của nhau và cả sáu người diễn tập trước 09/12.
-
-## 4. Quy tắc bàn giao
-
-- Mỗi người cập nhật việc đã làm, đường dẫn code/artifact, lỗi và kế hoạch tiếp theo trong thư mục mang tên mình.
-- Hoàn thành nghĩa là có đầu ra kiểm tra được, lệnh chạy và test phù hợp. Phân biệt kết quả fixture, pilot và toàn kỳ.
-- Tâm–Thanh, Phúc–Đăng, Trâm–Anh review trong từng cặp trước khi merge. Review không chuyển quyền sở hữu module.
-- Anh tổng hợp nội dung đã được từng người xác nhận, không viết thay mọi người. Tâm điều phối tích hợp, không chịu trách nhiệm sửa mọi module.
-- Khi quá tải, giảm B6 hoặc độ nhạy mở rộng trước. Giữ dữ liệu hợp lệ, tracking được kiểm chứng, B5–HeTCo và A1/A4. Không bỏ kiểm tra leakage, tinh chỉnh theo test hoặc tạo kết quả cho đủ bảng.
-
-### Checklist trước báo cáo 22/10
-
-- [x] **Tâm:** đã chuẩn bị sẵn bộ dataset Reddit gồm 15 corpus và các script xử lý ban đầu.
-- [ ] **Tâm:** tạo repo GitHub, mời thành viên, dựng cấu trúc thư mục, .gitignore, môi trường/thư viện và README hướng dẫn cộng tác/chạy demo; có manifest, snapshot Reddit pilot và membership tạm của nhóm core.
-- [ ] **Thanh:** tracking/features/nhãn, mô hình cơ bản và kết quả đánh giá trên pilot của nhóm Tâm–Thanh.
-- [ ] **Phúc:** benchmark mạng động có phân hoạch chuẩn, Independent Leiden và bảng AMI.
-- [ ] **Đăng:** Jaccard, kiểm chứng sáu sự kiện, bảng điểm và confusion matrix trên benchmark của Phúc–Đăng.
-- [ ] **Trâm:** bảng community–tháng tổng hợp, code baseline và dự đoán B1/B4.
-- [ ] **Anh:** split thời gian, bộ đánh giá, bảng điểm/confusion matrix và phần trình bày của nhóm Trâm–Anh.
-- [ ] **Từng cặp:** chạy từ input riêng đến evaluation results, có README/lệnh chạy, cấu hình, log và output riêng; không cần artifact từ nhóm khác.
-- [ ] **Từng người:** trình bày code và đầu ra phụ trách; ghi rõ dữ liệu thật/giả lập, phần chưa hoàn thành và chưa dùng test chính thức.
-
-Ba prototype độc lập là đầu ra tuần 1. Pipeline Reddit tích hợp toàn project tiếp tục từ tuần 2; điểm trên dữ liệu tổng hợp chỉ dùng kiểm chứng module, không thay thế kết quả Reddit.
-
 ## Nghiệm thu prototype core tuần 1 — cập nhật 17/10
 
 - [x] Tâm: audit/manifest, snapshot R và Independent Leiden trên Reddit thật; giao diện membership được forecast tiêu thụ.
@@ -289,37 +237,4 @@ Ba prototype độc lập là đầu ra tuần 1. Pipeline Reddit tích hợp to
 
 Lệnh demo và nội dung trình bày ở `docs/RUNBOOK.md` và `docs/RESULTS.md#presentation-outline`. Các hạn chế về ground truth, lớp thiếu và coverage phải được trình bày cùng điểm số. HeTCo đầy đủ và detector đề xuất thuộc các tuần sau, không phải thiếu sót bắt buộc của baseline tuần 1.
 
-## Cập nhật 28/10 — trạng thái HeTCo và phân công phần còn lại (tuần 3–8)
-
-### Trạng thái hiện tại
-
-- **HeTCo đã có bản chạy trên Reddit 2015** (Thanh, nhánh `feat/hetco-v1`). Bản mạnh nhất là **HeTCo_v4**: attention trên thành viên, head phân cấp và 6 đặc trưng quan hệ của thành viên (coreness, giữ liên kết, giữ đồng thành viên, cầu nối, trả lời qua lại, cờ cắt trái). Bản v3 (trộn với B4) không tăng điểm nên đã bỏ.
-- **Kết quả trên main window 2015-10..12 (571 community):**
-  - HeTCo_v4 đạt **macro-F1 0.398**, B4 đạt 0.361. Cả 3 seed đều cao hơn B4, và v4 cũng cao hơn ở cả 3 tháng rolling 10–12.
-  - Khoảng tin cậy rolling là [0.001, 0.030]; khoảng tin cậy theo community trên main window là [−0.035, 0.110].
-  - Accuracy của v4 thấp hơn (0.869 so với 0.933), vì v4 bắt được grow và merge nhưng sai nhiều hơn ở dissolve.
-- **Theo tiêu chí giảng viên (đề xuất ≥ baseline): đạt.** Khi trình bày, ghi là "cao hơn B4 trên dữ liệu phát triển". Ý tưởng v4 hình thành sau khi xem dữ liệu 2015, nên **bắt buộc kiểm định một lần trên giai đoạn chưa xem** trước khi kết luận là thắng.
-- **Tài liệu:**
-  - Số liệu: `docs/RESULTS.md`
-  - Phương pháp: `docs/METHODS.md`
-  - Lệnh chạy: `docs/RUNBOOK.md`
-  - Trình bày trực quan: `notebooks/core/06_hetco_study.ipynb`
-
-### Phân công theo tuần (mỗi người 1 việc mỗi tuần, giữ đúng phạm vi sở hữu)
-
-| Tuần | Tâm | Thanh | Phúc | Đăng | Trâm | Anh |
-|---|---|---|---|---|---|---|
-| **3** (29/10–04/11) | Chọn giai đoạn chưa xem (cohort 2018 trong `configs/prospective.toml` hoặc tháng 2016) và chuẩn bị snapshot, membership, preparation | Đóng gói artifact HeTCo (research run, preparation, `hetco-v4-001`) cho nhóm. Viết file khóa cấu hình v4 và commit trước mọi lần chạy mới | Chạy lại B2/B5 trên pilot 2015 từ artifact của Thanh để xác nhận đúng số | Test leakage cho `features/members.py`: không đọc bản ghi sau t, membership t+1 hay nhãn | Chạy lại B1/B4 trên pilot 2015 từ artifact của Thanh để xác nhận đúng số | Tự tính lại macro-F1 và confusion từ `hetco-v4-001/predictions.csv` bằng code riêng |
-| **4** (05–11/11) | Tích hợp `hetco` vào `temporal-study` để so với proposed hierarchical LR trên cùng mẫu | Thay cờ cắt trái bằng các tháng lịch sử; chỉ giữ nếu tốt hơn trên các tháng 07–09 | Đo thời gian và bộ nhớ của `hetco` (khoảng 10 phút trên pilot) và đề xuất giới hạn cho dữ liệu lớn | Kiểm tra nhãn GED ở lớp hiếm grow/merge, ghi các trường hợp đáng ngờ | Lập bảng so sánh theo từng lớp B1/B2/B4/B5/HeTCo_v4 trên pilot | Viết phần protocol: khóa cấu hình, chia thời gian, các giới hạn |
-| **5** (12–18/11) | Bàn giao preparation của giai đoạn chưa xem; review PR `feat/hetco-v1` | **Khóa v4** (hash config và code), không chỉnh thêm | Chuẩn bị chạy B2/B5 trên giai đoạn mới với cấu hình đã khóa | Đối chiếu bootstrap theo community với bootstrap theo khối tháng | Chuẩn bị chạy B1/B4 trên giai đoạn mới với cấu hình đã khóa | Mẫu bảng và biểu đồ cho kết quả giai đoạn mới |
-| **6** (19–25/11) | Kiểm tra pipeline chạy đúng trên giai đoạn mới | **Chạy HeTCo_v4 một lần** trên giai đoạn mới và báo cáo nguyên kết quả | Chạy B2/B5 trên giai đoạn mới | Kiểm tra leakage và tính khoảng tin cậy trên giai đoạn mới | Chạy B1/B4 trên giai đoạn mới | Tổng hợp chỉ số của mọi mô hình trên cùng mẫu |
-| **7** (26/11–02/12) | So community đề xuất (multislice/consensus) với Leiden làm đầu vào cho HeTCo | Ablation A1/A4/A6/A7 của v4 trên giai đoạn mới; phân tích lỗi theo lớp | Độ nhạy detection: đổi detector thì HeTCo có còn giữ được kết quả | Nhãn Jaccard thay GED: chạy lại so sánh trên bộ nhãn thứ hai | Ablation phía baseline: cùng đặc trưng mới cho B4 để kiểm tra công bằng | Báo cáo riêng từng bộ nhãn và từng giai đoạn |
-| **8** (03–09/12) | Chạy lại toàn bộ từ môi trường sạch | Viết phần phương pháp, đóng góp và hạn chế của HeTCo | Viết phần detection và chi phí | Viết phần kiểm chứng và leakage | Viết phần đối chứng baseline | Ghép report và slide; nhóm diễn tập trước 09/12 |
-
-### Quy tắc
-
-- **Không chỉnh cấu hình HeTCo sau khi đã xem điểm trên giai đoạn mới.** Thắng hay thua đều báo cáo nguyên kết quả, kèm phân tích lỗi theo lớp.
-- Mọi mô hình dùng cùng mẫu, cùng nhãn và cùng seed. Mọi lựa chọn chỉ dựa trên các tháng validation, không dựa trên test.
-- **Ở tuần 7, B4 cũng được thử với đặc trưng thành viên mới.** Nếu B4 cộng đặc trưng mới cũng tăng ngang v4, thì đóng góp nằm ở đặc trưng chứ không ở attention, và phải ghi đúng như vậy.
-- Artifact chạy (`artifacts/`) chỉ nằm trên máy cá nhân. Thanh chia sẻ gói artifact trong tuần 3; người nhận không sửa artifact của người khác.
-- Mỗi người commit gom theo phần việc hoàn chỉnh, review trong cặp trước khi merge vào `main`.
+</details>

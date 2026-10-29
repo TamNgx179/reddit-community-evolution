@@ -10,6 +10,7 @@ The sections below preserve earlier baseline and handoff evidence. Their indepen
 
 ## Contents
 
+- [Midterm 2 diagnostic baseline](#midterm-2-diagnostic-baseline-29-october-2026)
 - [HeTCo v1 development comparison](#hetco-v1-development-comparison)
 - [HeTCo v2: weighting and hierarchical head](#hetco-v2-weighting-and-hierarchical-head-chosen-on-inner-origins)
 - [HeTCo v3: ensemble with B4 (dropped)](#hetco-v3-ensemble-with-b4-tried-dropped)
@@ -19,6 +20,80 @@ The sections below preserve earlier baseline and handoff evidence. Their indepen
 - [External evidence still required](#external-evidence-still-required)
 - [Historical evidence](#historical-evidence)
 - [Presentation outline](#presentation-outline)
+
+## Midterm 2 diagnostic baseline (29 October 2026)
+
+The [current assignment](../PHAN-CONG-SNA-8-TUAN.md) targets Midterm 2 around
+12 November, based on the team's two-week horizon. It follows the instructor's
+request to investigate labels, applicability and errors before adding complexity.
+The existing Midterm 1 report and the 2015 HeTCo pilot remain separate studies.
+
+### Completed 2016 temporal replication
+
+The frozen V4 configuration was run through raw preparation, forecasting,
+research controls and HeTCo under `hetco-transfer-2016-20261029`. All four stages
+completed. Thirteen relevant HeTCo tests passed and 48 model/window/seed scores
+were recomputed from stored predictions with identical keys and truth labels.
+The main window contains 494 samples from October–December 2016, the rolling
+window 1,107 samples from July–December, with seeds 42/43/44.
+
+| Method | Main six-class Macro-F1 | Rolling six-class Macro-F1 |
+|---|---:|---:|
+| Logistic Regression, strongest of five baseline controls | 0.325043 | 0.329333 |
+| Context model v0 | 0.368235 | 0.357226 |
+| HeTCo V4 attention | 0.346804 | 0.343484 |
+| Matched V4 mean pooling | 0.381629 | 0.352299 |
+
+V4 exceeds LR by 0.021761 in the main window, with 2/3 seed wins and 3/6 monthly
+wins. Its rolling two-month-block 95% interval is [-0.039195, 0.102468]. Main
+seed SD is 0.036502 for V4 and 0.004435 for mean pooling. This replication does
+not establish consistent attention superiority. Mean pooling is a secondary
+diagnostic finding, not a primary model selected after observing the outcomes.
+The period was used in earlier project studies and is not certified unseen.
+
+Preparation took 2,978.636 seconds, core forecast 183.971 seconds, research
+controls 271.575 seconds and HeTCo 2,763.845 seconds in this recorded run.
+Artifacts remain local in `artifacts/core/hetco-transfer-2016-20261029`,
+`artifacts/core/hetco-transfer-2016-forecast-20261029`,
+`artifacts/research/hetco-transfer-2016-20261029` and
+`artifacts/hetco/hetco-transfer-2016-20261029`.
+
+### Coverage and paired errors from existing predictions
+
+A read-only audit rejoined existing labels, features and predictions without
+fitting, changing thresholds or generating human judgments. Observed transitions
+exclude terminal snapshots. Censored communities are reported separately.
+Member-month coverage sums community sizes across months and is not a proportion
+of unique people. These aggregate rates do not replace graph/user observation
+coverage or the per-month/size analysis assigned for Midterm 2.
+
+| Cohort and period | Eligible / observed transitions | Unresolved | Terminal censored | Community-month coverage | Member-month coverage |
+|---|---:|---:|---:|---:|---:|
+| Original full study, all label months | 7,490 / 11,562 | 4,072 | 183 | 64.78% | 79.31% |
+| Original full study, final 2018 | 1,269 / 1,832 | 563 | 183 | 69.27% | 75.72% |
+| 2016 replication, all label months | 2,721 / 4,399 | 1,678 | 242 | 61.85% | 82.99% |
+| 2016 replication, main window | 494 / 766 | 272 | 242 | 64.49% | 91.55% |
+
+The original final predictions of `hier_lr_dynamic` and `hier_hgb_dynamic`
+cover the same 1,269 keys per seed. The four correctness groups are 1,119 both
+correct, 29 proposed-only, 35 HGB-only and 86 both wrong. These groups are the
+same for all three seeds, not 3,807 independent cases. Of 19 grow cases, proposed
+predicts dissolve for 14 and HGB for 12. Of 15 merge cases, the respective counts
+are 8 and 9. Correct-count differences alone do not rank six-class Macro-F1.
+
+Median size is two in both the eligible and unresolved populations. More than
+90% of eligible original samples carry `history_missing`. Source semantics
+define this flag as absent accepted predecessors, not absence of the member
+activity histories used by D. These findings motivate size-stratified analysis
+and lineage tracing, not an automatic relabeling or a claim that the tracker is
+incorrect. Case-level paired errors and audit outputs stay local under
+`artifacts/diagnostics/midterm2-20261029`.
+
+Genuine independent review of dissolve/unresolved cases is assigned next.
+Two sealed human submissions must precede agreement/adjudication. No human
+review completion is claimed by this automated audit. The next core change is
+chosen from label review, coverage profiles and paired error analysis, with a
+finite matched ablation rather than a new complex model by default.
 
 ## HeTCo v1 development comparison
 
