@@ -66,6 +66,14 @@ Preserve and hash both submitted originals before revealing answers or comparing
 decisions. Agreement, seven-label confusion and adjudication require those real
 submissions. The completed technical audit does not count as human annotation.
 
+The pilot reviewer ZIP also passed a recipient-style technical check: all six
+compressed case payloads opened, local HTML links resolved, ZIP CRC passed and
+the coordinator key/label fields were absent. This checks package usability,
+not acknowledgement or annotation by the intended recipients. Recipient
+confirmation remains pending. The [public lineage illustrations](METHODS.md#observed-lineage-traces)
+use four different development examples, with no overlap with the pilot/main
+review cases. Do not distribute coordinator material with the reviewer ZIP.
+
 ## Two independent reviewers
 
 Prefer reviewers who did not implement the tracker. Each reviewer must work without the answer key and without discussing cases before submitting:

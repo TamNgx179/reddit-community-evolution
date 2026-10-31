@@ -68,6 +68,18 @@ Human label review remains pending actual independent submissions.
 
 ## Frozen reference and lineage audit (31 October 2026)
 
+Four real development examples now illustrate unique continuation, multiple
+predecessors, multiple successors and missing accepted lineage in
+[the methods diagram](METHODS.md#observed-lineage-traces). Reconstructed weighted
+inclusions, source-event labels, age resets and history flags match the saved
+artifacts. None of the four examples overlaps the 66 blinded pilot/main cases.
+Only anonymous aggregate counts/flags are public. Full source mappings remain
+local in `artifacts/diagnostics/lineage-examples-20261031`.
+
+The six-case pilot ZIP passed a recipient-style technical opening/link/hash
+check. This does not mean the actual recipients have confirmed receipt or
+completed independent review.
+
 The local audit run is
 `artifacts/diagnostics/midterm2-reference-label-audit-20261031-003`.
 It freezes the existing full study and the separate 2016 HeTCo replication
