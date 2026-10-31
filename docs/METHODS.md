@@ -202,6 +202,41 @@ the uncertainty is reflected in predecessor_count and the reset-age policy.
 No outgoing event, t+1 overlap, t+1 size, current transition retention, or collected
 Reddit score enters features. Scaling and model fit use training rows only.
 
+## Observed lineage traces
+
+Lineage describes accepted connections from the previous snapshot to the current
+feature snapshot. These connections are already observable at feature time t.
+They differ from the outgoing event t to t+1, which becomes an evaluation target
+only after observing the next snapshot. Community IDs are local to each month.
+
+![Observed development lineage](../reports/figures/lineage/observed_lineage.png)
+
+*Source: sealed original development artifacts (`activity-study-001`), checked
+against the [history implementation](../src/reddit_sna/features/history.py).
+Group names are anonymized. These four examples are outside the blinded review
+sample. The private trace retains source mappings, overlap scores and hashes.*
+
+| Example | Observed group sizes | Saved history interpretation |
+|---|---|---|
+| L1, April to May 2016 | 2 to 2, two shared members | Unique accepted one-to-one continuation. Age increases from one to two, `history_missing=0`. |
+| L2, June to July 2016 | 3 and 2 to 2,470, two shared members on each link | Two accepted predecessors. Age resets to one while `history_missing=0`. |
+| L3, June to July 2016 | 2,225 to 3 and 2, two shared members on each link | One source has two accepted successors. Both successor ages reset to one, with `history_missing=0`. |
+| L4, April to May 2016 | Two members drawn from groups of 799 and 1,539 | Each incoming overlap shares one member but no link is accepted. Age is one and `history_missing=1`, although these members have previous graph observations. |
+
+Arrows indicate tracker decisions, not a conserved flow of all group members.
+For L1–L3 the illustrated accepted family is complete. Other weaker overlaps are
+omitted from the drawing. L4 displays only incoming overlaps for the focal
+current group and does not display the earlier groups' other outgoing links.
+All saved pair values and the selected history flags were checked against the
+complete weighted source graphs and memberships before drawing.
+
+The asymmetric inclusion rule can accept a small-to-large or large-to-small link
+when one directional inclusion is sufficient. Thus an accepted split/merge
+topology is not by itself proof of a social group splitting or merging. The
+large size differences are genuine observations, not illustrative invented
+numbers. They make independent structural-label review important and are not
+used here to alter the frozen labeling thresholds.
+
 ## Limits
 
 GED adaptation and Jaccard labels remain algorithmic pseudo-labels. Ground-truth

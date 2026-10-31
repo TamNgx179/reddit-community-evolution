@@ -10,6 +10,8 @@ The sections below preserve earlier baseline and handoff evidence. Their indepen
 
 ## Contents
 
+- [Controlled member-pooling follow-up](#controlled-member-pooling-follow-up-31-october-2026)
+- [Frozen reference and lineage audit](#frozen-reference-and-lineage-audit-31-october-2026)
 - [Midterm 2 diagnostic baseline](#midterm-2-diagnostic-baseline-29-october-2026)
 - [HeTCo v1 development comparison](#hetco-v1-development-comparison)
 - [HeTCo v2: weighting and hierarchical head](#hetco-v2-weighting-and-hierarchical-head-chosen-on-inner-origins)
@@ -20,6 +22,109 @@ The sections below preserve earlier baseline and handoff evidence. Their indepen
 - [External evidence still required](#external-evidence-still-required)
 - [Historical evidence](#historical-evidence)
 - [Presentation outline](#presentation-outline)
+
+## Controlled member-pooling follow-up (31 October 2026)
+
+The approved finite experiment completed under
+`artifacts/controlled-pooling/member-pooling-2016-001`: **126 configuration fits,
+168 internal heads, 270.0 seconds measured pipeline wall time**. No peak-memory
+claim is made. Thirteen causal member attributes were averaged and cached once.
+The source, protocol and saved input payloads were checked before completion.
+
+| Method | Main Macro-F1, N=494 per seed | Rolling Macro-F1, N=1,107 per seed |
+|---|---:|---:|
+| Stored LR baseline | 0.3250 | 0.3293 |
+| Archived HeTCo V4 | 0.3468 | 0.3435 |
+| Archived V4 mean-pooling control | 0.3816 | 0.3523 |
+| Hierarchical LR, community attributes | 0.4249 | 0.3916 |
+| Planned candidate: hierarchical LR plus member means | 0.3963 | 0.3919 |
+| Matched flat HGB plus member means | 0.3958 | 0.3752 |
+
+The planned candidate exceeds all five stored baseline controls in both windows.
+Its rolling difference from stored LR is +0.0625, with exploratory paired
+two-month-block interval [0.0317, 0.1038]. The new HGB controls use the same
+feature alternatives with their own fixed estimator configuration and are
+reported alongside the original five baselines.
+
+The controlled contrasts qualify the mechanism. With member features held fixed,
+hierarchy improves LR by +0.0769 on rolling, interval [0.0715, 0.0942]. Adding
+member means within hierarchical LR changes rolling Macro-F1 by only +0.0002,
+interval [-0.0317, 0.0340], and reduces main Macro-F1 by 0.0286. Member means
+benefit the matched HGB control on rolling by +0.0270, interval [0.0134, 0.0771].
+Thus these results support a simple hierarchical forecaster as a useful
+diagnostic direction, but do not establish an incremental LR benefit from the
+new member means. The historical primary is not automatically replaced.
+
+All six new configurations have zero measured seed disagreement in this fixed
+deterministic experiment. This is reproducibility across the declared seeds,
+not proof of temporal or population stability. Main and rolling windows overlap.
+The main window has only three months and no month-block interval. The 2016
+period was already observed and remains exploratory development evidence.
+
+See [the executed notebook](../notebooks/core/07_controlled_pooling_diagnostics.ipynb),
+[integrated report](../reports/WEEK1_REPORT.md#controlled-member-pooling-follow-up-31-october-2026)
+and [reproduction command](RUNBOOK.md#controlled-member-pooling-follow-up).
+Human label review remains pending actual independent submissions.
+
+## Frozen reference and lineage audit (31 October 2026)
+
+Four real development examples now illustrate unique continuation, multiple
+predecessors, multiple successors and missing accepted lineage in
+[the methods diagram](METHODS.md#observed-lineage-traces). Reconstructed weighted
+inclusions, source-event labels, age resets and history flags match the saved
+artifacts. None of the four examples overlaps the 66 blinded pilot/main cases.
+Only anonymous aggregate counts/flags are public. Full source mappings remain
+local in `artifacts/diagnostics/lineage-examples-20261031`.
+
+The six-case pilot ZIP passed a recipient-style technical opening/link/hash
+check. This does not mean the actual recipients have confirmed receipt or
+completed independent review.
+
+The local audit run is
+`artifacts/diagnostics/midterm2-reference-label-audit-20261031-003`.
+It freezes the existing full study and the separate 2016 HeTCo replication
+from source base `ba2b02b`. No models were fitted, no target rules were changed,
+and no primary model was selected from inspected results. V4 and its matched
+mean-pooling control are retained.
+
+| Check | Observed result |
+|---|---|
+| Source/configuration/artifact inventory | 1,216 files checked against saved hashes where available, and checked again after derivation |
+| Independent reconstruction of seven history fields | 16,386 community-month rows, 114,702 value comparisons, no mismatch |
+| Graph-to-tracker reconstruction in six development transitions | 1,755 labels/reasons matched the saved outputs |
+| Feature availability metadata | All audited feature rows declare availability through their feature month |
+| Prediction joins | Same sample keys and true labels across model/seed groups within each evaluation window |
+| Existing GED/history/forecast regression suite | 38 tests passed |
+| Independent review preparation | 60 main cases and six separate pilot cases, with two blank reviewer worksheets per phase |
+
+The original study's 11,745 community-months contain 129 initial-snapshot rows,
+10,726 rows with no accepted predecessor, 228 unique continuations and 662
+ambiguous-lineage age resets. The separate 2016 run has 408 initial rows,
+3,932 without an accepted predecessor, 50 unique continuations and 251
+ambiguous-lineage resets. These are feature-row counts including terminal
+snapshots, not the coverage denominators used for observed transitions.
+
+`history_missing` is a lineage flag. An ambiguous merge/split can reset
+`community_age` to one while `history_missing` remains zero because predecessors
+exist. Conversely, 6,414 original-study rows have `history_missing=1` with
+corpus-level activity history available (`context_history_missing=0`). This
+does not establish complete observation of each account. It shows why a missing
+lineage must not be described as absence of all member-activity history.
+
+The audit found no mismatch that justifies relabeling or changing the tracker.
+It checks technical consistency, not independent social validity or every
+activity feature through a second raw-data implementation. The
+`reference-contract.json`, `input-inventory.json`, `audit-summary.json` and
+`HANDOFF.md` in the local run document references, schemas, source links and
+reproduction provenance. Runtime cases and identity mappings remain local.
+
+The review package contains complete relevant predecessor/successor membership
+and weighted incident-edge evidence without top-k filtering. HTML gives a
+compact overview, while losslessly compressed JSON retains the full evidence.
+Next-month authored-record and reply-network flags distinguish activity from
+network participation. Follow-up through three months is held separately until
+one-step decisions are locked. See [review instructions](LABEL_REVIEW.md#current-midterm-2-review-packet).
+Actual independent judgments, agreement and adjudication remain pending.
 
 ## Midterm 2 diagnostic baseline (29 October 2026)
 

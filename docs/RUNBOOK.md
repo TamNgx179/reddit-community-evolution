@@ -2,6 +2,36 @@
 
 Commands run from the repository root. Use a new immutable output ID for each run. For definitions and CSV contracts see [methods](METHODS.md); for measured evidence see [results](RESULTS.md).
 
+## Controlled member-pooling follow-up
+
+Install the declared extras in the project environment with
+`python -m pip install -e ".[research,graph,notebook]"`.
+The finite follow-up reuses completed preparation and forecasting artifacts:
+
+```powershell
+python -m reddit_sna controlled-pooling --protocol configs/controlled_pooling.toml --research-run artifacts/research/hetco-transfer-2016-20261029 --preparation-run artifacts/core/hetco-transfer-2016-20261029 --artifact-root artifacts --run-id member-pooling-2016-new --original-study artifacts/temporal/activity-study-001 --hetco-run artifacts/hetco/hetco-transfer-2016-20261029
+```
+
+Use a new run ID. The command verifies source manifests before extraction, caches
+thirteen member means once, performs exactly six configurations across the fixed
+three seeds and seven boundaries, and retains a failed manifest if execution
+fails. It does not resume a partial fit or search additional settings. Historical
+graphs, labels, five baselines and HeTCo outputs remain inputs.
+
+The verified delivery run is `artifacts/controlled-pooling/member-pooling-2016-001`.
+Open [the diagnostic notebook](../notebooks/core/07_controlled_pooling_diagnostics.ipynb)
+using the project's `.venv` Python kernel. Run All verifies and reads saved numeric
+outputs and draws figures, without refitting. GitHub displays saved outputs.
+Reproducing from another checkout requires these local artifacts as well as the
+source package. Private annotation cases and identity mappings are not published.
+
+`fits.json` records each training cutoff, configuration duration and internal head
+count. `cache.json` binds means to the source manifests and exact schema.
+`comparison.csv` contains all configurations and stored controls. The diagnostic
+CSVs separate coverage, class/month/size/history errors and paired contrasts.
+Month-block intervals are unavailable for the three-month main window. Six-month
+rolling intervals are exploratory on previously inspected data.
+
 The current midterm narrative is the [integrated report](../reports/WEEK1_REPORT.md).
 The supplementary component study uses eight fixed configurations with the
 original primary LR settings. It does not add headline baselines or replace

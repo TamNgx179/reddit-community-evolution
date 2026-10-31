@@ -34,6 +34,10 @@ Nguồn kết quả và phạm vi so sánh: [RESULTS](docs/RESULTS.md). Phương
 
 ## 3. Quyền sở hữu và đầu ra của ba cặp
 
+**Bàn giao chuẩn bị ngày 31/10:** đã chốt inventory và giao diện đầu vào của full-study/2016, chuẩn bị 60 ca chính và 6 ca thử riêng, tái tính 114.702 giá trị lịch sử và dựng lại 1.755 nhãn từ graph mà không thấy sai lệch. Chi tiết ở [RESULTS](docs/RESULTS.md#frozen-reference-and-lineage-audit-31-october-2026), hướng dẫn nhận bộ ca ở [LABEL_REVIEW](docs/LABEL_REVIEW.md#current-midterm-2-review-packet). Đây là hoàn tất khâu chuẩn bị và audit kỹ thuật của Tâm, chưa phải Phúc–Đăng đã chấm nhãn. Giữ answer key và theo dõi ba tháng ở phía điều phối, chỉ gửi ZIP reviewer riêng cho từng người.
+
+**Đầu ra kỹ thuật thực hiện sớm ngày 31/10:** đã bổ sung pipeline coverage/error analysis và thí nghiệm có kiểm soát gồm 126 lượt fit, notebook chạy đủ 7 cell với 4 hình, cùng report tiếng Anh. Các lượt này là chẩn đoán trên dữ liệu đã xem, không thay thế bước chọn cải tiến sau review thật. Kết quả cho thấy kiến trúc LR hai tầng có ích trên bộ 2016, còn lợi ích bổ sung của member means trong LR hai tầng chưa được xác lập. Giữ lịch review và mốc quyết định 04/11 để kết hợp bằng chứng của ba cặp trước khi chốt phương pháp chính.
+
 | Người | Phần chịu trách nhiệm | Đầu ra cá nhân |
 |---|---|---|
 | Tâm | Core dữ liệu, graph, cache/artifact, giao diện và tích hợp. Bảo đảm cutoff, reference và phiên bản dữ liệu. Điều tra lineage/history cùng Thanh | Gói input đóng băng, manifest/schema, lệnh chạy lại, kiểm tra cutoff và bản tích hợp |
@@ -47,7 +51,9 @@ Không chuyển việc sửa core sang Phúc–Đăng hoặc Trâm–Anh. Hai c�
 
 ### Giao diện bàn giao để làm song song
 
-Tâm bàn giao snapshot artifact đã có ngay 29–30/10. Mọi cặp làm trên bản chỉ đọc có manifest, không chờ mô hình cải tiến. Phúc–Đăng dùng graph/membership/observation và bộ ca mù. Trâm–Anh dùng labels/features/predictions đóng băng. Tâm–Thanh dùng bản core riêng để chẩn đoán. Các cặp không ghi đè output của nhau.
+Gói snapshot artifact đã được chuẩn bị và kiểm tra ngày **31/10**, thay cho mốc chuẩn bị dự kiến 29–30/10. Mọi cặp dùng bản chỉ đọc có manifest, không chờ mô hình cải tiến. Phúc–Đăng dùng graph/membership/observation và bộ ca mù. Trâm–Anh dùng labels/features/predictions đóng băng. Tâm–Thanh dùng bản core riêng để chẩn đoán. Các cặp không ghi đè output của nhau. Việc người nhận thực sự mở và xác nhận gói vẫn cần được ghi nhận riêng.
+
+Sơ đồ lineage từ **4 ca development thật** đã hoàn tất ở [METHODS](docs/METHODS.md#observed-lineage-traces), kèm bảng tuổi/cờ lịch sử và truy vết nguồn giữ local. Các ca không trùng bộ review. Gói pilot 6 ca đã qua kiểm tra kỹ thuật mở file, link và CRC, nhưng chưa có xác nhận nhận gói/chấm thử từ Phúc–Đăng. Vì vậy phần chuẩn bị và kiểm tra kỹ thuật của Tâm đã hoàn tất, còn nghiệm thu bàn giao giữa người với người đang chờ phản hồi thực tế.
 
 Khóa ghép đầy đủ là `reference_id + feature_month + community_id + label_month + label_reference_id`. Thêm `model + seed + window` cho dự báo. `community_id` chỉ có nghĩa trong snapshot. Giữ tách ba nghiên cứu: full-study LR–HGB, HeTCo pilot 2015 và tái lập 2016. B4 trong pilot là LR, không được nhầm với ký hiệu baseline của bảng full-study.
 
