@@ -453,6 +453,138 @@ not a cross-model training-speed comparison or a guarantee about unsampled
 allocation peaks. Numeric stores and monthly processing bound memory without
 equating the raw archive size with the number of independent target events.
 
+## Controlled member-pooling follow-up (31 October 2026)
+
+This is an exploratory follow-up on an already observed 2016 Reddit cohort. It preserves the six-event target, graph and tracker. The historical primary and five baseline roles remain unchanged.
+
+### Design
+
+Four LR cells cross flat/hierarchical heads with community-only/community-plus-member means. Two flat HGB cells use the same two feature sets. Thirteen causal member attributes are averaged within each current community. Preprocessing is fitted on past training samples only. There is no hyperparameter search.
+
+The completed schedule contains 126 configuration fits and 168 internal heads. Measured pipeline wall time is 270.0 seconds, including feature extraction, fitting and diagnostics. This is not a separately measured peak-memory result.
+
+### Results
+
+| Window | Method | Samples per seed | Macro-F1 | Seed SD |
+|---|---|---:|---:|---:|
+| main | A7v4_mean_pool | 494 | 0.3816 | 0.0044 |
+| main | B1_majority | 494 | 0.1587 | 0.0000 |
+| main | B1_persistence | 494 | 0.1559 | 0.0000 |
+| main | B2_random_forest | 494 | 0.2425 | 0.0167 |
+| main | B4_logreg | 494 | 0.3250 | 0.0000 |
+| main | B5_matched_boosting | 494 | 0.3218 | 0.0000 |
+| main | HGB_flat_community | 494 | 0.3777 | 0.0000 |
+| main | HGB_flat_member_mean | 494 | 0.3958 | 0.0000 |
+| main | HeTCo_v4 | 494 | 0.3468 | 0.0365 |
+| main | LR_flat_community | 494 | 0.3223 | 0.0000 |
+| main | LR_flat_member_mean | 494 | 0.3234 | 0.0000 |
+| main | LR_hier_community | 494 | 0.4249 | 0.0000 |
+| main | LR_hier_member_mean | 494 | 0.3963 | 0.0000 |
+| rolling | A7v4_mean_pool | 1107 | 0.3523 | 0.0070 |
+| rolling | B1_majority | 1107 | 0.1599 | 0.0000 |
+| rolling | B1_persistence | 1107 | 0.1562 | 0.0000 |
+| rolling | B2_random_forest | 1107 | 0.2122 | 0.0021 |
+| rolling | B4_logreg | 1107 | 0.3293 | 0.0000 |
+| rolling | B5_matched_boosting | 1107 | 0.2611 | 0.0000 |
+| rolling | HGB_flat_community | 1107 | 0.3482 | 0.0000 |
+| rolling | HGB_flat_member_mean | 1107 | 0.3752 | 0.0000 |
+| rolling | HeTCo_v4 | 1107 | 0.3435 | 0.0037 |
+| rolling | LR_flat_community | 1107 | 0.2813 | 0.0000 |
+| rolling | LR_flat_member_mean | 1107 | 0.3149 | 0.0000 |
+| rolling | LR_hier_community | 1107 | 0.3916 | 0.0000 |
+| rolling | LR_hier_member_mean | 1107 | 0.3919 | 0.0000 |
+
+Each score is the mean of seed-specific fixed-six-class Macro-F1 values. The seeds repeat the same community-months. Main and rolling windows overlap and are reported separately.
+
+### Prespecified contrasts
+
+| Window | Candidate | Reference | Delta | Month-block interval |
+|---|---|---|---:|---|
+| main | LR_hier_member_mean | LR_hier_community | -0.0286 | Unavailable: fewer than six months |
+| main | LR_flat_member_mean | LR_flat_community | +0.0011 | Unavailable: fewer than six months |
+| main | LR_hier_member_mean | LR_flat_member_mean | +0.0729 | Unavailable: fewer than six months |
+| main | HGB_flat_member_mean | HGB_flat_community | +0.0181 | Unavailable: fewer than six months |
+| main | LR_hier_member_mean | B1_majority | +0.2376 | Unavailable: fewer than six months |
+| main | LR_hier_member_mean | B1_persistence | +0.2403 | Unavailable: fewer than six months |
+| main | LR_hier_member_mean | B4_logreg | +0.0712 | Unavailable: fewer than six months |
+| main | LR_hier_member_mean | B2_random_forest | +0.1538 | Unavailable: fewer than six months |
+| main | LR_hier_member_mean | B5_matched_boosting | +0.0744 | Unavailable: fewer than six months |
+| rolling | LR_hier_member_mean | LR_hier_community | +0.0002 | [-0.0317, 0.0340] |
+| rolling | LR_flat_member_mean | LR_flat_community | +0.0337 | [-0.0070, 0.0471] |
+| rolling | LR_hier_member_mean | LR_flat_member_mean | +0.0769 | [0.0715, 0.0942] |
+| rolling | HGB_flat_member_mean | HGB_flat_community | +0.0270 | [0.0134, 0.0771] |
+| rolling | LR_hier_member_mean | B1_majority | +0.2319 | [0.2131, 0.2796] |
+| rolling | LR_hier_member_mean | B1_persistence | +0.2356 | [0.2176, 0.2840] |
+| rolling | LR_hier_member_mean | B4_logreg | +0.0625 | [0.0317, 0.1038] |
+| rolling | LR_hier_member_mean | B2_random_forest | +0.1797 | [0.1523, 0.2170] |
+| rolling | LR_hier_member_mean | B5_matched_boosting | +0.1308 | [0.0972, 0.1534] |
+
+The member-feature contrasts keep the estimator and head fixed. The head contrast keeps the member features fixed. HGB feature controls help test whether any benefit is specific to LR. These are finite diagnostic configurations, not six new headline baselines.
+
+### Applicability and error evidence
+
+Coverage excludes terminal censored targets from its transition denominator and reports unresolved targets separately. Member-month coverage weights current community size and repeats users across months. Graph observation coverage has a separate denominator.
+
+| Scope | Observed | Eligible | Unresolved | Censored | Community coverage | Member coverage |
+|---|---:|---:|---:|---:|---:|---:|
+| all:all | 4399 | 2721 | 1678 | 242 | 61.85% | 82.99% |
+| size:2 | 2852 | 1696 | 1156 | 163 | 59.47% | 59.47% |
+| size:3-4 | 1031 | 662 | 369 | 48 | 64.21% | 64.63% |
+| size:5-20 | 365 | 268 | 97 | 18 | 73.42% | 73.95% |
+| size:>20 | 151 | 95 | 56 | 13 | 62.91% | 83.31% |
+
+Saved class/month/size/history tables and paired cases expose both directions of disagreement. Grow/merge predictions of dissolve are final output errors. Those labels alone cannot prove whether the gate or conditional probabilities caused the error.
+
+### Interpretation and review status
+
+The planned diagnostic candidate is LR_hier_member_mean. It is not automatically promoted to replace the historical primary. All configurations and adverse comparisons remain reported. Deterministic seeds can have zero score variance without establishing generalization stability. The three-month main window has no month-block confidence interval. Six-month rolling intervals are exploratory and have limited temporal support.
+
+Technical label reconstruction and empty reviewer worksheets do not constitute human validation. Independent annotation and adjudication remain pending genuine submissions. Results do not establish social ground truth, untouched confirmation or a guaranteed grade.
+
+### Reproduction
+
+Run directory: `member-pooling-2016-001`. Read `manifest.json`, `protocol.json`, `cache.json`, `fits.json` and the numeric CSVs. The completed manifest seals payload hashes and pins source/configuration inputs. Reproduce in a new run directory. Notebook execution reads these completed outputs and does not refit models.
+
+### Evidence-based interpretation
+
+- main: the planned candidate scores 0.3963, versus B4_logreg at 0.3250 (difference +0.0712). Adding member means within hierarchical LR changes Macro-F1 by -0.0286. With the same member features, hierarchy minus flat LR is +0.0729. The HGB member-feature difference is +0.0181.
+- rolling: the planned candidate scores 0.3919, versus B4_logreg at 0.3293 (difference +0.0625). Adding member means within hierarchical LR changes Macro-F1 by +0.0002. With the same member features, hierarchy minus flat LR is +0.0769. The HGB member-feature difference is +0.0270.
+
+On the separate original final cohort, 1269 unique cases contain 29 proposed-only successes, 35 HGB-only successes, 86 both-wrong and 1119 both-correct. Three repeated seeds do not triple the number of independent cases.
+For grow, final dissolve predictions occur in 14/19 proposed and 12/19 HGB cases.
+For merge, final dissolve predictions occur in 8/15 proposed and 9/15 HGB cases.
+
+These contrasts distinguish representation and head effects. They do not establish why a particular account stopped replying, nor do they prove a new method beats the strongest baseline on an unseen cohort. The next research decision should combine these technical results with the independently submitted label reviews.
+
+![comparison](figures/controlled-pooling-001/comparison.png)
+
+*Source: [executed controlled diagnostic notebook](../notebooks/core/07_controlled_pooling_diagnostics.ipynb).*
+
+![coverage](figures/controlled-pooling-001/coverage.png)
+
+*Source: [executed controlled diagnostic notebook](../notebooks/core/07_controlled_pooling_diagnostics.ipynb).*
+
+![monthly](figures/controlled-pooling-001/monthly.png)
+
+*Source: [executed controlled diagnostic notebook](../notebooks/core/07_controlled_pooling_diagnostics.ipynb).*
+
+![class recall](figures/controlled-pooling-001/class_recall.png)
+
+*Source: [executed controlled diagnostic notebook](../notebooks/core/07_controlled_pooling_diagnostics.ipynb).*
+
+### Observed event-level trade-off
+
+| Event | Main support | Candidate recall | Stored LR recall |
+|---|---:|---:|---:|
+| stable | 2 | 0.000 | 0.000 |
+| grow | 5 | 0.000 | 0.000 |
+| shrink | 10 | 0.500 | 0.200 |
+| merge | 15 | 0.267 | 0.000 |
+| split | 13 | 0.692 | 0.846 |
+| dissolve | 449 | 0.947 | 0.998 |
+
+The observed aggregate gain includes improved shrink/merge recall, with lower recall on some other events. Grow and stable remain difficult in this main window. These differences describe the saved predictions and class support, not an independently validated social mechanism.
+
 ## References
 
 [1] CornellNLP, “Reddit Corpus (by subreddit),” ConvoKit documentation. [Online]. Available: [corpus documentation](https://convokit.cornell.edu/documentation/subreddit.html).

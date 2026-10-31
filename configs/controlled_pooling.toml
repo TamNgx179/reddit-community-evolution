@@ -1,0 +1,12 @@
+schema_version = 1
+protocol_id = "member-pooling-factorial-v1"
+exposure = "inspected_development_data"
+test_start = "2016-10"
+rolling_months = ["2016-07", "2016-08", "2016-09", "2016-10", "2016-11", "2016-12"]
+seeds = [42, 43, 44]
+maximum_configuration_fits = 126
+bootstrap_draws = 1000
+bootstrap_seed = 20261031
+block_length = 2
+minimum_block_months = 6
+candidate = "LR_hier_member_mean"

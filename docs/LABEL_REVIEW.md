@@ -16,6 +16,56 @@ Give each reviewer only `reviewer/cases.json`, a private copy of `reviewer/annot
 
 Evidence includes the focal source group, every next-month group sharing at least one focal member and the source predecessors overlapping those targets. Cases use locally linked member tokens and case-local community names to avoid exposing raw identities. This is still sensitive local research evidence, not an anonymity guarantee. A missing overlapping target means no observed shared member; it does not prove social dissolution. Large groups can produce large evidence files, so pilot reviewer burden before expanding the sample.
 
+## Current Midterm 2 review packet
+
+The frozen local packet is
+`artifacts/diagnostics/midterm2-reference-label-audit-20261031-003`.
+Its `reference-contract.json` binds the separate full-study and 2016 inputs.
+The input inventory and technical audit are described in
+[results](RESULTS.md#frozen-reference-and-lineage-audit-31-october-2026).
+
+The main packet samples 60 original-study development cases from feature months
+January–March 2017: 24 dissolve, 24 unresolved, six grow and six merge. Six
+separate pilot cases come from October–December 2016: two dissolve, two
+unresolved, one grow and one merge. A fixed seed of 20261031 and round-robin
+month/size bins determine selection within each machine-event stratum. No model
+prediction selects these cases. This targeted diagnostic sample does not estimate
+population prevalence or whole-dataset label accuracy.
+
+The coordinator keeps `coordinator/answer_key.json`, sampling strata and source
+mapping private. Distribute **only** the appropriate reviewer ZIP:
+
+| Phase | Reviewer 1 | Reviewer 2 |
+|---|---|---|
+| Pilot | `pilot-reviewer_1.zip` | `pilot-reviewer_2.zip` |
+| Main | `main-reviewer_1.zip` | `main-reviewer_2.zip` |
+
+The assignment names Phúc and Đăng for these two independent roles. Each receives
+a separate copy, opens the phase's `index.html` and edits only their own CSV.
+Pilot decisions are excluded from the 60 main cases. If the pilot changes the
+rubric or packet, declare and freeze a new version before main annotation.
+
+All focal successors, all predecessors sharing their members, and alternate
+successors of those predecessors are retained. Full membership lists and all
+incident weighted edges are in each case's losslessly compressed `JSON.gz`.
+The HTML shows every included group and overlap count, with ten example member
+tokens per group as a display preview. It does not replace the full evidence.
+User tokens are case-local. Next-month per-member flags distinguish authored
+records from membership in the reply graph. Lack of a reply edge is not proof
+of absent activity or social dissolution.
+
+The coordinator's `followup/` files trace the original focal members through
+three observed months, separately from the one-step task. Open them only after
+locking the initial judgments. Any follow-up assessment is a separately recorded
+second stage and cannot silently replace the original answer or become a
+forecast feature.
+
+All 132 worksheet rows across the two phases and two reviewers are blank at
+preparation. Record actual identities, roles, exposure and submission times.
+Preserve and hash both submitted originals before revealing answers or comparing
+decisions. Agreement, seven-label confusion and adjudication require those real
+submissions. The completed technical audit does not count as human annotation.
+
 ## Two independent reviewers
 
 Prefer reviewers who did not implement the tracker. Each reviewer must work without the answer key and without discussing cases before submitting:

@@ -33,6 +33,14 @@ def main(argv: list[str] | None = None) -> int:
         prog="reddit-sna", description="Reddit SNA: five-baseline temporal forecasting, preliminary activity dynamics and development observability audits; full HeTCo remains planned."
     )
     subparsers = parser.add_subparsers(dest="command", required=True)
+    pooling = subparsers.add_parser('controlled-pooling', help='Run the finite member-mean feature/head diagnostic study')
+    pooling.add_argument('--protocol', type=Path, required=True)
+    pooling.add_argument('--research-run', type=Path, required=True)
+    pooling.add_argument('--preparation-run', type=Path, required=True)
+    pooling.add_argument('--artifact-root', type=Path, default=Path('artifacts'))
+    pooling.add_argument('--run-id', required=True)
+    pooling.add_argument('--original-study', type=Path)
+    pooling.add_argument('--hetco-run', type=Path)
     subparsers.add_parser("pipelines", help="List independent pipelines and implementation status")
     structural = subparsers.add_parser("assess-structure", help="Validate a source-bound supplementary technical assessment without certifying human review")
     for flag in ("panel", "submission", "output"):
@@ -199,6 +207,12 @@ def main(argv: list[str] | None = None) -> int:
             from reddit_sna.pipelines.hetco import run_hetco
             output = run_hetco(args.research_run, args.preparation_run, args.artifact_root, args.run_id, args.model)
             print(json.dumps({"hetco_output": str(output), "scope": "inspected development; supplementary HeTCo v1"}))
+            return 0
+        if args.command == 'controlled-pooling':
+            from reddit_sna.pipelines.controlled_pooling import run_controlled_pooling
+            output = run_controlled_pooling(args.protocol, args.research_run, args.preparation_run,
+                args.artifact_root, args.run_id, original_study=args.original_study, hetco_run=args.hetco_run)
+            print(json.dumps(dict(output=str(output), scope='Observed-period controlled diagnostic, no primary promotion')))
             return 0
         if args.command == "synthetic-week1":
             from reddit_sna.pipelines.synthetic_week1 import run_demo

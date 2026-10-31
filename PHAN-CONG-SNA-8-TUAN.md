@@ -34,6 +34,10 @@ Nguồn kết quả và phạm vi so sánh: [RESULTS](docs/RESULTS.md). Phương
 
 ## 3. Quyền sở hữu và đầu ra của ba cặp
 
+**Bàn giao chuẩn bị ngày 31/10:** đã chốt inventory và giao diện đầu vào của full-study/2016, chuẩn bị 60 ca chính và 6 ca thử riêng, tái tính 114.702 giá trị lịch sử và dựng lại 1.755 nhãn từ graph mà không thấy sai lệch. Chi tiết ở [RESULTS](docs/RESULTS.md#frozen-reference-and-lineage-audit-31-october-2026), hướng dẫn nhận bộ ca ở [LABEL_REVIEW](docs/LABEL_REVIEW.md#current-midterm-2-review-packet). Đây là hoàn tất khâu chuẩn bị và audit kỹ thuật của Tâm, chưa phải Phúc–Đăng đã chấm nhãn. Giữ answer key và theo dõi ba tháng ở phía điều phối, chỉ gửi ZIP reviewer riêng cho từng người.
+
+**Đầu ra kỹ thuật thực hiện sớm ngày 31/10:** đã bổ sung pipeline coverage/error analysis và thí nghiệm có kiểm soát gồm 126 lượt fit, notebook chạy đủ 7 cell với 4 hình, cùng report tiếng Anh. Các lượt này là chẩn đoán trên dữ liệu đã xem, không thay thế bước chọn cải tiến sau review thật. Kết quả cho thấy kiến trúc LR hai tầng có ích trên bộ 2016, còn lợi ích bổ sung của member means trong LR hai tầng chưa được xác lập. Giữ lịch review và mốc quyết định 04/11 để kết hợp bằng chứng của ba cặp trước khi chốt phương pháp chính.
+
 | Người | Phần chịu trách nhiệm | Đầu ra cá nhân |
 |---|---|---|
 | Tâm | Core dữ liệu, graph, cache/artifact, giao diện và tích hợp. Bảo đảm cutoff, reference và phiên bản dữ liệu. Điều tra lineage/history cùng Thanh | Gói input đóng băng, manifest/schema, lệnh chạy lại, kiểm tra cutoff và bản tích hợp |
