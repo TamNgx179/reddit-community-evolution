@@ -11,6 +11,7 @@ The sections below preserve earlier baseline and handoff evidence. Their indepen
 ## Contents
 
 - [Controlled member-pooling follow-up](#controlled-member-pooling-follow-up-31-october-2026)
+- [Proposed-model error mechanisms (separate page)](ERROR_MECHANISMS.md)
 - [Frozen reference and lineage audit](#frozen-reference-and-lineage-audit-31-october-2026)
 - [Midterm 2 diagnostic baseline](#midterm-2-diagnostic-baseline-29-october-2026)
 - [HeTCo v1 development comparison](#hetco-v1-development-comparison)
