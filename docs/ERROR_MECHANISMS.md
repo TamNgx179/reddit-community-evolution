@@ -95,5 +95,70 @@ lineage overlap exists, without raising false events.
   - Attention → mean pooling as the new primary (M5): it would be chosen after
     seeing 2016 scores. Mean pooling stays a reported control. Its stability is a
     reason to keep it in the ablation, not to promote it.
-- Nothing is fitted before the hypothesis, grid of thresholds and run list are
-  locked on 05/11.
+- The hypothesis, threshold grid and run list were committed before any fit
+  (see the result below). Tâm can still overrule the choice at the 04/11 decision.
+
+## Result of the pre-declared v5 run (H1 not supported)
+
+The declaration `configs/hetco_threshold.toml` was committed in `a937eea`
+before any fit. Run `artifacts/hetco/hetco-v5-001` (local) took 264 s.
+Reproduce:
+
+```bash
+python -m reddit_sna hetco-threshold --research-run artifacts/research/midterm-thanh-001 \
+  --preparation-run artifacts/core/reddit-2015-reproduced-v1 \
+  --reference-hetco-run artifacts/hetco/hetco-v4-001 --run-id hetco-v5-001
+```
+
+The refit argmax models reproduce all 9,318 stored v4 and mean-pooling
+predictions exactly, so v5 − v4 differs only by the threshold.
+
+Inner selection on 2015-07..09 chose 0.3 for attention, a gain of only 0.003
+over argmax (0.3815 vs 0.3783). It chose argmax, meaning no change, for mean
+pooling and for hierarchical LR.
+
+| Model | Main Macro-F1 (per seed) | Rolling Macro-F1 | Missed / false / wrong-type events (main) |
+|---|---|---:|---|
+| HeTCo_v4 (argmax) | 0.398 (0.406 / 0.405 / 0.381) | 0.392 | 18.0 / 46.7 / 10.3 |
+| **HeTCo_v5 (threshold 0.3)** | 0.411 (0.418 / 0.435 / 0.380) | 0.397 | 22.0 / 26.0 / 7.0 |
+| LR_hier_community (= its t1 variant) | 0.397 | 0.381 | 23.0 / 25.0 / 8.0 |
+| A7v4 = A7v5 mean pool | 0.349 | 0.375 | 23.3 / 41.7 / 7.7 |
+| B4_logreg | 0.361 | 0.378 | 29.0 / 3.0 / 6.0 |
+| B5 HGB | 0.289 | 0.278 | 16.0 / 163.0 / 16.0 |
+
+| Difference | Main community bootstrap | Rolling month blocks |
+|---|---|---|
+| HeTCo_v5 − HeTCo_v4 | +0.013, [−0.004, 0.028], 94% > 0 | [−0.014, 0.013], 51% > 0 |
+| HeTCo_v5 − B4 | +0.050, [−0.029, 0.123], 88% > 0 | [−0.003, 0.037], 94% > 0 |
+| HeTCo_v5 − LR_hier_community | +0.013, [−0.055, 0.086], 63% > 0 | [−0.022, 0.047], 87% > 0 |
+
+The 0.1–beta overlap zone is the stratum where H1 predicted a gain (main):
+
+| Model | Event recall (tier 1) | Dissolve false alarm | Macro-F1 |
+|---|---:|---:|---:|
+| HeTCo_v4 | 0.651 | 0.186 | 0.539 |
+| HeTCo_v5 | 0.508 | 0.081 | 0.561 |
+
+Verdict:
+
+- **H1 is not supported in its predicted direction.** The selected point
+  made the model *more* conservative. Event recall in the overlap zone fell
+  and missed events rose from 18 to 22. The small Macro-F1 gain comes from
+  fewer false events (46.7 → 26.0), not from recovering grow/merge. Grow → dissolve
+  rose from 4.3 to 5.7, and merge → dissolve from 12.7 to 15.0.
+- **The placebo stratum shows no spurious gain.** In the no-shared stratum,
+  event recall went from 0.08 to 0.00.
+- **The procedure does not transfer.** Mean pooling and hierarchical LR keep
+  argmax. The attention choice rests on a 0.003 inner difference, and both
+  v5 − v4 intervals include zero. Rolling months 07–09 were used for
+  selection, so the rolling score is optimistic.
+- **Seed instability drops but remains:** cases that change across seeds
+  fall from 48 to 34 (main) and from 90 to 67 (rolling).
+- **Hierarchical LR on community attributes nearly matches v4 on main**
+  (0.397 vs 0.398), consistent with the 2016 controlled contrast where
+  hierarchy carries the gain.
+
+Decision: v4 stays the declared primary. v5 is reported as a pre-declared,
+neutral-to-adverse ablation. No further threshold variants are run on this
+pilot. Recovering tiny grow/merge cases needs information that is absent at
+t (M1), not a different operating point.

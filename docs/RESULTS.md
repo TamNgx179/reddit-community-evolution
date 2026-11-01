@@ -12,6 +12,7 @@ The sections below preserve earlier baseline and handoff evidence. Their indepen
 
 - [Controlled member-pooling follow-up](#controlled-member-pooling-follow-up-31-october-2026)
 - [Proposed-model error mechanisms (separate page)](ERROR_MECHANISMS.md)
+- [Pre-declared HeTCo v5 tier-1 threshold](#pre-declared-hetco-v5-tier-1-threshold-1-november-2026)
 - [Frozen reference and lineage audit](#frozen-reference-and-lineage-audit-31-october-2026)
 - [Midterm 2 diagnostic baseline](#midterm-2-diagnostic-baseline-29-october-2026)
 - [HeTCo v1 development comparison](#hetco-v1-development-comparison)
@@ -23,6 +24,17 @@ The sections below preserve earlier baseline and handoff evidence. Their indepen
 - [External evidence still required](#external-evidence-still-required)
 - [Historical evidence](#historical-evidence)
 - [Presentation outline](#presentation-outline)
+
+## Pre-declared HeTCo v5 tier-1 threshold (1 November 2026)
+
+The error-mechanism audit in [ERROR_MECHANISMS](ERROR_MECHANISMS.md) led to one
+hypothesis, declared in `configs/hetco_threshold.toml` before fitting. On the
+2015 pilot, v5 (v4 plus a tier-1 threshold of 0.3 chosen on 07–09) scores 0.411
+against 0.398 for v4 on the main window. Its rolling score is 0.397 against
+0.392. Both paired intervals include zero. The gain comes from fewer false
+events, not from recovered grow/merge, which is the opposite of the predicted
+mechanism. Mean pooling and hierarchical LR select no change. v4 remains the
+primary, and v5 is kept as a reported neutral ablation.
 
 ## Controlled member-pooling follow-up (31 October 2026)
 

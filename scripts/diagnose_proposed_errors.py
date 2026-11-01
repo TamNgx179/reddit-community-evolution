@@ -38,9 +38,9 @@ def size_band(size):
     return "2" if size <= 2 else "3-4" if size <= 4 else "5-20" if size <= 20 else ">20"
 
 
-def load(root):
+def load(root, sources):
     frames = []
-    for model, run in SOURCES.items():
+    for model, run in sources.items():
         p = pd.read_csv(root / run / "predictions.csv")
         frames.append(p[p.model == model])
     preds = pd.concat(frames, ignore_index=True)
@@ -135,9 +135,8 @@ def paired_table(w):
             .reset_index())
 
 
-def case_table(w):
+def case_table(w, models):
     target = w[w.y_true.isin(["grow", "merge"])]
-    models = list(SOURCES)
     rows = []
     for key, g in target.groupby(KEY):
         g = g.set_index("seed")
@@ -170,14 +169,22 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--artifacts", type=Path, default=Path("artifacts"))
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--extra-run", action="append", default=[],
+                        help="Run under artifacts/ whose models are added to every table (repeatable)")
     args = parser.parse_args()
     root = args.artifacts.resolve()
     out = args.output.resolve()
     if not out.is_relative_to(root / "diagnostics"):
         raise ValueError("Output must stay under artifacts/diagnostics")
     out.mkdir(parents=True, exist_ok=False)
-    preds, samples = load(root)
-    models = list(SOURCES)
+    sources = dict(SOURCES)
+    for run in args.extra_run:
+        run = Path(run).as_posix()
+        for model in pd.read_csv(root / run / "predictions.csv", usecols=["model"]).model.unique():
+            if model not in sources:
+                sources[model] = run
+    preds, samples = load(root, sources)
+    models = list(sources)
     tables = {}
     for window in ("main", "rolling"):
         w = wide(preds, samples, window)
@@ -186,7 +193,7 @@ def main():
                                                     for by in ("history_state", "size_band", "lineage_reset")])
         tables[f"{window}_seed_stability.csv"] = seed_table(w, models)
         tables[f"{window}_paired_v4_hgb.csv"] = paired_table(w)
-        tables[f"{window}_grow_merge_cases.csv"] = case_table(w)
+        tables[f"{window}_grow_merge_cases.csv"] = case_table(w, models)
         if window == "main":
             tables["main_attention_by_size.csv"] = attention_table(root, w)
     tables["history_by_month.csv"] = (samples.groupby(["feature_month", "history_state"]).size()
@@ -197,9 +204,9 @@ def main():
         frame.to_csv(out / name, index=False, float_format="%.6f")
         hashes[name] = hashlib.sha256((out / name).read_bytes()).hexdigest()
     sources = {run: hashlib.sha256((root / run / "predictions.csv").read_bytes()).hexdigest()
-               for run in sorted(set(SOURCES.values()))}
+               for run in sorted(set(sources.values()))}
     (out / "manifest.json").write_text(json.dumps(dict(
-        status="complete", read_only=True, fitted=False, models=SOURCES, proposed=PROPOSED, hgb=HGB,
+        status="complete", read_only=True, fitted=False, models=sources, proposed=PROPOSED, hgb=HGB,
         exposure="inspected_development_data", source_prediction_hashes=sources, outputs=hashes),
         indent=2, sort_keys=True) + "\n", encoding="utf-8")
     print(out)
