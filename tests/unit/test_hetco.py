@@ -9,7 +9,7 @@ import numpy as np
 
 from reddit_sna.features.members import EXTENDED_FEATURES, MEMBER_FEATURES, member_features
 from reddit_sna.models import hetco
-from reddit_sna.models.hetco import fit_hetco, predict_hetco
+from reddit_sna.models.hetco import EVENTS, fit_hetco, predict_hetco, tier1_decision
 
 
 class HeTCoModelTests(unittest.TestCase):
@@ -157,6 +157,31 @@ class MemberFeatureTests(unittest.TestCase):
         self.assertAlmostEqual(b["log_bridging"], np.log1p(1))
         self.assertEqual(b["observed_from_start"], 0.0)
         self.assertEqual(a["observed_from_start"], 1.0)
+
+
+class TierOneDecisionTests(unittest.TestCase):
+    def setUp(self):
+        order = list(EVENTS)
+        self.proba = np.zeros((3, len(EVENTS)))
+        # Row 0: dissolve 0.45 is the argmax; row 1: dissolve 0.65; row 2: dissolve 0.2.
+        for row, (d, other, value) in enumerate(((0.45, "grow", 0.3), (0.65, "merge", 0.2), (0.2, "split", 0.5))):
+            self.proba[row, order.index("dissolve")] = d
+            self.proba[row, order.index(other)] = value
+            rest = [i for i in range(len(order)) if self.proba[row, i] == 0]
+            self.proba[row, rest] = (1 - d - value) / len(rest)
+
+    def test_argmax_matches_plain_argmax(self):
+        self.assertEqual(tier1_decision(self.proba), [EVENTS[i] for i in self.proba.argmax(axis=1)])
+
+    def test_threshold_moves_only_the_dissolve_decision(self):
+        self.assertEqual(tier1_decision(self.proba, 0.5), ["grow", "dissolve", "split"])
+        self.assertEqual(tier1_decision(self.proba, 0.7), ["grow", "merge", "split"])
+        self.assertEqual(tier1_decision(self.proba, 0.1), ["dissolve", "dissolve", "dissolve"])
+
+    def test_rejects_invalid_threshold(self):
+        for bad in (0, 1, 1.5, True, "0.5"):
+            with self.assertRaises(ValueError):
+                tier1_decision(self.proba, bad)
 
 
 if __name__ == "__main__":

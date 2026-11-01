@@ -172,6 +172,22 @@ def fit_hetco(bags, groups, labels, seed, pooling="attention", settings=HETCO,
                 missing_train_classes=[e for e, n in zip(EVENTS, counts) if n == 0])
 
 
+def tier1_decision(proba, threshold="argmax"):
+    """Six-event decisions with an explicit dissolve-versus-event operating point.
+
+    "argmax" keeps the plain six-way argmax. A number t predicts dissolve when
+    P(dissolve) >= t and otherwise the most probable of the five other events,
+    so only the tier-1 decision moves and the tier-2 ranking is untouched.
+    """
+    proba = np.asarray(proba, dtype=float)
+    if threshold == "argmax":
+        return [EVENTS[i] for i in proba.argmax(axis=1)]
+    if isinstance(threshold, bool) or not isinstance(threshold, (int, float)) or not 0 < threshold < 1:
+        raise ValueError("Tier-1 threshold must be 'argmax' or a number in (0, 1)")
+    other = np.asarray(OTHERS)[proba[:, list(OTHERS)].argmax(axis=1)]
+    return [EVENTS[DISSOLVE if p >= threshold else o] for p, o in zip(proba[:, DISSOLVE], other)]
+
+
 def predict_hetco(fitted, bags, groups):
     """Return predicted events, six-class probabilities and per-member attention."""
     members, owner, starts = _segments(bags)
