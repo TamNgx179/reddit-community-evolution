@@ -1,0 +1,32 @@
+# Pre-declared HeTCo v5, committed before any fit. The pipeline refuses to run
+# if this file is untracked or differs from HEAD.
+# Hypothesis H1 (docs/ERROR_MECHANISMS.md): most proposed errors are tier-1
+# dissolve-versus-event errors whose operating point balanced weighting fixes
+# implicitly. Choosing only that threshold on inner origins should raise event
+# recall where lineage overlap exists without raising false events.
+schema_version = 1
+protocol_id = "hetco-tier1-threshold-v1"
+
+# v4 is unchanged: weighting/head from the v2 inner selection, extended members.
+class_weight = "balanced"
+head = "hierarchical"
+members = "extended"
+# attention -> HeTCo_v4 / HeTCo_v5, mean -> A7v4_mean_pool / A7v5_mean_pool.
+poolings = ["attention", "mean"]
+
+# Refuting control: the same threshold procedure on hierarchical LR with
+# community attributes only. Equal gains mean a decision-rule effect, not HeTCo.
+control = "LR_hier_community"
+
+# "argmax" is the current v4 rule. Ties keep declaration order, so selection
+# can legitimately return the unchanged model.
+thresholds = ["argmax", 0.3, 0.4, 0.5, 0.6, 0.7]
+
+# Each model selects its own threshold; only these label months are read and
+# all precede the 2015-10 test start.
+selection_months = ["2015-07", "2015-08", "2015-09"]
+selection_metric = "macro_f1_six"
+tie_break = "declaration_order"
+
+# Stratum where H1 predicts no gain: no member shared with any t-1 community.
+placebo_stratum = "missing_no_shared"

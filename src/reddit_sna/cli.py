@@ -95,6 +95,13 @@ def main(argv: list[str] | None = None) -> int:
     hetco.add_argument("--artifact-root", type=Path, default=Path("artifacts"))
     hetco.add_argument("--run-id", required=True)
     hetco.add_argument("--model", action="append", help="Restrict to these HeTCo models (repeatable); default all")
+    threshold = subparsers.add_parser("hetco-threshold", help="Run the pre-declared HeTCo v5 tier-1 threshold study")
+    threshold.add_argument("--research-run", type=Path, required=True)
+    threshold.add_argument("--preparation-run", type=Path, required=True)
+    threshold.add_argument("--declaration", type=Path, default=Path("configs/hetco_threshold.toml"))
+    threshold.add_argument("--reference-hetco-run", type=Path, help="Stored v4 run whose argmax predictions the refit must match")
+    threshold.add_argument("--artifact-root", type=Path, default=Path("artifacts"))
+    threshold.add_argument("--run-id", required=True)
     demo = subparsers.add_parser("week1", help="Run the core-pair raw/replay to verified forecast and figures")
     demo.add_argument("--config", type=Path, required=True)
     demo.add_argument("--run-id", required=True)
@@ -207,6 +214,12 @@ def main(argv: list[str] | None = None) -> int:
             from reddit_sna.pipelines.hetco import run_hetco
             output = run_hetco(args.research_run, args.preparation_run, args.artifact_root, args.run_id, args.model)
             print(json.dumps({"hetco_output": str(output), "scope": "inspected development; supplementary HeTCo v1"}))
+            return 0
+        if args.command == "hetco-threshold":
+            from reddit_sna.pipelines.hetco_threshold import run_hetco_threshold
+            output = run_hetco_threshold(args.research_run, args.preparation_run, args.artifact_root, args.run_id,
+                                         args.declaration, args.reference_hetco_run)
+            print(json.dumps({"hetco_output": str(output), "scope": "inspected development; pre-declared HeTCo v5"}))
             return 0
         if args.command == 'controlled-pooling':
             from reddit_sna.pipelines.controlled_pooling import run_controlled_pooling
