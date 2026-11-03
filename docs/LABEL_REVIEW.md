@@ -100,9 +100,16 @@ not a guarantee of complete blinding or sufficient evidence; inspect the real
 packet against this rubric before main annotation.
 
 The 3 November draft handoff is available to the intended collaborators in
-[GitHub Releases](https://github.com/TamNgx179/reddit-community-evolution/releases/tag/untagged-62c08035ea634c943d26).
-Its assets currently contain reviewer 1 only; Đăng receives reviewer 2 separately
-from the coordinator. The real pilot has a 93,781,624-byte decompressed case,
+[GitHub Releases](https://github.com/TamNgx179/reddit-community-evolution/releases).
+Select the draft named `Midterm 2 frozen team handoff - 3 November 2026`
+(CLI tag `midterm2-review-handoff-20261103`) while signed in as a collaborator.
+The release now includes both reviewers' separate pilot/main ZIPs; Đăng uses
+only `pilot-reviewer_2.zip`, `main-reviewer_2.zip` and
+`REVIEWER_2_SHA256SUMS.txt`. Reviewer 1's local helper intentionally rejects
+reviewer-2 packets; Đăng extracts his own ZIP and preserves the blank original
+before editing a separate working worksheet. Asset availability is not a receipt
+or annotation claim. See the work plan for download and hash-check commands.
+The real pilot has a 93,781,624-byte decompressed case,
 so the recipient reader uses a bounded 128 MiB case limit and preserves the full
 evidence. Original ZIPs remain unchanged. The coverage snapshot is **unblinded**:
 reviewers must lock their independent submissions before opening it, or have a

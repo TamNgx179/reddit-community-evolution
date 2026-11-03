@@ -28,7 +28,7 @@ Trạng thái “xong công cụ” khác với “đã chạy trên gói dữ l
 | P3-06 | Chấm bộ chính độc lập | 60 ca, nhãn/confidence/rationale thật, ghi exposure; nộp nguyên phiếu | Chưa làm; cần bạn thực hiện | 04/11 |
 | P3-07 | Xuất coverage và phân tầng | eligible/unresolved/censored riêng; community–tháng/member–tháng; theo tháng, size, history | Snapshot ở Release; Phúc mở sau khi khóa phiếu, hoặc giao người không chấm chạy song song | 04/11 |
 | P3-08 | Kiểm tra graph với snapshot đóng băng | Đúng hash, đúng month, membership phủ endpoint, cỡ nhóm khớp features, đúng mẫu số observation | Chờ khóa phiếu để mở snapshot; chưa chạy coverage/graph thật trên máy này | 04/11 |
-| P3-09 | Bàn giao thiếu bằng chứng và coverage | Anh nhận CSV; Tâm–Thanh nhận danh sách graph/history đáng ngờ, không lộ nhãn cho Đăng | Đã ghi các điểm cần chốt rubric và observation trong báo cáo pilot local; chưa gửi đi, coverage vẫn chờ khóa phiếu | 04/11 |
+| P3-09 | Bàn giao thiếu bằng chứng và coverage | Anh nhận CSV; Tâm–Thanh nhận danh sách graph/history đáng ngờ, không lộ nhãn cho Đăng | Đã gửi Tâm link rubric và câu hỏi về điều kiện quan sát trên PR #21; chưa gửi nhãn từng ca, coverage vẫn chờ khóa phiếu | 04/11 |
 | P4-01 | Hoàn tất review/coverage và sửa thiếu bằng chứng | Giữ phiếu gốc, version gói; mọi sửa nhãn do core quyết định | Chờ các bước tuần 3 | 11/11 |
 | P4-02 | Đối chứng HGB khớp nếu phương pháp thay đổi | Cùng đặc trưng/cutoff/mẫu/reference/split/seed/budget, runtime đo thật | Chờ Tâm–Thanh khóa một giả thuyết và cấu hình ngày 05/11 | 05–09/11 |
 | P4-03 | Gửi báo cáo tổng hợp cho Anh | Báo cáo nhãn/coverage, graph audit, matched HGB và logs nếu có fit | Chưa làm | 10–11/11 |
@@ -37,38 +37,69 @@ Trạng thái “xong công cụ” khác với “đã chạy trên gói dữ l
 
 | Người | Bạn cần nhận | Bạn trả lại | Có cần chờ? |
 |---|---|---|---|
-| **Tâm** | Hai ZIP reviewer 1 và checksum đã có ở Release; snapshot chứa nhãn máy mở sau khóa phiếu | Kết quả nhận gói, lỗi graph/thiếu evidence, phiếu reviewer 1 đã khóa | Bắt đầu pilot ngay; Đăng nhận reviewer 2 riêng từ Tâm |
+| **Tâm** | Hai ZIP reviewer 1 và checksum đã có ở Release; snapshot chứa nhãn máy mở sau khóa phiếu | Kết quả nhận gói, lỗi graph/thiếu evidence, phiếu reviewer 1 đã khóa | Bắt đầu pilot ngay; gói reviewer 2 của Đăng cũng đã có trên Release |
 | **Đăng** | Chỉ thống nhất rubric, schema, thời điểm khóa và quy trình cùng Tâm | Phiếu 1 đã khóa cho điều phối; sau khi cả hai nộp mới so sánh và xử lý bất đồng | Không chờ Đăng chấm mới bắt đầu; không xem nhãn/phiếu của nhau trước khi khóa |
 | **Anh** | Xác nhận giao diện các bảng tổng hợp; dùng quy ước size 2, 3–4, 5–20, >20 | `coverage.csv`, `distributions.csv`, `summary.json`, graph audit và pins theo reference | Có thể thống nhất ngay; không cần đợi mô hình mới |
 | **Thanh** | Giả thuyết duy nhất, feature schema và các ca graph/history cần xem sau review | Bằng chứng kỹ thuật có nguồn; HGB khớp nếu được yêu cầu | Chỉ chờ khi cần fit đối chứng cho phương pháp mới |
 | **Trâm** | Mô hình HGB chuẩn, danh sách đặc trưng và schedule đã khóa nếu cần chạy lại | Đối chứng HGB khớp, runtime; không tự chọn lại model theo final | Dùng output có sẵn nếu input/model/reference không đổi |
 
-Không cần gửi ZIP mới cho Đăng khi chưa có thay đổi đầu vào. Đăng dùng đúng gói reviewer 2 do Tâm phân phối riêng. Không gửi reviewer 1 cho Đăng để chấm cùng một phiếu.
+Không cần gửi ZIP mới cho Đăng khi chưa có thay đổi đầu vào. Đăng tải đúng gói reviewer 2 từ Release của Tâm. Không gửi reviewer 1 hoặc bản nhãn gợi ý của Phúc cho Đăng để chấm cùng một phiếu.
 
 ## 4. Đã kiểm tra GitHub được gì?
 
-Ngày 03/11 đã nhận được [Draft Release của Tâm](https://github.com/TamNgx179/reddit-community-evolution/releases/tag/untagged-62c08035ea634c943d26), tên `Midterm 2 frozen team handoff - 3 November 2026`, tag hiển thị `midterm2-review-handoff-20261103`. Đây là gói bàn giao cho cộng tác viên, giữ nguyên draft; không tự publish.
+Ngày 03/11 đã nhận được [Draft Release của Tâm](https://github.com/TamNgx179/reddit-community-evolution/releases), tên `Midterm 2 frozen team handoff - 3 November 2026`, tag hiển thị `midterm2-review-handoff-20261103`. Mở trang Releases rồi chọn đúng tên này khi đã đăng nhập tài khoản cộng tác viên. Link draft dạng `untagged-...` đã thay đổi khi cập nhật asset; các lệnh bên dưới dùng tag do GitHub CLI nhận diện. Đây là gói bàn giao cho cộng tác viên, giữ nguyên draft; không tự publish.
 
 | Asset | Trạng thái tại máy Phúc |
 |---|---|
 | `pilot-reviewer_1.zip` | Đã tải 41.685.542 byte; SHA-256 khớp checksum Release; đã chuẩn bị workspace pilot |
 | `main-reviewer_1.zip` | Đã tải 515.012.951 byte; SHA-256 khớp; giữ nguyên ZIP, chưa mở evidence/chấm |
 | `RELEASE_SHA256SUMS.txt` | Đã tải, dùng đối chiếu cả hai ZIP |
+| `pilot-reviewer_2.zip` | Đã có trên Release, 41.685.542 byte; Phúc không tải/mở gói của Đăng |
+| `main-reviewer_2.zip` | Đã có trên Release, 515.012.951 byte; Đăng mở sau khi thống nhất rubric |
+| `REVIEWER_2_SHA256SUMS.txt` | Đã tải riêng file checksum để cập nhật hướng dẫn; không chứa phiếu chấm |
 | `Phuc_Coverage_Snapshots_AFTER_REVIEW_LOCK_20261103.zip` | Có trên Release, 1.491.566.746 byte; chưa tải/mở vì chứa nhãn máy |
 
 Hai ZIP reviewer 1 có sẵn trong `artifacts/handoff/midterm2-release-20261103/`. SHA-256 pilot: `fae601660eee8c37c35a935717417fc2273a25ad86432123cb403c3b315158aa`; main: `71839e3145a74b56fc84f1f16207993034c7e5474ddf084b7c44dff8f5cbd8dc`. So checksum chỉ xác nhận khớp asset được bàn giao, không tự chứng nhận nội dung đúng về mặt xã hội.
 
-Release hiện không chứa reviewer 2. Tâm ghi rõ **Đăng nhận reviewer 2 riêng từ điều phối**; không thay bằng reviewer 1, không gửi bản làm việc của Phúc cho Đăng.
+Cập nhật đã kiểm tra ngày 03/11: **Release có đủ hai ZIP reviewer 2 và checksum riêng**. Đăng không cần chờ được gửi ZIP qua chat. Việc asset xuất hiện và checksum được tải không có nghĩa Đăng đã nhận, mở hoặc chấm xong. Không thay gói reviewer 2 bằng reviewer 1, không gửi bản làm việc của Phúc cho Đăng.
 
 **Tin nhắn để bạn tự gửi Đăng** (chưa có tin nào được công cụ gửi):
 
-> Ông ơi, Tâm đưa dữ liệu lên Release này rồi: https://github.com/TamNgx179/reddit-community-evolution/releases/tag/untagged-62c08035ea634c943d26 . Nhưng trong đó hiện là hai ZIP reviewer_1 của tui. Phần ông là reviewer_2, Tâm ghi gửi riêng nên ông nhắn Tâm lấy `pilot-reviewer_2.zip` với `main-reviewer_2.zip` và checksum nha. Mình xem 6 ca thử để chốt hướng dẫn trước, rồi mỗi người chấm 60 ca riêng, nộp khóa phiếu xong mới so đáp án. Source code ông dùng main mới nhất; dữ liệu ca thì lấy đúng gói Tâm bàn giao nha.
+> Ông ơi, Tâm đã up đủ gói của ông lên Release rồi nha: https://github.com/TamNgx179/reddit-community-evolution/releases . Ông đăng nhập GitHub, mở bản “Midterm 2 frozen team handoff - 3 November 2026”, tải `pilot-reviewer_2.zip` với `REVIEWER_2_SHA256SUMS.txt` trước nha. Mình đọc 6 ca thử theo rubric đề xuất v1.1 rồi thống nhất cách hiểu chung; sau đó mới chấm `main-reviewer_2.zip` gồm 60 ca. Tui đã dùng gợi ý AI và sẽ khai rõ. Hai đứa không gửi nhãn từng ca cho nhau trước khi khóa phiếu; nộp riêng cho Tâm xong mới so kết quả. Không tải/mở file coverage có nhãn máy trước khi khóa phiếu nha.
+
+**Đăng tải pilot bằng PowerShell** (nếu đã cài và đăng nhập `gh`; chạy từ repo, không chạy lại lên thư mục đã dùng):
+
+```powershell
+gh release download midterm2-review-handoff-20261103 --repo TamNgx179/reddit-community-evolution --pattern pilot-reviewer_2.zip --pattern REVIEWER_2_SHA256SUMS.txt --dir artifacts/handoff/dang-reviewer2-20261103
+Get-FileHash -Algorithm SHA256 artifacts/handoff/dang-reviewer2-20261103/pilot-reviewer_2.zip
+```
+
+SHA-256 pilot reviewer 2 theo checksum điều phối: `cdfb3d043fa1fc72b5ee616c6e788a54dec6253d766e5b1d2253de60ca6126f0`. Chỉ giải nén nếu kết quả khớp. Máy Phúc chỉ đọc file checksum, chưa tự xác minh byte của ZIP reviewer 2.
+
+```powershell
+Expand-Archive -LiteralPath artifacts/handoff/dang-reviewer2-20261103/pilot-reviewer_2.zip -DestinationPath artifacts/review/dang-pilot-20261103-001
+```
+
+Mở `index.html` của phase pilot trong thư mục vừa giải nén. Giữ `reviewer_2.csv` gốc trống, sao chép thành phiếu làm việc riêng để ghi `label`, `confidence`, `rationale`. `scripts/prepare_phuc_review.py` chỉ nhận reviewer 1; Đăng không dùng script đó cho ZIP reviewer 2.
+
+Sau khi pilot và rubric đã thống nhất, tải gói chính bằng lệnh riêng:
+
+```powershell
+gh release download midterm2-review-handoff-20261103 --repo TamNgx179/reddit-community-evolution --pattern main-reviewer_2.zip --dir artifacts/handoff/dang-reviewer2-20261103
+Get-FileHash -Algorithm SHA256 artifacts/handoff/dang-reviewer2-20261103/main-reviewer_2.zip
+```
+
+SHA-256 main reviewer 2 theo checksum điều phối: `e5dc7c638775ed103e6d2913110e01ea8cee3778e030f35456f20e98c7e93e1e`. Đối chiếu với file checksum tải cùng đợt. Giữ cả hai worksheet gốc và ghi exposure/thời điểm nộp thực tế; không tự ghi đã nộp hoặc đã khóa chỉ vì file tải xong.
 
 ## 5. Bắt đầu pilot ngay trên máy này
 
 **Hướng dẫn hiện tại:** [rubric đề xuất v1.1 theo tin nhắn Tâm](REVIEW-RUBRIC-V1.1.md). Dùng bản này để rà pilot, ghi rõ Phúc đã xem gợi ý AI. `dissolve` cần xác nhận điều kiện dữ liệu hai tháng/phạm vi/bộ lọc; nếu thiếu dữ liệu hoặc mức quan sát chưa rõ, dùng unresolved. Không tự coi file đọc được và overlap khớp là đã chứng minh dữ liệu tháng sau đầy đủ. Sau khi hai reviewer thống nhất mới ghi ngày khóa và mở bộ chính để chấm. Các bản nháp AI trước v1.1 được giữ nguyên, không phải phiếu người thật.
 
 Đã rà lại bản AI bổ trợ của 6 ca theo v1.1, lưu riêng tại `artifacts/review/phuc-pilot-v1.1-20261103-001/`. Có `RA-PILOT-V1.1.md`, `automated-pilot-v1.1.csv`, metadata và revision log. Những quyết định phụ thuộc xác nhận phạm vi quan sát còn được giữ unresolved khi chưa có nguồn xác nhận trong gói reviewer. Đây không phải đổi nhãn máy, chốt rubric hoặc khóa phiếu của Phúc. Bản nháp cũ và mọi phiếu người thật được so hash, không thay đổi. Không công bố nhãn từng ca AI lên Git hoặc gửi cho Đăng trước lượt chấm độc lập.
+
+Phúc tiếp tục nhờ AI lựa chọn và giải thích một ca pilot. Ghi nhận riêng tại `artifacts/review/phuc-pilot-decisions-20261103-001/`, gồm phần giải thích và provenance; vẫn là **lựa chọn AI**, không phải nhãn do Phúc tự chấm. Không cộng lặp vào sáu ca nháp đã có, không điền thay vào phiếu người thật. Số quyết định người thật được ghi nhận hiện vẫn là 0.
+
+Đã [gửi Tâm đề xuất v1.1 và hỏi nguồn metadata không lộ nhãn xác nhận điều kiện quan sát](https://github.com/TamNgx179/reddit-community-evolution/pull/21#issuecomment-6604710346). Khi kiểm tra đợt này chưa thấy phản hồi trên PR. Release vẫn chỉ mô tả cơ chế bàn giao và topology; chưa có xác nhận riêng được tìm thấy về phạm vi/bộ lọc đủ dùng cho kết luận không quan sát ở từng cặp tháng. Đây là câu hỏi về đầu vào, không phải xin Tâm quyết định hộ từng ca.
 
 - Mở `artifacts/review/phuc-pilot-20261103-001/packet/pilot/index.html`.
 - Bạn điền `artifacts/review/phuc-pilot-20261103-001/annotations-working.csv`.
