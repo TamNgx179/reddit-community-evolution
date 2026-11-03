@@ -76,6 +76,25 @@ review cases. Do not distribute coordinator material with the reviewer ZIP.
 
 ## Two independent reviewers
 
+### Recipient helpers for Phúc
+
+The Vietnamese [week 3–4 work plan](PHUC-WEEK3-WEEK4.md) separates technical
+preparation, real packet receipt and actual human judgments. The recipient
+helper `scripts/prepare_phuc_review.py` checks an isolated reviewer-1 ZIP and
+creates a private working copy plus an empty evidence checklist. It never
+chooses labels or records a human submission. Its filename/field checks are
+not a guarantee of complete blinding or sufficient evidence; inspect the real
+packet against this rubric before main annotation.
+
+`scripts/run_phuc_coverage.py` exports the existing coverage diagnostics from a
+hash-bound feature/label run, keeping final-snapshot censoring outside the
+eligible-plus-unresolved denominator. Optional monthly graph inputs must match
+the consuming sample manifest. Without those inputs the graph audit remains
+explicitly pending. Run full-study and 2016 separately. Local results and review
+worksheets remain under ignored `artifacts/`, not Git.
+
+### Independent judgments
+
 Prefer reviewers who did not implement the tracker. Each reviewer must work without the answer key and without discussing cases before submitting:
 
 - Choose `stable`, `grow`, `shrink`, `merge`, `split`, `dissolve` or `unresolved` for the **focal source**. No birth label exists for a nonexistent source.
