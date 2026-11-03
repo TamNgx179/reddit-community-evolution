@@ -24,7 +24,7 @@ Trạng thái “xong công cụ” khác với “đã chạy trên gói dữ l
 | P3-02 | Nhận đúng snapshot và hai ZIP reviewer 1 | Ghi SHA-256, version, terminal month, nguồn và đường dẫn; không nhận key | Đã tải hai ZIP reviewer 1, hash khớp Release; snapshot có sẵn nhưng chưa mở trước khi khóa phiếu | 03/11 |
 | P3-03 | Kiểm tra kỹ thuật gói pilot | CRC/path/field checks, 6 ca có payload, phiếu còn trống, bản làm việc riêng | Đã kiểm tra gói thật: 6 payload, 19 link nội bộ, phiếu gốc và bản làm việc trống | 03/11 |
 | P3-04 | Rà 6 ca thử với rubric | Bạn kiểm tra membership, đầy đủ topology/cạnh/observation và ghi thiếu gì | Đã đối chiếu kỹ thuật toàn bộ 6 ca và có bảng đọc riêng; phiếu chấm người thật vẫn trống | 03–04/11 |
-| P3-05 | Chốt hướng dẫn sau pilot | Version rubric và ghi ai đã phê duyệt; không tính pilot vào 60 ca | Người dùng xác nhận chưa chốt ngày 03/11; tiếp tục pilot trước | 04/11 |
+| P3-05 | Chốt hướng dẫn sau pilot | Version rubric và ghi ai đã phê duyệt; không tính pilot vào 60 ca | Đã nhận đề xuất v1.1 của Tâm và văn bản hóa; chưa có ngày khóa hoặc xác nhận hai reviewer thống nhất | 04/11 |
 | P3-06 | Chấm bộ chính độc lập | 60 ca, nhãn/confidence/rationale thật, ghi exposure; nộp nguyên phiếu | Chưa làm; cần bạn thực hiện | 04/11 |
 | P3-07 | Xuất coverage và phân tầng | eligible/unresolved/censored riêng; community–tháng/member–tháng; theo tháng, size, history | Snapshot ở Release; Phúc mở sau khi khóa phiếu, hoặc giao người không chấm chạy song song | 04/11 |
 | P3-08 | Kiểm tra graph với snapshot đóng băng | Đúng hash, đúng month, membership phủ endpoint, cỡ nhóm khớp features, đúng mẫu số observation | Chờ khóa phiếu để mở snapshot; chưa chạy coverage/graph thật trên máy này | 04/11 |
@@ -65,6 +65,10 @@ Release hiện không chứa reviewer 2. Tâm ghi rõ **Đăng nhận reviewer 2
 > Ông ơi, Tâm đưa dữ liệu lên Release này rồi: https://github.com/TamNgx179/reddit-community-evolution/releases/tag/untagged-62c08035ea634c943d26 . Nhưng trong đó hiện là hai ZIP reviewer_1 của tui. Phần ông là reviewer_2, Tâm ghi gửi riêng nên ông nhắn Tâm lấy `pilot-reviewer_2.zip` với `main-reviewer_2.zip` và checksum nha. Mình xem 6 ca thử để chốt hướng dẫn trước, rồi mỗi người chấm 60 ca riêng, nộp khóa phiếu xong mới so đáp án. Source code ông dùng main mới nhất; dữ liệu ca thì lấy đúng gói Tâm bàn giao nha.
 
 ## 5. Bắt đầu pilot ngay trên máy này
+
+**Hướng dẫn hiện tại:** [rubric đề xuất v1.1 theo tin nhắn Tâm](REVIEW-RUBRIC-V1.1.md). Dùng bản này để rà pilot, ghi rõ Phúc đã xem gợi ý AI. `dissolve` cần xác nhận điều kiện dữ liệu hai tháng/phạm vi/bộ lọc; nếu thiếu dữ liệu hoặc mức quan sát chưa rõ, dùng unresolved. Không tự coi file đọc được và overlap khớp là đã chứng minh dữ liệu tháng sau đầy đủ. Sau khi hai reviewer thống nhất mới ghi ngày khóa và mở bộ chính để chấm. Các bản nháp AI trước v1.1 được giữ nguyên, không phải phiếu người thật.
+
+Đã rà lại bản AI bổ trợ của 6 ca theo v1.1, lưu riêng tại `artifacts/review/phuc-pilot-v1.1-20261103-001/`. Có `RA-PILOT-V1.1.md`, `automated-pilot-v1.1.csv`, metadata và revision log. Những quyết định phụ thuộc xác nhận phạm vi quan sát còn được giữ unresolved khi chưa có nguồn xác nhận trong gói reviewer. Đây không phải đổi nhãn máy, chốt rubric hoặc khóa phiếu của Phúc. Bản nháp cũ và mọi phiếu người thật được so hash, không thay đổi. Không công bố nhãn từng ca AI lên Git hoặc gửi cho Đăng trước lượt chấm độc lập.
 
 - Mở `artifacts/review/phuc-pilot-20261103-001/packet/pilot/index.html`.
 - Bạn điền `artifacts/review/phuc-pilot-20261103-001/annotations-working.csv`.

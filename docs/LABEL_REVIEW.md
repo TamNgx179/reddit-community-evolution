@@ -76,6 +76,19 @@ review cases. Do not distribute coordinator material with the reviewer ZIP.
 
 ## Two independent reviewers
 
+### Proposed rubric v1.1 from the coordinator's message
+
+The [Vietnamese rubric proposal v1.1](REVIEW-RUBRIC-V1.1.md) records Tâm's
+clarifications supplied by Phúc on 3 November. It remains proposed, not frozen.
+In particular, no graph membership or authored activity can support an
+observed-network dissolve judgment only when the two-month data scope and
+filters are established; missing or unknown observation warrants unresolved.
+Internal packet consistency alone does not establish that observation condition.
+Small groups entering large groups and diffuse memberships require explicit
+continuation evidence before grow/merge/split judgments. Keep AI suggestions and
+actual human decisions separate, disclose assistance and preserve every version.
+Record actual pilot agreement and a freeze date before main annotation.
+
 ### Recipient helpers for Phúc
 
 The Vietnamese [week 3–4 work plan](PHUC-WEEK3-WEEK4.md) separates technical
