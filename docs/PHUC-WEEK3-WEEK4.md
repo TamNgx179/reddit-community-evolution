@@ -21,13 +21,13 @@ Trạng thái “xong công cụ” khác với “đã chạy trên gói dữ l
 | ID | Việc | Đầu ra/điều kiện xong | Trạng thái ngày 03/11 | Hạn |
 |---|---|---|---|---|
 | P3-01 | Đồng bộ source và đọc phân công mới | Bắt đầu từ `main` 7725b57, nhánh riêng cho Phúc | Đã làm | 03/11 |
-| P3-02 | Nhận đúng snapshot và hai ZIP reviewer 1 | Ghi SHA-256, version, terminal month, nguồn và đường dẫn; không nhận key | Chờ Tâm bàn giao ngoài Git | 03/11 |
-| P3-03 | Kiểm tra kỹ thuật gói pilot | CRC/path/field checks, 6 ca có payload, phiếu còn trống, bản làm việc riêng | Công cụ đã viết; chưa thử gói Tâm thật | 03/11 |
-| P3-04 | Rà 6 ca thử với rubric | Bạn kiểm tra membership, đầy đủ topology/cạnh/observation và ghi thiếu gì | Chờ gói; cần bạn thực hiện | 03–04/11 |
+| P3-02 | Nhận đúng snapshot và hai ZIP reviewer 1 | Ghi SHA-256, version, terminal month, nguồn và đường dẫn; không nhận key | Đã tải hai ZIP reviewer 1, hash khớp Release; snapshot có sẵn nhưng chưa mở trước khi khóa phiếu | 03/11 |
+| P3-03 | Kiểm tra kỹ thuật gói pilot | CRC/path/field checks, 6 ca có payload, phiếu còn trống, bản làm việc riêng | Đã kiểm tra gói thật: 6 payload, 19 link nội bộ, phiếu gốc và bản làm việc trống | 03/11 |
+| P3-04 | Rà 6 ca thử với rubric | Bạn kiểm tra membership, đầy đủ topology/cạnh/observation và ghi thiếu gì | Đã có gói để bắt đầu; bạn chưa chấm | 03–04/11 |
 | P3-05 | Chốt hướng dẫn sau pilot | Version rubric và ghi ai đã phê duyệt; không tính pilot vào 60 ca | Chờ kết quả pilot | 04/11 |
 | P3-06 | Chấm bộ chính độc lập | 60 ca, nhãn/confidence/rationale thật, ghi exposure; nộp nguyên phiếu | Chưa làm; cần bạn thực hiện | 04/11 |
-| P3-07 | Xuất coverage và phân tầng | eligible/unresolved/censored riêng; community–tháng/member–tháng; theo tháng, size, history | Công cụ đã viết; chưa có snapshot thật | 04/11 |
-| P3-08 | Kiểm tra graph với snapshot đóng băng | Đúng hash, đúng month, membership phủ endpoint, cỡ nhóm khớp features, đúng mẫu số observation | Công cụ đã viết; chưa có graph thật | 04/11 |
+| P3-07 | Xuất coverage và phân tầng | eligible/unresolved/censored riêng; community–tháng/member–tháng; theo tháng, size, history | Snapshot ở Release; Phúc mở sau khi khóa phiếu, hoặc giao người không chấm chạy song song | 04/11 |
+| P3-08 | Kiểm tra graph với snapshot đóng băng | Đúng hash, đúng month, membership phủ endpoint, cỡ nhóm khớp features, đúng mẫu số observation | Chờ khóa phiếu để mở snapshot; chưa chạy coverage/graph thật trên máy này | 04/11 |
 | P3-09 | Bàn giao thiếu bằng chứng và coverage | Anh nhận CSV; Tâm–Thanh nhận danh sách graph/history đáng ngờ, không lộ nhãn cho Đăng | Đang chuẩn bị giao diện, chưa có kết quả thật | 04/11 |
 | P4-01 | Hoàn tất review/coverage và sửa thiếu bằng chứng | Giữ phiếu gốc, version gói; mọi sửa nhãn do core quyết định | Chờ các bước tuần 3 | 11/11 |
 | P4-02 | Đối chứng HGB khớp nếu phương pháp thay đổi | Cùng đặc trưng/cutoff/mẫu/reference/split/seed/budget, runtime đo thật | Chờ Tâm–Thanh khóa một giả thuyết và cấu hình ngày 05/11 | 05–09/11 |
@@ -37,7 +37,7 @@ Trạng thái “xong công cụ” khác với “đã chạy trên gói dữ l
 
 | Người | Bạn cần nhận | Bạn trả lại | Có cần chờ? |
 |---|---|---|---|
-| **Tâm** | `pilot-reviewer_1.zip`, `main-reviewer_1.zip`, SHA-256/version, snapshot full-study và 2016, sample/graph manifest, terminal month | Kết quả nhận gói, lỗi graph/thiếu evidence, phiếu reviewer 1 đã khóa | Cần gói để chạy thật; vẫn chuẩn bị code/docs trước |
+| **Tâm** | Hai ZIP reviewer 1 và checksum đã có ở Release; snapshot chứa nhãn máy mở sau khóa phiếu | Kết quả nhận gói, lỗi graph/thiếu evidence, phiếu reviewer 1 đã khóa | Bắt đầu pilot ngay; Đăng nhận reviewer 2 riêng từ Tâm |
 | **Đăng** | Chỉ thống nhất rubric, schema, thời điểm khóa và quy trình cùng Tâm | Phiếu 1 đã khóa cho điều phối; sau khi cả hai nộp mới so sánh và xử lý bất đồng | Không chờ Đăng chấm mới bắt đầu; không xem nhãn/phiếu của nhau trước khi khóa |
 | **Anh** | Xác nhận giao diện các bảng tổng hợp; dùng quy ước size 2, 3–4, 5–20, >20 | `coverage.csv`, `distributions.csv`, `summary.json`, graph audit và pins theo reference | Có thể thống nhất ngay; không cần đợi mô hình mới |
 | **Thanh** | Giả thuyết duy nhất, feature schema và các ca graph/history cần xem sau review | Bằng chứng kỹ thuật có nguồn; HGB khớp nếu được yêu cầu | Chỉ chờ khi cần fit đối chứng cho phương pháp mới |
@@ -47,27 +47,41 @@ Không cần gửi ZIP mới cho Đăng khi chưa có thay đổi đầu vào. �
 
 ## 4. Đã kiểm tra GitHub được gì?
 
-Ngày 03/11, kiểm tra `main`, hai nhánh bàn giao/reference liên quan, danh sách Release và PR #18/#20:
+Ngày 03/11 đã nhận được [Draft Release của Tâm](https://github.com/TamNgx179/reddit-community-evolution/releases/tag/untagged-62c08035ea634c943d26), tên `Midterm 2 frozen team handoff - 3 November 2026`, tag hiển thị `midterm2-review-handoff-20261103`. Đây là gói bàn giao cho cộng tác viên, giữ nguyên draft; không tự publish.
 
-- `main` mới nhất lúc kiểm tra là `7725b57`; source/docs mới đã cập nhật trên máy.
-- Không có GitHub Release để tải ZIP.
-- Hướng dẫn ghi gói audit local: `artifacts/diagnostics/midterm2-reference-label-audit-20261031-003`.
-- PR #18 ghi các gói ca/private keys/source mappings ở ngoài Git. PR #20 cũng yêu cầu Tâm gửi frozen handoff riêng; báo cáo/CSV thực của Trâm nằm trong `artifacts/`.
-- Máy này chưa có snapshot full-study/2016 và gói reviewer mới được mô tả. Không suy ra các gói không tồn tại ở máy Tâm; chỉ chưa được bàn giao tại checkout này.
+| Asset | Trạng thái tại máy Phúc |
+|---|---|
+| `pilot-reviewer_1.zip` | Đã tải 41.685.542 byte; SHA-256 khớp checksum Release; đã chuẩn bị workspace pilot |
+| `main-reviewer_1.zip` | Đã tải 515.012.951 byte; SHA-256 khớp; giữ nguyên ZIP, chưa mở evidence/chấm |
+| `RELEASE_SHA256SUMS.txt` | Đã tải, dùng đối chiếu cả hai ZIP |
+| `Phuc_Coverage_Snapshots_AFTER_REVIEW_LOCK_20261103.zip` | Có trên Release, 1.491.566.746 byte; chưa tải/mở vì chứa nhãn máy |
 
-**Tin nhắn để bạn tự gửi Tâm** (chưa có tin nào được công cụ gửi):
+Hai ZIP reviewer 1 có sẵn trong `artifacts/handoff/midterm2-release-20261103/`. SHA-256 pilot: `fae601660eee8c37c35a935717417fc2273a25ad86432123cb403c3b315158aa`; main: `71839e3145a74b56fc84f1f16207993034c7e5474ddf084b7c44dff8f5cbd8dc`. So checksum chỉ xác nhận khớp asset được bàn giao, không tự chứng nhận nội dung đúng về mặt xã hội.
 
-> Tâm ơi, tui đã cập nhật main và đang làm coverage/reviewer 1. Trên GitHub docs ghi bộ ca với snapshot để local nên tui chưa tải được. Ông gửi riêng giúp tui `pilot-reviewer_1.zip`, `main-reviewer_1.zip`, SHA-256/version và snapshot full-study + 2016 có manifest nha. Cho tui đường dẫn sample-run chứa features/labels, các monthly graph run và tháng cuối quan sát của từng reference để tui chạy coverage. Đừng kèm answer key, followup ba tháng hay phiếu của Đăng trong gói reviewer nha.
+Release hiện không chứa reviewer 2. Tâm ghi rõ **Đăng nhận reviewer 2 riêng từ điều phối**; không thay bằng reviewer 1, không gửi bản làm việc của Phúc cho Đăng.
 
-## 5. Nhận và rà bộ ca
+**Tin nhắn để bạn tự gửi Đăng** (chưa có tin nào được công cụ gửi):
+
+> Ông ơi, Tâm đưa dữ liệu lên Release này rồi: https://github.com/TamNgx179/reddit-community-evolution/releases/tag/untagged-62c08035ea634c943d26 . Nhưng trong đó hiện là hai ZIP reviewer_1 của tui. Phần ông là reviewer_2, Tâm ghi gửi riêng nên ông nhắn Tâm lấy `pilot-reviewer_2.zip` với `main-reviewer_2.zip` và checksum nha. Mình xem 6 ca thử để chốt hướng dẫn trước, rồi mỗi người chấm 60 ca riêng, nộp khóa phiếu xong mới so đáp án. Source code ông dùng main mới nhất; dữ liệu ca thì lấy đúng gói Tâm bàn giao nha.
+
+## 5. Bắt đầu pilot ngay trên máy này
+
+- Mở `artifacts/review/phuc-pilot-20261103-001/packet/pilot/index.html`.
+- Bạn điền `artifacts/review/phuc-pilot-20261103-001/annotations-working.csv`.
+- Ghi thiếu bằng chứng trong `evidence-checklist.csv` cùng thư mục.
+- `packet/pilot/reviewer_1.csv` là bản gốc trống, giữ nguyên.
+- Sáu JSON.gz đã đọc được, 19 link HTML nội bộ hợp lệ, kiểm tra metadata completeness/observation đã chạy. Đây là intake kỹ thuật, chưa phải bạn đã đọc/chấm đủ 6 ca hay đã đồng ý rubric.
+- Không mở main để chấm trước khi rubric chốt. Không mở snapshot chứa nhãn máy hoặc followup trước khi khóa lượt chấm độc lập.
+
+### Lệnh nhận lại ở một output mới khi cần
 
 Nguồn rubric là [LABEL_REVIEW](LABEL_REVIEW.md#current-midterm-2-review-packet). Công cụ nhận gói:
 
 ```powershell
-& .\.venv\Scripts\python.exe scripts/prepare_phuc_review.py --zip "DUONG_DAN/pilot-reviewer_1.zip" --phase pilot --reviewer-id phuc --output artifacts/review/phuc-pilot-20261103-001 --expected-sha256 SHA256_TAM_GUI
+& .\.venv\Scripts\python.exe scripts/prepare_phuc_review.py --zip artifacts/handoff/midterm2-release-20261103/pilot-reviewer_1.zip --phase pilot --reviewer-id phuc --output artifacts/review/phuc-pilot-20261103-002 --expected-sha256 fae601660eee8c37c35a935717417fc2273a25ad86432123cb403c3b315158aa
 ```
 
-Các phần `DUONG_DAN`/`SHA256_TAM_GUI` là chỗ điền sau khi Tâm gửi, không phải đường dẫn có sẵn. Output mới, không ghi đè input. Chạy riêng `--phase main` cho gói chính sau khi rubric được chốt.
+Workspace `...-001` đã được tạo, không cần chạy lại để bắt đầu. Ví dụ trên dùng output mới `...-002`, không ghi đè input. Công cụ đã nâng giới hạn giải nén mỗi ca lên 128 MiB vì ca pilot thật lớn nhất 93.781.624 byte; vẫn giữ giới hạn hữu hạn và kiểm thử tràn. Chạy riêng `--phase main` cho gói chính sau khi rubric được chốt.
 
 Output:
 
@@ -95,7 +109,7 @@ Ví dụ có 10 cộng đồng–tháng với chuyển tiếp quan sát được
 
 Member–tháng dùng trọng số kích thước: tổng số thành viên của các cộng đồng eligible chia tổng số thành viên của eligible + unresolved, đếm riêng theo từng tháng. Một người có thể xuất hiện ở nhiều tháng nên đây không phải số người duy nhất.
 
-Chạy **tách từng reference**. Không ghép full-study với 2016 hoặc nhân số cộng đồng lên ba lần theo seed mô hình.
+Chạy **tách từng reference**. Không ghép full-study với 2016 hoặc nhân số cộng đồng lên ba lần theo seed mô hình. **Thứ tự mới theo gói Release: Phúc chỉ mở snapshot coverage sau khi khóa phiếu chấm độc lập.** Nếu cần coverage song song, Tâm/Anh hoặc người không tham gia chấm nhận snapshot để chạy. Không coi việc tải được file là đã được mở nhãn trước review.
 
 ```powershell
 & .\.venv\Scripts\python.exe scripts/run_phuc_coverage.py --sample-run "DUONG_DAN_SAMPLE_RUN" --terminal-month YYYY-MM --output artifacts/diagnostics/phuc-coverage-full-study-001
@@ -131,16 +145,16 @@ Không xuất phiếu reviewer vào những bảng tổng hợp này. Việc tí
 
 ## 7. Việc làm ngay hôm nay theo thứ tự
 
-1. Gửi yêu cầu gói cho Tâm như mẫu trên. Không chờ Đăng làm xong mới bắt đầu.
-2. Khi nhận ZIP pilot, chạy intake, mở HTML và rà 6 ca bằng checklist. Chưa mở gói chính để chấm khi rubric chưa chốt.
+1. Gửi Đăng thông tin reviewer 2 như mẫu trên. Không chờ Đăng làm xong mới bắt đầu.
+2. Mở workspace pilot đã chuẩn bị, rà 6 ca bằng checklist. Chưa mở gói chính để chấm khi rubric chưa chốt.
 3. Thống nhất rubric/version với điều phối dựa trên pilot; sau đó mỗi người chấm bộ chính riêng.
-4. Song song, chạy coverage riêng full-study và 2016 từ snapshot đã đóng băng. Chạy graph audit khi nhận đủ monthly manifests.
+4. Sau khi khóa phiếu, mở snapshot coverage và chạy riêng full-study/2016 với graph audit. Nếu chạy song song, giao người không chấm độc lập thực hiện để không lộ nhãn máy.
 5. Nộp phiếu 1 nguyên bản đã khóa cho điều phối. Gửi Anh output coverage, Tâm–Thanh danh sách thiếu/đáng ngờ. Không gửi các quyết định chưa khóa cho Đăng.
 6. Sau 04/11 mới phối hợp đối chứng HGB theo giả thuyết đã chọn; dùng output sẵn nếu input/model/reference chưa đổi.
 
 ## 8. Kiểm chứng phần công cụ
 
-Đã chạy ngày 03/11: **25/25 kiểm thử liên quan pass**, gồm 14 kiểm thử mới và 11 hồi quy diagnostics có sẵn. Hai lệnh CLI cũng đã chạy thành công trên fixture tổng hợp nhỏ, có manifest và output giữ tại `artifacts/verification/phuc-week3-20261103-001/`. Coverage fixture có 4 chuyển tiếp quan sát, 2 eligible, 2 unresolved và 2 censored riêng; reviewer fixture vẫn có 0 nhãn được chấm. Đây là kiểm chứng phần mềm, không phải số liệu Reddit mới hoặc review người thật. Chưa chạy toàn bộ test suite.
+Đã chạy cập nhật ngày 03/11: **27/27 kiểm thử liên quan pass**, thêm hai kiểm thử về payload lớn hơn 64 MiB và chặn vượt giới hạn. Hai lệnh CLI trước đó cũng chạy trên fixture tổng hợp nhỏ tại `artifacts/verification/phuc-week3-20261103-001/`. Sau khi nhận Release, intake pilot thật chạy thành công với 6 ca và phiếu trống; kiểm tra riêng xác nhận 19 link, đầy đủ case_id và hàng observation của focal members. Log/hash/inventory lưu tại `artifacts/verification/phuc-release-20261103-001/`. Không có ca nào được tự động gán nhãn người thật; chưa chạy lại coverage thật hoặc toàn bộ test suite.
 
 ```powershell
 & .\.venv\Scripts\python.exe -m unittest tests.unit.test_coverage_audit tests.integration.test_coverage_audit tests.unit.test_review_intake tests.unit.test_diagnostics -v

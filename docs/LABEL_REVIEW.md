@@ -86,6 +86,15 @@ chooses labels or records a human submission. Its filename/field checks are
 not a guarantee of complete blinding or sufficient evidence; inspect the real
 packet against this rubric before main annotation.
 
+The 3 November draft handoff is available to the intended collaborators in
+[GitHub Releases](https://github.com/TamNgx179/reddit-community-evolution/releases/tag/untagged-62c08035ea634c943d26).
+Its assets currently contain reviewer 1 only; Đăng receives reviewer 2 separately
+from the coordinator. The real pilot has a 93,781,624-byte decompressed case,
+so the recipient reader uses a bounded 128 MiB case limit and preserves the full
+evidence. Original ZIPs remain unchanged. The coverage snapshot is **unblinded**:
+reviewers must lock their independent submissions before opening it, or have a
+non-reviewer run coverage in parallel. Keep the transfer release in draft.
+
 `scripts/run_phuc_coverage.py` exports the existing coverage diagnostics from a
 hash-bound feature/label run, keeping final-snapshot censoring outside the
 eligible-plus-unresolved denominator. Optional monthly graph inputs must match

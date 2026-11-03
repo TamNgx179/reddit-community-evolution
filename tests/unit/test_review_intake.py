@@ -7,6 +7,7 @@ import json
 from pathlib import Path
 import tempfile
 import unittest
+from unittest.mock import patch
 import zipfile
 
 from reddit_sna.data.archive import digest_file
@@ -21,7 +22,7 @@ def reviewer_fixture(archive, *, count=6, extra=None, judgment='', evidence=None
         writer.writerow(dict(case_id=f'fixture-{index}', reviewer='reviewer_1',
                              human_label=judgment, confidence='', rationale=''))
     with zipfile.ZipFile(archive, 'w') as zipped:
-        zipped.writestr('index.html', '<a href="cases/fixture.json.gz">Fixture evidence</a>')
+        zipped.writestr('index.html', '<a href="cases/fixture-0.json.gz">Fixture evidence</a>')
         zipped.writestr('annotations.csv', buffer.getvalue())
         for index in range(count):
             zipped.writestr(f'cases/fixture-{index}.json.gz', gzip.compress(json.dumps(
@@ -86,4 +87,28 @@ class ReviewerIntakeTests(unittest.TestCase):
             reviewer_fixture(archive, evidence=dict(case_id='fixture-0', source_size=2))
             with self.assertRaisesRegex(ValueError, 'no machine-readable'):
                 prepare_reviewer_workspace(archive, root/'out', 'pilot', 'fixture-reviewer')
+            self.assertFalse((root/'out').exists())
+
+    def test_realistic_payload_above_old_64_mib_limit_is_retained(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            archive = root/'pilot.zip'
+            # Valid JSON above the previous cap, without inventing large graphs.
+            payload = b' ' * (64 * 1024**2 + 1) + b'{"case_id":"fixture-0"}'
+            compressed = gzip.compress(payload)
+            del payload
+            reviewer_fixture(archive, extra=('cases/large.json.gz', compressed))
+            result = prepare_reviewer_workspace(archive, root/'out', 'pilot', 'fixture-reviewer')
+            self.assertEqual(result['payload_files_checked'], 7)
+            self.assertEqual((root/'out/packet/cases/large.json.gz').read_bytes(), compressed)
+            self.assertEqual(result['annotated'], 0)
+
+    def test_bounded_gzip_reader_rejects_overflow_before_writing(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            archive = root/'pilot.zip'
+            reviewer_fixture(archive, extra=('cases/large.json.gz', gzip.compress(b' '*2048+b'{}')))
+            with patch('reddit_sna.reporting.review_intake.MAX_CASE_PAYLOAD_BYTES', 1024):
+                with self.assertRaisesRegex(ValueError, 'inspection limit'):
+                    prepare_reviewer_workspace(archive, root/'out', 'pilot', 'fixture-reviewer')
             self.assertFalse((root/'out').exists())

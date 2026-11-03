@@ -17,6 +17,7 @@ BLOCKED_FIELDS = {'label', 'machine_label', 'machine_event', 'y_true', 'y_pred',
                   'prediction', 'predictions', 'threshold', 'alpha', 'beta',
                   'stratum', 'sampling_stratum', 'answer_key', 'source_mapping'}
 ALLOWED_SUFFIXES = {'.html', '.csv', '.json', '.gz', '.png', '.svg', '.css', '.md', '.txt', '.sha256'}
+MAX_CASE_PAYLOAD_BYTES = 128 * 1024**2
 
 
 def _check_fields(value, case_ids):
@@ -92,9 +93,9 @@ def prepare_reviewer_workspace(archive, output, phase, reviewer_id, *, expected_
             content = zipped.read(entry)
             if suffix == '.gz':
                 with gzip.GzipFile(fileobj=io.BytesIO(content)) as compressed:
-                    content = compressed.read(64*1024**2 + 1)
-                if len(content) > 64*1024**2:
-                    raise ValueError('Compressed case exceeds the 64 MiB inspection limit')
+                    content = compressed.read(MAX_CASE_PAYLOAD_BYTES + 1)
+                if len(content) > MAX_CASE_PAYLOAD_BYTES:
+                    raise ValueError('Compressed case exceeds the 128 MiB inspection limit')
             payload = json.loads(content.decode('utf-8-sig'))
             _check_fields(payload, evidence_case_ids)
             payload_count += 1
