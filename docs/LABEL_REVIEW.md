@@ -40,6 +40,27 @@ mapping private. Distribute **only** the appropriate reviewer ZIP:
 | Pilot | `pilot-reviewer_1.zip` | `pilot-reviewer_2.zip` |
 | Main | `main-reviewer_1.zip` | `main-reviewer_2.zip` |
 
+### Phuc's frozen handoff downloads — 3 November 2026
+
+Existing collaborators with push access can download the files from the
+[team draft release](https://github.com/TamNgx179/reddit-community-evolution/releases/tag/untagged-62c08035ea634c943d26)
+after signing in to their own GitHub account. Keep the release in draft.
+Download `pilot-reviewer_1.zip` first, then `main-reviewer_1.zip` after the rubric
+is agreed. Verify the downloads against `RELEASE_SHA256SUMS.txt`.
+
+`Phuc_Coverage_Snapshots_AFTER_REVIEW_LOCK_20261103.zip` contains the separate
+full-study and 2016 graph, membership, feature and machine-label inputs.
+Open it only after independent annotations are locked, or let a non-reviewer
+run coverage in parallel. The snapshot README includes the commands and explains
+the legacy 2016 transport manifests. The delivered snapshots passed graph audits
+on all 45 full-study and 12 replication months. These checks do not complete human review.
+
+PR #21's reviewer intake currently rejects the original packets because some
+decompressed cases exceed its 64 MiB inspection limit. The largest pilot case is
+93,781,624 bytes and the largest main case is 72,726,472 bytes. Revise the bounded
+limit with a regression test before using that intake command. Do not truncate
+the evidence. Reviewer 2, answer keys and longitudinal follow-up remain separate.
+
 The assignment names Phúc and Đăng for these two independent roles. Each receives
 a separate copy, opens the phase's `index.html` and edits only their own CSV.
 Pilot decisions are excluded from the 60 main cases. If the pilot changes the
