@@ -43,10 +43,13 @@ mapping private. Distribute **only** the appropriate reviewer ZIP:
 ### Phuc's frozen handoff downloads — 3 November 2026
 
 Existing collaborators with push access can download the files from the
-[team draft release](https://github.com/TamNgx179/reddit-community-evolution/releases/tag/untagged-62c08035ea634c943d26)
-after signing in to their own GitHub account. Keep the release in draft.
+[repository Releases page](https://github.com/TamNgx179/reddit-community-evolution/releases)
+after signing in to their own GitHub account. Open the draft named
+`Midterm 2 frozen team handoff - 3 November 2026` and keep it in draft.
 Download `pilot-reviewer_1.zip` first, then `main-reviewer_1.zip` after the rubric
 is agreed. Verify the downloads against `RELEASE_SHA256SUMS.txt`.
+Dang's separate `pilot-reviewer_2.zip` and `main-reviewer_2.zip` are also attached,
+with their own `REVIEWER_2_SHA256SUMS.txt`. Use only the worksheet for your assigned role.
 
 `Phuc_Coverage_Snapshots_AFTER_REVIEW_LOCK_20261103.zip` contains the separate
 full-study and 2016 graph, membership, feature and machine-label inputs.
