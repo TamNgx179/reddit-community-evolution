@@ -2,6 +2,30 @@
 
 **Bản làm việc ngày 03/11/2026.** Deadline tuần 3: **04/11**. Deadline tuần 4: **11/11**. Phạm vi dựa trên bảng người dùng gửi và [phân công chung](../PHAN-CONG-SNA-8-TUAN.md); tài liệu này không đổi việc của các thành viên khác.
 
+**Cập nhật 04/11:** đã kiểm tra `main` tại `3016220` và PR #21. Gói reviewer 2 có trên Release; chưa thấy phản hồi mới trên PR về điều kiện quan sát hoặc xác nhận thống nhất hướng dẫn. Bản bàn giao local nằm ở `artifacts/handoff/phuc-pilot-20261104-001/README.md`, kèm trạng thái và hash nguồn. Không tạo thêm ZIP dữ liệu.
+
+## Đọc trước: “rubric” là gì?
+
+**Rubric là bộ quy tắc chấm**, giống hướng dẫn chấm bài của thầy. Trong phần này, Phúc và Đăng nhìn bằng chứng của một nhóm qua hai tháng rồi chọn cách mô tả sự thay đổi. Hai bạn cần hiểu cùng một quy tắc để kết quả có thể so sánh được.
+
+| Từ trong phiếu | Nói dễ hiểu | Điều cần xem |
+|---|---|---|
+| `stable` | Nhóm tiếp tục, quy mô giữ nguyên | Có bằng chứng đây là nhóm tiếp nối một–một của nhóm cũ. |
+| `grow` | Nhóm tiếp tục và lớn lên | Xác định được nhóm kế tiếp của nhóm cũ rồi mới so số người. |
+| `shrink` | Nhóm tiếp tục và thu nhỏ | Xác định được nhóm kế tiếp của nhóm cũ rồi mới so số người. |
+| `merge` | Nhiều nhóm hợp thành một nhóm | Nhiều nhóm cũ có đóng góp thành viên rõ vào nhóm mới. |
+| `split` | Một nhóm tách thành nhiều nhánh | Có ít nhất hai nhóm kế tiếp với bằng chứng tiếp nối về thành viên và tương tác. |
+| `dissolve` | Không còn tiếp nối trong mạng quan sát | Điều kiện dữ liệu/phạm vi/bộ lọc phải được xác nhận; không suy thành nhóm ngoài đời biến mất. |
+| `unresolved` | Chưa đủ bằng chứng để kết luận | Ghi cụ thể thiếu gì hoặc đang có những cách giải thích cạnh tranh nào. |
+
+Ví dụ minh họa quy tắc, không phải đáp án của ca pilot: không thấy thành viên tháng sau mà chưa biết dữ liệu có đủ không thì chọn `unresolved`. Thấy nhóm đích rất lớn cũng chưa đủ để gọi `grow`: phải biết đó là nhóm tiếp nối của nhóm cũ hay nơi nhiều nhóm nhập vào.
+
+**v1.1** là số phiên bản của hướng dẫn Tâm đề xuất. **Chốt/khóa rubric** nghĩa là ghi lại bản mà hai reviewer thực sự thống nhất dùng, cùng thời điểm và người xác nhận. Việc khóa giúp tránh mỗi người hiểu một kiểu hoặc đổi cách chấm giữa chừng mà không lưu lại.
+
+**Pilot** là 6 ca thử để luyện cách đọc và phát hiện chỗ hướng dẫn chưa rõ. **Bộ chính** là 60 ca chấm theo phiên bản đã thống nhất; 6 ca thử không cộng vào đó. Mỗi ca ghi nhãn, mức tin tưởng (`low`/`medium`/`high`) và lý do dựa trên bằng chứng. Phần này đánh giá cách diễn giải chuyển tiếp có hợp lý hay không; chưa phải kết quả mô hình dự đoán sự kiện tương lai.
+
+Đọc [hướng dẫn đề xuất v1.1](REVIEW-RUBRIC-V1.1.md) để xem đầy đủ. Bảng trên chỉ giải thích thuật ngữ, không thêm ngưỡng hoặc thay đổi quy tắc. Phúc hiện đã dùng gợi ý AI và cần khai đúng điều đó; sự đồng ý của Đăng và các thời điểm khóa vẫn phải ghi theo thực tế.
+
 ## 1. Hiểu phần của bạn bằng một ví dụ
 
 Hệ thống nói một cộng đồng đã “tan rã”. Bạn cần xem những thành viên đó ở tháng sau xuất hiện ở đâu, nhóm nào có liên hệ với nhóm cũ, và dữ liệu có đủ quan sát không. Không thấy một nhóm kế tiếp chưa chứng minh người thật đã ngừng giao tiếp.
