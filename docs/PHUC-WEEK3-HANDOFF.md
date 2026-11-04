@@ -14,6 +14,7 @@
 | Kiểm tra gói reviewer 1 | Pilot 6/6 ca và main 60/60 ca có cấu trúc/evidence nội bộ đọc được. Audit main kiểm tra thêm 181 liên kết HTML cục bộ | Hoàn thành về mặt kỹ thuật |
 | Bản đánh giá bổ trợ tự động | Có 60/60 ca cùng provenance, source hash và lý do. Toàn bộ ghi `reviewer_type=automated` | Hoàn thành, **không phải** phiếu người thật |
 | Bản nháp reviewer 1 có hỗ trợ AI | `phuc-main-ai-assisted-draft-20261104-001/reviewer_1.csv` có 60 dòng; metadata ghi `unsubmitted_ai_assisted_draft`, `human_judgments_claimed=0` và hash phiếu gốc | Sẵn sàng để Phúc tự rà, chấp nhận/sửa từng dòng và khai thời điểm nộp thật |
+| Gói reviewer 1 sẵn sàng nộp | `phuc-reviewer1-submission-ready-20261104-001/` có `reviewer_1.csv`, metadata, checksum và ZIP; Phúc đã xác nhận chốt bản AI-assisted | Sẵn sàng gửi trực tiếp cho Tâm; chưa gửi, chưa có receipt/checksum của điều phối |
 | Mở coverage snapshot | Chưa mở | Đúng quy trình, chờ khóa hai phiếu độc lập |
 
 Các artifact cục bộ được giữ ở `artifacts/review/` và không commit dữ liệu/nhãn vào Git. Các thư mục liên quan là `phuc-pilot-audit-20261103-001`, `phuc-main-audit-20261104-001` và `phuc-main-assisted-20261104-001`.
@@ -27,7 +28,7 @@ Vì vậy các trạng thái sau vẫn là `pending`:
 | Việc | Chủ sở hữu | Điều kiện hoàn thành |
 | --- | --- | --- |
 | Lưu xác nhận rubric | Tâm / điều phối | Đã xác nhận dùng `frozen_v1.1`; giữ tin nhắn gốc và version tài liệu |
-| Phiếu reviewer 1 | Phúc | Người chấm xác nhận nhãn, confidence, rationale và exposure cho 60 ca |
+| Phiếu reviewer 1 | Phúc | Đã chốt bản AI-assisted 60 ca. Cần gửi trực tiếp cho Tâm, kèm thời điểm gửi thực tế; không mô tả là chấm người độc lập không hỗ trợ AI |
 | Phiếu reviewer 2 | Đăng | Nộp gói riêng, không xem nhãn reviewer 1 hay bản AI của Phúc trước khi khóa |
 | Agreement và xử lý bất đồng | Phúc–Đăng, Anh hỗ trợ đánh giá | Chỉ mở hai phiếu sau khi cả hai đã khóa |
 | Coverage và liên kết với graph thật | Phúc, sau khi khóa phiếu | Mở snapshot có nhãn máy, chạy coverage theo từng reference và ghi giới hạn quan sát |

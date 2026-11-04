@@ -4,7 +4,10 @@ from pathlib import Path
 import tempfile
 import unittest
 
-from reddit_sna.reporting.review_draft import create_ai_assisted_draft
+from reddit_sna.reporting.review_draft import (
+    create_ai_assisted_draft,
+    create_submission_ready_package,
+)
 
 
 class ReviewDraftTests(unittest.TestCase):
@@ -50,6 +53,22 @@ class ReviewDraftTests(unittest.TestCase):
                     {'case_id': 'case-c', 'label': 'stable', 'confidence': 'high', 'rationale': 'Evidence C', 'reviewer_type': 'automated'})
         with self.assertRaisesRegex(ValueError, 'different case sets'):
             create_ai_assisted_draft(self.blank, self.automated, self.root / 'draft', 'phuc')
+
+    def test_finalizes_adopted_draft_without_claiming_unassisted_human_review(self):
+        draft = self.root / 'draft'
+        create_ai_assisted_draft(self.blank, self.automated, draft, 'phuc')
+        result = create_submission_ready_package(
+            draft,
+            self.root / 'submission',
+            'phuc',
+            'User explicitly adopted the AI-assisted draft in chat.',
+        )
+        self.assertEqual(result['status'], 'reviewer_adopted_ai_assisted_submission_ready')
+        self.assertEqual(result['human_judgments_claimed'], 0)
+        self.assertFalse(result['eligible_for_unassisted_human_agreement'])
+        self.assertTrue((self.root / 'submission/reviewer_1_submission_ready.zip').is_file())
+        with (self.root / 'submission/reviewer_1.csv').open(encoding='utf-8', newline='') as stream:
+            self.assertEqual(len(list(csv.DictReader(stream))), 2)
 
 
 if __name__ == '__main__':
