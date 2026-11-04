@@ -4,6 +4,8 @@
 
 **Cập nhật 04/11:** đã kiểm tra `main` tại `3016220` và PR #21. Gói reviewer 2 có trên Release; chưa thấy phản hồi mới trên PR về điều kiện quan sát hoặc xác nhận thống nhất hướng dẫn. Bản bàn giao local nằm ở `artifacts/handoff/phuc-pilot-20261104-001/README.md`, kèm trạng thái và hash nguồn. Không tạo thêm ZIP dữ liệu.
 
+**Quyết định chủ động của Phúc ngày 04/11:** chọn v1.1 làm bản hướng dẫn làm việc và đề nghị Đăng áp dụng cùng bản. Mở [cách chấm từng bước và tin nhắn giao việc cho Đăng](PHUC-DANG-CACH-CHAM.md). Phúc đã chọn hướng dẫn; xác nhận của Đăng, phiên bản chung sau pilot và thời điểm khóa vẫn ghi theo thực tế.
+
 ## Đọc trước: “rubric” là gì?
 
 **Rubric là bộ quy tắc chấm**, giống hướng dẫn chấm bài của thầy. Trong phần này, Phúc và Đăng nhìn bằng chứng của một nhóm qua hai tháng rồi chọn cách mô tả sự thay đổi. Hai bạn cần hiểu cùng một quy tắc để kết quả có thể so sánh được.
@@ -48,7 +50,7 @@ Trạng thái “xong công cụ” khác với “đã chạy trên gói dữ l
 | P3-02 | Nhận đúng snapshot và hai ZIP reviewer 1 | Ghi SHA-256, version, terminal month, nguồn và đường dẫn; không nhận key | Đã tải hai ZIP reviewer 1, hash khớp Release; snapshot có sẵn nhưng chưa mở trước khi khóa phiếu | 03/11 |
 | P3-03 | Kiểm tra kỹ thuật gói pilot | CRC/path/field checks, 6 ca có payload, phiếu còn trống, bản làm việc riêng | Đã kiểm tra gói thật: 6 payload, 19 link nội bộ, phiếu gốc và bản làm việc trống | 03/11 |
 | P3-04 | Rà 6 ca thử với rubric | Bạn kiểm tra membership, đầy đủ topology/cạnh/observation và ghi thiếu gì | Đã đối chiếu kỹ thuật toàn bộ 6 ca và có bảng đọc riêng; phiếu chấm người thật vẫn trống | 03–04/11 |
-| P3-05 | Chốt hướng dẫn sau pilot | Version rubric và ghi ai đã phê duyệt; không tính pilot vào 60 ca | Đã nhận đề xuất v1.1 của Tâm và văn bản hóa; chưa có ngày khóa hoặc xác nhận hai reviewer thống nhất | 04/11 |
+| P3-05 | Chốt hướng dẫn sau pilot | Version rubric và ghi ai đã phê duyệt; không tính pilot vào 60 ca | Phúc đã chọn v1.1 làm bản làm việc, có hướng dẫn từng bước để Đăng dùng; xác nhận của Đăng và ngày khóa chung chưa được ghi nhận | 04/11 |
 | P3-06 | Chấm bộ chính độc lập | 60 ca, nhãn/confidence/rationale thật, ghi exposure; nộp nguyên phiếu | Chưa làm; cần bạn thực hiện | 04/11 |
 | P3-07 | Xuất coverage và phân tầng | eligible/unresolved/censored riêng; community–tháng/member–tháng; theo tháng, size, history | Snapshot ở Release; Phúc mở sau khi khóa phiếu, hoặc giao người không chấm chạy song song | 04/11 |
 | P3-08 | Kiểm tra graph với snapshot đóng băng | Đúng hash, đúng month, membership phủ endpoint, cỡ nhóm khớp features, đúng mẫu số observation | Chờ khóa phiếu để mở snapshot; chưa chạy coverage/graph thật trên máy này | 04/11 |

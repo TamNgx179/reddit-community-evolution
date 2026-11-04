@@ -89,6 +89,14 @@ continuation evidence before grow/merge/split judgments. Keep AI suggestions and
 actual human decisions separate, disclose assistance and preserve every version.
 Record actual pilot agreement and a freeze date before main annotation.
 
+On 4 November, Phúc selected this v1.1 proposal as the working guidance he
+asks Đăng to use. The [Vietnamese practical guide](PHUC-DANG-CACH-CHAM.md)
+provides a case checklist, label explanations, responsibilities and a draft
+handoff message without publishing case-level recommendations. It changes no
+label definitions or thresholds. Đăng's acknowledgement and a shared post-pilot
+freeze remain unconfirmed; Phúc's selection is not recorded as someone else's
+agreement.
+
 ### Recipient helpers for Phúc
 
 The Vietnamese [week 3–4 work plan](PHUC-WEEK3-WEEK4.md) separates technical
