@@ -8,7 +8,7 @@ from datetime import datetime, timezone
 import pandas as pd
 
 # Cho phép import package trong src layout.
-ROOT = Path(__file__).resolve().parent
+ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
 from reddit_sna.evaluation.diagnostics import forecast_tables, size_band
