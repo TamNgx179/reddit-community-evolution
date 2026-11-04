@@ -1,0 +1,58 @@
+{
+  "created_utc": "2026-11-04T12:27:17.758789+00:00",
+  "scope": "final_window_only",
+  "window": "final",
+  "unique_samples_per_model_seed": 1269,
+  "prediction_rows_selected": 15228,
+  "paired_case_rows": 11421,
+  "macro_f1_interval_rows": 3,
+  "strata_bootstrap_rows": 384,
+  "unique_label_months": [
+    "2018-01",
+    "2018-02",
+    "2018-03",
+    "2018-04",
+    "2018-05",
+    "2018-06",
+    "2018-07",
+    "2018-08",
+    "2018-09"
+  ],
+  "models": [
+    "A_flat_matched",
+    "A_no_context_drift_matched",
+    "A_no_dynamics_matched",
+    "hier_lr_dynamic"
+  ],
+  "seeds": [
+    42,
+    43,
+    44
+  ],
+  "contrasts": [
+    {
+      "proposed": "hier_lr_dynamic",
+      "reference": "A_no_dynamics_matched"
+    },
+    {
+      "proposed": "hier_lr_dynamic",
+      "reference": "A_no_context_drift_matched"
+    },
+    {
+      "proposed": "hier_lr_dynamic",
+      "reference": "A_flat_matched"
+    }
+  ],
+  "draws": 1000,
+  "block_length_months": 2,
+  "macro_f1_bootstrap_seed": 20261031,
+  "strata_bootstrap_seed": 20261102,
+  "method": "paired_calendar_month_blocks",
+  "seed_handling": "seed metrics are averaged within each draw; seeds are not independent samples",
+  "prediction_hash_sha256": "a3015a93febcd92069079f88389902e18acd2e8603d99a37e88e07318a0f376f",
+  "feature_hash_sha256": "eafb3d46d8831e880253252bdb512cfea794af6867fecc6137f8aa7aa7ecaba3",
+  "unresolved_included": false,
+  "terminal_censored_included": false,
+  "models_refitted": false,
+  "predictions_regenerated": false
+}
