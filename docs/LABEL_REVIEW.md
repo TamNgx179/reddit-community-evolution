@@ -123,6 +123,16 @@ evidence. Original ZIPs remain unchanged. The coverage snapshot is **unblinded**
 reviewers must lock their independent submissions before opening it, or have a
 non-reviewer run coverage in parallel. Keep the transfer release in draft.
 
+On 4 November, following Phúc's working-guide selection, the main reviewer-1
+ZIP passed technical intake and its 60 payloads passed supplied membership,
+overlap, incident-edge and focal-observation consistency checks. All 181 local
+links across 61 HTML pages resolved. The private workspace is
+`artifacts/review/phuc-main-20261104-001/`; its README links the blank worksheet,
+case index and neutral technical table. `preparation.json` records this main
+payload access before shared post-pilot acknowledgement. Actual annotation is
+0/60 and the shared freeze remains pending. The technical report is in
+`artifacts/review/phuc-main-audit-20261104-001/`.
+
 `scripts/run_phuc_coverage.py` exports the existing coverage diagnostics from a
 hash-bound feature/label run, keeping final-snapshot censoring outside the
 eligible-plus-unresolved denominator. Optional monthly graph inputs must match

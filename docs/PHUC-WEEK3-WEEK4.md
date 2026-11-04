@@ -6,6 +6,8 @@
 
 **Quyết định chủ động của Phúc ngày 04/11:** chọn v1.1 làm bản hướng dẫn làm việc và đề nghị Đăng áp dụng cùng bản. Mở [cách chấm từng bước và tin nhắn giao việc cho Đăng](PHUC-DANG-CACH-CHAM.md). Phúc đã chọn hướng dẫn; xác nhận của Đăng, phiên bản chung sau pilot và thời điểm khóa vẫn ghi theo thực tế.
 
+**Đã triển khai chuẩn bị bộ chính ngày 04/11:** workspace `artifacts/review/phuc-main-20261104-001/` có đủ 60 ca và phiếu làm việc. Intake kỹ thuật thành công, kiểm tra nhất quán đạt 60/60 ca và 181 link HTML hợp lệ. Mở `README.md` trong workspace để bắt đầu tra file. Báo cáo và bảng bằng chứng nằm ở `artifacts/review/phuc-main-audit-20261104-001/`. Phiếu chấm hiện ghi nhận 0/60 ca, xác nhận hướng dẫn chung và ngày khóa còn pending.
+
 ## Đọc trước: “rubric” là gì?
 
 **Rubric là bộ quy tắc chấm**, giống hướng dẫn chấm bài của thầy. Trong phần này, Phúc và Đăng nhìn bằng chứng của một nhóm qua hai tháng rồi chọn cách mô tả sự thay đổi. Hai bạn cần hiểu cùng một quy tắc để kết quả có thể so sánh được.
@@ -51,7 +53,7 @@ Trạng thái “xong công cụ” khác với “đã chạy trên gói dữ l
 | P3-03 | Kiểm tra kỹ thuật gói pilot | CRC/path/field checks, 6 ca có payload, phiếu còn trống, bản làm việc riêng | Đã kiểm tra gói thật: 6 payload, 19 link nội bộ, phiếu gốc và bản làm việc trống | 03/11 |
 | P3-04 | Rà 6 ca thử với rubric | Bạn kiểm tra membership, đầy đủ topology/cạnh/observation và ghi thiếu gì | Đã đối chiếu kỹ thuật toàn bộ 6 ca và có bảng đọc riêng; phiếu chấm người thật vẫn trống | 03–04/11 |
 | P3-05 | Chốt hướng dẫn sau pilot | Version rubric và ghi ai đã phê duyệt; không tính pilot vào 60 ca | Phúc đã chọn v1.1 làm bản làm việc, có hướng dẫn từng bước để Đăng dùng; xác nhận của Đăng và ngày khóa chung chưa được ghi nhận | 04/11 |
-| P3-06 | Chấm bộ chính độc lập | 60 ca, nhãn/confidence/rationale thật, ghi exposure; nộp nguyên phiếu | Chưa làm; cần bạn thực hiện | 04/11 |
+| P3-06 | Chấm bộ chính độc lập | 60 ca, nhãn/confidence/rationale thật, ghi exposure; nộp nguyên phiếu | Workspace 60 ca sẵn sàng, kỹ thuật 60/60 đạt và 181 link hợp lệ; phiếu chấm 0/60, hướng dẫn chung còn pending | 04/11 |
 | P3-07 | Xuất coverage và phân tầng | eligible/unresolved/censored riêng; community–tháng/member–tháng; theo tháng, size, history | Snapshot ở Release; Phúc mở sau khi khóa phiếu, hoặc giao người không chấm chạy song song | 04/11 |
 | P3-08 | Kiểm tra graph với snapshot đóng băng | Đúng hash, đúng month, membership phủ endpoint, cỡ nhóm khớp features, đúng mẫu số observation | Chờ khóa phiếu để mở snapshot; chưa chạy coverage/graph thật trên máy này | 04/11 |
 | P3-09 | Bàn giao thiếu bằng chứng và coverage | Anh nhận CSV; Tâm–Thanh nhận danh sách graph/history đáng ngờ, không lộ nhãn cho Đăng | Đã gửi Tâm link rubric và câu hỏi về điều kiện quan sát trên PR #21; chưa gửi nhãn từng ca, coverage vẫn chờ khóa phiếu | 04/11 |
@@ -78,7 +80,7 @@ Ngày 03/11 đã nhận được [Draft Release của Tâm](https://github.com/T
 | Asset | Trạng thái tại máy Phúc |
 |---|---|
 | `pilot-reviewer_1.zip` | Đã tải 41.685.542 byte; SHA-256 khớp checksum Release; đã chuẩn bị workspace pilot |
-| `main-reviewer_1.zip` | Đã tải 515.012.951 byte; SHA-256 khớp; giữ nguyên ZIP, chưa mở evidence/chấm |
+| `main-reviewer_1.zip` | Đã tải 515.012.951 byte, SHA-256 khớp; đã mở 60 payload để chuẩn bị và kiểm tra kỹ thuật ngày 04/11; phiếu chấm 0/60 |
 | `RELEASE_SHA256SUMS.txt` | Đã tải, dùng đối chiếu cả hai ZIP |
 | `pilot-reviewer_2.zip` | Đã có trên Release, 41.685.542 byte; Phúc không tải/mở gói của Đăng |
 | `main-reviewer_2.zip` | Đã có trên Release, 515.012.951 byte; Đăng mở sau khi thống nhất rubric |
@@ -150,7 +152,7 @@ Nguồn rubric là [LABEL_REVIEW](LABEL_REVIEW.md#current-midterm-2-review-packe
 & .\.venv\Scripts\python.exe scripts/prepare_phuc_review.py --zip artifacts/handoff/midterm2-release-20261103/pilot-reviewer_1.zip --phase pilot --reviewer-id phuc --output artifacts/review/phuc-pilot-20261103-002 --expected-sha256 fae601660eee8c37c35a935717417fc2273a25ad86432123cb403c3b315158aa
 ```
 
-Workspace `...-001` đã được tạo, không cần chạy lại để bắt đầu. Ví dụ trên dùng output mới `...-002`, không ghi đè input. Công cụ đã nâng giới hạn giải nén mỗi ca lên 128 MiB vì ca pilot thật lớn nhất 93.781.624 byte; vẫn giữ giới hạn hữu hạn và kiểm thử tràn. Chạy riêng `--phase main` cho gói chính sau khi rubric được chốt.
+Workspace pilot `...-001` đã có sẵn. Ví dụ trên dùng output mới `...-002`. Công cụ dùng giới hạn giải nén mỗi ca 128 MiB vì ca pilot thật lớn nhất 93.781.624 byte; kiểm thử tràn đã pass. Với bộ chính, `--phase main` chuẩn bị workspace kỹ thuật 60 ca. Phúc đã chạy bước này ngày 04/11 theo bản v1.1 đã chọn. Phiên bản dùng để chấm chính thức và thời điểm thống nhất sau pilot được ghi theo thực tế.
 
 Output:
 
@@ -225,7 +227,7 @@ Không xuất phiếu reviewer vào những bảng tổng hợp này. Việc tí
 
 Đã chạy cập nhật ngày 03/11: **27/27 kiểm thử liên quan pass**, thêm hai kiểm thử về payload lớn hơn 64 MiB và chặn vượt giới hạn. Hai lệnh CLI trước đó cũng chạy trên fixture tổng hợp nhỏ tại `artifacts/verification/phuc-week3-20261103-001/`. Sau khi nhận Release, intake pilot thật chạy thành công với 6 ca và phiếu trống; kiểm tra riêng xác nhận 19 link, đầy đủ case_id và hàng observation của focal members. Log/hash/inventory lưu tại `artifacts/verification/phuc-release-20261103-001/`. Không có ca nào được tự động gán nhãn người thật; chưa chạy lại coverage thật hoặc toàn bộ test suite.
 
-Lượt tiếp theo chỉ phân tích evidence và cập nhật tài liệu, không đổi thuật toán/package. Báo cáo audit pilot thực nhận nằm ở `artifacts/review/phuc-pilot-audit-20261103-001/`; mọi kết luận giới hạn ở tính nhất quán nội bộ của sáu ca. Chưa mở bộ chính và snapshot. Thay đổi được gom theo đợt, không tạo commit cho từng ca.
+Ngày 03/11 đã audit sáu ca pilot tại `artifacts/review/phuc-pilot-audit-20261103-001/`. Ngày 04/11, lệnh CLI nhận bộ chính chạy thành công và audit 60 ca tại `artifacts/review/phuc-main-audit-20261104-001/` đạt 60/60 nhất quán nội bộ. Kiểm tra HTML xác nhận 181 link hợp lệ. Phiếu làm việc giữ trạng thái trống 60 dòng. Các kết quả này ghi nhận chuẩn bị kỹ thuật; lượt chấm người thật và xử lý bất đồng vẫn pending. Coverage thật cần thực hiện ở giai đoạn mở snapshot sau khóa phiếu. Thay đổi được gom theo đợt.
 
 ```powershell
 & .\.venv\Scripts\python.exe -m unittest tests.unit.test_coverage_audit tests.integration.test_coverage_audit tests.unit.test_review_intake tests.unit.test_diagnostics -v
