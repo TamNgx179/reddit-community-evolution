@@ -8,6 +8,8 @@
 
 **Đã triển khai chuẩn bị bộ chính ngày 04/11:** workspace `artifacts/review/phuc-main-20261104-001/` có đủ 60 ca và phiếu làm việc. Intake kỹ thuật thành công, kiểm tra nhất quán đạt 60/60 ca và 181 link HTML hợp lệ. Mở `README.md` trong workspace để bắt đầu tra file. Báo cáo và bảng bằng chứng nằm ở `artifacts/review/phuc-main-audit-20261104-001/`. Phiếu chấm hiện ghi nhận 0/60 ca, xác nhận hướng dẫn chung và ngày khóa còn pending.
 
+**Đã hoàn thành bản nhận xét AI cho 60 ca ngày 04/11:** thư mục `artifacts/review/phuc-main-assisted-20261104-001/` có `README.md` tiếng Việt, `automated-main-v1.1.csv`, `assessment.json`, bằng chứng đã đọc và kết quả kiểm chứng. Mỗi ca có nhãn đề xuất, confidence, rationale và ambiguity với `reviewer_type=automated`. CSV/JSON khớp 60 mã ca duy nhất; hash bằng chứng và phiếu gốc đã được kiểm tra. Phúc rà bản này khi quyết định phần chấm của mình. Đầu vào để đối chiếu hai reviewer và bản khóa chung còn pending.
+
 ## Đọc trước: “rubric” là gì?
 
 **Rubric là bộ quy tắc chấm**, giống hướng dẫn chấm bài của thầy. Trong phần này, Phúc và Đăng nhìn bằng chứng của một nhóm qua hai tháng rồi chọn cách mô tả sự thay đổi. Hai bạn cần hiểu cùng một quy tắc để kết quả có thể so sánh được.
@@ -53,7 +55,8 @@ Trạng thái “xong công cụ” khác với “đã chạy trên gói dữ l
 | P3-03 | Kiểm tra kỹ thuật gói pilot | CRC/path/field checks, 6 ca có payload, phiếu còn trống, bản làm việc riêng | Đã kiểm tra gói thật: 6 payload, 19 link nội bộ, phiếu gốc và bản làm việc trống | 03/11 |
 | P3-04 | Rà 6 ca thử với rubric | Bạn kiểm tra membership, đầy đủ topology/cạnh/observation và ghi thiếu gì | Đã đối chiếu kỹ thuật toàn bộ 6 ca và có bảng đọc riêng; phiếu chấm người thật vẫn trống | 03–04/11 |
 | P3-05 | Chốt hướng dẫn sau pilot | Version rubric và ghi ai đã phê duyệt; không tính pilot vào 60 ca | Phúc đã chọn v1.1 làm bản làm việc, có hướng dẫn từng bước để Đăng dùng; xác nhận của Đăng và ngày khóa chung chưa được ghi nhận | 04/11 |
-| P3-06 | Chấm bộ chính độc lập | 60 ca, nhãn/confidence/rationale thật, ghi exposure; nộp nguyên phiếu | Workspace 60 ca sẵn sàng, kỹ thuật 60/60 đạt và 181 link hợp lệ; phiếu chấm 0/60, hướng dẫn chung còn pending | 04/11 |
+| P3-06A | Nhận xét AI bổ trợ theo bản Phúc chọn | 60 đề xuất có bằng chứng, ambiguity, provenance và hash nguồn | Đã hoàn thành 60/60, CSV/JSON khớp, có bản đọc tiếng Việt; lưu local riêng | 04/11 |
+| P3-06 | Chấm bộ chính độc lập | 60 ca, nhãn/confidence/rationale thật, ghi exposure; nộp nguyên phiếu | Có bản bổ trợ AI 60/60 để Phúc rà; phiếu người thật 0/60, đầu vào đối chiếu Đăng và khóa chung còn pending | 04/11 |
 | P3-07 | Xuất coverage và phân tầng | eligible/unresolved/censored riêng; community–tháng/member–tháng; theo tháng, size, history | Snapshot ở Release; Phúc mở sau khi khóa phiếu, hoặc giao người không chấm chạy song song | 04/11 |
 | P3-08 | Kiểm tra graph với snapshot đóng băng | Đúng hash, đúng month, membership phủ endpoint, cỡ nhóm khớp features, đúng mẫu số observation | Chờ khóa phiếu để mở snapshot; chưa chạy coverage/graph thật trên máy này | 04/11 |
 | P3-09 | Bàn giao thiếu bằng chứng và coverage | Anh nhận CSV; Tâm–Thanh nhận danh sách graph/history đáng ngờ, không lộ nhãn cho Đăng | Đã gửi Tâm link rubric và câu hỏi về điều kiện quan sát trên PR #21; chưa gửi nhãn từng ca, coverage vẫn chờ khóa phiếu | 04/11 |

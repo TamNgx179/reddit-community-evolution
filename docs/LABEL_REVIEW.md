@@ -133,6 +133,17 @@ payload access before shared post-pilot acknowledgement. Actual annotation is
 0/60 and the shared freeze remains pending. The technical report is in
 `artifacts/review/phuc-main-audit-20261104-001/`.
 
+A supplementary automated assessment now covers all 60 main cases under Phúc's
+selected v1.1 working proposal. Private outputs at
+`artifacts/review/phuc-main-assisted-20261104-001/` include per-case suggestions,
+confidence, evidence-based rationales, ambiguity and explicit automated
+provenance. The CSV and JSON agree on 60 unique cases. Case-specific evidence
+checks cover concentrated predecessor contributions and persistent interaction
+cores. The assessment records prior exposure to pilot AI suggestions, general
+tracker code and the sampling design. Human annotation remains 0/60, with the
+original worksheets preserved for actual decisions and submissions. Shared
+post-pilot acknowledgement and paired evaluation remain pending.
+
 `scripts/run_phuc_coverage.py` exports the existing coverage diagnostics from a
 hash-bound feature/label run, keeping final-snapshot censoring outside the
 eligible-plus-unresolved denominator. Optional monthly graph inputs must match
