@@ -1,13 +1,13 @@
-# Rubric review nhãn cộng đồng — đề xuất v1.1
+# Rubric review nhãn cộng đồng — v1.1 đã xác nhận
 
 | Thuộc tính | Giá trị |
 |---|---|
 | Phiên bản | `1.1` |
-| Trạng thái | **Đề xuất, chưa khóa** |
-| Nguồn nội dung | Đề xuất của Tâm được Phúc chuyển trong cuộc trao đổi ngày 03/11/2026 |
+| Trạng thái | **`frozen_v1.1` cho lượt chấm độc lập** |
+| Nguồn nội dung | Đề xuất của Tâm ngày 03/11/2026, được Tâm xác nhận áp dụng trong tin nhắn chuyển ngày 04/11/2026 |
 | Soạn thành tài liệu | Phúc với trợ giúp AI |
-| Phạm vi hiện tại | Rà 6 ca pilot, không tính vào 60 ca review chính |
-| Ngày/giờ khóa hướng dẫn | **Chưa ghi — chỉ điền khi thực sự thống nhất** |
+| Phạm vi hiện tại | Rà pilot và chấm riêng 60 ca reviewer 1/reviewer 2; pilot không tính vào 60 ca chính |
+| Mốc khóa hướng dẫn | Tâm đã xác nhận dùng v1.1 ngày 04/11/2026; điều phối lưu thời điểm chat gốc nếu cần |
 | Phiếu người thật đã khóa | Chưa được xác nhận trong cuộc trao đổi này |
 
 Tài liệu này văn bản hóa đề xuất của Tâm. Bản nháp AI trước đó không phải nhãn chuẩn hoặc phiếu độc lập của Phúc. Không đổi nhãn máy, reference hay metric của thí nghiệm dự báo bằng các quyết định review này.
@@ -102,18 +102,19 @@ Confidence mô tả mức tin tưởng của người chấm vào quyết địn
 
 ## 7. Version, khóa hướng dẫn và rà lại ca
 
-Hiện trạng của tài liệu là `proposed_v1.1`, không phải `frozen_v1.1`. Tin nhắn đề xuất của Tâm đã được nhận; việc hai reviewer đã thống nhất và hoàn tất pilot chưa được xác nhận trong cuộc trao đổi này.
+Tâm đã xác nhận dùng ba nguyên tắc trong tài liệu này cho lượt chấm độc lập ngày 04/11/2026. Vì vậy version dùng cho bộ chính là `frozen_v1.1`. Điều này **không** có nghĩa phiếu của Phúc hoặc Đăng đã nộp/đã khóa; điều phối chỉ mở nhãn máy và snapshot coverage sau khi nhận đủ hai phiếu nguyên bản, checksum và thời điểm nộp.
 
-Trước bộ chính, ghi thực tế vào bảng sau hoặc biên bản điều phối:
+Biên bản điều phối vẫn cần ghi thực tế vào bảng sau:
 
-| Mục | Giá trị khi chưa thống nhất |
+| Mục | Giá trị hiện tại |
 |---|---|
-| Phúc xác nhận cùng cách hiểu | Pending |
-| Đăng xác nhận cùng cách hiểu | Pending / chưa có thông tin |
+| Tâm xác nhận áp dụng hướng dẫn | Có — tin nhắn chuyển ngày 04/11/2026 |
+| Phúc xác nhận/khóa phiếu riêng | Pending |
+| Đăng xác nhận/khóa phiếu riêng | Pending |
 | Điều kiện quan sát của gói đã được giải thích | Pending evidence hoặc dẫn xác nhận thực tế |
-| Phiên bản được dùng cho bộ chính | Pending |
-| SHA-256 của file rubric được khóa | Chưa ghi |
-| Ngày/giờ khóa, người ghi | Chưa ghi |
+| Phiên bản được dùng cho bộ chính | `frozen_v1.1` |
+| SHA-256 của mỗi phiếu đã khóa | Chờ điều phối tính sau khi nhận đủ hai phiếu |
+| Ngày/giờ nộp, người ghi | Chờ thời điểm nộp thật của từng reviewer |
 
 Sau khi rà pilot và thống nhất, mới ghi ngày khóa và chấm 60 ca chính. Không tự điền chữ ký, ngày đồng ý hay thời điểm nộp hộ người khác.
 

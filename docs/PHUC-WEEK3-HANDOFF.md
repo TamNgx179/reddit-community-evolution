@@ -3,13 +3,13 @@
 **Cập nhật:** 04/11/2026  
 **Người phụ trách:** Phúc  
 **PR theo dõi:** [#21](https://github.com/TamNgx179/reddit-community-evolution/pull/21)  
-**Trạng thái tổng:** `technical_ready_human_review_pending`
+**Trạng thái tổng:** `rubric_frozen_human_forms_pending`
 
 ## 1. Phần Phúc đã hoàn thành
 
 | Hạng mục | Bằng chứng | Trạng thái |
 | --- | --- | --- |
-| Rubric chung | `docs/REVIEW-RUBRIC-V1.1.md` ghi đúng ba tình huống Tâm đề xuất, nhãn `unresolved`, cách ghi evidence/confidence/ambiguity và quy tắc khai báo AI | Hoàn thành dưới dạng `proposed_v1.1` |
+| Rubric chung | `docs/REVIEW-RUBRIC-V1.1.md` ghi đúng ba tình huống Tâm đề xuất, nhãn `unresolved`, cách ghi evidence/confidence/ambiguity và quy tắc khai báo AI | Tâm đã xác nhận dùng `frozen_v1.1` ngày 04/11/2026 |
 | Hướng dẫn phối hợp Phúc–Đăng | `docs/PHUC-DANG-CACH-CHAM.md` và `docs/PHUC-WEEK3-WEEK4.md` mô tả gói riêng, thứ tự pilot → khóa phiếu → main → coverage | Hoàn thành |
 | Kiểm tra gói reviewer 1 | Pilot 6/6 ca và main 60/60 ca có cấu trúc/evidence nội bộ đọc được. Audit main kiểm tra thêm 181 liên kết HTML cục bộ | Hoàn thành về mặt kỹ thuật |
 | Bản đánh giá bổ trợ tự động | Có 60/60 ca cùng provenance, source hash và lý do. Toàn bộ ghi `reviewer_type=automated` | Hoàn thành, **không phải** phiếu người thật |
@@ -25,7 +25,7 @@ Vì vậy các trạng thái sau vẫn là `pending`:
 
 | Việc | Chủ sở hữu | Điều kiện hoàn thành |
 | --- | --- | --- |
-| Chốt wording và ngày khóa rubric | Tâm, sau khi hai reviewer thống nhất cách hiểu pilot | Ghi phiên bản `frozen_v1.1` và thời điểm khóa thực tế |
+| Lưu xác nhận rubric | Tâm / điều phối | Đã xác nhận dùng `frozen_v1.1`; giữ tin nhắn gốc và version tài liệu |
 | Phiếu reviewer 1 | Phúc | Người chấm xác nhận nhãn, confidence, rationale và exposure cho 60 ca |
 | Phiếu reviewer 2 | Đăng | Nộp gói riêng, không xem nhãn reviewer 1 hay bản AI của Phúc trước khi khóa |
 | Agreement và xử lý bất đồng | Phúc–Đăng, Anh hỗ trợ đánh giá | Chỉ mở hai phiếu sau khi cả hai đã khóa |
@@ -33,7 +33,7 @@ Vì vậy các trạng thái sau vẫn là `pending`:
 
 ## 3. Cách bàn giao để không bị rối
 
-1. Phúc và Đăng dùng đúng ZIP riêng trên Draft Release `Midterm 2 frozen team handoff - 3 November 2026`.
+1. Phúc và Đăng dùng đúng ZIP riêng trên Draft Release `Midterm 2 frozen team handoff - 3 November 2026` và rubric `frozen_v1.1`.
 2. Mỗi người lưu worksheet gốc không sửa và một bản làm việc riêng có `label`, `confidence`, `rationale`, `evidence` và `exposure`.
 3. Mỗi người nộp nguyên phiếu đã khóa cho Tâm. Không gửi quyết định từng ca qua chat cho nhau.
 4. Tâm ghi ngày khóa rubric và ngày nhận hai phiếu. Khi đó mới chạy agreement, đọc machine labels/follow-up hoặc mở coverage snapshot.
@@ -41,7 +41,7 @@ Vì vậy các trạng thái sau vẫn là `pending`:
 
 ## 4. Nội dung có thể gửi Tâm ngay
 
-> Tâm ơi, phần Phúc đã xong phần kỹ thuật: rubric đề xuất v1.1, hướng dẫn phối hợp, audit pilot 6/6 và main 60/60, trong đó main có 181 link HTML cục bộ đọc được. Mình cũng có một bản đánh giá **tự động** 60/60 được lưu riêng với provenance, không ghi thành phiếu người thật và không gửi cho Đăng để giữ độc lập. Hiện chưa thấy phiếu reviewer 2 hoặc xác nhận khóa rubric trên GitHub. Khi Tâm chốt wording/ngày khóa và nhận hai phiếu người thật, mình sẽ chạy agreement rồi mới mở coverage snapshot theo đúng quy trình.
+> Tâm ơi, phần Phúc đã xong phần kỹ thuật: rubric `frozen_v1.1`, hướng dẫn phối hợp, audit pilot 6/6 và main 60/60, trong đó main có 181 link HTML cục bộ đọc được. Mình cũng có một bản đánh giá **tự động** 60/60 được lưu riêng với provenance, không ghi thành phiếu người thật và không gửi cho Đăng để giữ độc lập. Mình sẽ nộp reviewer_1.csv cùng thời điểm nộp và khai báo AI; Đăng nộp reviewer_2.csv riêng. Sau khi Tâm nhận đủ, lưu nguyên bản và checksum, mình mới chạy agreement và coverage theo đúng quy trình.
 
 ## 5. Giới hạn cần nói rõ khi bàn giao
 
