@@ -1,0 +1,4 @@
+﻿window,proposed,reference,delta,months,low,high,draws,block_length,reason
+final,hier_lr_dynamic,A_no_dynamics_matched,0.047439457162799015,9,-0.0073124924859886975,0.09343852569729189,1000,2,Exploratory paired month blocks
+final,hier_lr_dynamic,A_no_context_drift_matched,0.004887393412469576,9,-0.019547868394918677,0.019144064910265213,1000,2,Exploratory paired month blocks
+final,hier_lr_dynamic,A_flat_matched,0.07959072519919069,9,0.029219164012218003,0.1321398505877758,1000,2,Exploratory paired month blocks

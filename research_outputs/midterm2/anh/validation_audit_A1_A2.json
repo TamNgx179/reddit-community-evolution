@@ -1,0 +1,218 @@
+{
+  "source_directory": "C:\\Users\\MSI\\Downloads\\SNA_Frozen_F1_Handoff_20261104\\analysis_outputs_20261104_A1_A2_run2",
+  "output_directory": "C:\\Users\\MSI\\Downloads\\SNA_Frozen_F1_Handoff_20261104\\analysis_outputs_20261104_A1_A2_aggregate_run2",
+  "expected_seeds": [
+    42,
+    43,
+    44
+  ],
+  "aggregation": {
+    "mean": "Arithmetic mean across seeds",
+    "sd": "Sample standard deviation (ddof=1)",
+    "support": "Invariant support retained once; not multiplied by three.",
+    "n": "Invariant sample count retained once; not multiplied by three."
+  },
+  "macro_tables": {
+    "A1_overall": {
+      "source_rows": 57,
+      "aggregate_rows": 19,
+      "models": 19,
+      "metric_columns": [
+        "macro_f1_six",
+        "accuracy"
+      ],
+      "invariant_columns": [
+        "n"
+      ]
+    },
+    "A1_monthly": {
+      "source_rows": 513,
+      "aggregate_rows": 171,
+      "models": 19,
+      "metric_columns": [
+        "macro_f1_six",
+        "accuracy"
+      ],
+      "invariant_columns": [
+        "n"
+      ]
+    },
+    "A2_size": {
+      "source_rows": 228,
+      "aggregate_rows": 76,
+      "models": 19,
+      "metric_columns": [
+        "macro_f1_six",
+        "accuracy"
+      ],
+      "invariant_columns": [
+        "n"
+      ]
+    },
+    "A2_lineage_history": {
+      "source_rows": 114,
+      "aggregate_rows": 38,
+      "models": 19,
+      "metric_columns": [
+        "macro_f1_six",
+        "accuracy"
+      ],
+      "invariant_columns": [
+        "n"
+      ]
+    },
+    "A2_member_activity_history": {
+      "source_rows": 114,
+      "aggregate_rows": 38,
+      "models": 19,
+      "metric_columns": [
+        "macro_f1_six",
+        "accuracy"
+      ],
+      "invariant_columns": [
+        "n"
+      ]
+    },
+    "A2_size_history": {
+      "source_rows": 456,
+      "aggregate_rows": 152,
+      "models": 19,
+      "metric_columns": [
+        "macro_f1_six",
+        "accuracy"
+      ],
+      "invariant_columns": [
+        "n"
+      ]
+    },
+    "A2_stratified": {
+      "source_rows": 912,
+      "aggregate_rows": 304,
+      "models": 19,
+      "metric_columns": [
+        "macro_f1_six",
+        "accuracy"
+      ],
+      "invariant_columns": [
+        "n"
+      ]
+    }
+  },
+  "class_tables": {
+    "A1_overall": {
+      "source_rows": 342,
+      "aggregate_rows": 114,
+      "models": 19,
+      "metric_columns": [
+        "precision",
+        "recall",
+        "f1",
+        "to_dissolve",
+        "predicted"
+      ],
+      "invariant_columns": [
+        "support"
+      ]
+    },
+    "A1_monthly": {
+      "source_rows": 3078,
+      "aggregate_rows": 1026,
+      "models": 19,
+      "metric_columns": [
+        "precision",
+        "recall",
+        "f1",
+        "to_dissolve",
+        "predicted"
+      ],
+      "invariant_columns": [
+        "support"
+      ]
+    },
+    "A2_size": {
+      "source_rows": 1368,
+      "aggregate_rows": 456,
+      "models": 19,
+      "metric_columns": [
+        "precision",
+        "recall",
+        "f1",
+        "to_dissolve",
+        "predicted"
+      ],
+      "invariant_columns": [
+        "support"
+      ]
+    },
+    "A2_lineage_history": {
+      "source_rows": 684,
+      "aggregate_rows": 228,
+      "models": 19,
+      "metric_columns": [
+        "precision",
+        "recall",
+        "f1",
+        "to_dissolve",
+        "predicted"
+      ],
+      "invariant_columns": [
+        "support"
+      ]
+    },
+    "A2_member_activity_history": {
+      "source_rows": 684,
+      "aggregate_rows": 228,
+      "models": 19,
+      "metric_columns": [
+        "precision",
+        "recall",
+        "f1",
+        "to_dissolve",
+        "predicted"
+      ],
+      "invariant_columns": [
+        "support"
+      ]
+    },
+    "A2_size_history": {
+      "source_rows": 2736,
+      "aggregate_rows": 912,
+      "models": 19,
+      "metric_columns": [
+        "precision",
+        "recall",
+        "f1",
+        "to_dissolve",
+        "predicted"
+      ],
+      "invariant_columns": [
+        "support"
+      ]
+    },
+    "A2_stratified": {
+      "source_rows": 5472,
+      "aggregate_rows": 1824,
+      "models": 19,
+      "metric_columns": [
+        "precision",
+        "recall",
+        "f1",
+        "to_dissolve",
+        "predicted"
+      ],
+      "invariant_columns": [
+        "support"
+      ]
+    }
+  },
+  "notes": [
+    "Final-window predictions only.",
+    "No model was fitted or refitted.",
+    "No predictions were regenerated.",
+    "Each model/stratum was aggregated across seeds 42, 43, 44.",
+    "Seeds are repeated runs, not independent communities.",
+    "Confusion matrices remain in the original per-seed exports.",
+    "Support is not summed across seeds.",
+    "Macro-F1 uses the fixed six-class convention."
+  ]
+}

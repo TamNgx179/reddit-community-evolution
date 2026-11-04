@@ -1,0 +1,20 @@
+{
+  "model": "B2_random_forest",
+  "seeds": [
+    42,
+    43,
+    44
+  ],
+  "prediction_rows": 3807,
+  "unique_samples": 1269,
+  "rows_per_seed": {
+    "42": 1269,
+    "43": 1269,
+    "44": 1269
+  },
+  "all_samples_have_three_seeds": true,
+  "y_true_consistent_across_seeds": true,
+  "duplicate_sample_seed_rows": 0,
+  "all_three_agree": 1238,
+  "at_least_one_differs": 31
+}

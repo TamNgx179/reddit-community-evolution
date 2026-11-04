@@ -1,0 +1,54 @@
+{
+  "created_utc": "2026-11-04T09:06:25.215121+00:00",
+  "prediction_rows": 72333,
+  "unique_final_samples": 1269,
+  "models": [
+    "A_flat_matched",
+    "A_no_context_drift_matched",
+    "A_no_dynamics_matched",
+    "B1_majority",
+    "B1_persistence",
+    "B2_random_forest",
+    "B4_logreg",
+    "B5_matched_boosting",
+    "HeTCo_v0",
+    "flat_hgb_SHL",
+    "flat_hgb_dynamic",
+    "flat_hgb_static",
+    "flat_lr_SHL",
+    "flat_lr_dynamic",
+    "flat_lr_static",
+    "hier_hgb_dynamic",
+    "hier_hgb_static",
+    "hier_lr_dynamic",
+    "hier_lr_static"
+  ],
+  "seeds": [
+    42,
+    43,
+    44
+  ],
+  "rows_per_model_seed": 1269,
+  "all_labels_resolved": true,
+  "all_y_true_match_label_export": true,
+  "all_features_matched": true,
+  "fixed_classes": [
+    "stable",
+    "grow",
+    "shrink",
+    "merge",
+    "split",
+    "dissolve"
+  ],
+  "metric_strata": [
+    "all",
+    "lineage_history",
+    "member_activity_history",
+    "month",
+    "size",
+    "size_history"
+  ],
+  "label_month_min": "2018-01",
+  "label_month_max": "2018-09",
+  "note": "Final-window predictions only. Unresolved and censored cases are excluded from predictive metrics and remain in coverage analysis."
+}
