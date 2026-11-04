@@ -13,6 +13,7 @@
 | Hướng dẫn phối hợp Phúc–Đăng | `docs/PHUC-DANG-CACH-CHAM.md` và `docs/PHUC-WEEK3-WEEK4.md` mô tả gói riêng, thứ tự pilot → khóa phiếu → main → coverage | Hoàn thành |
 | Kiểm tra gói reviewer 1 | Pilot 6/6 ca và main 60/60 ca có cấu trúc/evidence nội bộ đọc được. Audit main kiểm tra thêm 181 liên kết HTML cục bộ | Hoàn thành về mặt kỹ thuật |
 | Bản đánh giá bổ trợ tự động | Có 60/60 ca cùng provenance, source hash và lý do. Toàn bộ ghi `reviewer_type=automated` | Hoàn thành, **không phải** phiếu người thật |
+| Bản nháp reviewer 1 có hỗ trợ AI | `phuc-main-ai-assisted-draft-20261104-001/reviewer_1.csv` có 60 dòng; metadata ghi `unsubmitted_ai_assisted_draft`, `human_judgments_claimed=0` và hash phiếu gốc | Sẵn sàng để Phúc tự rà, chấp nhận/sửa từng dòng và khai thời điểm nộp thật |
 | Mở coverage snapshot | Chưa mở | Đúng quy trình, chờ khóa hai phiếu độc lập |
 
 Các artifact cục bộ được giữ ở `artifacts/review/` và không commit dữ liệu/nhãn vào Git. Các thư mục liên quan là `phuc-pilot-audit-20261103-001`, `phuc-main-audit-20261104-001` và `phuc-main-assisted-20261104-001`.
@@ -38,6 +39,14 @@ Vì vậy các trạng thái sau vẫn là `pending`:
 3. Mỗi người nộp nguyên phiếu đã khóa cho Tâm. Không gửi quyết định từng ca qua chat cho nhau.
 4. Tâm ghi ngày khóa rubric và ngày nhận hai phiếu. Khi đó mới chạy agreement, đọc machine labels/follow-up hoặc mở coverage snapshot.
 5. Nếu thiếu thông tin về phạm vi, bộ lọc hay độ đầy đủ của tháng sau, dùng `unresolved` thay vì suy diễn `dissolve`.
+
+### Bảo vệ phiếu gốc khi tạo bản nháp AI-assisted
+
+`scripts/create_ai_assisted_review_draft.py` chỉ nhận một worksheet gốc còn trống,
+đối chiếu đủ `case_id` với nguồn có `reviewer_type=automated` rồi viết output vào
+một thư mục mới. Nó từ chối ghi đè output cũ hoặc worksheet đã có nhãn. Output vẫn
+chỉ là `unsubmitted_ai_assisted_draft`; người reviewer phải tự rà, chấp nhận/sửa
+từng dòng và ghi thời điểm nộp thật trước khi gửi `reviewer_1.csv` cho Tâm.
 
 ## 4. Nội dung có thể gửi Tâm ngay
 
