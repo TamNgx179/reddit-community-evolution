@@ -29,6 +29,33 @@ The analyses cover:
 - **Paired bootstrap:** Exploratory uncertainty intervals for paired model comparisons.
 - **B2 seed agreement:** Prediction consistency across random seeds.
 
+### 1.1. Output Files and Reproducibility
+
+The tables, figures, and validation artifacts for this evaluation are organized under:
+
+- [Midterm 2 output index](tables/midterm2-20261104/README.md)
+- [A1 tables](tables/midterm2-20261104/A1/tables/)
+- [A2 tables](tables/midterm2-20261104/A2/tables/)
+- [A3 tables](tables/midterm2-20261104/A3/tables/)
+- [B coverage tables](tables/midterm2-20261104/B/tables/)
+- [Error analysis tables](tables/midterm2-20261104/error_analysis/tables/)
+- [Matched model comparison](tables/midterm2-20261104/model_comparison/tables/)
+- [Paired bootstrap tables](tables/midterm2-20261104/paired_bootstrap/tables/)
+- [B2 seed agreement outputs](tables/midterm2-20261104/seed_agreement/)
+- [Validation audits](tables/midterm2-20261104/audits/)
+
+Figures are stored separately from the table directories:
+
+- [A1 figures](figures/midterm2-20261104/A1/)
+- [A2 figures](figures/midterm2-20261104/A2/)
+- [B figures](figures/midterm2-20261104/B/)
+
+The reproducibility scripts are maintained in the repository's `scripts/` directory:
+
+- [run_a1_a2.py](../scripts/run_a1_a2.py)
+- [aggregate_a1_a2.py](../scripts/aggregate_a1_a2.py)
+- [analyze_seed_agreement.py](../scripts/analyze_seed_agreement.py)
+
 ## 2. A1 — Overall and Monthly Performance
 
 ### 2.1 Overall performance
