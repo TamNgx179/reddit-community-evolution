@@ -3,7 +3,7 @@
 **Cập nhật:** 04/11/2026  
 **Người phụ trách:** Phúc  
 **PR theo dõi:** [#21](https://github.com/TamNgx179/reddit-community-evolution/pull/21)  
-**Trạng thái tổng:** `rubric_frozen_human_forms_pending`
+**Trạng thái tổng:** `reviewer_1_locked_waiting_for_reviewer_2`
 
 ## 1. Phần Phúc đã hoàn thành
 
@@ -14,7 +14,7 @@
 | Kiểm tra gói reviewer 1 | Pilot 6/6 ca và main 60/60 ca có cấu trúc/evidence nội bộ đọc được. Audit main kiểm tra thêm 181 liên kết HTML cục bộ | Hoàn thành về mặt kỹ thuật |
 | Bản đánh giá bổ trợ tự động | Có 60/60 ca cùng provenance, source hash và lý do. Toàn bộ ghi `reviewer_type=automated` | Hoàn thành, **không phải** phiếu người thật |
 | Bản nháp reviewer 1 có hỗ trợ AI | `phuc-main-ai-assisted-draft-20261104-001/reviewer_1.csv` có 60 dòng; metadata ghi `unsubmitted_ai_assisted_draft`, `human_judgments_claimed=0` và hash phiếu gốc | Sẵn sàng để Phúc tự rà, chấp nhận/sửa từng dòng và khai thời điểm nộp thật |
-| Gói reviewer 1 sẵn sàng nộp | `phuc-reviewer1-submission-ready-20261104-001/` có `reviewer_1.csv`, metadata, checksum và ZIP; Phúc đã xác nhận chốt bản AI-assisted | Sẵn sàng gửi trực tiếp cho Tâm; chưa gửi, chưa có receipt/checksum của điều phối |
+| Gói reviewer 1 đã nhận | `phuc-reviewer1-submission-ready-20261104-001/` có `reviewer_1.csv`, metadata, checksum và ZIP; Phúc đã xác nhận chốt bản AI-assisted | Tâm đã nhận/lưu nguyên bản và khóa tại biên nhận `reviewer_1_20261104T151747Z`; đối chiếu ZIP/CSV với checksum biên nhận đều khớp |
 | Mở coverage snapshot | Chưa mở | Đúng quy trình, chờ khóa hai phiếu độc lập |
 
 Các artifact cục bộ được giữ ở `artifacts/review/` và không commit dữ liệu/nhãn vào Git. Các thư mục liên quan là `phuc-pilot-audit-20261103-001`, `phuc-main-audit-20261104-001` và `phuc-main-assisted-20261104-001`.
@@ -28,7 +28,7 @@ Vì vậy các trạng thái sau vẫn là `pending`:
 | Việc | Chủ sở hữu | Điều kiện hoàn thành |
 | --- | --- | --- |
 | Lưu xác nhận rubric | Tâm / điều phối | Đã xác nhận dùng `frozen_v1.1`; giữ tin nhắn gốc và version tài liệu |
-| Phiếu reviewer 1 | Phúc | Đã chốt bản AI-assisted 60 ca. Cần gửi trực tiếp cho Tâm, kèm thời điểm gửi thực tế; không mô tả là chấm người độc lập không hỗ trợ AI |
+| Phiếu reviewer 1 | Phúc | Đã nhận/khóa. Biên nhận của Tâm ghi 22:17:47 ngày 04/11/2026 UTC+07, đủ 60 case_id và hash ZIP/CSV khớp. Không mô tả là chấm người độc lập không hỗ trợ AI |
 | Phiếu reviewer 2 | Đăng | Nộp gói riêng, không xem nhãn reviewer 1 hay bản AI của Phúc trước khi khóa |
 | Agreement và xử lý bất đồng | Phúc–Đăng, Anh hỗ trợ đánh giá | Chỉ mở hai phiếu sau khi cả hai đã khóa |
 | Coverage và liên kết với graph thật | Phúc, sau khi khóa phiếu | Mở snapshot có nhãn máy, chạy coverage theo từng reference và ghi giới hạn quan sát |
@@ -40,6 +40,16 @@ Vì vậy các trạng thái sau vẫn là `pending`:
 3. Mỗi người nộp nguyên phiếu đã khóa cho Tâm. Không gửi quyết định từng ca qua chat cho nhau.
 4. Tâm ghi ngày khóa rubric và ngày nhận hai phiếu. Khi đó mới chạy agreement, đọc machine labels/follow-up hoặc mở coverage snapshot.
 5. Nếu thiếu thông tin về phạm vi, bộ lọc hay độ đầy đủ của tháng sau, dùng `unresolved` thay vì suy diễn `dissolve`.
+
+### Biên nhận reviewer 1
+
+Tâm gửi biên nhận `Phuc_Reviewer1_Receipt_20261104`. Nội dung xác nhận ZIP CRC,
+checksum file bên trong, 60 `case_id` duy nhất và các trường nhãn/độ tự tin/lý do.
+SHA-256 ZIP là `67383f0ec938bff5335621081e67da08429a56f81b556471d5b3a6b28541620a`;
+SHA-256 CSV là `91fb5eb69f954e196e9cb9496a5dbaad9db940340b3dbe9e9e4e84abbbdba4e4`.
+Biên nhận vẫn ghi reviewer 2 là pending, chưa mở answer key, chưa đối chiếu nhãn
+máy và chưa tính agreement. Không chuyển phiếu 1 cho Đăng cho đến khi điều phối
+nhận và khóa cả hai phiếu.
 
 ### Bảo vệ phiếu gốc khi tạo bản nháp AI-assisted
 
