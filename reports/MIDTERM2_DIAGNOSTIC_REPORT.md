@@ -1,4 +1,15 @@
-# Midterm 2 — Evaluation and Diagnostic Analysis Report
+# Week 3 — Community Evolution Diagnostic Report
+
+
+This report records the completed Week 3 diagnostic work as of 9 November 2026. It integrates the frozen full-study evaluation, observation and label coverage, paired forecast errors, submitted review agreement, adjudication and post-lock tracker comparison.
+
+### Problem, graph and operational target
+
+The unit of analysis is a detected user community at month t. The task predicts its next-month structural event from six labels — stable, grow, shrink, merge, split and dissolve. Input features use records available through t. The target uses the transition from t to t+1. Unresolved transitions and terminally censored communities enter the applicability audit as separate statuses.
+
+The original study uses 15 Reddit corpora and 45 monthly snapshots from January 2015 through September 2018. Valid replies create directed author-to-parent-author interactions in the child record's UTC month. The undirected user projection sums reply counts in both directions. Independent weighted Leiden partitions define the communities in each snapshot. The declared GED adaptation compares member overlap and importance-weighted inclusion to assign transition links and events. A directional inclusion of at least 0.5 accepts a link. The declared dissolution threshold is 0.1, and competing weak or ambiguous patterns can remain unresolved. Consequently the prediction target is defined jointly by the graph, detector and tracker.
+
+Two diagnostic questions organize the report. First, how much of the observed community population receives a resolved target, and how do excluded groups differ? Second, under the same frozen targets, which classes and conditions explain the proposed model's differences from HGB and matched component controls? The review panel examines whether the supplied membership and interaction evidence supports the structural interpretation of those targets.
 
 ## 1. Scope and Evaluation Protocol
 
@@ -150,7 +161,7 @@ Coverage is calculated over resolved and unresolved records, with terminally cen
 = 64.78\%
 \]
 
-This is member-month weighted coverage. A member or community may contribute records in multiple months; the percentage should not be interpreted as the proportion of unique members that were resolved.
+This is community-month label-resolution coverage. Member-month weighted coverage is calculated separately as 1,417,626 / 1,787,503 = 79.31%. Both measures count repeated observations across months. Terminal censoring is reported separately from observed transitions.
 
 ### 4.2 Resolved and unresolved feature distributions
 
@@ -206,6 +217,17 @@ The hierarchical configuration should not be described as uniformly better acros
 
 ## 6. Matched Model Comparisons
 
+### 6.1 Proposed and HGB on identical frozen samples
+
+| Model | Final cases per seed | Macro-F1 | Accuracy |
+|---|---:|---:|---:|
+| Hierarchical LR dynamic, proposed | 1,269 | 0.4117 | 0.9046 |
+| Hierarchical HGB dynamic, paired comparator | 1,269 | 0.3880 | 0.9094 |
+
+The paired audit reproduces 29 proposed-only correct and 35 HGB-only correct cases. Both models correctly predict 1,119 cases and both err on 86. A separate table records all 95 prediction disagreements. The complete historical control inventory is retained as supplementary evidence alongside the five reference baselines and the component comparisons.
+
+### 6.2 Matched component contrasts
+
 Three paired contrasts were evaluated:
 
 1. `hier_lr_dynamic` versus `A_no_dynamics_matched`.
@@ -214,7 +236,7 @@ Three paired contrasts were evaluated:
 
 The comparison uses the same final samples and preserves seed pairing.
 
-### 6.1 Paired Macro-F1 intervals
+### 6.3 Paired Macro-F1 intervals
 
 An exploratory paired block bootstrap used 1,000 draws and a block length of two months across nine calendar months.
 
@@ -230,7 +252,7 @@ The intervals for the dynamic-versus-no-dynamics and context-drift contrasts inc
 
 These are exploratory intervals over nine months, not causal estimates or proof of generalization to all resolved records.
 
-### 6.2 Paired correctness outcomes
+### 6.4 Paired correctness outcomes
 
 For the hierarchical-versus-flat comparison:
 
@@ -254,7 +276,7 @@ For the context-drift contrast, the overall paired difference is very small. The
 
 Macro-F1 and paired correctness rates weight observations differently. Macro-F1 gives equal weight to classes, whereas paired correctness rates are sample-weighted. Because dissolve dominates the sample, these summaries can lead to different impressions without being contradictory.
 
-### 6.3 Bootstrap limitations
+### 6.5 Bootstrap limitations
 
 Overall and class-level strata retained at least 984 valid draws. Lineage-history, member-activity-history, and size strata retained all 1,000 draws.
 
@@ -289,14 +311,72 @@ The findings should be interpreted within the following boundaries:
 7. **Seed dependence:** Random seeds are repeated runs on the same evaluation samples, not independent test samples.
 8. **No full resolved-population prediction export:** The available final predictions do not cover all 7,490 resolved records. Missing predictions are not reconstructed or inferred.
 
-## 9. Overall Conclusions
+## 9. Label review, adjudication and source-lineage verification
 
-The final-window evaluation shows that `hier_lr_dynamic` achieves the highest observed overall Macro-F1 among the evaluated configurations, while the hierarchical-versus-flat paired comparison has a positive exploratory 95% interval.
+The development panel contains 60 selected cases. Two submitted versions were sealed before comparison. Their pre-discussion agreement was 47/60 (78.33%) and unweighted Cohen kappa was 0.4433. Both reviewers declared AI assistance. The original metadata records the scope of adoption and exposure declarations. These provenance details qualify the evidence when describing label validation.
 
-However, model performance is strongly affected by class imbalance. The dominant dissolve class is predicted substantially better than rare event classes, and the hierarchical advantage is not uniform across all classes.
+Phúc and Đăng finalized the 13 disagreements in a separate adjudication record on 6 November. Their decisions were 10 unresolved, two grow and one shrink. Combining those decisions with the 47 initial matches gives the final 60-case panel. The original submissions and pre-discussion agreement remain archived with their SHA-256 hashes.
 
-The tested dynamic-feature contrast does not establish a clear overall Macro-F1 improvement, and the context-drift contrast shows only a negligible difference. Subgroup results suggest heterogeneous behavior across event classes, size groups, and history availability.
+After the adjudication version was sealed, the coordinator compared its decisions with frozen tracker labels. The final panel agreed with the tracker in 26/60 cases (43.33%). The directions of all 34 discrepancies are retained in the seven-label confusion table.
 
-The coverage analysis also shows that only 64.78% of eligible community-month records have resolved labels. Resolved and unresolved records differ descriptively in several feature distributions, but the current analysis does not establish why those differences occur.
+| Final review decision | Tracker decision | Cases |
+|---|---|---:|
+| unresolved | dissolve | 24 |
+| unresolved | grow | 5 |
+| unresolved | merge | 1 |
+| grow | unresolved | 2 |
+| merge | unresolved | 1 |
+| shrink | unresolved | 1 |
 
-Overall, these results support a careful interpretation of predictive performance, class-specific errors, subgroup support, and label-resolution coverage. They should be treated as evidence about the frozen final evaluation window rather than as estimates that automatically generalize to the entire resolved population.
+The 24 dissolve-to-unresolved discrepancies identify the main interpretation question. A tracker can assign dissolve after its continuity rule rejects successors, while an assessor can retain unresolved when observation or a coherent group continuation remains ambiguous. These cases motivate reporting operational event definitions and observation coverage together. The result alone establishes neither a corpus collection defect nor disappearance of a social group. The panel was stratified for diagnosis, so its matching rate applies to these 60 cases.
+
+The source-month lineage check found 52 focal communities with no accepted predecessor, five with an ambiguous lineage reset, and three with unique continuation. Reconstructed predecessor counts, stored age and missing-history flags matched the frozen feature values. Forty-three cases lacked accepted lineage while member-activity history was available. Source age checks reused the prior audited age and the frozen inclusion-pair table. This verifies saved semantics within that scope. The anonymous graph audit separately checked all 13 disputed cases for membership, overlap, edges and observation consistency.
+
+### Supplementary six-case assessment
+
+A separate six-case development sample was prepared with seed 20261109. One community was selected within each size stratum 2–4, 5–20 and above 20 in each of April and May 2017. The earlier 66 pilot/main case keys were excluded. Target labels and model predictions were withheld during selection and assessment. Complete anonymous memberships, incident edges, successor/predecessor overlap and per-member observation flags were available.
+
+At the user's request, the assistant assessed all six cases and recorded the evidence, confidence and rationale. The supplementary decisions were three unresolved, one grow, one shrink and one observed-network dissolve, all with medium confidence. The grow/shrink interpretations rely on a dominant surviving interaction core despite partial source retention. The dissolve interpretation concerns absence in the next-month reply and authored-record channels within the declared observation scope.
+
+This adds six automated case interpretations to the technical diagnostic record. Actual human decisions on these six cases remain unrecorded. The original blank human worksheet is retained separately. The adjacent monthly transitions can reuse underlying memberships, which limits independence among cases. These supplementary decisions enter neither the original 60-case agreement nor its 26/60 tracker comparison. The assessment remains a separately identified exploratory supplement.
+
+The aggregate counts and sampling/provenance scope are retained in [the supplementary assessment summary](tables/week3-review-20261109/supplementary-assessment-summary.json).
+
+Aggregate review results and source hashes are available in [the review tables](tables/week3-review-20261109/review-summary.json), [the tracker confusion table](tables/week3-review-20261109/review-tracker-confusion.csv), [the lineage table](tables/week3-review-20261109/source-lineage-summary.csv) and [provenance](tables/week3-review-20261109/provenance.json).
+
+## 10. Week 3 evidence ledger
+
+| Lecturer feedback or planned output | Evidence available | Acceptance and remaining work |
+|---|---|---|
+| Explain how graph and labels are constructed | Frozen source manifests, declared reply projection, detector/tracker rules and lineage examples | Technical preparation complete. Operational label interpretation remains explicit. |
+| Check ambiguous dissolve and unresolved cases | 60-case sealed submissions, 13-case adjudication and post-lock tracker comparison | Processing complete for the declared AI-assisted submissions. A six-case automated supplement is documented separately. Independent human validation remains open. |
+| Explain unresolved exclusions and applicability | Full-study community-month coverage 64.78%, member-month coverage 79.31%, 4,072 unresolved and 183 terminal censored | Aggregate and month/size/history coverage are available. Recipient-side graph audit evidence must retain the run manifest. |
+| Explain grow/merge errors and HGB comparison | 1,269 final keys per seed, four correctness groups, 64 correctness contrasts and 95 prediction disagreements | Frozen-data replay reproduced the counts. Interpret 16 selected illustrations within their documented sampling skew. |
+| Explain performance by class, month and history | A1/A2 tables, six-class metrics, per-class support and exploratory paired intervals | Complete for the final prediction window. Final-window metrics cover 1,269 resolved cases. |
+| Deliver a coherent diagnosis | Coverage correction, this review section, existing mechanism analysis and aggregate inventories | Integrated in this report with matched tables, source hashes and diagnostic findings. |
+
+## 11. Integrated diagnostic conclusions
+
+### Label applicability and observation
+
+The study assigns resolved labels to 7,490 of 11,562 observed transitions, giving community-month coverage of 64.78%. Weighting by community size gives member-month coverage of 79.31%. The 183 terminal communities remain censored. Together these measures define the population to which forecasting metrics apply and the observation mass excluded by unresolved labels.
+
+The review panel raises an additional interpretation issue. Its final 60-case decisions contain 50 unresolved, six merge, three grow and one shrink. Twenty-six decisions agree with the tracker. Of the 34 differences, 24 are tracker-dissolve cases retained as unresolved by the review process. The panel was selected within machine-event strata, so these counts characterize the inspected cases. They identify ambiguity between a rule-defined lack of continuity and confidence in an observed structural event. The underlying graph audit detected no inconsistency in the supplied memberships, overlaps, edges or observation flags for the 13 disputed cases.
+
+### Forecast errors and the HGB comparison
+
+On 1,269 final samples per seed, the proposed hierarchical LR dynamic model has Macro-F1 0.4117, compared with 0.3880 for hierarchical HGB dynamic. The paired outcomes are 1,119 both correct, 29 proposed-only correct, 35 HGB-only correct and 86 both wrong. These counts repeat identically across seeds. Among all different predicted labels, 95 cases differ, including 31 cases where both predictions are wrong. Macro-F1 and the number of correct predictions emphasize different aspects of this imbalanced six-event task.
+
+Grow and merge remain the clearest error groups. Proposed predicts dissolve for 14/19 grow cases and 8/15 merge cases. The HGB comparator does so for 12/19 and 9/15 respectively. This locates the error concentration in the dissolve-versus-event decision and in the available community history. It also shows that the two models exchange errors within the same rare classes.
+
+### History and component evidence
+
+Source-month lineage matches the saved predecessor and age semantics across the 60 audited focal communities. Fifty-two lack an accepted predecessor, while five reset age under ambiguous lineage and three have unique continuation. Forty-three cases have no accepted lineage but retain member-activity history. These channels require separate interpretation when analyzing performance strata.
+
+The exploratory full-study component contrasts give a dynamic-versus-no-dynamics Macro-F1 difference of +0.0474 with interval [-0.0073, +0.0934]. The context-drift difference is +0.0049 with interval [-0.0195, +0.0191]. The matched hierarchical-versus-flat difference is +0.0796 with interval [+0.0292, +0.1321]. The clearest positive component evidence in this final window concerns the hierarchical decision architecture. The feature-group contributions have wider uncertainty and heterogeneous subgroup behavior.
+
+### Completed diagnostic record
+
+Week 3 has produced frozen input contracts, review submission receipts and checksums, pre-discussion agreement, a separate adjudication, source-lineage checks, full-population coverage, a paired error analysis on the final window and a separately documented six-case automated supplement. Repeated seeds refer to the same communities. The 16 selected error illustrations emphasize early months and larger groups, which is documented alongside their selection procedure. Review provenance, class support, unresolved eligibility and diagnostic sampling delimit the conclusions throughout the report.
+
+The subsequent experimental stage can use this record to justify a bounded change and its matched evaluation. Model changes, fitting and subsequent-stage ablation results are outside the results consolidated here.

@@ -1,0 +1,19 @@
+{
+  "status": "automated_assessment_completed",
+  "assessor_type": "AI_assistant",
+  "created_utc": "2026-11-09T09:52:46.645622+00:00",
+  "cases": 6,
+  "label_counts": {
+    "unresolved": 3,
+    "grow": 1,
+    "dissolve": 1,
+    "shrink": 1
+  },
+  "human_judgments_recorded": 0,
+  "user_adoption_status": "not_recorded",
+  "target_labels_or_model_predictions_accessed_for_this_assessment": false,
+  "independent_human_validation": false,
+  "sampling": "Seed 20261109; one community per size stratum 2-4,5-20,>20 in each of April and May 2017. Excluded earlier 66 panel keys.",
+  "sample_scope": "Six diagnostic cases spanning two consecutive transitions. Underlying memberships may recur across cases and months.",
+  "rubric_interpretation": "Existing observed-network dissolution and dominant-interaction-continuation interpretation. Recommendations may require adjudication where retention and observation are low."
+}

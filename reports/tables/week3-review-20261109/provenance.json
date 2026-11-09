@@ -1,0 +1,11 @@
+{
+  "input_sha256": {
+    "artifacts\\review\\submissions\\adjudication_20261107\\agreement_20261105.zip": "0ccdaa06c4da48f26924cca1ee00c3153244ba753c3146aed476393ea1e4791e",
+    "artifacts\\review\\submissions\\adjudication_20261107\\receipt.json": "91bf0c5003ebcc9e375764033d810ea23fb232ccd2feb0707b9588eaef84eb02",
+    "artifacts\\review\\submissions\\adjudication_20261107\\post_lock_comparison\\case_tracker_comparison.csv": "64f828b86f3a4a0386ed60e48f2b308b602badb81c200a641a6e11f1540ee170",
+    "artifacts\\review\\submissions\\adjudication_20261107\\post_lock_comparison\\case_lineage.csv": "95b8a1aca27037612032ebdff660ad63a7709226e50043152f716bc02d156137"
+  },
+  "case_ids_and_hidden_mapping": "Coordinator-held input files. Public exports contain aggregate counts.",
+  "reviewer_claims": "Preserved as declared in original metadata.",
+  "week_scope": "Week 3 diagnostic completion only"
+}
