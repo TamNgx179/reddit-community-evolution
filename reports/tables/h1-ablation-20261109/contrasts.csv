@@ -1,0 +1,7 @@
+window,family,primary,ablation,primary_macro_f1,ablation_macro_f1,delta
+main,attention,HeTCo_v4,HeTCo_v5,0.39760634004814105,0.4108710161077215,0.013264676059580427
+main,mean,A7v4_mean_pool,A7v5_mean_pool,0.3489879153319082,0.3489879153319082,0.0
+main,LR_hier_community,LR_hier_community,LR_hier_community_t1,0.39737251721984546,0.39737251721984546,0.0
+rolling,attention,HeTCo_v4,HeTCo_v5,0.39237208008971053,0.396720409084264,0.004348328994553452
+rolling,mean,A7v4_mean_pool,A7v5_mean_pool,0.3749778666957483,0.3749778666957483,0.0
+rolling,LR_hier_community,LR_hier_community,LR_hier_community_t1,0.38121844371844377,0.38121844371844377,0.0

@@ -1,0 +1,7 @@
+{
+  "source_diagnostic_manifest_sha256": "2b362c3da17fdcf7b46a06dea5607c4dc3d36060231fb884e4f37734c5c9da8e",
+  "inclusion_pairs_sha256": "38d86becf01fcb84cbdb05faa4140490472089c7ca8e1ba62fa97a15b6456fc8",
+  "history_evidence_cutoff": "t-1 -> t inclusion only; no target-month features",
+  "read_only": true,
+  "fitted": false
+}

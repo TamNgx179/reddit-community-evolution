@@ -1,0 +1,15 @@
+{
+  "ablation.csv": "8bb6813a49088ee1fdfc04fb562ce6e98e9901150a51314380d0c1a0cceefca2",
+  "contrasts.csv": "63f2f4c3c7ab1c73c709b8c15496fe2a7d60125442b63deca3666df85fa7bc17",
+  "fit-log.csv": "e52cfbebf16c39a2fc19ee1513d7a9c4b74cd38b334bc6128ac1d27475cfe473",
+  "main-seed-stability.csv": "c5373fab5d696cfbb40b7da340ba9d2fde77439a6e54cbaf06b222021e6a99c2",
+  "main-strata.csv": "526982352c0a13dcd03913ea96ce34f2ae7944f5bba382385c3bfd130a9c907c",
+  "main-tiers.csv": "90f985f4a7e32be047529736da2fa614246f4262546a0ecaddb98d87d55b6533",
+  "mechanism-verification.json": "1fa65e3f6c21bd61defb3791a7ee5a110caada0864fec33fa6b71da4a3186601",
+  "per-class.csv": "08e8f760a2a8583cb02add51011068e42d3f887a02b275b21562737e50485f09",
+  "rolling-seed-stability.csv": "f3edd81a6e8cfa8c24503b6604d03ee21887510b61258328dbca23810c59be10",
+  "rolling-strata.csv": "24fa696b53bd89f8e9cb7aa485186acbedeb1dc87e93467ef255667f58acd0dd",
+  "rolling-tiers.csv": "7dc4333d80fa5600a84615f249f0a3fb1bab12a57bfd6ec9db43faddc2914d61",
+  "saved-intervals.json": "afa3782e4fe481aa491334771af7c0f2b9e9b377e6ad0a4d1d0bd42b16b22ba1",
+  "verification.json": "2fc9cb07c194c45b5f5045eed3f0bf3b8c4c88565cf3c6307f2d498aeef73328"
+}

@@ -100,6 +100,12 @@ Runtime output theo cặp và `run_id` riêng trong `artifacts/`. Phiếu chấm
 
 ### Cải tiến được phép lựa chọn sau chẩn đoán
 
+**Bàn giao kỹ thuật của Thanh ngày 09/11:** [gói H1 primary–ablation](reports/H1_ABLATION_REPORT.md)
+gồm cấu hình khai báo, lịch fit hữu hạn khóa trước khi chạy, source snapshot,
+tests, dự báo khớp khóa và bảng kết quả kèm notebook. Giữ v4 là primary của pilot,
+báo cáo cả kết quả H1 không được ủng hộ; không thay primary full-study của nhóm.
+Các mục review nhãn của Phúc–Đăng vẫn được nghiệm thu riêng theo bằng chứng thật.
+
 | Nếu bằng chứng chỉ ra | Hướng Tâm–Thanh ưu tiên | Kiểm tra bắt buộc |
 |---|---|---|
 | Lỗi ID/cutoff/lineage hoặc thiếu bằng chứng predecessor | Sửa semantics/bug core, giữ phiên bản reference cũ để đối chiếu | Tests tái hiện, dữ liệu/label mới có reference mới, mọi baseline chạy lại cùng reference |

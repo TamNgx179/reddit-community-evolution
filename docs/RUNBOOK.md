@@ -2,6 +2,30 @@
 
 Commands run from the repository root. Use a new immutable output ID for each run. For definitions and CSV contracts see [methods](METHODS.md); for measured evidence see [results](RESULTS.md).
 
+## H1 delivery verification
+
+The [H1 delivery](../reports/H1_ABLATION_REPORT.md) records the declared
+pilot hypothesis, fixed budget, matched tables and passing test command.
+Verify its saved predictions without fitting:
+
+```powershell
+.venv/Scripts/python.exe scripts/verify_h1_delivery.py --run artifacts/hetco/thanh-h1-reproduction-20261109 --compare-run artifacts/hetco/hetco-v5-001 --output artifacts/diagnostics/thanh-h1-new
+```
+
+Local 2015 research, preparation and HeTCo artifacts are required. The command
+refuses existing output directories and changed input payloads. It exports
+aggregate scores, per-class recall, matched differences and replay intervals.
+It also checks the measured 90-fit budget, causal cutoffs, archived source and
+all six probabilities in the real-data replay. Reproduce the same fixed run
+with a fresh ID:
+
+```powershell
+.venv/Scripts/python.exe -u -m reddit_sna hetco-threshold --research-run artifacts/research/midterm-thanh-001 --preparation-run artifacts/core/reddit-2015-reproduced-v1 --reference-hetco-run artifacts/hetco/hetco-v4-001 --run-id thanh-h1-reproduction-new
+```
+
+The executed [delivery notebook](../notebooks/core/08_h1_ablation.ipynb)
+reads the public aggregate exports and verifies their inventory without fitting.
+
 ## Controlled member-pooling follow-up
 
 Install the declared extras in the project environment with

@@ -27,6 +27,14 @@ The sections below preserve earlier baseline and handoff evidence. Their indepen
 
 ## Pre-declared HeTCo v5 tier-1 threshold (1 November 2026)
 
+The [9 November H1 delivery](../reports/H1_ABLATION_REPORT.md) verifies
+27,954 saved prediction rows and all 9,318 archived argmax matches, and provides
+recomputed aggregate ablation tables. Twenty-one focused tests pass, including the
+estimator integration test pairing primary and ablation on reference keys.
+The real-data replay uses the same declaration under a frozen 90-fit schedule
+and archives source, environment, fit cutoffs and full event probabilities.
+It reproduces the existing pilot experiment without adding a new model variant.
+
 The error-mechanism audit in [ERROR_MECHANISMS](ERROR_MECHANISMS.md) led to one
 hypothesis, declared in `configs/hetco_threshold.toml` before fitting. On the
 2015 pilot, v5 (v4 plus a tier-1 threshold of 0.3 chosen on 07–09) scores 0.411

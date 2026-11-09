@@ -1,0 +1,154 @@
+[
+  {
+    "scope": "main_community",
+    "model": "HeTCo_v5",
+    "reference": "HeTCo_v4",
+    "observed": 0.013264676059580482,
+    "low": -0.004311776274626001,
+    "high": 0.027941852659803815,
+    "share_positive": 0.937,
+    "draws": 1000,
+    "unit": "community"
+  },
+  {
+    "scope": "main_community",
+    "model": "A7v5_mean_pool",
+    "reference": "A7v4_mean_pool",
+    "observed": 0.0,
+    "low": 0.0,
+    "high": 0.0,
+    "share_positive": 0.0,
+    "draws": 1000,
+    "unit": "community"
+  },
+  {
+    "scope": "main_community",
+    "model": "LR_hier_community_t1",
+    "reference": "LR_hier_community",
+    "observed": 0.0,
+    "low": 0.0,
+    "high": 0.0,
+    "share_positive": 0.0,
+    "draws": 1000,
+    "unit": "community"
+  },
+  {
+    "scope": "main_community",
+    "model": "HeTCo_v5",
+    "reference": "B4_logreg",
+    "observed": 0.050330569576275186,
+    "low": -0.028630548634230136,
+    "high": 0.122842587293908,
+    "share_positive": 0.883,
+    "draws": 1000,
+    "unit": "community"
+  },
+  {
+    "scope": "main_community",
+    "model": "HeTCo_v5",
+    "reference": "B5_matched_boosting",
+    "observed": 0.12185841546721393,
+    "low": 0.046086512212233026,
+    "high": 0.19225731980586674,
+    "share_positive": 0.999,
+    "draws": 1000,
+    "unit": "community"
+  },
+  {
+    "scope": "main_community",
+    "model": "HeTCo_v4",
+    "reference": "B4_logreg",
+    "observed": 0.0370658935166947,
+    "low": -0.03547312732331378,
+    "high": 0.10986098674891806,
+    "share_positive": 0.824,
+    "draws": 1000,
+    "unit": "community"
+  },
+  {
+    "scope": "main_community",
+    "model": "HeTCo_v4",
+    "reference": "B5_matched_boosting",
+    "observed": 0.10859373940763345,
+    "low": 0.036571499475341836,
+    "high": 0.17769876376403446,
+    "share_positive": 1.0,
+    "draws": 1000,
+    "unit": "community"
+  },
+  {
+    "scope": "main_community",
+    "model": "HeTCo_v5",
+    "reference": "LR_hier_community_t1",
+    "observed": 0.013498498887876076,
+    "low": -0.054945395103196785,
+    "high": 0.0858892712344812,
+    "share_positive": 0.628,
+    "draws": 1000,
+    "unit": "community"
+  },
+  {
+    "scope": "rolling_month_blocks",
+    "model": "HeTCo_v5",
+    "reference": "HeTCo_v4",
+    "low": -0.01406400190223489,
+    "high": 0.013148603886626309,
+    "share_positive": 0.513
+  },
+  {
+    "scope": "rolling_month_blocks",
+    "model": "A7v5_mean_pool",
+    "reference": "A7v4_mean_pool",
+    "low": 0.0,
+    "high": 0.0,
+    "share_positive": 0.0
+  },
+  {
+    "scope": "rolling_month_blocks",
+    "model": "LR_hier_community_t1",
+    "reference": "LR_hier_community",
+    "low": 0.0,
+    "high": 0.0,
+    "share_positive": 0.0
+  },
+  {
+    "scope": "rolling_month_blocks",
+    "model": "HeTCo_v5",
+    "reference": "B4_logreg",
+    "low": -0.0028953672857899293,
+    "high": 0.03707179983231634,
+    "share_positive": 0.942
+  },
+  {
+    "scope": "rolling_month_blocks",
+    "model": "HeTCo_v5",
+    "reference": "B5_matched_boosting",
+    "low": 0.06841018405929977,
+    "high": 0.16778535267015138,
+    "share_positive": 1.0
+  },
+  {
+    "scope": "rolling_month_blocks",
+    "model": "HeTCo_v4",
+    "reference": "B4_logreg",
+    "low": 0.0008201932238929288,
+    "high": 0.030042711772398256,
+    "share_positive": 0.99
+  },
+  {
+    "scope": "rolling_month_blocks",
+    "model": "HeTCo_v4",
+    "reference": "B5_matched_boosting",
+    "low": 0.0818979469223608,
+    "high": 0.156954473440894,
+    "share_positive": 1.0
+  },
+  {
+    "scope": "rolling_month_blocks",
+    "model": "HeTCo_v5",
+    "reference": "LR_hier_community_t1",
+    "low": -0.021922110236011705,
+    "high": 0.04730849920906194,
+    "share_positive": 0.867
+  }
+]
