@@ -1,0 +1,273 @@
+{
+  "schema_version": 1,
+  "protocol_id": "week4-frozen-core-acceptance-v1",
+  "exposure": "observed_development_and_replication",
+  "cohorts": [
+    {
+      "name": "original",
+      "reference_id": "activity-interaction-v1:4a96d0142039d03d7700f01941779abe2c3b257af7c69daad1f15178fd39e7df",
+      "label_reference_id": "e4a85cfd3b1013adb109b0b508997761a927775abaf3f194a319ea8d4d85679d",
+      "terminal_month": "2018-09",
+      "evaluation_start": "2018-01",
+      "boundary_field": "test_start",
+      "seeds": [
+        42,
+        43,
+        44
+      ],
+      "feature_columns": [
+        "reference_id",
+        "feature_month",
+        "community_id",
+        "available_through_month",
+        "size",
+        "internal_edges",
+        "internal_weight",
+        "boundary_weight",
+        "density",
+        "community_age",
+        "history_missing",
+        "predecessor_count",
+        "past_growth",
+        "past_retention",
+        "inflow_fraction",
+        "outflow_fraction",
+        "subreddit_entropy",
+        "thread_activity",
+        "active_member_fraction",
+        "co_thread_external_exposure",
+        "records_per_member_log",
+        "active_day_fraction",
+        "recent_record_fraction",
+        "top_member_fraction",
+        "internal_reply_fraction",
+        "weighted_reciprocity",
+        "activity_missing",
+        "reply_missing",
+        "returning_member_fraction",
+        "past_active_month_fraction",
+        "record_log_growth",
+        "reply_log_growth",
+        "repeated_dyad_fraction",
+        "context_drift_js",
+        "past_window_fraction",
+        "context_history_missing",
+        "previous_reply_missing"
+      ],
+      "expected_status_counts": {
+        "resolved": 7490,
+        "unresolved": 4072,
+        "censored": 183
+      },
+      "windows": {
+        "final": [
+          "2018-01",
+          "2018-02",
+          "2018-03",
+          "2018-04",
+          "2018-05",
+          "2018-06",
+          "2018-07",
+          "2018-08",
+          "2018-09"
+        ]
+      },
+      "expected_window_n": {
+        "final": 1269
+      },
+      "manifests": {
+        "samples": {
+          "path": "artifacts/temporal/activity-study-001/stages/evaluation-samples/attempt-001/complete.json",
+          "sha256": "7729535bd610d59154e849b4893b3dfb274db4001115e5d27219bcef17977a0c"
+        },
+        "evaluation": {
+          "path": "artifacts/temporal/activity-study-001/stages/evaluation/attempt-001/complete.json",
+          "sha256": "29ae05c85a884a74465eb6b67ebd001f3bfed0823fc6425ab37d34546d7302ac"
+        }
+      },
+      "files": {
+        "features": {
+          "path": "artifacts/temporal/activity-study-001/stages/evaluation-samples/attempt-001/features.csv",
+          "sha256": "b69a09ca4ae20f75d6f6011cec22330217bfc36afac9fe0eab940e64f9547d6e",
+          "manifest": "samples"
+        },
+        "labels": {
+          "path": "artifacts/temporal/activity-study-001/stages/evaluation-samples/attempt-001/labels.csv",
+          "sha256": "d54986980a0a2e8f21bb98b00a7ca7184562ffbcfa859d8a7c610ef419a5a05c",
+          "manifest": "samples"
+        },
+        "samples": {
+          "path": "artifacts/temporal/activity-study-001/stages/evaluation-samples/attempt-001/samples.csv",
+          "sha256": "7b3ca68bb021d313dfea0aaa48d3f3b0c621f1cfe7ef063493a46188f0d091f2",
+          "manifest": "samples"
+        },
+        "protocol": {
+          "path": "artifacts/temporal/activity-study-001/protocol.json",
+          "sha256": "9fb19fff5540ec01c7979ebbd6c6c121b842d03f5116cf5832110c73557948ad"
+        },
+        "prediction_original": {
+          "path": "artifacts/temporal/activity-study-001/stages/evaluation/attempt-001/predictions.csv",
+          "sha256": "498212fe1c757badc5d50ca206057c7abf8ec8544bcf9b4f08f56a0822df3e07",
+          "manifest": "evaluation"
+        }
+      },
+      "predictions": [
+        {
+          "file": "prediction_original",
+          "models": [
+            "A_flat_matched",
+            "A_no_context_drift_matched",
+            "A_no_dynamics_matched",
+            "B1_majority",
+            "B1_persistence",
+            "B2_random_forest",
+            "B4_logreg",
+            "B5_matched_boosting",
+            "HeTCo_v0",
+            "flat_hgb_SHL",
+            "flat_hgb_dynamic",
+            "flat_hgb_static",
+            "flat_lr_SHL",
+            "flat_lr_dynamic",
+            "flat_lr_static",
+            "hier_hgb_dynamic",
+            "hier_hgb_static",
+            "hier_lr_dynamic",
+            "hier_lr_static"
+          ],
+          "default_window": "final"
+        }
+      ]
+    },
+    {
+      "name": "replication2016",
+      "reference_id": "hetco-transfer-2016-20261029:reply-r-v3-order1:f27baed26fad29c953e54b9af4b7e3f28694c98f6bcdd7d2dd115bed04656c2c:leiden-rb-v2-gamma1-seed0",
+      "label_reference_id": "24c6eda519861548b6dd8bb1091c411adb9310dec7a09457501813de7c401f58",
+      "terminal_month": "2016-12",
+      "evaluation_start": "2016-10",
+      "boundary_field": "test_start",
+      "seeds": [
+        42,
+        43,
+        44
+      ],
+      "feature_columns": [
+        "reference_id",
+        "feature_month",
+        "community_id",
+        "available_through_month",
+        "size",
+        "internal_edges",
+        "internal_weight",
+        "boundary_weight",
+        "density",
+        "community_age",
+        "history_missing",
+        "predecessor_count",
+        "past_growth",
+        "past_retention",
+        "inflow_fraction",
+        "outflow_fraction"
+      ],
+      "expected_status_counts": {
+        "resolved": 2721,
+        "unresolved": 1678,
+        "censored": 242
+      },
+      "windows": {
+        "main": [
+          "2016-10",
+          "2016-11",
+          "2016-12"
+        ],
+        "rolling": [
+          "2016-07",
+          "2016-08",
+          "2016-09",
+          "2016-10",
+          "2016-11",
+          "2016-12"
+        ]
+      },
+      "expected_window_n": {
+        "main": 494,
+        "rolling": 1107
+      },
+      "manifests": {
+        "forecast": {
+          "path": "artifacts/core/hetco-transfer-2016-forecast-20261029/manifest.json",
+          "sha256": "d18996159607c58554e3895b88040f9cf07234d0f783ffaa02619e5c24efcd49"
+        },
+        "research": {
+          "path": "artifacts/research/hetco-transfer-2016-20261029/manifest.json",
+          "sha256": "65eb1bd181834f7117421f1a444bae23fd4aa989358b957743f03dd3acf3590c"
+        },
+        "hetco": {
+          "path": "artifacts/hetco/hetco-transfer-2016-20261029/manifest.json",
+          "sha256": "29f26056f3766a41d9bc99a6c82db1f21b6abf37d54b1a2c84929690b934e14a"
+        }
+      },
+      "files": {
+        "features": {
+          "path": "artifacts/core/hetco-transfer-2016-forecast-20261029/features.csv",
+          "sha256": "d1680a6e166cba10d4f032db2fb486b17f2d920215a00bc394f4279af185986e",
+          "manifest": "forecast"
+        },
+        "labels": {
+          "path": "artifacts/core/hetco-transfer-2016-forecast-20261029/labels.csv",
+          "sha256": "f3d5bf9adbb4c7e502af14022841004c9f9a393b76cef33afd1e686976bb567f",
+          "manifest": "forecast"
+        },
+        "samples": {
+          "path": "artifacts/research/hetco-transfer-2016-20261029/samples.csv",
+          "sha256": "ec856720c3da6ca7b7032ae7ecdbb3ce4fd56252bd2db2eb42876de6777a2a1e",
+          "manifest": "research"
+        },
+        "protocol": {
+          "path": "artifacts/research/hetco-transfer-2016-20261029/protocol.json",
+          "sha256": "526d795bc50c67f93ffdf1d2a0f1ed838f381ac46265404af7da3bc74d26bdbe",
+          "manifest": "research"
+        },
+        "prediction_research": {
+          "path": "artifacts/research/hetco-transfer-2016-20261029/predictions.csv",
+          "sha256": "678f58bd57f757eeb525f26416c3080519c78470a20a7b45354bdb2891d9ec05",
+          "manifest": "research"
+        },
+        "prediction_hetco": {
+          "path": "artifacts/hetco/hetco-transfer-2016-20261029/predictions.csv",
+          "sha256": "a2244f021c61cb8188f0d5ecb3af9317037d32e991f0ed69438c739c38cc56bb",
+          "manifest": "hetco"
+        }
+      },
+      "predictions": [
+        {
+          "file": "prediction_research",
+          "models": [
+            "A1_no_context",
+            "A4_no_dynamics",
+            "A6_no_lag",
+            "B1_majority",
+            "B1_persistence",
+            "B2_random_forest",
+            "B4_logreg",
+            "B5_matched_boosting",
+            "HeTCo_v0"
+          ]
+        },
+        {
+          "file": "prediction_hetco",
+          "models": [
+            "A7v4_mean_pool",
+            "HeTCo_v4"
+          ]
+        }
+      ]
+    }
+  ],
+  "h1_required_paths": [
+    "artifacts/research/midterm-thanh-001",
+    "artifacts/core/reddit-2015-reproduced-v1",
+    "artifacts/hetco/hetco-v4-001",
+    "artifacts/hetco/thanh-h1-reproduction-20261109"
+  ]
+}
