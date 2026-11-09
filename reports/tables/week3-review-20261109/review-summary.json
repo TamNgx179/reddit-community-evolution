@@ -1,0 +1,29 @@
+{
+  "status": "verified_for_week3_documentation",
+  "panel_cases": 60,
+  "pre_discussion_agreements": 47,
+  "raw_agreement": 0.7833333333333333,
+  "cohen_kappa": 0.443254817987152,
+  "adjudicated_cases": 13,
+  "adjudicated_label_counts": {
+    "unresolved": 10,
+    "grow": 2,
+    "shrink": 1
+  },
+  "final_panel_label_counts": {
+    "unresolved": 50,
+    "grow": 3,
+    "merge": 6,
+    "shrink": 1
+  },
+  "tracker_matches": 26,
+  "source_month_lineage_counts": {
+    "no_accepted_predecessor": 52,
+    "ambiguous_lineage_reset": 5,
+    "unique_lineage": 3
+  },
+  "review_provenance": "Descriptive agreement between one adopted AI-assisted reviewer_1 draft and one AI-assisted reviewer_2 submission confirmed by Dang; not two unassisted independent human annotations.",
+  "additional_tam_review_status": "six_case_automated_supplement_completed_human_judgments_unrecorded",
+  "tam_previously_seen_panel_results": true,
+  "supplementary_automated_cases": 6
+}
