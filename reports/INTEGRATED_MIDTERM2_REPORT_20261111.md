@@ -350,9 +350,8 @@ Future work should prioritize better resolution and independent validation of am
 - `reports/tables/week4-comparison-20261111/reconciliation_summary.json`
 - `reports/tables/week4-comparison-20261111/target_cases_evaluation.json`
 
-## Human review handoff (analysis-inputs repository)
+## Human review handoff (main repository)
 
-- `Midterm2_Review_Handoff_For_Anh_20261107/REPORT_FOR_ANH.md`
 - `Midterm2_Review_Handoff_For_Anh_20261107/01_agreement_adjudication/summary.json`
 - `Midterm2_Review_Handoff_For_Anh_20261107/01_agreement_adjudication/adjudication.csv`
 - `Midterm2_Review_Handoff_For_Anh_20261107/01_agreement_adjudication/confusion_7labels.csv`
