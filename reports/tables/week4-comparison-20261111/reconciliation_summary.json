@@ -1,0 +1,14 @@
+{
+  "status": "PASS",
+  "both_correct": 1119,
+  "proposed_only": 29,
+  "hgb_only": 35,
+  "both_wrong": 86,
+  "contrast_cases": 64,
+  "expected_4group_pass": true,
+  "f1_match_pass": true,
+  "c64_checked": true,
+  "c64_keys_match": true,
+  "proposed_macro_f1": 0.4117,
+  "hgb_macro_f1": 0.388
+}

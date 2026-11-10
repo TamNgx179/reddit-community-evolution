@@ -1,0 +1,28 @@
+{
+  "provided": false,
+  "is_descriptive_only": true,
+  "label": "DESCRIPTIVE ONLY - target set not pre-declared by owner",
+  "total_cases": 34,
+  "correct_old": 6,
+  "correct_new": 6,
+  "repaired_cases": 0,
+  "broken_cases": 0,
+  "dissolve_predicted_old": 22,
+  "dissolve_predicted_new": 22,
+  "breakdown": {
+    "grow": {
+      "support": 19,
+      "correct_old": 3,
+      "correct_new": 3,
+      "dissolve_old": 14,
+      "dissolve_new": 14
+    },
+    "merge": {
+      "support": 15,
+      "correct_old": 3,
+      "correct_new": 3,
+      "dissolve_old": 8,
+      "dissolve_new": 8
+    }
+  }
+}

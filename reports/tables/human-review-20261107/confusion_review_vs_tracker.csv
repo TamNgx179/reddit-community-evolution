@@ -1,0 +1,8 @@
+﻿review_label,stable,grow,shrink,merge,split,dissolve,unresolved
+stable,0,0,0,0,0,0,0
+grow,0,1,0,0,0,0,2
+shrink,0,0,0,0,0,0,1
+merge,0,0,0,5,0,0,1
+split,0,0,0,0,0,0,0
+dissolve,0,0,0,0,0,0,0
+unresolved,0,5,0,1,0,24,20

@@ -1,0 +1,16 @@
+proposed_model,comparator_model,seed,total_cases,both_correct,proposed_only (wins),reference_only (losses),both_wrong,net_wins
+hier_lr_dynamic,hier_hgb_dynamic,42,1269,1119,29,35,86,-6
+hier_lr_dynamic,hier_hgb_dynamic,43,1269,1119,29,35,86,-6
+hier_lr_dynamic,hier_hgb_dynamic,44,1269,1119,29,35,86,-6
+hier_lr_dynamic,B4_logreg,42,1269,1132,16,70,51,-54
+hier_lr_dynamic,B4_logreg,43,1269,1132,16,70,51,-54
+hier_lr_dynamic,B4_logreg,44,1269,1132,16,70,51,-54
+hier_lr_dynamic,flat_lr_dynamic,42,1269,1139,9,66,55,-57
+hier_lr_dynamic,flat_lr_dynamic,43,1269,1139,9,66,55,-57
+hier_lr_dynamic,flat_lr_dynamic,44,1269,1139,9,66,55,-57
+hier_lr_dynamic,A_no_dynamics_matched,42,1269,1120,28,44,77,-16
+hier_lr_dynamic,A_no_dynamics_matched,43,1269,1120,28,44,77,-16
+hier_lr_dynamic,A_no_dynamics_matched,44,1269,1120,28,44,77,-16
+hier_lr_dynamic,A_flat_matched,42,1269,703,445,17,104,428
+hier_lr_dynamic,A_flat_matched,43,1269,703,445,17,104,428
+hier_lr_dynamic,A_flat_matched,44,1269,703,445,17,104,428
