@@ -46,7 +46,7 @@ MODEL_ROLE_MAP: dict[str, str] = {
     "flat_lr_static": "Control (Flat LR Static)",
     "flat_lr_SHL": "Feature Control (Flat LR SHL)",
     "flat_hgb_SHL": "Feature Control (Flat HGB SHL)",
-    "HeTCo_v0": "Historical Pilot (HeTCo v0)",
+    "HeTCo_v0": "Historical Context Model (HeTCo v0)",
 }
 
 DEFAULT_EXPECTED_MODELS: tuple[str, ...] = (
@@ -66,6 +66,9 @@ DEFAULT_EXPECTED_MODELS: tuple[str, ...] = (
     "flat_hgb_static",
     "A_flat_matched",
     "flat_lr_static",
+    "flat_lr_SHL",
+    "flat_hgb_SHL",
+    "HeTCo_v0",
 )
 
 

@@ -181,6 +181,14 @@ def generate_week4_report(
             f"`{', '.join(missing_models)}`.",
         ])
 
+    lines.extend([
+        "",
+        "> **Note on Secondary and Historical Controls:** `flat_lr_SHL` and `flat_hgb_SHL` are SHL feature-set variants "
+        "(definition per the frozen handoff, where `flat_lr_SHL` yields identical Macro-F1 [0.3311] to `B4_logreg`), "
+        "and `HeTCo_v0` is a historical context model carried in the frozen predictions. These are preserved from the frozen "
+        "predictions for lineage completeness and are secondary to the primary protocol baselines.",
+    ])
+
     # Build HGB ranking dynamically from primary_df
     hgb_df = primary_df[primary_df["model"].str.contains("hgb|boosting", case=False)].sort_values(
         "macro_f1_mean", ascending=False
