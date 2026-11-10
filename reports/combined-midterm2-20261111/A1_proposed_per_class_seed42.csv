@@ -1,0 +1,7 @@
+window,model,seed,axis,stratum,month_basis,label,support,precision,recall,f1,to_dissolve,predicted
+final,hier_lr_dynamic,42,all,all,,stable,4,0.0,0.0,0.0,3,18
+final,hier_lr_dynamic,42,all,all,,grow,19,0.0697674418604651,0.1578947368421052,0.096774193548387,14,43
+final,hier_lr_dynamic,42,all,all,,shrink,25,0.4137931034482758,0.48,0.4444444444444445,6,29
+final,hier_lr_dynamic,42,all,all,,merge,15,0.2727272727272727,0.2,0.2307692307692307,8,11
+final,hier_lr_dynamic,42,all,all,,split,39,0.7941176470588235,0.6923076923076923,0.7397260273972601,0,34
+final,hier_lr_dynamic,42,all,all,,dissolve,1167,0.972663139329806,0.94515852613539,0.9587136027813994,1103,1134

@@ -1,0 +1,15 @@
+truth,predicted,count
+dissolve,grow,37
+grow,dissolve,14
+dissolve,stable,14
+split,shrink,12
+merge,dissolve,8
+dissolve,merge,8
+shrink,split,7
+shrink,dissolve,6
+dissolve,shrink,5
+stable,dissolve,3
+grow,stable,2
+merge,stable,2
+merge,grow,2
+stable,grow,1
