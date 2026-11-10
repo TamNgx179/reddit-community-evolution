@@ -66,6 +66,9 @@ DEFAULT_EXPECTED_MODELS: tuple[str, ...] = (
     "flat_hgb_static",
     "A_flat_matched",
     "flat_lr_static",
+    "flat_lr_SHL",
+    "flat_hgb_SHL",
+    "HeTCo_v0",
 )
 
 
