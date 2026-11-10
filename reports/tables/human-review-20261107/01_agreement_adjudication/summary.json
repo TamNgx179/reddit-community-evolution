@@ -1,0 +1,28 @@
+{
+  "status": "agreement_completed_pending_adjudication",
+  "cases": 60,
+  "reviewer_2_rows": 60,
+  "reviewer_1_rows": 60,
+  "labels": [
+    "stable",
+    "grow",
+    "shrink",
+    "merge",
+    "split",
+    "dissolve",
+    "unresolved"
+  ],
+  "matrix_orientation": "rows=reviewer_2_dang, columns=reviewer_1_phuc",
+  "raw_agreement": 0.7833333333333333,
+  "agreements": 47,
+  "disagreements": 13,
+  "expected_agreement": 0.6108333333333333,
+  "cohen_kappa": 0.443254817987152,
+  "kappa_status": "computed_unweighted_nominal",
+  "answer_key_opened": false,
+  "machine_labels_opened": false,
+  "adjudication": "pending",
+  "sampling_note": "The 60-case panel is diagnostic/stratified and does not estimate whole-dataset prevalence or coverage.",
+  "provenance_note": "Descriptive agreement between one adopted AI-assisted reviewer_1 draft and one AI-assisted reviewer_2 submission confirmed by Dang; not two unassisted independent human annotations.",
+  "generated_utc": "2026-11-05T12:45:26.587194+00:00"
+}

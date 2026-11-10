@@ -1,0 +1,62 @@
+{
+  "panel": 60,
+  "original_reviewer_agreement": 47,
+  "cohen_kappa": 0.443254817987152,
+  "adjudicated": 13,
+  "adjudicated_label_counts": {
+    "unresolved": 10,
+    "grow": 2,
+    "shrink": 1
+  },
+  "tracker_matches": 26,
+  "tracker_mismatches": 34,
+  "tracker_matches_in_13_adjudicated": 4,
+  "feature_month_lineage": {
+    "no_accepted_predecessor": 52,
+    "ambiguous_lineage_reset": 5,
+    "unique_lineage": 3
+  },
+  "feature_month_lineage_in_13": {
+    "ambiguous_lineage_reset": 2,
+    "no_accepted_predecessor": 9,
+    "unique_lineage": 2
+  },
+  "no_predecessor_but_member_activity_history_available": 43,
+  "mismatch_pairs": [
+    {
+      "review_label": "unresolved",
+      "tracker_label": "dissolve",
+      "count": 24
+    },
+    {
+      "review_label": "unresolved",
+      "tracker_label": "grow",
+      "count": 5
+    },
+    {
+      "review_label": "grow",
+      "tracker_label": "unresolved",
+      "count": 2
+    },
+    {
+      "review_label": "unresolved",
+      "tracker_label": "merge",
+      "count": 1
+    },
+    {
+      "review_label": "merge",
+      "tracker_label": "unresolved",
+      "count": 1
+    },
+    {
+      "review_label": "shrink",
+      "tracker_label": "unresolved",
+      "count": 1
+    }
+  ],
+  "original_adjudication_zip_sha256": "0ccdaa06c4da48f26924cca1ee00c3153244ba753c3146aed476393ea1e4791e",
+  "inclusion_pairs_sha256": "95876ac07412d59915728346cf67c7d1cace96821b3b09af740b58b66b0ddd78",
+  "features_sha256": "b69a09ca4ae20f75d6f6011cec22330217bfc36afac9fe0eab940e64f9547d6e",
+  "labels_sha256": "d54986980a0a2e8f21bb98b00a7ca7184562ffbcfa859d8a7c610ef419a5a05c",
+  "provenance": "Descriptive agreement between one adopted AI-assisted reviewer_1 draft and one AI-assisted reviewer_2 submission confirmed by Dang; not two unassisted independent human annotations."
+}
