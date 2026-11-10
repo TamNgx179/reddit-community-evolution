@@ -183,10 +183,10 @@ def generate_week4_report(
 
     lines.extend([
         "",
-        "> **Note on Secondary and Historical Controls:** `flat_lr_SHL` and `flat_hgb_SHL` are feature-control ablations "
-        "(Static + History + Lineage features, where `flat_lr_SHL` yields performance identical to `B4_logreg`), "
-        "and `HeTCo_v0` is the historical prototype baseline from week 1. These are preserved from the frozen predictions "
-        "for lineage completeness and are secondary to the primary protocol baselines.",
+        "> **Note on Secondary and Historical Controls:** `flat_lr_SHL` and `flat_hgb_SHL` are SHL feature-set variants "
+        "(definition per the frozen handoff, where `flat_lr_SHL` yields identical Macro-F1 [0.3311] to `B4_logreg`), "
+        "and `HeTCo_v0` is a historical context model carried in the frozen predictions. These are preserved from the frozen "
+        "predictions for lineage completeness and are secondary to the primary protocol baselines.",
     ])
 
     # Build HGB ranking dynamically from primary_df
