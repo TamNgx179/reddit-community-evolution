@@ -350,16 +350,14 @@ Future work should prioritize better resolution and independent validation of am
 - `reports/tables/week4-comparison-20261111/reconciliation_summary.json`
 - `reports/tables/week4-comparison-20261111/target_cases_evaluation.json`
 
-## Human review handoff (analysis-inputs repository)
+## Human review handoff (main repository)
 
-- `Midterm2_Review_Handoff_For_Anh_20261107/REPORT_FOR_ANH.md`
-- `Midterm2_Review_Handoff_For_Anh_20261107/01_agreement_adjudication/summary.json`
-- `Midterm2_Review_Handoff_For_Anh_20261107/01_agreement_adjudication/adjudication.csv`
-- `Midterm2_Review_Handoff_For_Anh_20261107/01_agreement_adjudication/confusion_7labels.csv`
+- `reports/tables/human-review-20261107/adjudication.csv`
+- `reports/tables/human-review-20261107/confusion_7labels.csv`
 - `Midterm2_Review_Handoff_For_Anh_20261107/02_tracker_audit/summary.json`
-- `Midterm2_Review_Handoff_For_Anh_20261107/02_tracker_audit/confusion_review_vs_tracker.csv`
-- `Midterm2_Review_Handoff_For_Anh_20261107/02_tracker_audit/lineage_by_scope.csv`
-- `Midterm2_Review_Handoff_For_Anh_20261107/03_graph_evidence/graph_lineage_check.csv`
+- `reports/tables/human-review-20261107/confusion_review_vs_tracker.csv`
+- `reports/tables/human-review-20261107/lineage_by_scope.csv`
+- `reports/tables/human-review-20261107/graph_lineage_check.csv`
 
 ## H1 pilot (main repository)
 
