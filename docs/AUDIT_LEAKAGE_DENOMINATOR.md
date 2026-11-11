@@ -1,62 +1,124 @@
-# Audit leakage / key-label join / cùng mẫu / denominator / bootstrap theo khối tháng
+# Audit of Leakage, Key-Label Joins, Matched Samples, Denominators, and Month-Block Bootstrap
 
-Người thực hiện: Đăng. Ngày: 2026-11-11.
-Đầu vào: `Week4_Frozen_Core_Acceptance_20261109.zip`, SHA-256 `3a36ca98...5e132` (khớp file `.sha256`).
-Phạm vi: cohort full-study (final, 1.269 mẫu, label_month 2018-01..09) và cohort 2016 (main 494, rolling 1.107). H1 ngoài phạm vi.
+**Responsible:** Đăng  
+**Date:** 2026-11-11  
+**Input:** `Week4_Frozen_Core_Acceptance_20261109.zip`  
+**SHA-256:** `3a36ca98...5e132` (matches the `.sha256` file)
 
-## 1. Toàn vẹn và replay
-- `package_week4_handoff.py --verify`: 45 file đã xác minh.
-- `verify_week4_inputs.py` và `run_week4_acceptance.py` (output mới `dang-inputs-001`, `dang-replay-001`): qua 2 cohort.
-- `replayed-metrics.csv` giống từng byte với `week4-replay-002` trong gói.
-- H1: `pending_missing_inputs` (4 đường dẫn H1 không có trong gói frozen). Hành vi thiết kế, không phải lỗi.
+**Scope:** Full-study cohort (final, 1,269 samples, `label_month` 2018-01 to 2018-09) and 2016 cohort (main: 494, rolling: 1,107). H1 is outside the scope of this audit.
 
-## 2. Khóa ghép và nhãn
-| Kiểm tra | Full-study | 2016 |
-|---|---|---|
-| Dòng dự báo trùng (5 khóa + model/seed/window) | 0 | 0 |
-| Khóa nhãn trùng | 0 | 0 |
-| Dự báo không ghép được nhãn | 0 | 0 |
-| Số dòng thay đổi sau khi ghép | không | không |
-| `y_true` khác nhãn gốc | 0 | 0 |
-| Dự báo thuộc mẫu không eligible | 0 | 0 |
+## 1. Integrity and Replay
 
-## 3. Cùng mẫu giữa model
-- Full-study: 57 nhóm model/seed, đúng 1 tập mẫu (1.269). 72.333 = 57 x 1.269.
-- 2016: main 1 tập (494), rolling 1 tập (1.107), 33 nhóm model/seed cho mỗi cửa sổ (66 nhóm tổng cộng).
+- `package_week4_handoff.py --verify`: all 45 files verified.
+- `verify_week4_inputs.py` and `run_week4_acceptance.py` completed successfully for both cohorts, using new outputs `dang-inputs-001` and `dang-replay-001`.
+- `replayed-metrics.csv` is byte-for-byte identical to `week4-replay-002` in the package.
+- H1 status: `pending_missing_inputs` (the four required H1 paths are not included in the frozen package). This is expected behavior, not an error.
 
-## 4. Cutoff / leakage
-- `label_month <= feature_month`: 0 dòng ở cả hai cohort.
-- `available_through_month` khác `feature_month`: 0 dòng.
-- Tests: 102 passed (leakage, causal order, split, acceptance) và 55 passed (diagnostics, research evaluation).
-- Giới hạn: cutoff huấn luyện chỉ đối chiếu ở mức protocol, gói không có fit logs.
+## 2. Join Keys and Labels
 
-## 5. Denominator (full-study)
-Bảng nhãn 11.745 dòng: 7.490 resolved, 4.072 unresolved (`weak_overlap_unresolved`), 183 censored (`final_snapshot_censored`).
-Dự báo chỉ phủ 1.269 mẫu final, không phải 7.490. Unresolved/censored không bị quy thành dissolve.
-Coverage: community-month 64,78%, member-month 79,31%.
+| Check | Full-study | 2016 |
+|---|---:|---:|
+| Duplicate prediction rows (5 keys + model/seed/window) | 0 | 0 |
+| Duplicate label keys | 0 | 0 |
+| Predictions without a matching label | 0 | 0 |
+| Number of rows changed after joining | No | No |
+| `y_true` differs from the original label | 0 | 0 |
+| Predictions belonging to ineligible samples | 0 | 0 |
 
-## 6. Bootstrap theo khối tháng (paired_tables, 1.000 draws, block 2, 9 tháng, 3 seed gộp trong từng draw)
-Kiểm chứng pipeline: tái tạo đúng bảng 6.3 của MIDTERM2_DIAGNOSTIC_REPORT
-(+0,0474 [-0,0073; +0,0934], +0,0049 [-0,0195; +0,0191], +0,0796 [+0,0292; +0,1321]) và tỷ lệ outcome 55,40/35,07/1,34/8,20.
-Chạy lại cùng seed cho kết quả y hệt.
+## 3. Matched Samples Across Models
 
-| Proposed `hier_lr_dynamic` so với | Delta Macro-F1 | CI 95% | Chứa 0? |
+- **Full-study:** 57 model/seed groups, all using exactly the same sample set (1,269 samples). Total: 72,333 = 57 × 1,269.
+- **2016:** Main uses one sample set (494); rolling uses one sample set (1,107). There are 33 model/seed groups for each window (66 groups in total).
+
+## 4. Cutoff and Leakage
+
+- `label_month <= feature_month`: 0 rows in both cohorts.
+- `available_through_month` differs from `feature_month`: 0 rows.
+- Tests: 102 passed (leakage, causal order, split, and acceptance) and 55 passed (diagnostics and research evaluation).
+- **Limitation:** The training cutoff was checked only against the protocol. The package does not contain model-fitting logs.
+
+## 5. Denominator (Full-study)
+
+The label table contains 11,745 rows:
+
+- 7,490 resolved.
+- 4,072 unresolved (`weak_overlap_unresolved`).
+- 183 censored (`final_snapshot_censored`).
+
+Predictions cover only 1,269 final samples, not all 7,490 resolved samples. Unresolved and censored samples were not reclassified as dissolve.
+
+Coverage:
+
+- Community-month: 64.78%.
+- Member-month: 79.31%.
+
+## 6. Month-Block Bootstrap
+
+**Configuration:** `paired_tables`, 1,000 draws, block size 2, 9 months, with the 3 seeds pooled within each draw.
+
+**Pipeline verification:** The pipeline exactly reproduced Table 6.3 of `MIDTERM2_DIAGNOSTIC_REPORT`:
+
+- +0.0474 [-0.0073; +0.0934]
+- +0.0049 [-0.0195; +0.0191]
+- +0.0796 [+0.0292; +0.1321]
+
+The outcome proportions were also reproduced: 55.40/35.07/1.34/8.20.
+
+Rerunning with the same seed produced identical results.
+
+| Proposed `hier_lr_dynamic` compared with | Macro-F1 Delta | 95% CI | Includes 0? |
 |---|---:|---|---|
-| hier_hgb_dynamic | +0,0237 | [-0,0694; +0,0945] | có |
-| flat_hgb_dynamic | +0,0476 | [-0,0303; +0,1163] | có |
-| flat_lr_dynamic | +0,0502 | [-0,0294; +0,1176] | có |
-| B4_logreg | +0,0806 | [-0,0101; +0,1418] | có |
-| B5_matched_boosting | +0,1788 | [+0,0843; +0,2524] | không |
+| `hier_hgb_dynamic` | +0.0237 | [-0.0694; +0.0945] | Yes |
+| `flat_hgb_dynamic` | +0.0476 | [-0.0303; +0.1163] | Yes |
+| `flat_lr_dynamic` | +0.0502 | [-0.0294; +0.1176] | Yes |
+| `B4_logreg` | +0.0806 | [-0.0101; +0.1418] | Yes |
+| `B5_matched_boosting` | +0.1788 | [+0.0843; +0.2524] | No |
 
-Nhạy theo bootstrap seed (4 seed): kết luận không đổi (cặp với B5 luôn dương; các cặp còn lại luôn chứa 0).
-Paired outcome so với hier_hgb_dynamic: cả hai đúng 88,18%, proposed-only 2,29%, reference-only 2,76%, cả hai sai 6,78%.
+**Bootstrap seed sensitivity:** Across 4 bootstrap seeds, the conclusion remained unchanged: the comparison with B5 was always positive, while all other paired comparisons continued to include zero.
 
-## 7. Phát hiện cần xử lý
-1. Claim C04 (INTEGRATED report) "proposed có Macro-F1 cao nhất" đúng về số (0,4117 so với 0,3880) nhưng khoảng ghép cặp với `hier_hgb_dynamic`, `flat_*`, `B4_logreg` đều chứa 0. Chỉ nên diễn đạt là lợi thế điểm số, không phải khác biệt có ý nghĩa. Báo cáo hiện chưa công bố CI cho cặp proposed so với HGB.
-2. Cặp proposed so với HGB có reference-only (2,76%) lớn hơn proposed-only (2,29%): proposed thắng Macro-F1 nhưng thắng ít ca hơn, đã được báo cáo nêu đúng (mục 6.1).
+**Paired outcomes against `hier_hgb_dynamic`:**
 
-## 8. Chưa kiểm được
-- Cutoff huấn luyện (không có fit logs).
-- Kiểm version khi sửa nhãn: chưa có lần sửa nhãn nào để so; `test_mixed_reference` chỉ phủ một phần.
-- H1 (ngoài phạm vi theo xác nhận).
-- Bootstrap chỉ khám phá trên 9 tháng đã được xem, không phải xác nhận.
+- Both correct: 88.18%.
+- Proposed-only correct: 2.29%.
+- Reference-only correct: 2.76%.
+- Both wrong: 6.78%.
+
+## 7. Findings Requiring Attention
+
+1. **Claim C04 in the INTEGRATED report:** The statement that "the proposed model achieves the highest Macro-F1" is numerically correct (0.4117 compared with 0.3880). However, the paired confidence intervals against `hier_hgb_dynamic`, `flat_*`, and `B4_logreg` all include zero. The result should therefore be described as a score advantage, not as a statistically significant difference. The current report does not publish the confidence interval for the proposed-versus-HGB comparison.
+
+2. **Proposed versus HGB:** The reference-only proportion (2.76%) is higher than the proposed-only proportion (2.29%). Therefore, although the proposed model achieves a higher Macro-F1, it gets fewer individual cases correct than HGB. This distinction is already correctly reported in Section 6.1 of the report.
+
+## 8. Checks Not Yet Completed
+
+- **Training cutoff:** Cannot be independently verified because model-fitting logs are unavailable.
+- **Versioning after label changes:** No label modification has occurred for comparison. `test_mixed_reference` provides only partial coverage.
+- **H1:** Outside the scope of this audit, as previously agreed.
+- **Bootstrap:** This is exploratory analysis on the 9 months already examined, not an independent confirmation.
+
+## 9. Handoff Status and Remaining Limitations
+
+### Reproducibility Status
+
+- Frozen inputs for Full-study and Replication 2016 passed package integrity and input validation checks.
+- Saved metrics were successfully replayed for both cohorts.
+- Model, seed, window, sample key, label join, and reconciliation checks passed.
+- The delivered archive is a selected export. It does not include the complete historical runtime payload or all model-fitting logs. The replay validates saved predictions and metrics; it does not independently refit the historical models.
+- The original source commit SHA was not independently confirmed with Tâm. This remains a provenance limitation and must not be inferred from the current repository HEAD.
+
+### H1 Independent Acceptance
+
+The separate 2015 H1 pilot has a verified delivery record, including 27,954 prediction rows, a 90-fit execution record, saved outputs, and focused passing tests.
+
+However, independent H1 acceptance under the Week 4 frozen-core package remains `pending_missing_inputs`. The following required input directories are not included in the frozen package:
+
+- `artifacts/research/midterm-thanh-001`
+- `artifacts/core/reddit-2015-reproduced-v1`
+- `artifacts/hetco/hetco-v4-001`
+- `artifacts/hetco/thanh-h1-reproduction-20261109`
+
+The existing H1 delivery verification must not be interpreted as independent acceptance using the complete frozen source inputs.
+
+### Final Handoff Decision
+
+Full-study and Replication 2016 replay evidence is complete within the scope of the selected export. Historical runtime reproducibility and original source commit provenance remain limited. H1 independent acceptance remains pending until the required source inputs and manifests become available.
