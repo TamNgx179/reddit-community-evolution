@@ -49,6 +49,8 @@ All seven demonstration, analysis and research notebooks listed above contain ex
 | [Runbook](docs/RUNBOOK.md) | Data download, environment/kernel setup, pipeline/notebook commands, verification and offline handoff |
 | [Results and evidence](docs/RESULTS.md) | Current acceptance, scores/support, limitations, historical run provenance and presentation outline |
 | [Label review](docs/LABEL_REVIEW.md) | Blinded sampling, independent annotation and adjudication |
+| [Phúc week 3–4 work plan](docs/PHUC-WEEK3-WEEK4.md) | Vietnamese task board, dependencies, recipient review intake and frozen-input coverage commands |
+| [Phúc week 4 results](docs/PHUC-WEEK4-RESULTS.md) | Agreement provenance, full-study coverage and 45-month graph-audit handoff |
 | [Eight-week assignment](PHAN-CONG-SNA-8-TUAN.md) | Individual responsibilities and pair milestones |
 
 ## Repository layout

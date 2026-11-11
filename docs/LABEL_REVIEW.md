@@ -100,6 +100,83 @@ review cases. Do not distribute coordinator material with the reviewer ZIP.
 
 ## Two independent reviewers
 
+### Proposed rubric v1.1 from the coordinator's message
+
+The [Vietnamese rubric proposal v1.1](REVIEW-RUBRIC-V1.1.md) records Tâm's
+clarifications supplied by Phúc on 3 November. It remains proposed, not frozen.
+In particular, no graph membership or authored activity can support an
+observed-network dissolve judgment only when the two-month data scope and
+filters are established; missing or unknown observation warrants unresolved.
+Internal packet consistency alone does not establish that observation condition.
+Small groups entering large groups and diffuse memberships require explicit
+continuation evidence before grow/merge/split judgments. Keep AI suggestions and
+actual human decisions separate, disclose assistance and preserve every version.
+Record actual pilot agreement and a freeze date before main annotation.
+
+On 4 November, Phúc selected this v1.1 proposal as the working guidance he
+asks Đăng to use. The [Vietnamese practical guide](PHUC-DANG-CACH-CHAM.md)
+provides a case checklist, label explanations, responsibilities and a draft
+handoff message without publishing case-level recommendations. It changes no
+label definitions or thresholds. Đăng's acknowledgement and a shared post-pilot
+freeze remain unconfirmed; Phúc's selection is not recorded as someone else's
+agreement.
+
+### Recipient helpers for Phúc
+
+The Vietnamese [week 3–4 work plan](PHUC-WEEK3-WEEK4.md) separates technical
+preparation, real packet receipt and actual human judgments. The recipient
+helper `scripts/prepare_phuc_review.py` checks an isolated reviewer-1 ZIP and
+creates a private working copy plus an empty evidence checklist. It never
+chooses labels or records a human submission. Its filename/field checks are
+not a guarantee of complete blinding or sufficient evidence; inspect the real
+packet against this rubric before main annotation.
+
+The 3 November draft handoff is available to the intended collaborators in
+[GitHub Releases](https://github.com/TamNgx179/reddit-community-evolution/releases).
+Select the draft named `Midterm 2 frozen team handoff - 3 November 2026`
+(CLI tag `midterm2-review-handoff-20261103`) while signed in as a collaborator.
+The release now includes both reviewers' separate pilot/main ZIPs; Đăng uses
+only `pilot-reviewer_2.zip`, `main-reviewer_2.zip` and
+`REVIEWER_2_SHA256SUMS.txt`. Reviewer 1's local helper intentionally rejects
+reviewer-2 packets; Đăng extracts his own ZIP and preserves the blank original
+before editing a separate working worksheet. Asset availability is not a receipt
+or annotation claim. See the work plan for download and hash-check commands.
+The real pilot has a 93,781,624-byte decompressed case,
+so the recipient reader uses a bounded 128 MiB case limit and preserves the full
+evidence. Original ZIPs remain unchanged. The coverage snapshot is **unblinded**:
+reviewers must lock their independent submissions before opening it, or have a
+non-reviewer run coverage in parallel. Keep the transfer release in draft.
+
+On 4 November, following Phúc's working-guide selection, the main reviewer-1
+ZIP passed technical intake and its 60 payloads passed supplied membership,
+overlap, incident-edge and focal-observation consistency checks. All 181 local
+links across 61 HTML pages resolved. The private workspace is
+`artifacts/review/phuc-main-20261104-001/`; its README links the blank worksheet,
+case index and neutral technical table. `preparation.json` records this main
+payload access before shared post-pilot acknowledgement. Actual annotation is
+0/60 and the shared freeze remains pending. The technical report is in
+`artifacts/review/phuc-main-audit-20261104-001/`.
+
+A supplementary automated assessment now covers all 60 main cases under Phúc's
+selected v1.1 working proposal. Private outputs at
+`artifacts/review/phuc-main-assisted-20261104-001/` include per-case suggestions,
+confidence, evidence-based rationales, ambiguity and explicit automated
+provenance. The CSV and JSON agree on 60 unique cases. Case-specific evidence
+checks cover concentrated predecessor contributions and persistent interaction
+cores. The assessment records prior exposure to pilot AI suggestions, general
+tracker code and the sampling design. Human annotation remains 0/60, with the
+original worksheets preserved for actual decisions and submissions. Shared
+post-pilot acknowledgement and paired evaluation remain pending.
+
+`scripts/run_phuc_coverage.py` exports the existing coverage diagnostics from a
+hash-bound feature/label run, keeping final-snapshot censoring outside the
+eligible-plus-unresolved denominator. Optional monthly graph inputs must match
+the consuming sample manifest. Without those inputs the graph audit remains
+explicitly pending. Run full-study and 2016 separately. Local results and review
+worksheets remain under ignored `artifacts/`, not Git.
+
+### Independent judgments
+
 Prefer reviewers who did not implement the tracker. Each reviewer must work without the answer key and without discussing cases before submitting:
 
 - Choose `stable`, `grow`, `shrink`, `merge`, `split`, `dissolve` or `unresolved` for the **focal source**. No birth label exists for a nonexistent source.
