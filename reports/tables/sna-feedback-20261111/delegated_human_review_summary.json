@@ -1,0 +1,30 @@
+{
+  "cases": 12,
+  "annotator_count": 1,
+  "provenance": "Tâm annotated on behalf of Thanh, delegation reported by Tâm",
+  "matches": 7,
+  "zero_reply_cases": 4,
+  "label_pairs": [
+    {
+      "tracker": "dissolve",
+      "annotation": "dissolve",
+      "count": 7
+    },
+    {
+      "tracker": "dissolve",
+      "annotation": "split",
+      "count": 2
+    },
+    {
+      "tracker": "unresolved",
+      "annotation": "merge",
+      "count": 1
+    },
+    {
+      "tracker": "unresolved",
+      "annotation": "split",
+      "count": 2
+    }
+  ],
+  "annotation_lock_sha256": "8bdcd7854912327cdd98a89bfe1b59232f79744d1157c265681fb554744f19da"
+}

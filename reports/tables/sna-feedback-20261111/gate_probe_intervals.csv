@@ -1,0 +1,3 @@
+window,proposed,reference,delta,months,low,high,draws,block_length,reason
+final,hier_lr_gate_probe_05,hier_lr_dynamic,0.0012152679887112439,9,-0.028792530008323294,0.04226156446568189,1000,2,Exploratory paired month blocks
+final,hier_lr_gate_probe_05,hier_hgb_dynamic,0.024907726760436066,9,-0.040512575100492894,0.07309253984841718,1000,2,Exploratory paired month blocks

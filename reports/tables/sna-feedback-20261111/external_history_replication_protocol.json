@@ -1,0 +1,29 @@
+{
+  "scope": "external-corpus retrospective replication; prior exposure uncertified; users may overlap",
+  "cohort": "political-cohort-001",
+  "rule": "hier_lr_dynamic if context_history_missing is 0, A_no_dynamics_matched otherwise",
+  "comparators": [
+    "hier_lr_dynamic",
+    "hier_hgb_dynamic"
+  ],
+  "seeds": [
+    42,
+    43,
+    44
+  ],
+  "bootstrap": {
+    "draws": 2000,
+    "block_length": 2,
+    "bootstrap_seed": 20261031
+  },
+  "sensitivity_block_length": 3,
+  "primary": "paired delta in six-class Macro-F1 versus hier_lr_dynamic",
+  "promotion": "primary 95% lower bound above zero, no higher dissolve false alarm rate, and no drop in either grow or merge recall; both rare classes must have support",
+  "inputs": {
+    "artifacts/confirmation/political-cohort-001/protocol.json": "fe902ec8d1be033bff09d9cc609785123ba2be9ece12144c1df09f6c8a26c19e",
+    "artifacts/confirmation/political-cohort-001/freeze.json": "3ddf63b03494f562f61868bf7befc31761ee575c2abb612cac80c6c750b7666a",
+    "artifacts/confirmation/political-cohort-001/stages/evaluation/attempt-001/complete.json": "fc9a205b0d7e89a7fcf11b14f8fbcc3ef71f350433b8c930c5d78dcb3f81df5e",
+    "artifacts/confirmation/political-cohort-001/stages/evaluation-samples/attempt-001/complete.json": "8c664dfcad2bb15e2e16d1126e77253f0ea1b5360fa197ebc134059ab753c807",
+    "artifacts/confirmation/political-cohort-001/stages/selection/attempt-001/complete.json": "fb87528f919ff8d83407402e91c55ef75c3fb61d281be92c56fd2f362e8ad434"
+  }
+}

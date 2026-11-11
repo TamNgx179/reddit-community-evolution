@@ -1,0 +1,13 @@
+cohort,window,proposed,reference,delta,months,low,high,draws,block_length,reason
+full-study,final,development_selected_dissolve_guard,hier_lr_dynamic,-0.028256169501370387,9,-0.07585790207152751,0.008802230102627706,2000,2,Exploratory paired month blocks
+full-study,final,development_selected_dissolve_guard,hier_hgb_dynamic,-0.004563710729645565,9,-0.0720641149280184,0.041140510829361154,2000,2,Exploratory paired month blocks
+full-study,final,development_selected_dissolve_guard,hier_lr_dynamic,-0.028256169501370387,9,-0.05037362781036975,0.007366686334053352,2000,3,Exploratory paired month blocks
+full-study,final,development_selected_dissolve_guard,hier_hgb_dynamic,-0.004563710729645565,9,-0.08003828328091439,0.05840174534492809,2000,3,Exploratory paired month blocks
+external-political,final,development_selected_dissolve_guard,hier_lr_dynamic,0.012399741730895808,9,0.00038368169522386283,0.02135825388579491,2000,2,Exploratory paired month blocks
+external-political,final,development_selected_dissolve_guard,hier_hgb_dynamic,0.031391312813421335,9,-0.22585458946006567,0.2120546156672751,2000,2,Exploratory paired month blocks
+external-political,final,development_selected_dissolve_guard,hier_lr_dynamic,0.012399741730895808,9,0.000776447961742921,0.021055556699120986,2000,3,Exploratory paired month blocks
+external-political,final,development_selected_dissolve_guard,hier_hgb_dynamic,0.031391312813421335,9,-0.2437220015800329,0.21724985754362564,2000,3,Exploratory paired month blocks
+external-ideological,final,development_selected_dissolve_guard,hier_lr_dynamic,0.006228998942206299,9,-0.0053434416221301295,0.018847237237718466,2000,2,Exploratory paired month blocks
+external-ideological,final,development_selected_dissolve_guard,hier_hgb_dynamic,-0.0335873157170587,9,-0.07285746694208371,0.02283213083213076,2000,2,Exploratory paired month blocks
+external-ideological,final,development_selected_dissolve_guard,hier_lr_dynamic,0.006228998942206299,9,-0.0003531229107927025,0.012377196168132099,2000,3,Exploratory paired month blocks
+external-ideological,final,development_selected_dissolve_guard,hier_hgb_dynamic,-0.0335873157170587,9,-0.07093480125660018,0.026584853989649382,2000,3,Exploratory paired month blocks

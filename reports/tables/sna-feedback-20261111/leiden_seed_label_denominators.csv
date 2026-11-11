@@ -1,0 +1,15 @@
+seed,original_label,original_total,same,changed,unmatched
+1,dissolve,1167,1153,0,14
+1,grow,19,18,1,0
+1,merge,15,15,0,0
+1,shrink,25,23,1,1
+1,split,39,37,1,1
+1,stable,4,4,0,0
+1,unresolved,563,555,0,8
+2,dissolve,1167,1154,0,13
+2,grow,19,18,1,0
+2,merge,15,15,0,0
+2,shrink,25,22,1,2
+2,split,39,38,1,0
+2,stable,4,4,0,0
+2,unresolved,563,554,0,9

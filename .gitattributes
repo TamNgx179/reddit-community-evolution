@@ -11,3 +11,6 @@ data/processed/**/*.sqlite filter=lfs diff=lfs merge=lfs -text
 /configs/benchmark_week1.json text eol=lf
 /configs/benchmark_week1_protocol.json text eol=lf
 /configs/hetco_threshold.toml text eol=lf
+
+# Preserve exact bytes of frozen Midterm 2 evidence for SHA-256 verification.
+/reports/tables/sna-feedback-20261111/** -text

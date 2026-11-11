@@ -1,0 +1,62 @@
+{
+  "provenance": "Two separate automated reviews of identical blinded evidence, not human annotations",
+  "cases": 12,
+  "agreements": 11,
+  "disagreements": 1,
+  "raw_agreement": 0.9166666666666666,
+  "expected_agreement": 0.3680555555555556,
+  "cohen_kappa": 0.868131868131868,
+  "matrix_orientation": "rows agent A, columns agent B",
+  "tracker_matches": {
+    "agent_A": 0,
+    "agent_B": 0
+  },
+  "by_tracker": {
+    "dissolve": {
+      "n": 4,
+      "agent_A": {
+        "unresolved": 4
+      },
+      "agent_B": {
+        "unresolved": 4
+      }
+    },
+    "grow": {
+      "n": 2,
+      "agent_A": {
+        "merge": 1,
+        "dissolve": 1
+      },
+      "agent_B": {
+        "merge": 1,
+        "dissolve": 1
+      }
+    },
+    "merge": {
+      "n": 2,
+      "agent_A": {
+        "dissolve": 2
+      },
+      "agent_B": {
+        "dissolve": 2
+      }
+    },
+    "unresolved": {
+      "n": 4,
+      "agent_A": {
+        "dissolve": 3,
+        "shrink": 1
+      },
+      "agent_B": {
+        "dissolve": 3,
+        "split": 1
+      }
+    }
+  },
+  "response_sha256": {
+    "agent_A": "2c75dffe4b2ffa30f01bc77bc73002c88edb8d929c5d3c0368f19729c81d8c5f",
+    "agent_B": "b351f71e3d60668f6a1b37493e0c0bc248c1c2fbb3cccd7bc0688acb95b396d2"
+  },
+  "human_review": "pending",
+  "generated_utc": "2026-11-11T15:09:00.537630+00:00"
+}

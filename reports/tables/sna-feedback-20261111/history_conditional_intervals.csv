@@ -1,0 +1,6 @@
+scope,window,proposed,reference,delta,months,low,high,draws,block_length,reason
+all,final,history_conditional_replay,hier_lr_dynamic,0.0018396289707735547,9,-8.018662907982588e-05,0.0027073077885453488,1000,2,Exploratory paired month blocks
+all,final,history_conditional_replay,A_no_dynamics_matched,0.04927908613357257,9,-0.007076988595187572,0.09514254775383318,1000,2,Exploratory paired month blocks
+all,final,history_conditional_replay,hier_hgb_dynamic,0.025532087742498377,9,-0.0689583934729993,0.09551264033790713,1000,2,Exploratory paired month blocks
+history_available,final,hier_lr_dynamic,A_no_dynamics_matched,0.05692198723832742,9,-0.009219525545247187,0.10762841757695593,1000,2,Exploratory paired month blocks
+history_missing,final,hier_lr_dynamic,A_no_dynamics_matched,-0.00527536986348498,9,-0.013932172969357243,-0.00016543582413508506,1000,2,Exploratory paired month blocks

@@ -1,0 +1,48 @@
+{
+  "scope": "retrospective replay of existing predictions; prior exposure not certified; populations may overlap",
+  "models": [
+    "hier_lr_dynamic",
+    "hier_hgb_dynamic"
+  ],
+  "seeds": [
+    42,
+    43,
+    44
+  ],
+  "cohorts": {
+    "full-study": {
+      "root": "artifacts/temporal/activity-study-001",
+      "pins": {
+        "artifacts/temporal/activity-study-001/protocol.json": "9fb19fff5540ec01c7979ebbd6c6c121b842d03f5116cf5832110c73557948ad",
+        "artifacts/temporal/activity-study-001/freeze.json": "7adc4242e2575e6732cdacf526277e2125e1759bdc76debc85b39a8d4cc30927",
+        "artifacts/temporal/activity-study-001/stages/evaluation/attempt-001/complete.json": "29ae05c85a884a74465eb6b67ebd001f3bfed0823fc6425ab37d34546d7302ac",
+        "artifacts/temporal/activity-study-001/stages/evaluation-samples/attempt-001/complete.json": "7729535bd610d59154e849b4893b3dfb274db4001115e5d27219bcef17977a0c"
+      }
+    },
+    "external-political": {
+      "root": "artifacts/confirmation/political-cohort-001",
+      "pins": {
+        "artifacts/confirmation/political-cohort-001/protocol.json": "fe902ec8d1be033bff09d9cc609785123ba2be9ece12144c1df09f6c8a26c19e",
+        "artifacts/confirmation/political-cohort-001/freeze.json": "3ddf63b03494f562f61868bf7befc31761ee575c2abb612cac80c6c750b7666a",
+        "artifacts/confirmation/political-cohort-001/stages/evaluation/attempt-001/complete.json": "fc9a205b0d7e89a7fcf11b14f8fbcc3ef71f350433b8c930c5d78dcb3f81df5e",
+        "artifacts/confirmation/political-cohort-001/stages/evaluation-samples/attempt-001/complete.json": "8c664dfcad2bb15e2e16d1126e77253f0ea1b5360fa197ebc134059ab753c807"
+      }
+    },
+    "external-ideological": {
+      "root": "artifacts/prospective/ideological-001",
+      "pins": {
+        "artifacts/prospective/ideological-001/protocol.json": "6ecfa0f21aa96b9816c909912c73d778fcc829e3f1c5bc704c07d5af473b1b22",
+        "artifacts/prospective/ideological-001/freeze.json": "9266009967cf0562c1113bebaf3312f00bd7896519f7e0a71f8069821c58f5e5",
+        "artifacts/prospective/ideological-001/stages/evaluation/attempt-001/complete.json": "20e56b84bfe5b09ef2cfe7a597413361f97ece45d1aeab3136e3f226684b03e3",
+        "artifacts/prospective/ideological-001/stages/evaluation-samples/attempt-001/complete.json": "7427e581f02543b5d0dd1020ef0d3b1dae60ad92d1e9b35916ba610f185f400c"
+      }
+    }
+  },
+  "bootstrap": {
+    "draws": 2000,
+    "block_length": 2,
+    "sensitivity_block_length": 3,
+    "seed": 20261031
+  },
+  "decision": "Separate cohort estimates; no pooling. A stable advantage requires positive lower paired interval in each external cohort plus no worse combined grow/merge recall or dissolve false-alarm rate, each with nonzero support. Treat ideological comparison as secondary to that cohort’s original declared primary."
+}

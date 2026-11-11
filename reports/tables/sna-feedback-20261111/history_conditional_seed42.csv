@@ -1,0 +1,5 @@
+model,n,macro_f1,grow_correct,merge_correct,grow_merge_to_dissolve,false_event_alarms
+hier_lr_dynamic,1269,0.41173791649012026,3,3,22,64
+A_no_dynamics_matched,1269,0.36429845932732124,0,2,28,39
+hier_hgb_dynamic,1269,0.38804545771839544,3,3,21,55
+history_conditional_replay,1269,0.4135775454608938,3,3,22,60
