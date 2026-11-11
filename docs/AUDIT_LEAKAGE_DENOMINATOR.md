@@ -22,7 +22,7 @@ Phạm vi: cohort full-study (final, 1.269 mẫu, label_month 2018-01..09) và c
 
 ## 3. Cùng mẫu giữa model
 - Full-study: 57 nhóm model/seed, đúng 1 tập mẫu (1.269). 72.333 = 57 x 1.269.
-- 2016: main 1 tập (494), rolling 1 tập (1.107), 54 nhóm.
+- 2016: main 1 tập (494), rolling 1 tập (1.107), 33 nhóm model/seed cho mỗi cửa sổ (66 nhóm tổng cộng).
 
 ## 4. Cutoff / leakage
 - `label_month <= feature_month`: 0 dòng ở cả hai cohort.
