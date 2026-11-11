@@ -1,0 +1,138 @@
+{
+  "protocol_sha256": "28044bac8635edb3fae11cb4e4e69d6aec28d08a7a7cff54b3d42072e6bb7437",
+  "inputs": {
+    "artifacts/confirmation/political-cohort-001/stages/evaluation/attempt-001/predictions.csv": "96bb982cd69a07ae9d7ef9cb1b9b3f4c9dbaaa8ab432f2215928cf0d754c5c75",
+    "artifacts/confirmation/political-cohort-001/stages/evaluation-samples/attempt-001/features.csv": "c058f20cd4fbbd5ba4e3460708c86c684f3eda297b85a79a76f5206379518e4a",
+    "artifacts/confirmation/political-cohort-001/stages/evaluation-samples/attempt-001/labels.csv": "3fcb012fe9006052a878da709ab7a9d73fa15acd1f87a75d558def2f9a6f75cf"
+  },
+  "metrics_seed42": {
+    "hier_lr_dynamic": {
+      "n": 286,
+      "macro_f1": 0.3690119360222453,
+      "grow": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "support": 8
+      },
+      "merge": {
+        "precision": 0.3333333333333333,
+        "recall": 0.2222222222222222,
+        "f1": 0.26666666666666666,
+        "support": 9
+      },
+      "dissolve_false_alarms": 28,
+      "dissolve_support": 250
+    },
+    "A_no_dynamics_matched": {
+      "n": 286,
+      "macro_f1": 0.37769432709191747,
+      "grow": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "support": 8
+      },
+      "merge": {
+        "precision": 0.3333333333333333,
+        "recall": 0.2222222222222222,
+        "f1": 0.26666666666666666,
+        "support": 9
+      },
+      "dissolve_false_alarms": 16,
+      "dissolve_support": 250
+    },
+    "hier_hgb_dynamic": {
+      "n": 286,
+      "macro_f1": 0.3500203649397198,
+      "grow": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "support": 8
+      },
+      "merge": {
+        "precision": 0.09090909090909091,
+        "recall": 0.1111111111111111,
+        "f1": 0.09999999999999999,
+        "support": 9
+      },
+      "dissolve_false_alarms": 17,
+      "dissolve_support": 250
+    },
+    "history_conditional_replay": {
+      "n": 286,
+      "macro_f1": 0.36734536324700257,
+      "grow": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "support": 8
+      },
+      "merge": {
+        "precision": 0.2857142857142857,
+        "recall": 0.2222222222222222,
+        "f1": 0.25,
+        "support": 9
+      },
+      "dissolve_false_alarms": 25,
+      "dissolve_support": 250
+    }
+  },
+  "paired_intervals": [
+    {
+      "window": "final",
+      "proposed": "history_conditional_replay",
+      "reference": "hier_lr_dynamic",
+      "delta": -0.0016665727752427362,
+      "months": 9,
+      "low": -0.009386153639255048,
+      "high": 0.0012853993264927376,
+      "draws": 2000,
+      "block_length": 2,
+      "reason": "Exploratory paired month blocks"
+    },
+    {
+      "window": "final",
+      "proposed": "history_conditional_replay",
+      "reference": "hier_hgb_dynamic",
+      "delta": 0.01732499830728279,
+      "months": 9,
+      "low": -0.2400703381807321,
+      "high": 0.20161966655609834,
+      "draws": 2000,
+      "block_length": 2,
+      "reason": "Exploratory paired month blocks"
+    },
+    {
+      "window": "final",
+      "proposed": "history_conditional_replay",
+      "reference": "hier_lr_dynamic",
+      "delta": -0.0016665727752427362,
+      "months": 9,
+      "low": -0.011066126580310476,
+      "high": 0.0012224817865061355,
+      "draws": 2000,
+      "block_length": 3,
+      "reason": "Exploratory paired month blocks"
+    },
+    {
+      "window": "final",
+      "proposed": "history_conditional_replay",
+      "reference": "hier_hgb_dynamic",
+      "delta": 0.01732499830728279,
+      "months": 9,
+      "low": -0.2620574878701074,
+      "high": 0.20100726045607936,
+      "draws": 2000,
+      "block_length": 3,
+      "reason": "Exploratory paired month blocks"
+    }
+  ],
+  "error_guards_by_seed": {
+    "42": true,
+    "43": true,
+    "44": true
+  },
+  "promotion_criteria_met": false
+}

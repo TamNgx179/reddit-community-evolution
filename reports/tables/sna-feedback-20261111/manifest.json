@@ -1,0 +1,112 @@
+{
+  "scope": "retrospective inspected final window",
+  "fixed_gate_probability": 0.5,
+  "bootstrap": {
+    "seed": 20261031,
+    "draws": 1000,
+    "block_months": 2
+  },
+  "inputs": {
+    "artifacts/temporal/activity-study-001/stages/evaluation/attempt-001/predictions.csv": "498212fe1c757badc5d50ca206057c7abf8ec8544bcf9b4f08f56a0822df3e07",
+    "artifacts/temporal/activity-study-001/stages/evaluation-samples/attempt-001/features.csv": "b69a09ca4ae20f75d6f6011cec22330217bfc36afac9fe0eab940e64f9547d6e",
+    "src/reddit_sna/evaluation/diagnostics.py": "e2dcce43875b37bd25df7490eba187c8fb0940bc32d08e36a3fe52629803db7e"
+  },
+  "tables": {
+    "gate_probe_intervals.csv": "023830aa28a1a0c247e590ee2a57179a468f4634316fb44839132d23e1ae8547",
+    "gate_probe_seed42.csv": "5326b71ee41427bcbd964fe2e88484955a38f2d6e27df8122679c28800085e6c",
+    "matched_strata_seed42.csv": "ba8a6d71d6327676fc440f9dd2b29db52823351be58113fb40bf0213dc5116b3",
+    "history_conditional_intervals.csv": "92c4ae1d58ad58c0b40e35d27769fc6744814516056f7553d7b090dfbd66d3d0",
+    "history_conditional_seed42.csv": "e4d6c215d8b26ccf6475b80954322252b6b997cfaeef5dc98cee1ee5ec7c2081",
+    "history_leave_one_month_out.csv": "2b38da807d27a2d30ef58fcf0b4ddd48acd94099a27b20214c02a60f43a2d250",
+    "history_interaction_sensitivity.csv": "c62eedb828adb5cd7bd94870465677d075c63adae745bfbea97bda2d7dd8492d"
+  },
+  "automated_review_outputs": {
+    "automated_label_review_summary.json": "c8309b1ca9a80d743148ec076a98c6c4cbea1454041ab8a0372d43e00ba32af1",
+    "automated_label_review_confusion.csv": "1b54cc217d8cf4b2b1ac27835e4d2f428ad608e528dceda8480d8c8743419f7b"
+  },
+  "history_conditional_replay": {
+    "scope": "post-hoc use of already inspected final predictions",
+    "rule": "dynamic with member-activity history, no-dynamics otherwise",
+    "new_fit": false
+  },
+  "history_interaction": {
+    "scope": "post-hoc descriptive effect modification, common months per draw",
+    "contrast": "(dynamic \u2212 no dynamics) with history minus the same contrast without history"
+  },
+  "external_replication": {
+    "external_history_replication_protocol.json": "28044bac8635edb3fae11cb4e4e69d6aec28d08a7a7cff54b3d42072e6bb7437",
+    "external_history_replication_results.json": "fc11a80e3107ce5e99590462984a5b7f71483121b13c3f13de3830791efe79dd"
+  },
+  "delegated_review_outputs": {
+    "delegated_human_review_summary.json": "d8028328a6de7c94b4498b208b467738b2eaa58fa454ce3a48819aeb26e5a36e"
+  },
+  "ged_sensitivity": {
+    "original_labels_reproduced": 11745,
+    "sample_manifest_sha256": "7729535bd610d59154e849b4893b3dfb274db4001115e5d27219bcef17977a0c",
+    "input_hashes": {
+      "labels.csv": "d54986980a0a2e8f21bb98b00a7ca7184562ffbcfa859d8a7c610ef419a5a05c",
+      "inclusion_pairs.csv": "95876ac07412d59915728346cf67c7d1cace96821b3b09af740b58b66b0ddd78"
+    },
+    "tables": {
+      "ged_threshold_sensitivity.csv": "d25ce31538a20ce605c4f966069e281b73bceda037e2bd0059afe7b51cc1e7ca",
+      "ged_threshold_transitions.csv": "9863be3d903440788489f5f6e09ac550900490d1d0df43669995ceb9711d53d6"
+    }
+  },
+  "ged_frozen_prediction_sensitivity": {
+    "scope": "unchanged saved predictions, intersection only, retrospective",
+    "prediction_sha256": "498212fe1c757badc5d50ca206057c7abf8ec8544bcf9b4f08f56a0822df3e07",
+    "tables": {
+      "ged_frozen_prediction_sensitivity.csv": "1b24715f34cf5593da7055ac0391ef95daed56df1a9cfa53d7717f1a71db2486"
+    }
+  },
+  "leiden_seed_sensitivity": {
+    "scope": "retrospective final label months 2018-01 to 2018-09, including unresolved source groups",
+    "alignment": "unique reciprocal best Jaccard >= 0.5; ties excluded",
+    "sample_manifest_sha256": "7729535bd610d59154e849b4893b3dfb274db4001115e5d27219bcef17977a0c",
+    "month_manifest_sha256": {
+      "2017-12": "7b4c5e2fcadc9ee61da4a2ccb7c3bc65335a2fcd924a8b99e7ffb4398d1bb8ca",
+      "2018-01": "0de646eb62897c2b8fe164f530d1a762f7f4882556e14b7528edb8cdfa28c5a8",
+      "2018-02": "a126bc04f7d1d6dc92ea2c4c8e18ac4858e080618ae115b1ebfeb89e70c2c4d5",
+      "2018-03": "a21ba42a337dc30cd5654f2212e5c92ed1cc1d5cc87628bf9c927fd11aa312ea",
+      "2018-04": "3d6da9114a12d83257d2f07f58c3fdfdf0ab86f875e169ba7b9026042a3169d6",
+      "2018-05": "491046ced5f34365181894879e39c1f52e2da71f30850b539aad4970022ade6d",
+      "2018-06": "a7c7ff39497fbc51fbcb9a758959dae1a2c428a1e55450f2499b4467c0d63224",
+      "2018-07": "399383e497b8788c39872ad8e9d0dbcd85d08f7f105172a69a367bd74c3c0374",
+      "2018-08": "a674532d1df50155790a6dd56c2caa4fb3de2617c63f7e25118910b1d60df74a",
+      "2018-09": "8afdb0fdf7d4c277f549237b22866fea9c248233880622ab1890b6a8a08934ba"
+    },
+    "tables": {
+      "leiden_seed_monthly.csv": "bd0fb3788adfc4b45c819913ebf61f3e4b8cac3aee5a3389d4b04e6310f1e9e0",
+      "leiden_seed_label_transitions.csv": "e87b38ac74ce5389f6af8ad51a430bcab50df83228f2083a62ceeec86cac2b55",
+      "leiden_seed_label_denominators.csv": "05093d0419ee75d4e10af52d831269a922260954adf302a9e0695f73b7535eb1"
+    }
+  },
+  "lr_hgb_cross_cohort": {
+    "protocol_sha256": "2ab24eb13f09182f8251522b969070089138d399c5223a0e57b9a88d93da9af5",
+    "inputs": {
+      "artifacts/temporal/activity-study-001/stages/evaluation/attempt-001/predictions.csv": "498212fe1c757badc5d50ca206057c7abf8ec8544bcf9b4f08f56a0822df3e07",
+      "artifacts/temporal/activity-study-001/stages/evaluation-samples/attempt-001/features.csv": "b69a09ca4ae20f75d6f6011cec22330217bfc36afac9fe0eab940e64f9547d6e",
+      "artifacts/temporal/activity-study-001/stages/evaluation-samples/attempt-001/labels.csv": "d54986980a0a2e8f21bb98b00a7ca7184562ffbcfa859d8a7c610ef419a5a05c",
+      "artifacts/confirmation/political-cohort-001/stages/evaluation/attempt-001/predictions.csv": "96bb982cd69a07ae9d7ef9cb1b9b3f4c9dbaaa8ab432f2215928cf0d754c5c75",
+      "artifacts/confirmation/political-cohort-001/stages/evaluation-samples/attempt-001/features.csv": "c058f20cd4fbbd5ba4e3460708c86c684f3eda297b85a79a76f5206379518e4a",
+      "artifacts/confirmation/political-cohort-001/stages/evaluation-samples/attempt-001/labels.csv": "3fcb012fe9006052a878da709ab7a9d73fa15acd1f87a75d558def2f9a6f75cf",
+      "artifacts/prospective/ideological-001/stages/evaluation/attempt-001/predictions.csv": "fb468ce917cfea1101af3f6fbf5b6f3b131b067be9fd000e45e5192183aa2548",
+      "artifacts/prospective/ideological-001/stages/evaluation-samples/attempt-001/features.csv": "bfd2940bb41997cb52910f614a49103f05368083d3bbcfa05f6c654e9f5f0f9d",
+      "artifacts/prospective/ideological-001/stages/evaluation-samples/attempt-001/labels.csv": "86c8e7fa6f788fc3ee99d9a4286a9489e19c5a8b203cef947d54f9b866403901"
+    },
+    "tables": {
+      "lr_hgb_cross_cohort_intervals.csv": "cc702878811a227e7bc1adafe8bf1b121a914dd8b191f121c72ccf2ab83dff62",
+      "lr_hgb_cross_cohort_counts.csv": "4c9ff82ace5fbdb264451298ebd2f42a200cfdd45c44e0c366c5da57def95f87",
+      "lr_hgb_class_contributions.csv": "ee923717da4f7cc0f2ef886ed4c496102bf1b53f7a5d36fc6faee5de9b9f543a"
+    }
+  },
+  "automated_panel36": {
+    "automated_panel36_summary.json": "bcb1290751c51e284f28936ba90c4a56ee2ce6b95d16d52b6ed00c884a526fe7"
+  },
+  "dissolve_guard": {
+    "dissolve_guard_protocol.json": "d48bb145938beae28ace83d29773e43b3182140108cc8cd4bd29aef5c27185c6",
+    "dissolve_guard_selection.json": "275f015c44c43ea35e84cee3d14aebca655c5f216d176f7cfae60bf3bc3fe36b",
+    "dissolve_guard_intervals.csv": "14cac00031622c6828b82ab012b7522923ceeff5565e105c51b4cc283d76d10f",
+    "dissolve_guard_counts.csv": "174f902b80110de76875497e80f48da23e06b5dc9ce13c017a458e3eb7e0cca2"
+  }
+}

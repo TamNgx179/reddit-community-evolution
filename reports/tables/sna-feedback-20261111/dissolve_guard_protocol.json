@@ -1,0 +1,23 @@
+{
+  "scope": "development-selected retrospective probe; evaluation predictions were previously inspected",
+  "rule": "for a predicted event other than dissolve, switch to dissolve when P(dissolve) >= ratio * P(predicted_event); 1.0 is identity",
+  "ratios": [
+    0.5,
+    0.65,
+    0.8,
+    0.9,
+    1.0
+  ],
+  "seeds": [
+    42,
+    43,
+    44
+  ],
+  "selection": "require no drop in either grow or merge hits and strictly fewer false alarms at every seed, both classes must have support; maximize mean validation macro-F1, ties favor ratio closest to one; identity if no candidate qualifies",
+  "test_start": "2018-01",
+  "validation_start": "2017-07",
+  "input_sha256": {
+    "artifacts/temporal/activity-study-001/stages/development-samples/attempt-001/samples.csv": "a61389fb8da4679df14f516849271610d9f6b6b01f6508feeea7257eb7dc3e96",
+    "artifacts/temporal/activity-study-001/stages/selection/attempt-001/selection.json": "5c59ab7163e8bdfe4c7015ded2a5a11666eaf483ef814cb41effbb26ffce1bde"
+  }
+}

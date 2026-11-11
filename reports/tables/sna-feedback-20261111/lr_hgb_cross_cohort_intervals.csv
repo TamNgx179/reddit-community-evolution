@@ -1,0 +1,7 @@
+cohort,window,proposed,reference,delta,months,low,high,draws,block_length,reason
+full-study,final,hier_lr_dynamic,hier_hgb_dynamic,0.023692458771724823,9,-0.06991262700124508,0.09932197828029121,2000,2,Exploratory paired month blocks
+full-study,final,hier_lr_dynamic,hier_hgb_dynamic,0.023692458771724823,9,-0.08279976887233198,0.0983841175983789,2000,3,Exploratory paired month blocks
+external-political,final,hier_lr_dynamic,hier_hgb_dynamic,0.018991571082525527,9,-0.24133532471814437,0.2073931610773089,2000,2,Exploratory paired month blocks
+external-political,final,hier_lr_dynamic,hier_hgb_dynamic,0.018991571082525527,9,-0.26310911310911317,0.21007963698540005,2000,3,Exploratory paired month blocks
+external-ideological,final,hier_lr_dynamic,hier_hgb_dynamic,-0.039816314659264995,9,-0.08162881728251391,0.014083250488014454,2000,2,Exploratory paired month blocks
+external-ideological,final,hier_lr_dynamic,hier_hgb_dynamic,-0.039816314659264995,9,-0.0738960182411586,0.017917756192695478,2000,3,Exploratory paired month blocks

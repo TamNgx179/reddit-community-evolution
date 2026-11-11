@@ -1,5 +1,5 @@
 # Integrated Midterm 2 Report
-## Community Evolution in Online Reddit Communities
+## Forecasting Structural Events in Reddit User Communities
 
 **Reporting scope:** Full-study diagnostics, Week 4 model comparison, human review and tracker audit, and the separate H1 HeTCo pilot  
 **Evidence cutoff:** 11 November 2026  
@@ -9,11 +9,23 @@
 
 ---
 
+# Abstract
+
+We study whether structural changes in Reddit user communities can be forecast from monthly reply networks. Communities are detected with weighted Leiden and linked across months by a GED adaptation. Of 11,562 observed transitions, 7,490 receive a resolved label. On 1,269 chronological evaluation cases, hierarchical logistic regression reaches six-class Macro-F1 of 0.4117 versus 0.3880 for hierarchical gradient boosting. The paired month-block interval for the difference includes zero, and boosting correctly predicts six more cases per seed. A stratified review panel exposes disagreements between tracker-assigned dissolution and unresolved transitions. A diagnostic threshold probe reduces missed grow and merge predictions at the cost of more false event alarms. These results locate the applicability boundary and motivate independent label review and targeted forecasting checks.
+
+## Key findings
+
+- **Applicability.** The frozen tracker resolves 64.78% of observed transitions. Lowering the dissolve threshold removes 68 originally scored cases. Macro-F1 increases on the remaining cases with identical predictions and labels.
+- **Partition sensitivity.** Alternative Leiden seeds preserve 1,805 of 1,808 aligned labels per comparison on the final nine months. A further 24 source groups per comparison have no qualifying match.
+- **Forecasting.** The proposed model scores 0.4117 versus 0.3880 Macro-F1 for hierarchical HGB. The paired interval includes zero and HGB correctly predicts six more cases per seed.
+
 # 1. Introduction and Research Questions
 
 Online communities change over time as members join, leave, interact, and reorganize. This study examines whether structural events in detected online communities can be predicted from information available before the next monthly transition.
 
 The prediction task uses six event classes: **stable, grow, shrink, merge, split, and dissolve**. The operational target is defined by the observed interaction graph, community detection, and the declared lineage/event-tracking rules. It should therefore be interpreted as a rule-based structural event label, rather than an unquestionable statement about the social identity or continued existence of a group.
+
+The technical input is a detected community at month *t* and its graph, activity and history features observed through that month. The output is a six-class probability distribution and an event prediction for *t → t+1*. The study connects community evolution to forecasting by treating the monthly detected groups as the units to track.
 
 The integrated analysis addresses four questions:
 
@@ -26,15 +38,24 @@ The evidence is descriptive and comparative. It does not establish causal effect
 
 # 2. Dataset and Graph Construction
 
-The full study uses 15 Reddit corpora and 45 monthly snapshots from January 2015 through September 2018. Valid replies are represented as directed author-to-parent-author interactions, assigned to the UTC month of the child record. The undirected user projection aggregates reply counts in both directions.
+The full study uses 15 ConvoKit Reddit corpora and 45 monthly snapshots from January 2015 through September 2018. Each subreddit supplies an activity context. Detected communities consist of users who interact in the monthly reply network. Valid replies are represented as directed author-to-parent-author interactions, assigned to the UTC month of the child record. The undirected user projection aggregates reply counts in both directions.
 
 Communities are detected independently in each monthly snapshot using weighted Leiden partitions. The declared GED adaptation compares member overlap and importance-weighted inclusion to establish transition links and community events. A directional inclusion of at least 0.5 accepts a lineage link. The declared dissolution threshold is 0.1; competing weak or ambiguous patterns can remain unresolved.
 
 The prediction unit is a detected community at month *t*. Features are restricted to records available through *t*, while the target describes the transition from *t* to *t+1*. This cutoff is essential: later information must not be used to construct predictors for an earlier prediction point.
 
+The pipeline follows one sequence:
+
+1. Read posts and comments with their author, timestamp and parent record. Resolve each valid reply to a parent author.
+2. Assign each reply to the child record’s UTC month. Aggregate directed reply counts into an undirected weighted user graph for Leiden.
+3. Detect communities independently each month. For each adjacent pair of months, compare membership and importance overlap in both directions.
+4. Build features through month *t*, then join them to the structural label for *t → t+1*. Compare saved predictions using the same reference, community and target month.
+
 The resulting labels are operational outputs of the graph construction, community detection, and tracking rules. A tracker-assigned dissolve label means that the declared continuity procedure did not accept a successor under its rules; it does not independently prove that the underlying social group disappeared.
 
 # 3. Labeling and Coverage
+
+The GED adaptation accepts a successor when either directional inclusion reaches its threshold of 0.5. With one accepted successor and one predecessor, the relative sizes determine grow, shrink or stable. Multiple accepted successors indicate split and multiple predecessors into a single accepted successor indicate merge. A many-to-many pattern is unresolved. With no accepted successor, the tracker records dissolve when every directional inclusion is below 0.1. Weaker overlap at or above 0.1 leaves the event unresolved. The final observed month has no target snapshot and is censored.
 
 ## 3.1 Overall label-resolution coverage
 
@@ -89,19 +110,51 @@ The large difference between means and medians indicates that a small number of 
 
 Coverage varies by month rather than remaining constant. In the final prediction horizon, coverage is 66.67% in January 2018, 62.37% in February, 72.12% in March, 70.67% in April, 67.21% in May, 70.00% in June, 76.04% in July, 66.95% in August, and 71.50% in September. These monthly values describe the observed label population and should not be confused with model performance.
 
+## 3.5 Two graph cases from the diagnostic review
+
+| Case | Evidence across the two snapshots | Recorded adjudication |
+|---|---|---|
+| `main-0010` | All four focal users appear in a target of 16,293 members. Focal edges drop from three to one, and the largest retained focal component has two users. | **Unresolved.** Shared membership in a large target gives limited evidence that the focal group merged as a coherent unit. |
+| `main-0012` | The target grows from 82 to 114 users. It retains 25 focal users, including a connected core of 23, with 25 prior edges persisting. | **Grow.** The connected retained core supports a dominant continuation. Retention of 25/82 and incomplete observation qualify the decision. |
+
+These examples come from the diagnostic review panel. The recorded decisions are the panel's adjudications and remain separate from the frozen prediction targets. See the [case audit](tables/human-review-20261107/03_graph_evidence/graph_lineage_check.csv) and [adjudication records](tables/human-review-20261107/01_agreement_adjudication/adjudication.csv).
+
+The full-study coverage and monthly graph consistency were independently replayed from the frozen inputs. All 45 monthly manifests matched the sample run, and the graph audit checked membership, edge endpoints and observation denominators. This check establishes the consistency of the supplied graph artifacts. See [the coverage and graph audit](https://github.com/TamNgx179/reddit-community-evolution/blob/afec18c/docs/PHUC-WEEK4-RESULTS.md).
+
+## 3.6 Sensitivity to GED thresholds
+
+The threshold replay reproduced all 11,745 frozen labels before changing one parameter at a time. Moving the linkage threshold from 0.50 to 0.45 or 0.55 changed 15 or 63 labels. With linkage fixed, moving the dissolve threshold from 0.10 to 0.05 reassigned 623 dissolve cases to unresolved and reduced coverage from 64.78% to 59.39%. Moving it to 0.15 reassigned 352 unresolved cases to dissolve and raised coverage to 67.83%. The graph and partitions were held fixed. This quantifies how the operational definition changes eligibility and motivates review of ambiguous and weakly observed cases. The reported forecasting scores use the original frozen labels. [Sensitivity table](tables/sna-feedback-20261111/ged_threshold_sensitivity.csv) and [transition counts](tables/sna-feedback-20261111/ged_threshold_transitions.csv).
+
+## 3.7 Separating eligibility changes from label changes
+
+We rescored the saved predictions on the intersection of the original final prediction keys and cases resolved under each alternate GED rule. We first restricted the original labels to those keys, then substituted the alternate labels on the same keys. These two steps separate the effect of sample eligibility from the effect of relabeling. The replay uses fixed predictions and six-class Macro-F1 averaged over the three frozen seeds.
+
+At dissolve threshold 0.05, 68 of the original 1,269 final cases leave the scored set. The other 1,201 retain their original labels. The proposed model moves from 0.4117 to 0.4136 and hierarchical HGB from 0.3880 to 0.3912 entirely through the change in eligibility. At linkage threshold 0.55, seven cases leave the scored set and four retained cases change label. For the proposed model, the eligibility step moves the score from 0.4117 to 0.3957, and the relabeling step moves it to 0.4006. The proposed score is higher than HGB in all five inspected settings on their respective common keys. These are point estimates on a previously inspected cohort. The replay cannot score newly eligible cases without corresponding saved predictions. [Matched eligibility and label sensitivity](tables/sna-feedback-20261111/ged_frozen_prediction_sensitivity.csv).
+
+## 3.8 Sensitivity to the Leiden partition seed
+
+We held the monthly reply graphs, Leiden objective and resolution, and GED thresholds fixed. We replayed GED with saved Leiden partitions for seeds 0, 1 and 2, recomputing within-community importance for each partition. Seed 0 exactly reproduced the frozen labels for **1,832** source groups over the nine final target months (January–September 2018), including unresolved groups. We aligned source groups within each month using a unique reciprocal best membership Jaccard match of at least 0.50.
+
+| Alternative seed | Seed-0 source groups | Aligned | Same label | Different label | Unmatched |
+|---|---:|---:|---:|---:|---:|
+| 1 | 1,832 | 1,808 | 1,805 | 3 | 24 |
+| 2 | 1,832 | 1,808 | 1,805 | 3 | 24 |
+
+The concordance among aligned groups is 99.83% for each comparison. No aligned case moved directly between dissolve and unresolved. Some original dissolve and unresolved groups failed the alignment threshold, so the matched result applies to comparable groups in these snapshots. This analysis varies the partition seed at fixed graph construction and GED settings. Section 3.6 varies GED thresholds at fixed partitions. Together the checks locate sensitivity under the tested perturbations. [Monthly audit](tables/sna-feedback-20261111/leiden_seed_monthly.csv), [label transitions](tables/sna-feedback-20261111/leiden_seed_label_transitions.csv) and [label-specific denominators](tables/sna-feedback-20261111/leiden_seed_label_denominators.csv).
+
 # 4. Evaluation Protocol
 
 The full-study predictive evaluation uses the frozen final prediction window from January through September 2018. It contains **1,269 unique community-month cases per seed**, **19 model configurations**, and seeds **42, 43, and 44**.
 
 The evaluation uses a fixed six-class label set: stable, grow, shrink, merge, split, and dissolve. Macro-F1 is calculated across all six classes with `zero_division=0`. Unresolved and terminally censored records are excluded from predictive metrics; neither is converted into an event class.
 
-The saved prediction export was checked against the resolved label export and corresponding feature records. The evaluation report records that all evaluated predictions matched their expected labels and feature keys. No model was fitted or refitted for the diagnostic analyses summarized here.
+The acceptance runner checked uniqueness, matched evaluation keys, label agreement and feature availability through month *t*. The full join uses graph reference, feature month, community ID, label month and label reference. The 1,269 evaluation cases are drawn from the 7,490 resolved records according to the frozen final window. This is an analysis of saved predictions. Fit cutoff is checked against the declared protocol for the frozen exports. The H1 run has its own fit log and verification record.
 
 The three seeds are repeated runs on the same evaluation cases, not independent test samples. Identical results across seeds for deterministic configurations must not be interpreted as evidence of stability under new sampling conditions.
 
 # 5. Baselines and Proposed Methods
 
-The primary full-study method is `hier_lr_dynamic`, a hierarchical logistic-regression configuration with dynamic features. The principal reference comparator is `hier_hgb_dynamic`. Other reference baselines include majority prediction, persistence, random forest, logistic regression, and matched boosting. Additional controls isolate hierarchy, dynamics, context drift, and static/dynamic feature choices.
+The primary full-study method is `hier_lr_dynamic`, a hierarchical logistic-regression configuration with dynamic features. Its first head estimates dissolve versus other events. Its second head estimates the other event classes conditional on continuation. The final six-class probabilities combine those two estimates. The principal reference comparator, `hier_hgb_dynamic`, uses the same hierarchical decision structure with HGB estimators. This comparison tests estimator choice under the declared dynamic setup. Comparisons with flat LR and the controls address architecture and feature choices separately. Other reference baselines include majority prediction, persistence, random forest, logistic regression, and matched boosting. Additional controls isolate hierarchy, dynamics, context drift, and static/dynamic feature choices.
 
 The 19 configurations are retained in the frozen output inventory. The main comparisons in this report focus on the pre-declared proposed model, the hierarchical HGB comparator, and matched component controls. Historical or secondary controls are not treated as equivalent primary baselines.
 
@@ -126,7 +179,7 @@ The H1 threshold experiment belongs to a separate 2015 HeTCo pilot. It tests a d
 
 The proposed model has the highest Macro-F1 among the listed primary reference models, but HGB has slightly higher accuracy. This is not contradictory. Dissolve represents 1,167 of 1,269 cases (91.96%), so sample-weighted accuracy is dominated by the majority class. The majority baseline achieves 91.96% accuracy but only 0.1597 Macro-F1. Macro-F1 is therefore the more informative metric for comparing performance across the six fixed classes.
 
-The proposed model's Macro-F1 advantage over hierarchical HGB is 0.0237. This is an aggregate metric advantage, not evidence that the proposed model wins on more individual cases.
+The proposed model gains 0.0237 Macro-F1 over hierarchical HGB. Sections 6.5 and 6.6 show how the per-case outcomes and month-block interval qualify that gain.
 
 ## 6.2 Per-class performance
 
@@ -191,7 +244,88 @@ The proposed-versus-HGB comparison has 95 cases with different predicted labels.
 
 ## 6.6 Full-study interpretation
 
-The evidence supports a narrow conclusion: the proposed hierarchical LR dynamic model has the highest Macro-F1 among the primary full-study reference models, but it does not dominate HGB on case-level correctness or every class. The largest weaknesses remain the rare grow and merge classes and the four stable cases. The paired and class-level results should accompany the headline Macro-F1.
+The proposed model achieves 0.4117 Macro-F1, compared with 0.3880 for hierarchical HGB. The matched 95% interval for their difference is **[−0.0694, +0.0945]**, which includes zero. The estimate comes from 1,000 paired bootstrap draws with blocks of two consecutive months over nine observed months. Each draw uses the same months for all models and seeds. This interval describes exploratory uncertainty within the inspected evaluation period.
+
+| Comparator | Proposed minus comparator Macro-F1 | Paired 95% interval |
+|---|---:|---:|
+| Hierarchical HGB dynamic | +0.0237 | [−0.0694, +0.0945] |
+| Flat HGB dynamic | +0.0476 | [−0.0303, +0.1163] |
+| Flat LR dynamic | +0.0502 | [−0.0294, +0.1176] |
+| B4 Logistic Regression | +0.0806 | [−0.0101, +0.1418] |
+| B5 Matched Boosting | +0.1788 | [+0.0843, +0.2524] |
+
+The saved matched controls help interpret the model comparison. The no-dynamics contrast yields **+0.0474** Macro-F1 with a paired interval of **[−0.0073, +0.0934]**. The flat matched contrast yields **+0.0796** with an interval of **[+0.0292, +0.1321]**. These estimates describe their respective frozen configurations and the inspected period.
+
+The paired correctness counts favor HGB by six cases per seed. Among the 19 grow cases, the proposed model predicts dissolve 14 times and HGB 12 times. Among the 15 merge cases, the counts are 8 and 9. The direction differs by class, and the small supports limit interpretation. The proposed method's benefit is higher class-balanced performance on this window. Whether that benefit persists across new months remains an open question.
+
+## 6.7 Retrospective decision-rule probe
+
+On the 1,269 previously inspected final cases, retain the frozen scores and change a dissolve argmax only when its probability is below 0.5. In that case, select the highest-scoring remaining event. This isolates the decision rule while holding training, features and scores fixed.
+
+| Seed 42 decision | Grow correct / 19 | Merge correct / 15 | Grow or merge called dissolve | False event alarms / 1,167 dissolve | Macro-F1 |
+|---|---:|---:|---:|---:|---:|
+| Proposed argmax | 3 | 3 | 22 | 64 | 0.4117 |
+| Hierarchical HGB | 3 | 3 | 21 | 55 | 0.3880 |
+| Proposed with 0.5 dissolve rule | 6 | 5 | 13 | 134 | 0.4130 |
+
+The probe gains +0.0012 Macro-F1 over the original decision rule, with a paired month-block 95% interval of [−0.0288, +0.0423]. The additional 70 false alarms outweigh the evidence for adopting this rule. Retain the original full-study configuration.
+
+Against the matched no-dynamics configuration, the proposed model gains +0.0569 Macro-F1 where member-activity history is available (730 cases) and changes by −0.0053 where it is missing (539 cases). Compared with the flat matched control, the hierarchical variant gains Macro-F1 in both strata but sends more grow and merge cases to dissolve. This distinction motivates a study of when dynamic signals help, with class support and false alarms reported jointly. The stratum results use seed 42 and are descriptive. See [matched strata](tables/sna-feedback-20261111/matched_strata_seed42.csv), [probe counts](tables/sna-feedback-20261111/gate_probe_seed42.csv), and [paired probe intervals](tables/sna-feedback-20261111/gate_probe_intervals.csv).
+
+## 6.8 History-conditioned replay and month sensitivity
+
+We replayed a conditional rule on the already inspected final window. It uses the saved dynamic prediction when member-activity history is available and the saved no-dynamics prediction otherwise. Both variants were evaluated on the same keys. This replay involves no new fits or threshold search. The rule was motivated by the descriptive differences in Section 6.7.
+
+| Paired contrast | Cases per seed | Δ six-class Macro-F1 | Exploratory 95% month-block interval |
+|---|---:|---:|---:|
+| Dynamic vs. no-dynamics, history available | 730 | +0.0569 | [−0.0092, +0.1076] |
+| Dynamic vs. no-dynamics, history missing | 539 | −0.0053 | [−0.0139, −0.0002] |
+| Conditional replay vs. dynamic | 1,269 | +0.0018 | [−0.00008, +0.0027] |
+| Conditional replay vs. hierarchical HGB | 1,269 | +0.0255 | [−0.0690, +0.0955] |
+
+The replay moves Macro-F1 from 0.4117 to 0.4136 and reduces false event alarms among true dissolve cases from 64 to 60 at seed 42. Grow and merge hits remain three each, and 22 of these cases are still predicted as dissolve. Omitting any one of the nine months leaves a positive point difference between the replay and the existing proposed model (+0.0006 to +0.0027). This sensitivity check uses the same inspected cohort, and the paired interval for the overall improvement includes zero. The condition is a candidate for a future matched evaluation. The current proposed model remains the primary result.
+
+To test whether the dynamic-feature gain differs between the two history strata, we computed the difference between their matched gains using the same sampled calendar months for both strata in each draw. The observed difference was **+0.0622 Macro-F1**. The 95% interval was **[−0.0099, +0.1123]** for two-month blocks and **[−0.0137, +0.1151]** for three-month blocks (2,000 draws each). Both intervals include zero. History availability is a plausible condition for further testing, and this retrospective window leaves the difference uncertain. [Shared-month sensitivity results](tables/sna-feedback-20261111/history_interaction_sensitivity.csv).
+
+See the [paired intervals](tables/sna-feedback-20261111/history_conditional_intervals.csv), [decision counts](tables/sna-feedback-20261111/history_conditional_seed42.csv), and [leave-one-month-out results](tables/sna-feedback-20261111/history_leave_one_month_out.csv).
+
+## 6.9 External-corpus replication of the conditional rule
+
+We specified the conditional rule, comparators and adoption criteria before replaying the saved predictions from AustralianPolitics, CanadaPolitics and ukpolitics. The run covers 286 cases per seed over nine evaluation months. Prior team exposure is uncertified and users may overlap, so the scope is retrospective external-corpus replication. The replay checked feature cutoff, frozen input hashes and matching sample keys against the label export.
+
+At seed 42, Macro-F1 is **0.3673** for the conditional rule, **0.3690** for the existing proposed model and **0.3500** for hierarchical HGB. The paired difference from the existing proposed model is **−0.0017**, with a two-month-block 95% interval of **[−0.0094, +0.0013]**. The three-month-block interval is **[−0.0111, +0.0012]**. False event alarms fall from 28 to 25 among 250 true dissolve cases at seed 42. Grow recall remains 0/8 and merge recall remains 2/9. The adoption criteria were not met, so the existing proposed model remains the primary configuration. [Replication protocol](tables/sna-feedback-20261111/external_history_replication_protocol.json) and [results](tables/sna-feedback-20261111/external_history_replication_results.json).
+
+## 6.10 Does the LR–HGB advantage recur across corpora?
+
+We replayed the named frozen dynamic LR and dynamic HGB models on common keys in each of three cohorts. The analysis rule was recorded before replaying these saved predictions. The two external comparisons are retrospective and team exposure is uncertified. Dynamic LR was a secondary comparison in the ideological cohort. We estimate each cohort separately.
+
+| Cohort | Cases per seed | Δ Macro-F1, LR minus HGB | Paired 95% interval, two-month blocks |
+|---|---:|---:|---:|
+| Full-study | 1,269 | +0.0237 | [−0.0699, +0.0993] |
+| External political | 286 | +0.0190 | [−0.2413, +0.2074] |
+| External ideological | 493 | −0.0398 | [−0.0816, +0.0141] |
+
+All intervals include zero with either two- or three-month blocks. At seed 42, LR produces more false event alarms among true dissolve cases on every cohort (64 vs. 55, 28 vs. 17, and 98 vs. 49). Combined grow/merge hits are respectively 6 vs. 6 of 34, 2 vs. 1 of 17, and 2 vs. 2 of 7. The point difference reverses on the ideological cohort, and the comparison fails the declared stability criterion. This supports keeping the current result scoped to the original cohort and retaining HGB as a strong comparator. [Replay protocol](tables/sna-feedback-20261111/lr_hgb_cross_cohort_protocol.json), [intervals](tables/sna-feedback-20261111/lr_hgb_cross_cohort_intervals.csv), and [decision counts](tables/sna-feedback-20261111/lr_hgb_cross_cohort_counts.csv).
+
+### What drives the reversal?
+
+We decomposed the Macro-F1 difference into the six class F1 differences divided by six and checked that the contributions sum to the reported difference for each cohort and seed. At seed 42, merge (+0.0196) and split (+0.0138) account for the positive full-study point difference. In the ideological cohort, grow (−0.0316) and dissolve (−0.0097) contribute most to the reversal. Both models correctly identify the same two grow cases out of seven there. Their different grow F1 comes from precision. There are zero true merge cases in this cohort. Among its 442 dissolve cases, HGB alone is correct on 63 and LR alone on 14.
+
+These results suggest that the next candidate should address excess event predictions among true dissolve cases while tracking grow and merge recall on a cohort with support for both. Keep the frozen models as baselines. Predeclare the candidate, evaluation scope and acceptable false-alarm and recall tradeoff before testing. [Per-class contributions and paired correctness](tables/sna-feedback-20261111/lr_hgb_class_contributions.csv).
+
+## 6.11 Validation-selected dissolve decision rule
+
+We tested a single family of changes to address excess event predictions. A non-dissolve prediction switches to dissolve when the dissolve probability is at least a fixed fraction of the winning event probability. We refitted the frozen LR configuration at six pre-2018 validation origins, training only on earlier labels. The selection considered four ratios plus the original decision rule, and required fewer false alarms and no loss of correct grow or merge predictions at every seed. Among qualifying ratios, we selected the highest mean validation Macro-F1. This gave a ratio of **0.80** after **18 fits**. Across the 926 validation cases per seed, seed 42 false alarms fell from 52 to 37, grow and merge hits stayed at two each, and Macro-F1 rose from 0.4350 to 0.4442.
+
+We applied the locked ratio to the existing model probabilities in the three previously inspected cohorts. The thresholds were selected on development data, while the following replay remains retrospective.
+
+| Cohort | LR Macro-F1, original → rule | False alarms, original → rule | Grow hits | Merge hits |
+|---|---:|---:|---:|---:|
+| Full-study | 0.4117 → 0.3835 | 64 → 47 | 3 → 1 of 19 | 3 → 1 of 15 |
+| External political | 0.3690 → 0.3814 | 28 → 21 | 0 → 0 of 8 | 2 → 2 of 9 |
+| External ideological | 0.3646 → 0.3708 | 98 → 71 | 2 → 2 of 7 | No support |
+
+Counts are for seed 42. The full-study paired Macro-F1 difference is **−0.0283**, with a two-month-block 95% interval of **[−0.0759, +0.0088]**. The rule reduces false alarms in each cohort but loses grow and merge hits on the full study. Its development improvement therefore does not satisfy the intended tradeoff across cohorts. We retain the original decision rule for the primary report. [Selection protocol](tables/sna-feedback-20261111/dissolve_guard_protocol.json), [validation trials](tables/sna-feedback-20261111/dissolve_guard_selection.json), [cohort counts](tables/sna-feedback-20261111/dissolve_guard_counts.csv), and [paired intervals](tables/sna-feedback-20261111/dissolve_guard_intervals.csv).
 
 # 7. Human Review, Adjudication, Tracker Comparison, and Lineage
 
@@ -220,6 +354,27 @@ The audit covers the saved source-month lineage semantics and previously audited
 ## 7.4 Separate six-case automated supplement
 
 A separate six-case assessment was completed using an automated assistant assessment. Its recorded outcomes were three unresolved, one grow, one shrink, and one observed-network dissolve, all at medium confidence. Human decisions for these six cases remain unrecorded. These cases do not enter the 60-case agreement calculation, adjudication count, or 26/60 tracker comparison. They must remain a separately identified exploratory supplement.
+
+## 7.5 Blinded automated review on 12 development cases
+
+Two agents separately applied the same rubric to identical blinded evidence drawn from four development months. The coordinator compared the completed outputs with the frozen tracker after both runs. The agents agreed on 11 of 12 cases (91.7%, unweighted Cohen’s κ = 0.868). Neither agent matched a tracker label in this stratified panel.
+
+All four tracker dissolve cases had zero observed focal members in the next month. Both agents marked them unresolved. In three tracker unresolved cases, both agents marked dissolve because they observed some focal members while internal focal edges disappeared. The two agents disagreed on one case with retained ties in two targets. One selected shrink based on a dominant continuation, while the other selected split. These differences motivate explicit rubric criteria for observation sufficiency and continuity. The panel documents disagreement between operational rules and automated interpretations. Human validation remains pending. See the [aggregate results](tables/sna-feedback-20261111/automated_label_review_summary.json) and [agent confusion matrix](tables/sna-feedback-20261111/automated_label_review_confusion.csv).
+
+## 7.6 Single-reviewer check on 12 additional development cases
+
+Tâm annotated the cases on behalf of Thanh, as reported by Tâm. The evidence shown during annotation omitted the tracker labels. The 12 annotations were locked by SHA-256 before comparison with the frozen label export. This is one human annotator's comparison with the tracker on a separate exploratory panel of small communities (4–20 members eligible for sampling, one case per source month).
+
+| Tracker label | Human dissolve | Human split | Human merge | Total |
+|---|---:|---:|---:|---:|
+| Dissolve | 7 | 2 | 0 | 9 |
+| Unresolved | 0 | 2 | 1 | 3 |
+
+The annotator matched the tracker on **7/12 cases (58.3%)**. All four cases with zero observed focal reply endpoints in the next month were called dissolve by both. In four disagreements the annotator called split based on members dispersing across targets. The fifth was called merge after members entered a much larger target. The observed evidence in these cases contained no focal internal edges in the next month. These patterns separate three questions for a future rubric: whether the focal users were observable, whether they dispersed across targets, and whether a group retained interaction ties. Agreement on zero-observation cases documents a shared interpretation of the observed snapshots. The available data leave social disappearance undetermined. This selected panel gives a case-level comparison. Agreement between two independent human annotators remains unmeasured. [Aggregate and lock checksum](tables/sna-feedback-20261111/delegated_human_review_summary.json).
+
+## 7.7 Additional blinded automated panel
+
+Two separate AI sessions labeled the same 36 cases using only the rubric and neutral evidence supplied to each. The case set was previously used for calibration. The two outputs were checked and hash-locked before opening the tracker key for this comparison. The agents agreed on **34/36 cases (94.4%)**, with nominal Cohen’s κ = **0.882**. Their tracker concordance was **8/36** and **9/36**. The result describes agreement between automated readings from the same model family on a diagnostic sample. Human inter-rater reliability remains unmeasured. [Aggregate counts and lock checksum](tables/sna-feedback-20261111/automated_panel36_summary.json).
 
 # 8. Ablation Study: H1 HeTCo 2015 Pilot
 
@@ -273,6 +428,12 @@ Several limitations constrain interpretation:
 
 The most defensible interpretation is that the study has a clear applicability boundary, a strong majority-class signal, and substantial uncertainty for rare structural events. The proposed full-study model improves Macro-F1 over the principal HGB comparator but does not win the paired correctness comparison. The H1 threshold change has not demonstrated the intended event-recall mechanism.
 
+## Follow-up study design
+
+The next evaluation can test the history-conditioned rule from Section 6.8 as a single candidate. Before examining confirmation predictions, record the cohort, exposure, reference, label version, two component models, the existing primary and HGB controls, splits, feature cutoff, seeds, and decision criteria. Use the same evaluation keys and six fixed classes for all models. Specify the accepted tradeoff between false event alarms and grow/merge recall before scoring. Treat the current replay as development evidence.
+
+For label validation, use two separate human annotations with a locked rubric and concealed tracker outputs. Record review provenance and retain both forms before computing agreement and adjudicating. Reviewers who have seen the automated labels or tracker answers for these cases need a fresh panel.
+
 # 10. Conclusion
 
 This integrated analysis combines label coverage, predictive evaluation, error diagnostics, reviewer agreement, tracker comparison, lineage verification, Week 4 paired model comparison, and a separately scoped H1 pilot.
@@ -294,7 +455,7 @@ Future work should prioritize better resolution and independent validation of am
 | C01 | Community-month label coverage is 64.78%. | 7,490 resolved / (7,490 + 4,072 unresolved). | `reports/tables/midterm2-20261104/B/tables/` and `reports/MIDTERM2_DIAGNOSTIC_REPORT.md` §4 | Verified; censored 183 reported separately. |
 | C02 | Member-month weighted coverage is 79.31%. | 1,417,626 / 1,787,503. | `reports/MIDTERM2_DIAGNOSTIC_REPORT.md` §4.1 | Verified; different denominator/weighting from C01. |
 | C03 | Coverage varies by size and history. | `B_size_coverage.csv`, `B_history_coverage.csv`. | `reports/tables/midterm2-20261104/B/tables/` | Verified; descriptive only. |
-| C04 | The proposed model has the highest Macro-F1 among primary full-study reference models. | `hier_lr_dynamic` 0.4117 vs `hier_hgb_dynamic` 0.3880 and listed baselines. | `A1_overall_macro_summary.csv`; Week 4 `primary_baseline_comparison.csv` | Verified; does not imply most paired correct cases. |
+| C04 | The proposed model has the highest Macro-F1 among primary full-study reference models. | `hier_lr_dynamic` 0.4117 vs `hier_hgb_dynamic` 0.3880 and listed baselines. | `A1_overall_macro_summary.csv`; Week 4 `primary_baseline_comparison.csv` | Paired 95% interval [−0.0694, +0.0945]. HGB has six more correct cases per seed. |
 | C05 | Accuracy alone is misleading under severe class imbalance. | Dissolve = 1,167/1,269 (91.96%); majority baseline accuracy 0.9196 but Macro-F1 0.1597. | A1 summary; Week 4 report §1 | Verified. |
 | C06 | Proposed-model recall is weak for grow and merge. | Grow recall 0.1579 (n=19); merge recall 0.2000 (n=15). | `A1_overall_class_metrics.csv`; Week 4 `per_class_metrics.csv` | Verified; rare-class support is small. |
 | C07 | Monthly Macro-F1 varies across 2018. | `A1_monthly_macro_summary.csv`; proposed monthly values 0.2445–0.5496. | `reports/tables/midterm2-20261104/A1/tables/` | Verified; descriptive, not a temporal trend. |
@@ -371,3 +532,26 @@ Future work should prioritize better resolution and independent validation of am
 - `reports/tables/h1-ablation-20261109/saved-intervals.json`
 - `reports/tables/h1-ablation-20261109/verification.json`
 - `reports/tables/h1-ablation-20261109/fit-log.csv`
+
+
+# References and reproducibility
+
+- CornellNLP, *Reddit Corpus by subreddit*. [Corpus documentation](https://convokit.cornell.edu/documentation/subreddit.html).
+- J. P. Chang et al., “ConvoKit: A Toolkit for the Analysis of Conversations,” *SIGDIAL*, 2020. [Paper](https://www.cs.cornell.edu/~cristian/ConvoKit_Demo_Paper_files/convokit-demo-paper.pdf).
+- J. Baumgartner et al., “The Pushshift Reddit Dataset,” *ICWSM*, 2020. [Paper](https://doi.org/10.1609/icwsm.v14i1.7347).
+- V. A. Traag, L. Waltman, and N. J. van Eck, “From Louvain to Leiden: Guaranteeing Well-Connected Communities,” *Scientific Reports*, 2019. [Paper](https://doi.org/10.1038/s41598-019-41695-z).
+- P. Bródka, S. Saganowski, and P. Kazienko, “GED: The Method for Group Evolution Discovery in Social Networks,” *Social Network Analysis and Mining*, 2013. [Paper](https://doi.org/10.1007/s13278-012-0058-8).
+
+The [Week 4 handoff](../docs/WEEK4_HANDOFF.md) provides the frozen inputs, checksums and replay commands. The [executed notebook](../notebooks/INTEGRATED_MIDTERM2_NOTEBOOK_20261111.ipynb) shows figures and outputs. For the paired interval, use `paired_tables` with 1,000 draws, block length 2 and bootstrap seed 20261031 on the full-study final predictions, normalizing the legacy window field to `final`.
+
+
+# Appendix — Experimental plan and evidence
+
+| Experiment | Question and design | Primary evidence |
+|---|---|---|
+| E1 Coverage | How much of the observed network has a resolved target? Count resolved and unresolved transitions by month, size and history. Count terminal censoring separately. Verify the frozen graph inventory. | Sections 2–3. |
+| E2 Matched forecast | How do five reference baselines and the proposed model perform on the same 1,269 final cases? Report six-class Macro-F1, class support and paired monthly uncertainty. | Sections 4–6. |
+| E3 Components | What changes when hierarchy or dynamic features are removed? Compare frozen matched variants. Inspect strata and adverse errors with their denominators. | Sections 6.5–6.7. |
+| E4 Label audit | Which ambiguous cases need more evidence? Compare the two submitted forms, adjudication and graph traces. Compare a separate blinded automated panel and record the human validation status. | Section 7. The diagnostic panels and a separate one-annotator blind check are complete. Independent human inter-rater validation remains pending. |
+| E5 H1 and decision-rule probe | Does a change in the dissolve decision recover target events? Report the 2015 pilot separately from the retrospective 2018 probe. Track false alarms alongside missed events. | Sections 6.7 and 8. |
+| E6 Prototype | Can a teammate reproduce the reported scores? Verify the frozen bundle, replay metrics and inspect the executed notebook. | Week 4 handoff and reproducibility section. |

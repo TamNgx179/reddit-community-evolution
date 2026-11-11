@@ -1,0 +1,4 @@
+model,n,macro_f1,grow_support,grow_correct,merge_support,merge_correct,grow_merge_to_dissolve,dissolve_support,false_event_alarms
+hier_lr_dynamic,1269,0.41173791649012026,19,3,15,3,22,1167,64
+hier_hgb_dynamic,1269,0.38804545771839544,19,3,15,3,21,1167,55
+hier_lr_gate_probe_05,1269,0.4129531844788315,19,6,15,5,13,1167,134

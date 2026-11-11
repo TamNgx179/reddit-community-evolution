@@ -1,0 +1,253 @@
+{
+  "scope": "automated diagnostic on an existing stratified panel, same evidence and model family; human agreement unmeasured",
+  "agreement": {
+    "n": 36,
+    "matches": 34,
+    "raw_agreement": 0.9444444444444444,
+    "cohen_kappa": 0.8817733990147784,
+    "kappa_status": "computed",
+    "labels": [
+      "stable",
+      "grow",
+      "shrink",
+      "merge",
+      "split",
+      "dissolve",
+      "unresolved"
+    ],
+    "confusion": [
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        2,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        7,
+        1
+      ],
+      [
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        24
+      ]
+    ]
+  },
+  "tracker_concordance": {
+    "A": {
+      "n": 36,
+      "matches": 8,
+      "raw_agreement": 0.2222222222222222,
+      "cohen_kappa": -0.09446254071661238,
+      "kappa_status": "computed",
+      "labels": [
+        "stable",
+        "grow",
+        "shrink",
+        "merge",
+        "split",
+        "dissolve",
+        "unresolved"
+      ],
+      "confusion": [
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          2,
+          0
+        ],
+        [
+          0,
+          0,
+          2,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          0,
+          0,
+          0,
+          3,
+          1
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          18
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          3,
+          6
+        ]
+      ]
+    },
+    "B": {
+      "n": 36,
+      "matches": 9,
+      "raw_agreement": 0.25,
+      "cohen_kappa": -0.03735325506937033,
+      "kappa_status": "computed",
+      "labels": [
+        "stable",
+        "grow",
+        "shrink",
+        "merge",
+        "split",
+        "dissolve",
+        "unresolved"
+      ],
+      "confusion": [
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          2,
+          0
+        ],
+        [
+          0,
+          0,
+          2,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          2,
+          0,
+          0,
+          0,
+          3,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          18
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          2,
+          7
+        ]
+      ]
+    }
+  },
+  "disagreement_cases": [
+    "case-020",
+    "case-032"
+  ],
+  "annotation_lock_sha256": "d0067c3d45f8138553ee0744d05ed6909b6e0c9a4010d55fde07f1de8854ff2f"
+}

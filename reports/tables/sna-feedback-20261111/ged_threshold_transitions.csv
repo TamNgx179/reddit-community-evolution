@@ -1,0 +1,13 @@
+link_threshold,dissolve_threshold,from_label,to_label,n
+0.45,0.1,grow,merge,2
+0.45,0.1,shrink,split,2
+0.45,0.1,unresolved,grow,4
+0.45,0.1,unresolved,merge,6
+0.45,0.1,unresolved,shrink,1
+0.55,0.1,grow,unresolved,8
+0.55,0.1,merge,grow,10
+0.55,0.1,merge,unresolved,30
+0.55,0.1,shrink,unresolved,6
+0.55,0.1,split,shrink,9
+0.5,0.05,dissolve,unresolved,623
+0.5,0.15,unresolved,dissolve,352

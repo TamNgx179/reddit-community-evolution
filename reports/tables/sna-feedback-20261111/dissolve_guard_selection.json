@@ -1,0 +1,186 @@
+{
+  "protocol_sha256": "d48bb145938beae28ace83d29773e43b3182140108cc8cd4bd29aef5c27185c6",
+  "months": [
+    "2017-07",
+    "2017-08",
+    "2017-09",
+    "2017-10",
+    "2017-11",
+    "2017-12"
+  ],
+  "fits": 18,
+  "selected_ratio": 0.8,
+  "trials": [
+    {
+      "ratio": 0.5,
+      "eligible": false,
+      "mean_macro_f1": 0.4389289282418529,
+      "by_seed": {
+        "42": {
+          "n": 926,
+          "macro_f1": 0.4389289282418529,
+          "grow_support": 14,
+          "merge_support": 22,
+          "grow_hits": 0,
+          "merge_hits": 2,
+          "false_alarms": 14
+        },
+        "43": {
+          "n": 926,
+          "macro_f1": 0.4389289282418529,
+          "grow_support": 14,
+          "merge_support": 22,
+          "grow_hits": 0,
+          "merge_hits": 2,
+          "false_alarms": 14
+        },
+        "44": {
+          "n": 926,
+          "macro_f1": 0.4389289282418529,
+          "grow_support": 14,
+          "merge_support": 22,
+          "grow_hits": 0,
+          "merge_hits": 2,
+          "false_alarms": 14
+        }
+      }
+    },
+    {
+      "ratio": 0.65,
+      "eligible": false,
+      "mean_macro_f1": 0.4344361405539261,
+      "by_seed": {
+        "42": {
+          "n": 926,
+          "macro_f1": 0.4344361405539261,
+          "grow_support": 14,
+          "merge_support": 22,
+          "grow_hits": 0,
+          "merge_hits": 2,
+          "false_alarms": 28
+        },
+        "43": {
+          "n": 926,
+          "macro_f1": 0.4344361405539261,
+          "grow_support": 14,
+          "merge_support": 22,
+          "grow_hits": 0,
+          "merge_hits": 2,
+          "false_alarms": 28
+        },
+        "44": {
+          "n": 926,
+          "macro_f1": 0.4344361405539261,
+          "grow_support": 14,
+          "merge_support": 22,
+          "grow_hits": 0,
+          "merge_hits": 2,
+          "false_alarms": 28
+        }
+      }
+    },
+    {
+      "ratio": 0.8,
+      "eligible": true,
+      "mean_macro_f1": 0.44424923226060137,
+      "by_seed": {
+        "42": {
+          "n": 926,
+          "macro_f1": 0.44424923226060137,
+          "grow_support": 14,
+          "merge_support": 22,
+          "grow_hits": 2,
+          "merge_hits": 2,
+          "false_alarms": 37
+        },
+        "43": {
+          "n": 926,
+          "macro_f1": 0.44424923226060137,
+          "grow_support": 14,
+          "merge_support": 22,
+          "grow_hits": 2,
+          "merge_hits": 2,
+          "false_alarms": 37
+        },
+        "44": {
+          "n": 926,
+          "macro_f1": 0.44424923226060137,
+          "grow_support": 14,
+          "merge_support": 22,
+          "grow_hits": 2,
+          "merge_hits": 2,
+          "false_alarms": 37
+        }
+      }
+    },
+    {
+      "ratio": 0.9,
+      "eligible": true,
+      "mean_macro_f1": 0.43694583508760226,
+      "by_seed": {
+        "42": {
+          "n": 926,
+          "macro_f1": 0.43694583508760226,
+          "grow_support": 14,
+          "merge_support": 22,
+          "grow_hits": 2,
+          "merge_hits": 2,
+          "false_alarms": 46
+        },
+        "43": {
+          "n": 926,
+          "macro_f1": 0.43694583508760226,
+          "grow_support": 14,
+          "merge_support": 22,
+          "grow_hits": 2,
+          "merge_hits": 2,
+          "false_alarms": 46
+        },
+        "44": {
+          "n": 926,
+          "macro_f1": 0.43694583508760226,
+          "grow_support": 14,
+          "merge_support": 22,
+          "grow_hits": 2,
+          "merge_hits": 2,
+          "false_alarms": 46
+        }
+      }
+    },
+    {
+      "ratio": 1.0,
+      "eligible": false,
+      "mean_macro_f1": 0.43496650343133986,
+      "by_seed": {
+        "42": {
+          "n": 926,
+          "macro_f1": 0.43496650343133986,
+          "grow_support": 14,
+          "merge_support": 22,
+          "grow_hits": 2,
+          "merge_hits": 2,
+          "false_alarms": 52
+        },
+        "43": {
+          "n": 926,
+          "macro_f1": 0.43496650343133986,
+          "grow_support": 14,
+          "merge_support": 22,
+          "grow_hits": 2,
+          "merge_hits": 2,
+          "false_alarms": 52
+        },
+        "44": {
+          "n": 926,
+          "macro_f1": 0.43496650343133986,
+          "grow_support": 14,
+          "merge_support": 22,
+          "grow_hits": 2,
+          "merge_hits": 2,
+          "false_alarms": 52
+        }
+      }
+    }
+  ],
+  "status": "candidate_selected"
+}
