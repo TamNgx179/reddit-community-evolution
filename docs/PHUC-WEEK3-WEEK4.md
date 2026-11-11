@@ -57,12 +57,12 @@ Trạng thái “xong công cụ” khác với “đã chạy trên gói dữ l
 | P3-05 | Chốt hướng dẫn sau pilot | Version rubric và ghi ai đã phê duyệt; không tính pilot vào 60 ca | Phúc đã chọn v1.1 làm bản làm việc, có hướng dẫn từng bước để Đăng dùng; xác nhận của Đăng và ngày khóa chung chưa được ghi nhận | 04/11 |
 | P3-06A | Nhận xét AI bổ trợ theo bản Phúc chọn | 60 đề xuất có bằng chứng, ambiguity, provenance và hash nguồn | Đã hoàn thành 60/60, CSV/JSON khớp, có bản đọc tiếng Việt; lưu local riêng | 04/11 |
 | P3-06 | Chấm bộ chính độc lập | 60 ca, nhãn/confidence/rationale thật, ghi exposure; nộp nguyên phiếu | Có bản bổ trợ AI 60/60 để Phúc rà; phiếu người thật 0/60, đầu vào đối chiếu Đăng và khóa chung còn pending | 04/11 |
-| P3-07 | Xuất coverage và phân tầng | eligible/unresolved/censored riêng; community–tháng/member–tháng; theo tháng, size, history | Snapshot ở Release; Phúc mở sau khi khóa phiếu, hoặc giao người không chấm chạy song song | 04/11 |
-| P3-08 | Kiểm tra graph với snapshot đóng băng | Đúng hash, đúng month, membership phủ endpoint, cỡ nhóm khớp features, đúng mẫu số observation | Chờ khóa phiếu để mở snapshot; chưa chạy coverage/graph thật trên máy này | 04/11 |
-| P3-09 | Bàn giao thiếu bằng chứng và coverage | Anh nhận CSV; Tâm–Thanh nhận danh sách graph/history đáng ngờ, không lộ nhãn cho Đăng | Đã gửi Tâm link rubric và câu hỏi về điều kiện quan sát trên PR #21; chưa gửi nhãn từng ca, coverage vẫn chờ khóa phiếu | 04/11 |
-| P4-01 | Hoàn tất review/coverage và sửa thiếu bằng chứng | Giữ phiếu gốc, version gói; mọi sửa nhãn do core quyết định | Chờ các bước tuần 3 | 11/11 |
-| P4-02 | Đối chứng HGB khớp nếu phương pháp thay đổi | Cùng đặc trưng/cutoff/mẫu/reference/split/seed/budget, runtime đo thật | Chờ Tâm–Thanh khóa một giả thuyết và cấu hình ngày 05/11 | 05–09/11 |
-| P4-03 | Gửi báo cáo tổng hợp cho Anh | Báo cáo nhãn/coverage, graph audit, matched HGB và logs nếu có fit | Chưa làm | 10–11/11 |
+| P3-07 | Xuất coverage và phân tầng | eligible/unresolved/censored riêng; community–tháng/member–tháng; theo tháng, size, history | Hoàn thành full-study ngày 11/11. Community-month 64,78%; member-month 79,31%; output có month/size/history strata | 11/11 |
+| P3-08 | Kiểm tra graph với snapshot đóng băng | Đúng hash, đúng month, membership phủ endpoint, cỡ nhóm khớp features, đúng mẫu số observation | Hoàn thành 45/45 tháng. SHA ZIP và 622 checksum nội bộ khớp; graph audit `verified` | 11/11 |
+| P3-09 | Bàn giao thiếu bằng chứng và coverage | Anh nhận CSV; Tâm–Thanh nhận danh sách graph/history đáng ngờ, không lộ nhãn cho Đăng | Báo cáo Week 4 và artifact coverage đã sẵn sàng; không có graph mismatch được audit ghi nhận | 11/11 |
+| P4-01 | Hoàn tất review/coverage và sửa thiếu bằng chứng | Giữ phiếu gốc, version gói; mọi sửa nhãn do core quyết định | Hoàn thành technical agreement/adjudication và coverage graph-verified. Giới hạn provenance AI-assisted được giữ nguyên | 11/11 |
+| P4-02 | Đối chứng HGB khớp nếu phương pháp thay đổi | Cùng đặc trưng/cutoff/mẫu/reference/split/seed/budget, runtime đo thật | Chưa chạy vì chưa có cấu hình/HGB hypothesis do Tâm–Thanh bàn giao; không tự thay run khác | 05–09/11 |
+| P4-03 | Gửi báo cáo tổng hợp cho Anh | Báo cáo nhãn/coverage, graph audit, matched HGB và logs nếu có fit | Báo cáo tại `docs/PHUC-WEEK4-RESULTS.md` đã sẵn sàng để Anh ghép; nêu rõ HGB chưa có kết quả | 11/11 |
 
 ## 3. Ai liên quan đến bạn và chờ phần nào?
 
