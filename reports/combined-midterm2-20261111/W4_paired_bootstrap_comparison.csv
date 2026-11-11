@@ -1,0 +1,6 @@
+comparator,delta_macro_f1,ci_95_low,ci_95_high,ci_contains_zero
+hier_hgb_dynamic,0.0237,-0.0694,0.0945,True
+flat_hgb_dynamic,0.0476,-0.0303,0.1163,True
+flat_lr_dynamic,0.0502,-0.0294,0.1176,True
+B4_logreg,0.0806,-0.0101,0.1418,True
+B5_matched_boosting,0.1788,0.0843,0.2524,False

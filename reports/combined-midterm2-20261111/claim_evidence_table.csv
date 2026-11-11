@@ -1,7 +1,8 @@
 claim,evidence_summary,source
 Coverage is incomplete,"7,490 resolved; 4,072 unresolved; 183 censored; coverage 64.78%",A3/B coverage tables
-Proposed has highest primary Macro-F1,hier_lr_dynamic 0.4117 vs hier_hgb_dynamic 0.3880,A1 overall; Week 4 baseline comparison
+Proposed has the highest observed Macro-F1 among primary full-study models,"hier_lr_dynamic 0.4117 vs hier_hgb_dynamic 0.3880; paired block-bootstrap delta +0.0237, 95% CI [-0.0694, 0.0945]",A1 overall; Week 4 baseline comparison; docs/AUDIT_LEAKAGE_DENOMINATOR.md
 Proposed does not win paired correctness vs HGB,29 proposed-only correct vs 35 HGB-only correct,Week 4 paired_wins_losses_summary.csv
 Grow/merge remain difficult,Recall 0.1579 / 0.2000; small supports 19 / 15,A1 class metrics; Week 4 per_class_metrics.csv
 Reviewer submissions show moderate descriptive agreement,47/60; raw agreement 78.33%; kappa 0.4433,Review handoff summary.json
 H1 is not supported in its predicted direction,Missed events 18 -> 22; overlap tier-1 recall 0.651 -> 0.508; paired interval includes zero,H1 report; ablation.csv; saved-intervals.json; main-strata.csv
+Independent H1 acceptance remains pending,"Saved H1 verification exists, but Week 4 independent acceptance has missing required inputs and manifests",H1 verification.json; docs/AUDIT_LEAKAGE_DENOMINATOR.md
