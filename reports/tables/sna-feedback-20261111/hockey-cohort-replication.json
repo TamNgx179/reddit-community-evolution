@@ -1,0 +1,51 @@
+{
+  "development_n": 674,
+  "cutoff": "2017-01",
+  "evaluation_n": 914,
+  "months": 21,
+  "first_test_month": "2017-01",
+  "last_test_month": "2018-09",
+  "macro_f1": {
+    "hier_lr_dynamic": 0.3583746044353617,
+    "hier_hgb_dynamic": 0.3477717047991374
+  },
+  "delta": 0.010602899636224294,
+  "paired_interval": {
+    "low": -0.026786864721038247,
+    "high": 0.0558863406537644,
+    "draws": 2000,
+    "block_length": 3,
+    "scope": "paired exploratory monthly blocks; pseudo-label validity separate",
+    "confidence_level": 0.95
+  },
+  "rare_classes": {
+    "grow": {
+      "support": 16,
+      "minimum": 19,
+      "lr_recall": 0.25,
+      "hgb_recall": 0.0625
+    },
+    "merge": {
+      "support": 24,
+      "minimum": 15,
+      "lr_recall": 0.08333333333333333,
+      "hgb_recall": 0.041666666666666664
+    }
+  },
+  "sufficient_predeclared_support": false,
+  "rare_recall_guard_passed": true,
+  "superiority_criteria_passed": false,
+  "declared_protocol_sha256": "489310f897b7807f8ae97e01adf9482bb2fa15e1b0738ea45af5b4db04dfcb5a",
+  "evaluation_manifest_sha256": "122b75f4729f0cb315c355b608cf47e9a03fc918cd04d0d760ffb427a82aac58",
+  "corpora": [
+    "hockey",
+    "hockeyplayers"
+  ],
+  "seeds": [
+    42,
+    43,
+    44
+  ],
+  "rare_class_recall_seed": 42,
+  "minimum_months": 12
+}

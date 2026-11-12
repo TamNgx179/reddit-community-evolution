@@ -493,6 +493,26 @@ The two automated draft reviews both selected `unresolved` for all 68 cases. The
 
 Among controls, 31 had no observed focal activity in the next month and three showed only one original member in a target without a surviving focal edge. The rubric treats missing observation as unresolved and calls for affirmative evidence of structural loss before assigning dissolve. The control group therefore tested a narrow comparison within tracker-assigned dissolve cases. The rule identifies a specific observation pattern, and the automated labels gave the same result on both sides. The submitted confirmation forms identified the two draft files by checksum and left personal review and signature fields blank.
 
+### Structural controls with observable continuation
+
+The graph-based control feasibility check found six distinct controls for the 34 flagged cases under exact matching on target month and source size. Each control retained at least one focal reply edge within a successor. The six controls span four evaluation months and carry four stable, one grow and one merge tracker labels. This establishes availability of examples with visible continuation. The remaining 28 flagged cases lack a control under this design, so the six matches do not support a panel-wide validation estimate.
+
+A follow-up design kept exact source size and permitted a target-month gap of at most three months after using the six exact matches. It added two controls, each two months from its paired case. All eight controls retain one original internal reply edge within a target, and at least two original members appear as reply endpoints. The resulting panel has eight flagged cases and eight controls, with four stable, two shrink, one grow and one merge tracker labels among controls. The 26 unmatched flagged cases limit the scope of inference. These graph checks establish the contrast in observed evidence.
+
+Matched rare-class outcomes at seed 42 show why the college-admissions result needs cautious interpretation. On that cohort, both models got two of six grow cases right and LR alone got one additional case right. On merge, LR alone got one of six right. On the main cohort, the models each got three of 19 grow and three of 15 merge cases right, but their correct merge cases were disjoint. The political and ideological cohorts fall below the predeclared support targets of 19 grow and 15 merge cases. [Control feasibility and matched rare-class counts](tables/sna-feedback-20261111/control-feasibility.json)
+
+### Replication on hockey communities
+
+We used the ConvoKit r/hockey and r/hockeyplayers corpora in a fixed temporal replication. We expanded the initial single-corpus declaration before building labels because the feature pipeline requires at least two corpora for context features. Both hierarchical models used the same 37 features and the previously fixed settings. We fitted them on the same 674 cases with targets before January 2017 and froze the fitted models before building evaluation targets. The comparison used the same 914 resolved community-month cases for both models from January 2017 through September 2018. Earlier team exposure to these corpora was not independently verified.
+
+| Metric | Hierarchical LR | Hierarchical HGB |
+| --- | ---: | ---: |
+| Mean Macro-F1 across seeds 42–44 | 0.3584 | 0.3478 |
+| Grow recall, seed 42 (16 cases) | 4/16 | 1/16 |
+| Merge recall, seed 42 (24 cases) | 2/24 | 1/24 |
+
+The paired difference was +0.0106 Macro-F1 (95% interval [−0.0268, +0.0559], 2,000 three-month-block resamples). LR matched or exceeded HGB recall for both rare events at each of the three seeds. Merge met its predeclared minimum of 15 cases and grow fell short of its minimum of 19. The point estimate favors LR on both additional cohorts, with uncertainty about the size and direction of its advantage. [Verified hockey-cohort aggregate](tables/sna-feedback-20261111/hockey-cohort-replication.json)
+
 # 10. Conclusion
 
 This integrated analysis combines label coverage, predictive evaluation, error diagnostics, reviewer agreement, tracker comparison, lineage verification, Week 4 paired model comparison, and a separately scoped H1 pilot.
@@ -615,4 +635,4 @@ The [Week 4 handoff](../docs/WEEK4_HANDOFF.md) provides the frozen inputs, check
 | E5 H1 and decision-rule probe | Does a change in the dissolve decision recover target events? Report the 2015 pilot separately from the retrospective 2018 probe. Track false alarms alongside missed events. | Sections 6.7 and 8. |
 | E6 Prototype | Can a teammate reproduce the reported scores? Verify the frozen bundle, replay metrics and inspect the executed notebook. | Week 4 handoff and reproducibility section. |
 | E7 Observation sensitivity | Replay the observation flag on frozen graphs. Compare coverage and paired scores before and after filtering. Review 34 flagged cases and 34 controls matched by month and size. | Additional label audit and matched review. The automated comparison yielded 34/34 unresolved in both groups. |
-| E8 External replication | Freeze LR and HGB before constructing evaluation labels. Compare the same 843 college-admissions cases across 21 months using paired month blocks. | College-admissions cohort results. The paired interval included zero and both rare classes fell below their declared support thresholds. |
+| E8 External replication | Freeze LR and HGB before constructing evaluation labels. Compare paired predictions by month on the college-admissions and hockey cohorts, and record support and recall for grow and merge. | 843 college-admissions cases and 914 hockey cases, each spanning 21 months. The paired intervals include zero. Hockey reaches the merge support threshold with 24 cases and has 16 grow cases. |
