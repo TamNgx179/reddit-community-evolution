@@ -1,0 +1,120 @@
+{
+  "graph_controls": {
+    "scope": "Positive controls selected on graph evidence in the previously inspected evaluation cohort. Descriptive design feasibility.",
+    "flagged_n": 34,
+    "matched_n": 6,
+    "match_rule": "Exact target month and source size, no replacement, at least one surviving focal reply edge within one target",
+    "control_labels": {
+      "stable": 4,
+      "merge": 1,
+      "grow": 1
+    },
+    "matched_by_month": {
+      "2018-03": 1,
+      "2018-06": 1,
+      "2018-07": 2,
+      "2018-08": 2
+    },
+    "control_edge_counts": {
+      "1": 6
+    }
+  },
+  "rare_class_paired_counts_seed_42": {
+    "main": {
+      "grow": {
+        "n": 19,
+        "both": 2,
+        "lr_only": 1,
+        "hgb_only": 1,
+        "neither": 15
+      },
+      "merge": {
+        "n": 15,
+        "both": 0,
+        "lr_only": 3,
+        "hgb_only": 3,
+        "neither": 9
+      }
+    },
+    "political": {
+      "grow": {
+        "n": 8,
+        "both": 0,
+        "lr_only": 0,
+        "hgb_only": 0,
+        "neither": 8
+      },
+      "merge": {
+        "n": 9,
+        "both": 1,
+        "lr_only": 1,
+        "hgb_only": 0,
+        "neither": 7
+      }
+    },
+    "ideological": {
+      "grow": {
+        "n": 7,
+        "both": 2,
+        "lr_only": 0,
+        "hgb_only": 0,
+        "neither": 5
+      },
+      "merge": {
+        "n": 0,
+        "both": 0,
+        "lr_only": 0,
+        "hgb_only": 0,
+        "neither": 0
+      }
+    },
+    "college": {
+      "grow": {
+        "n": 6,
+        "both": 2,
+        "lr_only": 1,
+        "hgb_only": 0,
+        "neither": 3
+      },
+      "merge": {
+        "n": 6,
+        "both": 0,
+        "lr_only": 1,
+        "hgb_only": 0,
+        "neither": 5
+      }
+    }
+  },
+  "expanded_graph_controls": {
+    "exact_n": 6,
+    "lag_counts": {
+      "0": 6,
+      "2": 2
+    },
+    "scope": "Positive controls selected on graph evidence in the previously inspected evaluation cohort. Descriptive design feasibility.",
+    "flagged_n": 34,
+    "matched_n": 8,
+    "match_rule": "Exact source size and at most three months apart, exact-month matches first, no replacement, at least one surviving focal reply edge within one target",
+    "control_labels": {
+      "stable": 4,
+      "merge": 1,
+      "grow": 1,
+      "shrink": 2
+    },
+    "matched_by_month": {
+      "2018-03": 2,
+      "2018-04": 1,
+      "2018-06": 1,
+      "2018-07": 2,
+      "2018-08": 2
+    },
+    "control_edge_counts": {
+      "1": 8
+    },
+    "packets": {
+      "A": "1bbcc91c4979cf8f2ee7c4e3fb7542990de4107e3d46a99833c4ef16385e0afb",
+      "B": "1bbcc91c4979cf8f2ee7c4e3fb7542990de4107e3d46a99833c4ef16385e0afb"
+    },
+    "evidence_sha256": "fd2a93e2a398107bc9ade2f79d1b72a548da04b0b85fd9bdbc1866d5b8785bf9"
+  }
+}

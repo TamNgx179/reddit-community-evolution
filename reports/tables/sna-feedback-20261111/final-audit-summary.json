@@ -1,0 +1,138 @@
+{
+  "external_cohort": {
+    "development_n": 564,
+    "cutoff": "2017-01",
+    "evaluation_n": 843,
+    "months": 21,
+    "first_test_month": "2017-01",
+    "last_test_month": "2018-09",
+    "macro_f1": {
+      "hier_lr_dynamic": 0.2508415436852695,
+      "hier_hgb_dynamic": 0.24130252924006182
+    },
+    "delta": 0.009539014445207689,
+    "paired_interval": {
+      "low": -0.027300838081540296,
+      "high": 0.05107406221655724,
+      "draws": 2000,
+      "block_length": 3,
+      "scope": "paired exploratory monthly blocks; pseudo-label validity separate"
+    },
+    "rare_classes": {
+      "grow": {
+        "support": 6,
+        "minimum": 19,
+        "lr_recall": 0.5,
+        "hgb_recall": 0.3333333333333333
+      },
+      "merge": {
+        "support": 6,
+        "minimum": 15,
+        "lr_recall": 0.16666666666666666,
+        "hgb_recall": 0.0
+      }
+    },
+    "sufficient_predeclared_support": false,
+    "rare_recall_guard_passed": true,
+    "superiority_criteria_passed": false,
+    "declared_protocol_sha256": "a3706b412806cd2fc59bcbb10880b648cfe9151d7977b87cd8265ac1c53c1340",
+    "evaluation_manifest_sha256": "85f42e9cba74d3424b272c975a2658b356de0a1b036dc4addff5b73ec04cb386"
+  },
+  "matched_review": {
+    "provenance": "automated",
+    "lock_sha256": "c6fca9a612a77bc4c3ed93d3e660ca3c639d55ec78b89de33b1dd2618feadaf4",
+    "agreement": {
+      "n": 68,
+      "matches": 68,
+      "raw_agreement": 1.0,
+      "cohen_kappa": null,
+      "kappa_status": "undefined_degenerate_marginals",
+      "labels": [
+        "stable",
+        "grow",
+        "shrink",
+        "merge",
+        "split",
+        "dissolve",
+        "unresolved"
+      ],
+      "confusion": [
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          68
+        ]
+      ]
+    },
+    "flagged_outcomes": {
+      "unresolved": 34
+    },
+    "control_outcomes": {
+      "unresolved": 34
+    },
+    "pairs": {
+      "both_unresolved": 34,
+      "flagged_only": 0,
+      "control_only": 0,
+      "neither": 0
+    }
+  }
+}
