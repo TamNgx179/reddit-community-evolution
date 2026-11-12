@@ -434,6 +434,25 @@ The next evaluation can test the history-conditioned rule from Section 6.8 as a 
 
 For label validation, use two separate human annotations with a locked rubric and concealed tracker outputs. Record review provenance and retain both forms before computing agreement and adjudicating. Reviewers who have seen the automated labels or tracker answers for these cases need a fresh panel.
 
+## Additional label audit and college-admissions cohort
+
+The two reviewers agreed on 15 of 20 cases (75%, Cohen’s κ = 0.563). According to the submitter, each reviewer chose their labels separately, and one reviewer forwarded the files. Prior exposure to tracker labels was not recorded. The submitted forms were hash-checked before comparison with the tracker. Reviewer A matched the tracker on 5 of 20 cases and reviewer B on 4 of 20. The panel was stratified to diagnose ambiguous transitions, so these counts describe the selected cases.
+
+In case 004, the March 2016 reply graph shows two members connected by one edge. In April, one of the two authored content, neither appeared as a reply endpoint or partition member, and no successor community was observed.
+
+| Evidence for the original pair | March 2016 | April 2016 |
+|---|---:|---:|
+| Internal reply edges | 1 | 0 |
+| Members observed as authors | — | 1 |
+| Members observed as reply endpoints | — | 0 |
+| Members in a detected community | 2 | 0 |
+
+The tracker assigned `dissolve` because its continuity rule accepted no successor. Both reviewers chose `unresolved` because the next reply graph did not show either member. One member’s authorship shows continued activity, while the absence of reply endpoints leaves the relationship unobserved. This example motivates an observation check for no-successor cases before interpreting them as structural dissolution.
+
+To check transfer beyond the original cohort, we declared the Cornell and ApplyingToCollege corpora and fixed the LR and HGB feature sets and hyperparameters before acquisition. Both models were fitted on the same 564 earlier cases and locked before the evaluation targets were built. On 843 cases spanning January 2017 through September 2018, hierarchical LR scored 0.2508 Macro-F1 and hierarchical HGB scored 0.2413. The paired difference was +0.0095 (95% interval [−0.0273, +0.0511], 2,000 three-month-block resamples). The direction agrees with the +0.0237 difference on the main cohort. Each rare class had six cases, below the declared minimum of 19 grow and 15 merge cases. The result therefore leaves the size and reliability of the advantage uncertain.
+
+The development-selected probability blend used 75% LR and 25% HGB. Its main-cohort Macro-F1 was 0.3955 versus 0.4117 for LR. At seed 42, false event alarms fell from 64 to 52 and correct grow predictions fell from three to two. We retained hierarchical LR for the main comparison.
+
 # 10. Conclusion
 
 This integrated analysis combines label coverage, predictive evaluation, error diagnostics, reviewer agreement, tracker comparison, lineage verification, Week 4 paired model comparison, and a separately scoped H1 pilot.
