@@ -51,6 +51,41 @@ def archives(root, end='2018-10'):
 
 
 class PreparationIntegrationTests(unittest.TestCase):
+    def test_extended_observations_preserve_uncached_features_before_cutoff(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            raw = root / 'raw'
+            archives(raw, '2015-04')
+            feature_months = ('2015-01', '2015-02')
+            results = []
+            for name, cutoff, snapshot_months in (
+                ('development', '2015-03', feature_months),
+                ('extended', '2015-04', (*feature_months, '2015-03')),
+            ):
+                stage = root / name
+                database = stage / 'store' / 'normalized.sqlite'
+                normalize_phase(raw, database.parent, cutoff)
+                snapshots = {}
+                for month in snapshot_months:
+                    snapshots[month] = stage / month
+                    prepare_month(database, snapshots[month], month)
+                output = stage / 'samples'
+                build_study_samples(database, snapshots, output, 'cutoff-fixture')
+                verified(output)
+                results.append(output)
+
+            development, extended = results
+            past_features = read_csv(development / 'features.csv')
+            self.assertEqual({row['feature_month'] for row in past_features}, set(feature_months))
+            extended_features = read_csv(extended / 'features.csv')
+            self.assertIn('2015-03', {row['feature_month'] for row in extended_features})
+            self.assertEqual(past_features, [
+                row for row in extended_features if row['feature_month'] in feature_months
+            ])
+            self.assertEqual(read_csv(development / 'samples.csv'), [
+                row for row in read_csv(extended / 'samples.csv') if row['label_month'] < '2015-03'
+            ])
+
     def test_stable_cross_cutoff_identity_and_no_raw_author_text_persistence(self):
         with tempfile.TemporaryDirectory() as temporary:
             root=Path(temporary);raw=root/'raw';archives(raw,'2015-04')
