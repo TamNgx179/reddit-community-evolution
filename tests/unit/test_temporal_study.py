@@ -256,6 +256,22 @@ class EvaluationTests(unittest.TestCase):
             bad=deepcopy(rows);bad[0][field]=value
             with self.assertRaises(ValueError):self.evaluate(bad)
 
+    def test_label_reference_mismatch_is_rejected(self):
+        rows = self.predictions()
+        for row in rows:
+            if row['model'] == 'baseline':
+                row['label_reference_id'] = 'different-label-version'
+        with self.assertRaisesRegex(ValueError, 'same complete sample cohort'):
+            self.evaluate(rows)
+
+    def test_matching_models_cannot_score_mixed_label_references(self):
+        rows = self.predictions()
+        for row in rows:
+            if (row['feature_month'], row['community_id']) == ('2017-12', 'c0'):
+                row['label_reference_id'] = 'different-label-version'
+        with self.assertRaisesRegex(ValueError, 'cannot mix measurement references'):
+            self.evaluate(rows)
+
     def test_matched_component_control_blocks_broad_superiority(self):
         # Proposed beats the named baseline by a clear time-consistent margin,
         # but the matched flat control is perfect. The hierarchy cannot claim
