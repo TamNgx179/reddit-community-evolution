@@ -1,0 +1,1189 @@
+model,seed,axis,stratum,cls,support,recall,precision,f1,errors,to_dissolve,model_label
+A_no_dynamics_matched,42,all,all,stable,4,0.0,0.0,0.0,4,4,LR bỏ D
+A_no_dynamics_matched,42,all,all,grow,19,0.0,0.0,0.0,19,17,LR bỏ D
+A_no_dynamics_matched,42,all,all,shrink,25,0.4,0.3448275862068966,0.3703703703703704,15,5,LR bỏ D
+A_no_dynamics_matched,42,all,all,merge,15,0.13333333333333333,0.3333333333333333,0.19047619047619044,13,11,LR bỏ D
+A_no_dynamics_matched,42,all,all,split,39,0.6153846153846154,0.7058823529411765,0.6575342465753424,15,0,LR bỏ D
+A_no_dynamics_matched,42,all,all,dissolve,1167,0.9665809768637532,0.9682403433476395,0.967409948542024,39,0,LR bỏ D
+A_no_dynamics_matched,43,all,all,stable,4,0.0,0.0,0.0,4,4,LR bỏ D
+A_no_dynamics_matched,43,all,all,grow,19,0.0,0.0,0.0,19,17,LR bỏ D
+A_no_dynamics_matched,43,all,all,shrink,25,0.4,0.3448275862068966,0.3703703703703704,15,5,LR bỏ D
+A_no_dynamics_matched,43,all,all,merge,15,0.13333333333333333,0.3333333333333333,0.19047619047619044,13,11,LR bỏ D
+A_no_dynamics_matched,43,all,all,split,39,0.6153846153846154,0.7058823529411765,0.6575342465753424,15,0,LR bỏ D
+A_no_dynamics_matched,43,all,all,dissolve,1167,0.9665809768637532,0.9682403433476395,0.967409948542024,39,0,LR bỏ D
+A_no_dynamics_matched,44,all,all,stable,4,0.0,0.0,0.0,4,4,LR bỏ D
+A_no_dynamics_matched,44,all,all,grow,19,0.0,0.0,0.0,19,17,LR bỏ D
+A_no_dynamics_matched,44,all,all,shrink,25,0.4,0.3448275862068966,0.3703703703703704,15,5,LR bỏ D
+A_no_dynamics_matched,44,all,all,merge,15,0.13333333333333333,0.3333333333333333,0.19047619047619044,13,11,LR bỏ D
+A_no_dynamics_matched,44,all,all,split,39,0.6153846153846154,0.7058823529411765,0.6575342465753424,15,0,LR bỏ D
+A_no_dynamics_matched,44,all,all,dissolve,1167,0.9665809768637532,0.9682403433476395,0.967409948542024,39,0,LR bỏ D
+hier_hgb_dynamic,42,all,all,stable,4,0.0,0.0,0.0,4,3,HGB
+hier_hgb_dynamic,42,all,all,grow,19,0.15789473684210525,0.10714285714285714,0.1276595744680851,16,12,HGB
+hier_hgb_dynamic,42,all,all,shrink,25,0.56,0.4,0.4666666666666667,11,4,HGB
+hier_hgb_dynamic,42,all,all,merge,15,0.2,0.07894736842105263,0.11320754716981134,12,9,HGB
+hier_hgb_dynamic,42,all,all,split,39,0.5641025641025641,0.7857142857142857,0.6567164179104477,17,0,HGB
+hier_hgb_dynamic,42,all,all,dissolve,1167,0.9528706083976007,0.9754385964912281,0.964022540095362,55,0,HGB
+hier_hgb_dynamic,43,all,all,stable,4,0.0,0.0,0.0,4,3,HGB
+hier_hgb_dynamic,43,all,all,grow,19,0.15789473684210525,0.10714285714285714,0.1276595744680851,16,12,HGB
+hier_hgb_dynamic,43,all,all,shrink,25,0.56,0.4,0.4666666666666667,11,4,HGB
+hier_hgb_dynamic,43,all,all,merge,15,0.2,0.07894736842105263,0.11320754716981134,12,9,HGB
+hier_hgb_dynamic,43,all,all,split,39,0.5641025641025641,0.7857142857142857,0.6567164179104477,17,0,HGB
+hier_hgb_dynamic,43,all,all,dissolve,1167,0.9528706083976007,0.9754385964912281,0.964022540095362,55,0,HGB
+hier_hgb_dynamic,44,all,all,stable,4,0.0,0.0,0.0,4,3,HGB
+hier_hgb_dynamic,44,all,all,grow,19,0.15789473684210525,0.10714285714285714,0.1276595744680851,16,12,HGB
+hier_hgb_dynamic,44,all,all,shrink,25,0.56,0.4,0.4666666666666667,11,4,HGB
+hier_hgb_dynamic,44,all,all,merge,15,0.2,0.07894736842105263,0.11320754716981134,12,9,HGB
+hier_hgb_dynamic,44,all,all,split,39,0.5641025641025641,0.7857142857142857,0.6567164179104477,17,0,HGB
+hier_hgb_dynamic,44,all,all,dissolve,1167,0.9528706083976007,0.9754385964912281,0.964022540095362,55,0,HGB
+hier_lr_dynamic,42,all,all,stable,4,0.0,0.0,0.0,4,3,LR đầy đủ
+hier_lr_dynamic,42,all,all,grow,19,0.15789473684210525,0.06976744186046512,0.09677419354838708,16,14,LR đầy đủ
+hier_lr_dynamic,42,all,all,shrink,25,0.48,0.41379310344827586,0.4444444444444445,13,6,LR đầy đủ
+hier_lr_dynamic,42,all,all,merge,15,0.2,0.2727272727272727,0.23076923076923075,12,8,LR đầy đủ
+hier_lr_dynamic,42,all,all,split,39,0.6923076923076923,0.7941176470588235,0.7397260273972601,12,0,LR đầy đủ
+hier_lr_dynamic,42,all,all,dissolve,1167,0.9451585261353899,0.972663139329806,0.9587136027813994,64,0,LR đầy đủ
+hier_lr_dynamic,43,all,all,stable,4,0.0,0.0,0.0,4,3,LR đầy đủ
+hier_lr_dynamic,43,all,all,grow,19,0.15789473684210525,0.06976744186046512,0.09677419354838708,16,14,LR đầy đủ
+hier_lr_dynamic,43,all,all,shrink,25,0.48,0.41379310344827586,0.4444444444444445,13,6,LR đầy đủ
+hier_lr_dynamic,43,all,all,merge,15,0.2,0.2727272727272727,0.23076923076923075,12,8,LR đầy đủ
+hier_lr_dynamic,43,all,all,split,39,0.6923076923076923,0.7941176470588235,0.7397260273972601,12,0,LR đầy đủ
+hier_lr_dynamic,43,all,all,dissolve,1167,0.9451585261353899,0.972663139329806,0.9587136027813994,64,0,LR đầy đủ
+hier_lr_dynamic,44,all,all,stable,4,0.0,0.0,0.0,4,3,LR đầy đủ
+hier_lr_dynamic,44,all,all,grow,19,0.15789473684210525,0.06976744186046512,0.09677419354838708,16,14,LR đầy đủ
+hier_lr_dynamic,44,all,all,shrink,25,0.48,0.41379310344827586,0.4444444444444445,13,6,LR đầy đủ
+hier_lr_dynamic,44,all,all,merge,15,0.2,0.2727272727272727,0.23076923076923075,12,8,LR đầy đủ
+hier_lr_dynamic,44,all,all,split,39,0.6923076923076923,0.7941176470588235,0.7397260273972601,12,0,LR đầy đủ
+hier_lr_dynamic,44,all,all,dissolve,1167,0.9451585261353899,0.972663139329806,0.9587136027813994,64,0,LR đầy đủ
+A_no_dynamics_matched,42,month,2018-01,stable,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,42,month,2018-01,grow,1,0.0,0.0,0.0,1,0,LR bỏ D
+A_no_dynamics_matched,42,month,2018-01,shrink,5,0.4,0.6666666666666666,0.5,3,0,LR bỏ D
+A_no_dynamics_matched,42,month,2018-01,merge,2,0.0,0.0,0.0,2,2,LR bỏ D
+A_no_dynamics_matched,42,month,2018-01,split,4,0.75,0.5,0.6,1,0,LR bỏ D
+A_no_dynamics_matched,42,month,2018-01,dissolve,132,0.9772727272727273,0.9847328244274809,0.9809885931558935,3,0,LR bỏ D
+A_no_dynamics_matched,42,month,2018-02,stable,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,42,month,2018-02,grow,2,0.0,0.0,0.0,2,2,LR bỏ D
+A_no_dynamics_matched,42,month,2018-02,shrink,2,0.5,1.0,0.6666666666666666,1,1,LR bỏ D
+A_no_dynamics_matched,42,month,2018-02,merge,2,0.0,0.0,0.0,2,2,LR bỏ D
+A_no_dynamics_matched,42,month,2018-02,split,4,1.0,1.0,1.0,0,0,LR bỏ D
+A_no_dynamics_matched,42,month,2018-02,dissolve,106,0.9811320754716981,0.9541284403669725,0.9674418604651164,2,0,LR bỏ D
+A_no_dynamics_matched,42,month,2018-03,stable,1,0.0,0.0,0.0,1,1,LR bỏ D
+A_no_dynamics_matched,42,month,2018-03,grow,3,0.0,0.0,0.0,3,3,LR bỏ D
+A_no_dynamics_matched,42,month,2018-03,shrink,7,0.42857142857142855,0.5,0.4615384615384615,4,2,LR bỏ D
+A_no_dynamics_matched,42,month,2018-03,merge,2,0.0,0.0,0.0,2,2,LR bỏ D
+A_no_dynamics_matched,42,month,2018-03,split,3,0.3333333333333333,0.3333333333333333,0.3333333333333333,2,0,LR bỏ D
+A_no_dynamics_matched,42,month,2018-03,dissolve,134,0.9850746268656716,0.9428571428571428,0.9635036496350364,2,0,LR bỏ D
+A_no_dynamics_matched,42,month,2018-04,stable,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,42,month,2018-04,grow,1,0.0,0.0,0.0,1,1,LR bỏ D
+A_no_dynamics_matched,42,month,2018-04,shrink,3,0.0,0.0,0.0,3,1,LR bỏ D
+A_no_dynamics_matched,42,month,2018-04,merge,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,42,month,2018-04,split,4,0.5,0.5,0.5,2,0,LR bỏ D
+A_no_dynamics_matched,42,month,2018-04,dissolve,139,0.9712230215827338,0.9854014598540146,0.9782608695652174,4,0,LR bỏ D
+A_no_dynamics_matched,42,month,2018-05,stable,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,42,month,2018-05,grow,1,0.0,0.0,0.0,1,1,LR bỏ D
+A_no_dynamics_matched,42,month,2018-05,shrink,1,0.0,0.0,0.0,1,0,LR bỏ D
+A_no_dynamics_matched,42,month,2018-05,merge,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,42,month,2018-05,split,4,0.5,0.6666666666666666,0.5714285714285715,2,0,LR bỏ D
+A_no_dynamics_matched,42,month,2018-05,dissolve,117,0.9658119658119658,0.9912280701754386,0.9783549783549784,4,0,LR bỏ D
+A_no_dynamics_matched,42,month,2018-06,stable,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,42,month,2018-06,grow,3,0.0,0.0,0.0,3,3,LR bỏ D
+A_no_dynamics_matched,42,month,2018-06,shrink,3,1.0,0.75,0.8571428571428571,0,0,LR bỏ D
+A_no_dynamics_matched,42,month,2018-06,merge,3,0.0,0.0,0.0,3,2,LR bỏ D
+A_no_dynamics_matched,42,month,2018-06,split,3,1.0,1.0,1.0,0,0,LR bỏ D
+A_no_dynamics_matched,42,month,2018-06,dissolve,128,0.9453125,0.9603174603174603,0.9527559055118109,7,0,LR bỏ D
+A_no_dynamics_matched,42,month,2018-07,stable,2,0.0,0.0,0.0,2,2,LR bỏ D
+A_no_dynamics_matched,42,month,2018-07,grow,3,0.0,0.0,0.0,3,2,LR bỏ D
+A_no_dynamics_matched,42,month,2018-07,shrink,1,0.0,0.0,0.0,1,1,LR bỏ D
+A_no_dynamics_matched,42,month,2018-07,merge,3,0.0,0.0,0.0,3,2,LR bỏ D
+A_no_dynamics_matched,42,month,2018-07,split,8,0.5,1.0,0.6666666666666666,4,0,LR bỏ D
+A_no_dynamics_matched,42,month,2018-07,dissolve,129,0.9689922480620154,0.946969696969697,0.9578544061302682,4,0,LR bỏ D
+A_no_dynamics_matched,42,month,2018-08,stable,1,0.0,0.0,0.0,1,1,LR bỏ D
+A_no_dynamics_matched,42,month,2018-08,grow,3,0.0,0.0,0.0,3,3,LR bỏ D
+A_no_dynamics_matched,42,month,2018-08,shrink,1,0.0,0.0,0.0,1,0,LR bỏ D
+A_no_dynamics_matched,42,month,2018-08,merge,3,0.6666666666666666,0.6666666666666666,0.6666666666666666,1,1,LR bỏ D
+A_no_dynamics_matched,42,month,2018-08,split,5,0.6,0.75,0.6666666666666665,2,0,LR bỏ D
+A_no_dynamics_matched,42,month,2018-08,dissolve,147,0.9455782312925171,0.9652777777777778,0.9553264604810997,8,0,LR bỏ D
+A_no_dynamics_matched,42,month,2018-09,stable,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,42,month,2018-09,grow,2,0.0,0.0,0.0,2,2,LR bỏ D
+A_no_dynamics_matched,42,month,2018-09,shrink,2,0.5,0.3333333333333333,0.4,1,0,LR bỏ D
+A_no_dynamics_matched,42,month,2018-09,merge,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,42,month,2018-09,split,4,0.5,0.6666666666666666,0.5714285714285715,2,0,LR bỏ D
+A_no_dynamics_matched,42,month,2018-09,dissolve,135,0.9629629629629629,0.9848484848484849,0.9737827715355806,5,0,LR bỏ D
+A_no_dynamics_matched,43,month,2018-01,stable,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,43,month,2018-01,grow,1,0.0,0.0,0.0,1,0,LR bỏ D
+A_no_dynamics_matched,43,month,2018-01,shrink,5,0.4,0.6666666666666666,0.5,3,0,LR bỏ D
+A_no_dynamics_matched,43,month,2018-01,merge,2,0.0,0.0,0.0,2,2,LR bỏ D
+A_no_dynamics_matched,43,month,2018-01,split,4,0.75,0.5,0.6,1,0,LR bỏ D
+A_no_dynamics_matched,43,month,2018-01,dissolve,132,0.9772727272727273,0.9847328244274809,0.9809885931558935,3,0,LR bỏ D
+A_no_dynamics_matched,43,month,2018-02,stable,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,43,month,2018-02,grow,2,0.0,0.0,0.0,2,2,LR bỏ D
+A_no_dynamics_matched,43,month,2018-02,shrink,2,0.5,1.0,0.6666666666666666,1,1,LR bỏ D
+A_no_dynamics_matched,43,month,2018-02,merge,2,0.0,0.0,0.0,2,2,LR bỏ D
+A_no_dynamics_matched,43,month,2018-02,split,4,1.0,1.0,1.0,0,0,LR bỏ D
+A_no_dynamics_matched,43,month,2018-02,dissolve,106,0.9811320754716981,0.9541284403669725,0.9674418604651164,2,0,LR bỏ D
+A_no_dynamics_matched,43,month,2018-03,stable,1,0.0,0.0,0.0,1,1,LR bỏ D
+A_no_dynamics_matched,43,month,2018-03,grow,3,0.0,0.0,0.0,3,3,LR bỏ D
+A_no_dynamics_matched,43,month,2018-03,shrink,7,0.42857142857142855,0.5,0.4615384615384615,4,2,LR bỏ D
+A_no_dynamics_matched,43,month,2018-03,merge,2,0.0,0.0,0.0,2,2,LR bỏ D
+A_no_dynamics_matched,43,month,2018-03,split,3,0.3333333333333333,0.3333333333333333,0.3333333333333333,2,0,LR bỏ D
+A_no_dynamics_matched,43,month,2018-03,dissolve,134,0.9850746268656716,0.9428571428571428,0.9635036496350364,2,0,LR bỏ D
+A_no_dynamics_matched,43,month,2018-04,stable,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,43,month,2018-04,grow,1,0.0,0.0,0.0,1,1,LR bỏ D
+A_no_dynamics_matched,43,month,2018-04,shrink,3,0.0,0.0,0.0,3,1,LR bỏ D
+A_no_dynamics_matched,43,month,2018-04,merge,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,43,month,2018-04,split,4,0.5,0.5,0.5,2,0,LR bỏ D
+A_no_dynamics_matched,43,month,2018-04,dissolve,139,0.9712230215827338,0.9854014598540146,0.9782608695652174,4,0,LR bỏ D
+A_no_dynamics_matched,43,month,2018-05,stable,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,43,month,2018-05,grow,1,0.0,0.0,0.0,1,1,LR bỏ D
+A_no_dynamics_matched,43,month,2018-05,shrink,1,0.0,0.0,0.0,1,0,LR bỏ D
+A_no_dynamics_matched,43,month,2018-05,merge,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,43,month,2018-05,split,4,0.5,0.6666666666666666,0.5714285714285715,2,0,LR bỏ D
+A_no_dynamics_matched,43,month,2018-05,dissolve,117,0.9658119658119658,0.9912280701754386,0.9783549783549784,4,0,LR bỏ D
+A_no_dynamics_matched,43,month,2018-06,stable,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,43,month,2018-06,grow,3,0.0,0.0,0.0,3,3,LR bỏ D
+A_no_dynamics_matched,43,month,2018-06,shrink,3,1.0,0.75,0.8571428571428571,0,0,LR bỏ D
+A_no_dynamics_matched,43,month,2018-06,merge,3,0.0,0.0,0.0,3,2,LR bỏ D
+A_no_dynamics_matched,43,month,2018-06,split,3,1.0,1.0,1.0,0,0,LR bỏ D
+A_no_dynamics_matched,43,month,2018-06,dissolve,128,0.9453125,0.9603174603174603,0.9527559055118109,7,0,LR bỏ D
+A_no_dynamics_matched,43,month,2018-07,stable,2,0.0,0.0,0.0,2,2,LR bỏ D
+A_no_dynamics_matched,43,month,2018-07,grow,3,0.0,0.0,0.0,3,2,LR bỏ D
+A_no_dynamics_matched,43,month,2018-07,shrink,1,0.0,0.0,0.0,1,1,LR bỏ D
+A_no_dynamics_matched,43,month,2018-07,merge,3,0.0,0.0,0.0,3,2,LR bỏ D
+A_no_dynamics_matched,43,month,2018-07,split,8,0.5,1.0,0.6666666666666666,4,0,LR bỏ D
+A_no_dynamics_matched,43,month,2018-07,dissolve,129,0.9689922480620154,0.946969696969697,0.9578544061302682,4,0,LR bỏ D
+A_no_dynamics_matched,43,month,2018-08,stable,1,0.0,0.0,0.0,1,1,LR bỏ D
+A_no_dynamics_matched,43,month,2018-08,grow,3,0.0,0.0,0.0,3,3,LR bỏ D
+A_no_dynamics_matched,43,month,2018-08,shrink,1,0.0,0.0,0.0,1,0,LR bỏ D
+A_no_dynamics_matched,43,month,2018-08,merge,3,0.6666666666666666,0.6666666666666666,0.6666666666666666,1,1,LR bỏ D
+A_no_dynamics_matched,43,month,2018-08,split,5,0.6,0.75,0.6666666666666665,2,0,LR bỏ D
+A_no_dynamics_matched,43,month,2018-08,dissolve,147,0.9455782312925171,0.9652777777777778,0.9553264604810997,8,0,LR bỏ D
+A_no_dynamics_matched,43,month,2018-09,stable,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,43,month,2018-09,grow,2,0.0,0.0,0.0,2,2,LR bỏ D
+A_no_dynamics_matched,43,month,2018-09,shrink,2,0.5,0.3333333333333333,0.4,1,0,LR bỏ D
+A_no_dynamics_matched,43,month,2018-09,merge,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,43,month,2018-09,split,4,0.5,0.6666666666666666,0.5714285714285715,2,0,LR bỏ D
+A_no_dynamics_matched,43,month,2018-09,dissolve,135,0.9629629629629629,0.9848484848484849,0.9737827715355806,5,0,LR bỏ D
+A_no_dynamics_matched,44,month,2018-01,stable,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,44,month,2018-01,grow,1,0.0,0.0,0.0,1,0,LR bỏ D
+A_no_dynamics_matched,44,month,2018-01,shrink,5,0.4,0.6666666666666666,0.5,3,0,LR bỏ D
+A_no_dynamics_matched,44,month,2018-01,merge,2,0.0,0.0,0.0,2,2,LR bỏ D
+A_no_dynamics_matched,44,month,2018-01,split,4,0.75,0.5,0.6,1,0,LR bỏ D
+A_no_dynamics_matched,44,month,2018-01,dissolve,132,0.9772727272727273,0.9847328244274809,0.9809885931558935,3,0,LR bỏ D
+A_no_dynamics_matched,44,month,2018-02,stable,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,44,month,2018-02,grow,2,0.0,0.0,0.0,2,2,LR bỏ D
+A_no_dynamics_matched,44,month,2018-02,shrink,2,0.5,1.0,0.6666666666666666,1,1,LR bỏ D
+A_no_dynamics_matched,44,month,2018-02,merge,2,0.0,0.0,0.0,2,2,LR bỏ D
+A_no_dynamics_matched,44,month,2018-02,split,4,1.0,1.0,1.0,0,0,LR bỏ D
+A_no_dynamics_matched,44,month,2018-02,dissolve,106,0.9811320754716981,0.9541284403669725,0.9674418604651164,2,0,LR bỏ D
+A_no_dynamics_matched,44,month,2018-03,stable,1,0.0,0.0,0.0,1,1,LR bỏ D
+A_no_dynamics_matched,44,month,2018-03,grow,3,0.0,0.0,0.0,3,3,LR bỏ D
+A_no_dynamics_matched,44,month,2018-03,shrink,7,0.42857142857142855,0.5,0.4615384615384615,4,2,LR bỏ D
+A_no_dynamics_matched,44,month,2018-03,merge,2,0.0,0.0,0.0,2,2,LR bỏ D
+A_no_dynamics_matched,44,month,2018-03,split,3,0.3333333333333333,0.3333333333333333,0.3333333333333333,2,0,LR bỏ D
+A_no_dynamics_matched,44,month,2018-03,dissolve,134,0.9850746268656716,0.9428571428571428,0.9635036496350364,2,0,LR bỏ D
+A_no_dynamics_matched,44,month,2018-04,stable,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,44,month,2018-04,grow,1,0.0,0.0,0.0,1,1,LR bỏ D
+A_no_dynamics_matched,44,month,2018-04,shrink,3,0.0,0.0,0.0,3,1,LR bỏ D
+A_no_dynamics_matched,44,month,2018-04,merge,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,44,month,2018-04,split,4,0.5,0.5,0.5,2,0,LR bỏ D
+A_no_dynamics_matched,44,month,2018-04,dissolve,139,0.9712230215827338,0.9854014598540146,0.9782608695652174,4,0,LR bỏ D
+A_no_dynamics_matched,44,month,2018-05,stable,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,44,month,2018-05,grow,1,0.0,0.0,0.0,1,1,LR bỏ D
+A_no_dynamics_matched,44,month,2018-05,shrink,1,0.0,0.0,0.0,1,0,LR bỏ D
+A_no_dynamics_matched,44,month,2018-05,merge,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,44,month,2018-05,split,4,0.5,0.6666666666666666,0.5714285714285715,2,0,LR bỏ D
+A_no_dynamics_matched,44,month,2018-05,dissolve,117,0.9658119658119658,0.9912280701754386,0.9783549783549784,4,0,LR bỏ D
+A_no_dynamics_matched,44,month,2018-06,stable,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,44,month,2018-06,grow,3,0.0,0.0,0.0,3,3,LR bỏ D
+A_no_dynamics_matched,44,month,2018-06,shrink,3,1.0,0.75,0.8571428571428571,0,0,LR bỏ D
+A_no_dynamics_matched,44,month,2018-06,merge,3,0.0,0.0,0.0,3,2,LR bỏ D
+A_no_dynamics_matched,44,month,2018-06,split,3,1.0,1.0,1.0,0,0,LR bỏ D
+A_no_dynamics_matched,44,month,2018-06,dissolve,128,0.9453125,0.9603174603174603,0.9527559055118109,7,0,LR bỏ D
+A_no_dynamics_matched,44,month,2018-07,stable,2,0.0,0.0,0.0,2,2,LR bỏ D
+A_no_dynamics_matched,44,month,2018-07,grow,3,0.0,0.0,0.0,3,2,LR bỏ D
+A_no_dynamics_matched,44,month,2018-07,shrink,1,0.0,0.0,0.0,1,1,LR bỏ D
+A_no_dynamics_matched,44,month,2018-07,merge,3,0.0,0.0,0.0,3,2,LR bỏ D
+A_no_dynamics_matched,44,month,2018-07,split,8,0.5,1.0,0.6666666666666666,4,0,LR bỏ D
+A_no_dynamics_matched,44,month,2018-07,dissolve,129,0.9689922480620154,0.946969696969697,0.9578544061302682,4,0,LR bỏ D
+A_no_dynamics_matched,44,month,2018-08,stable,1,0.0,0.0,0.0,1,1,LR bỏ D
+A_no_dynamics_matched,44,month,2018-08,grow,3,0.0,0.0,0.0,3,3,LR bỏ D
+A_no_dynamics_matched,44,month,2018-08,shrink,1,0.0,0.0,0.0,1,0,LR bỏ D
+A_no_dynamics_matched,44,month,2018-08,merge,3,0.6666666666666666,0.6666666666666666,0.6666666666666666,1,1,LR bỏ D
+A_no_dynamics_matched,44,month,2018-08,split,5,0.6,0.75,0.6666666666666665,2,0,LR bỏ D
+A_no_dynamics_matched,44,month,2018-08,dissolve,147,0.9455782312925171,0.9652777777777778,0.9553264604810997,8,0,LR bỏ D
+A_no_dynamics_matched,44,month,2018-09,stable,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,44,month,2018-09,grow,2,0.0,0.0,0.0,2,2,LR bỏ D
+A_no_dynamics_matched,44,month,2018-09,shrink,2,0.5,0.3333333333333333,0.4,1,0,LR bỏ D
+A_no_dynamics_matched,44,month,2018-09,merge,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,44,month,2018-09,split,4,0.5,0.6666666666666666,0.5714285714285715,2,0,LR bỏ D
+A_no_dynamics_matched,44,month,2018-09,dissolve,135,0.9629629629629629,0.9848484848484849,0.9737827715355806,5,0,LR bỏ D
+hier_hgb_dynamic,42,month,2018-01,stable,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,42,month,2018-01,grow,1,0.0,0.0,0.0,1,0,HGB
+hier_hgb_dynamic,42,month,2018-01,shrink,5,0.8,0.6666666666666666,0.7272727272727272,1,0,HGB
+hier_hgb_dynamic,42,month,2018-01,merge,2,0.5,0.2,0.28571428571428575,1,1,HGB
+hier_hgb_dynamic,42,month,2018-01,split,4,0.5,0.6666666666666666,0.5714285714285715,2,0,HGB
+hier_hgb_dynamic,42,month,2018-01,dissolve,132,0.9696969696969697,0.9922480620155039,0.9808429118773947,4,0,HGB
+hier_hgb_dynamic,42,month,2018-02,stable,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,42,month,2018-02,grow,2,0.0,0.0,0.0,2,2,HGB
+hier_hgb_dynamic,42,month,2018-02,shrink,2,0.5,0.3333333333333333,0.4,1,1,HGB
+hier_hgb_dynamic,42,month,2018-02,merge,2,0.0,0.0,0.0,2,1,HGB
+hier_hgb_dynamic,42,month,2018-02,split,4,0.75,1.0,0.8571428571428571,1,0,HGB
+hier_hgb_dynamic,42,month,2018-02,dissolve,106,0.9245283018867925,0.9607843137254902,0.9423076923076923,8,0,HGB
+hier_hgb_dynamic,42,month,2018-03,stable,1,0.0,0.0,0.0,1,1,HGB
+hier_hgb_dynamic,42,month,2018-03,grow,3,0.3333333333333333,0.5,0.4,2,2,HGB
+hier_hgb_dynamic,42,month,2018-03,shrink,7,0.42857142857142855,0.6,0.5,4,2,HGB
+hier_hgb_dynamic,42,month,2018-03,merge,2,0.5,0.3333333333333333,0.4,1,1,HGB
+hier_hgb_dynamic,42,month,2018-03,split,3,0.6666666666666666,0.5,0.5714285714285715,1,0,HGB
+hier_hgb_dynamic,42,month,2018-03,dissolve,134,0.9701492537313433,0.9558823529411765,0.962962962962963,4,0,HGB
+hier_hgb_dynamic,42,month,2018-04,stable,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,42,month,2018-04,grow,1,0.0,0.0,0.0,1,1,HGB
+hier_hgb_dynamic,42,month,2018-04,shrink,3,0.3333333333333333,0.25,0.28571428571428575,2,0,HGB
+hier_hgb_dynamic,42,month,2018-04,merge,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,42,month,2018-04,split,4,0.5,0.6666666666666666,0.5714285714285715,2,0,HGB
+hier_hgb_dynamic,42,month,2018-04,dissolve,139,0.9568345323741008,0.9925373134328358,0.9743589743589743,6,0,HGB
+hier_hgb_dynamic,42,month,2018-05,stable,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,42,month,2018-05,grow,1,0.0,0.0,0.0,1,1,HGB
+hier_hgb_dynamic,42,month,2018-05,shrink,1,0.0,0.0,0.0,1,0,HGB
+hier_hgb_dynamic,42,month,2018-05,merge,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,42,month,2018-05,split,4,0.5,0.6666666666666666,0.5714285714285715,2,0,HGB
+hier_hgb_dynamic,42,month,2018-05,dissolve,117,0.9572649572649573,0.9911504424778761,0.9739130434782609,5,0,HGB
+hier_hgb_dynamic,42,month,2018-06,stable,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,42,month,2018-06,grow,3,0.0,0.0,0.0,3,2,HGB
+hier_hgb_dynamic,42,month,2018-06,shrink,3,1.0,0.75,0.8571428571428571,0,0,HGB
+hier_hgb_dynamic,42,month,2018-06,merge,3,0.3333333333333333,0.2,0.25,2,2,HGB
+hier_hgb_dynamic,42,month,2018-06,split,3,0.6666666666666666,1.0,0.8,1,0,HGB
+hier_hgb_dynamic,42,month,2018-06,dissolve,128,0.96875,0.96875,0.96875,4,0,HGB
+hier_hgb_dynamic,42,month,2018-07,stable,2,0.0,0.0,0.0,2,2,HGB
+hier_hgb_dynamic,42,month,2018-07,grow,3,0.0,0.0,0.0,3,2,HGB
+hier_hgb_dynamic,42,month,2018-07,shrink,1,0.0,0.0,0.0,1,1,HGB
+hier_hgb_dynamic,42,month,2018-07,merge,3,0.0,0.0,0.0,3,2,HGB
+hier_hgb_dynamic,42,month,2018-07,split,8,0.5,1.0,0.6666666666666666,4,0,HGB
+hier_hgb_dynamic,42,month,2018-07,dissolve,129,0.9534883720930233,0.9461538461538461,0.9498069498069497,6,0,HGB
+hier_hgb_dynamic,42,month,2018-08,stable,1,0.0,0.0,0.0,1,0,HGB
+hier_hgb_dynamic,42,month,2018-08,grow,3,0.6666666666666666,0.2857142857142857,0.4,1,1,HGB
+hier_hgb_dynamic,42,month,2018-08,shrink,1,1.0,0.3333333333333333,0.5,0,0,HGB
+hier_hgb_dynamic,42,month,2018-08,merge,3,0.0,0.0,0.0,3,2,HGB
+hier_hgb_dynamic,42,month,2018-08,split,5,0.6,1.0,0.7499999999999999,2,0,HGB
+hier_hgb_dynamic,42,month,2018-08,dissolve,147,0.9591836734693877,0.9791666666666666,0.9690721649484536,6,0,HGB
+hier_hgb_dynamic,42,month,2018-09,stable,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,42,month,2018-09,grow,2,0.0,0.0,0.0,2,1,HGB
+hier_hgb_dynamic,42,month,2018-09,shrink,2,0.5,0.3333333333333333,0.4,1,0,HGB
+hier_hgb_dynamic,42,month,2018-09,merge,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,42,month,2018-09,split,4,0.5,0.6666666666666666,0.5714285714285715,2,0,HGB
+hier_hgb_dynamic,42,month,2018-09,dissolve,135,0.9111111111111111,0.9919354838709677,0.9498069498069498,12,0,HGB
+hier_hgb_dynamic,43,month,2018-01,stable,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,43,month,2018-01,grow,1,0.0,0.0,0.0,1,0,HGB
+hier_hgb_dynamic,43,month,2018-01,shrink,5,0.8,0.6666666666666666,0.7272727272727272,1,0,HGB
+hier_hgb_dynamic,43,month,2018-01,merge,2,0.5,0.2,0.28571428571428575,1,1,HGB
+hier_hgb_dynamic,43,month,2018-01,split,4,0.5,0.6666666666666666,0.5714285714285715,2,0,HGB
+hier_hgb_dynamic,43,month,2018-01,dissolve,132,0.9696969696969697,0.9922480620155039,0.9808429118773947,4,0,HGB
+hier_hgb_dynamic,43,month,2018-02,stable,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,43,month,2018-02,grow,2,0.0,0.0,0.0,2,2,HGB
+hier_hgb_dynamic,43,month,2018-02,shrink,2,0.5,0.3333333333333333,0.4,1,1,HGB
+hier_hgb_dynamic,43,month,2018-02,merge,2,0.0,0.0,0.0,2,1,HGB
+hier_hgb_dynamic,43,month,2018-02,split,4,0.75,1.0,0.8571428571428571,1,0,HGB
+hier_hgb_dynamic,43,month,2018-02,dissolve,106,0.9245283018867925,0.9607843137254902,0.9423076923076923,8,0,HGB
+hier_hgb_dynamic,43,month,2018-03,stable,1,0.0,0.0,0.0,1,1,HGB
+hier_hgb_dynamic,43,month,2018-03,grow,3,0.3333333333333333,0.5,0.4,2,2,HGB
+hier_hgb_dynamic,43,month,2018-03,shrink,7,0.42857142857142855,0.6,0.5,4,2,HGB
+hier_hgb_dynamic,43,month,2018-03,merge,2,0.5,0.3333333333333333,0.4,1,1,HGB
+hier_hgb_dynamic,43,month,2018-03,split,3,0.6666666666666666,0.5,0.5714285714285715,1,0,HGB
+hier_hgb_dynamic,43,month,2018-03,dissolve,134,0.9701492537313433,0.9558823529411765,0.962962962962963,4,0,HGB
+hier_hgb_dynamic,43,month,2018-04,stable,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,43,month,2018-04,grow,1,0.0,0.0,0.0,1,1,HGB
+hier_hgb_dynamic,43,month,2018-04,shrink,3,0.3333333333333333,0.25,0.28571428571428575,2,0,HGB
+hier_hgb_dynamic,43,month,2018-04,merge,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,43,month,2018-04,split,4,0.5,0.6666666666666666,0.5714285714285715,2,0,HGB
+hier_hgb_dynamic,43,month,2018-04,dissolve,139,0.9568345323741008,0.9925373134328358,0.9743589743589743,6,0,HGB
+hier_hgb_dynamic,43,month,2018-05,stable,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,43,month,2018-05,grow,1,0.0,0.0,0.0,1,1,HGB
+hier_hgb_dynamic,43,month,2018-05,shrink,1,0.0,0.0,0.0,1,0,HGB
+hier_hgb_dynamic,43,month,2018-05,merge,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,43,month,2018-05,split,4,0.5,0.6666666666666666,0.5714285714285715,2,0,HGB
+hier_hgb_dynamic,43,month,2018-05,dissolve,117,0.9572649572649573,0.9911504424778761,0.9739130434782609,5,0,HGB
+hier_hgb_dynamic,43,month,2018-06,stable,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,43,month,2018-06,grow,3,0.0,0.0,0.0,3,2,HGB
+hier_hgb_dynamic,43,month,2018-06,shrink,3,1.0,0.75,0.8571428571428571,0,0,HGB
+hier_hgb_dynamic,43,month,2018-06,merge,3,0.3333333333333333,0.2,0.25,2,2,HGB
+hier_hgb_dynamic,43,month,2018-06,split,3,0.6666666666666666,1.0,0.8,1,0,HGB
+hier_hgb_dynamic,43,month,2018-06,dissolve,128,0.96875,0.96875,0.96875,4,0,HGB
+hier_hgb_dynamic,43,month,2018-07,stable,2,0.0,0.0,0.0,2,2,HGB
+hier_hgb_dynamic,43,month,2018-07,grow,3,0.0,0.0,0.0,3,2,HGB
+hier_hgb_dynamic,43,month,2018-07,shrink,1,0.0,0.0,0.0,1,1,HGB
+hier_hgb_dynamic,43,month,2018-07,merge,3,0.0,0.0,0.0,3,2,HGB
+hier_hgb_dynamic,43,month,2018-07,split,8,0.5,1.0,0.6666666666666666,4,0,HGB
+hier_hgb_dynamic,43,month,2018-07,dissolve,129,0.9534883720930233,0.9461538461538461,0.9498069498069497,6,0,HGB
+hier_hgb_dynamic,43,month,2018-08,stable,1,0.0,0.0,0.0,1,0,HGB
+hier_hgb_dynamic,43,month,2018-08,grow,3,0.6666666666666666,0.2857142857142857,0.4,1,1,HGB
+hier_hgb_dynamic,43,month,2018-08,shrink,1,1.0,0.3333333333333333,0.5,0,0,HGB
+hier_hgb_dynamic,43,month,2018-08,merge,3,0.0,0.0,0.0,3,2,HGB
+hier_hgb_dynamic,43,month,2018-08,split,5,0.6,1.0,0.7499999999999999,2,0,HGB
+hier_hgb_dynamic,43,month,2018-08,dissolve,147,0.9591836734693877,0.9791666666666666,0.9690721649484536,6,0,HGB
+hier_hgb_dynamic,43,month,2018-09,stable,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,43,month,2018-09,grow,2,0.0,0.0,0.0,2,1,HGB
+hier_hgb_dynamic,43,month,2018-09,shrink,2,0.5,0.3333333333333333,0.4,1,0,HGB
+hier_hgb_dynamic,43,month,2018-09,merge,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,43,month,2018-09,split,4,0.5,0.6666666666666666,0.5714285714285715,2,0,HGB
+hier_hgb_dynamic,43,month,2018-09,dissolve,135,0.9111111111111111,0.9919354838709677,0.9498069498069498,12,0,HGB
+hier_hgb_dynamic,44,month,2018-01,stable,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,44,month,2018-01,grow,1,0.0,0.0,0.0,1,0,HGB
+hier_hgb_dynamic,44,month,2018-01,shrink,5,0.8,0.6666666666666666,0.7272727272727272,1,0,HGB
+hier_hgb_dynamic,44,month,2018-01,merge,2,0.5,0.2,0.28571428571428575,1,1,HGB
+hier_hgb_dynamic,44,month,2018-01,split,4,0.5,0.6666666666666666,0.5714285714285715,2,0,HGB
+hier_hgb_dynamic,44,month,2018-01,dissolve,132,0.9696969696969697,0.9922480620155039,0.9808429118773947,4,0,HGB
+hier_hgb_dynamic,44,month,2018-02,stable,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,44,month,2018-02,grow,2,0.0,0.0,0.0,2,2,HGB
+hier_hgb_dynamic,44,month,2018-02,shrink,2,0.5,0.3333333333333333,0.4,1,1,HGB
+hier_hgb_dynamic,44,month,2018-02,merge,2,0.0,0.0,0.0,2,1,HGB
+hier_hgb_dynamic,44,month,2018-02,split,4,0.75,1.0,0.8571428571428571,1,0,HGB
+hier_hgb_dynamic,44,month,2018-02,dissolve,106,0.9245283018867925,0.9607843137254902,0.9423076923076923,8,0,HGB
+hier_hgb_dynamic,44,month,2018-03,stable,1,0.0,0.0,0.0,1,1,HGB
+hier_hgb_dynamic,44,month,2018-03,grow,3,0.3333333333333333,0.5,0.4,2,2,HGB
+hier_hgb_dynamic,44,month,2018-03,shrink,7,0.42857142857142855,0.6,0.5,4,2,HGB
+hier_hgb_dynamic,44,month,2018-03,merge,2,0.5,0.3333333333333333,0.4,1,1,HGB
+hier_hgb_dynamic,44,month,2018-03,split,3,0.6666666666666666,0.5,0.5714285714285715,1,0,HGB
+hier_hgb_dynamic,44,month,2018-03,dissolve,134,0.9701492537313433,0.9558823529411765,0.962962962962963,4,0,HGB
+hier_hgb_dynamic,44,month,2018-04,stable,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,44,month,2018-04,grow,1,0.0,0.0,0.0,1,1,HGB
+hier_hgb_dynamic,44,month,2018-04,shrink,3,0.3333333333333333,0.25,0.28571428571428575,2,0,HGB
+hier_hgb_dynamic,44,month,2018-04,merge,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,44,month,2018-04,split,4,0.5,0.6666666666666666,0.5714285714285715,2,0,HGB
+hier_hgb_dynamic,44,month,2018-04,dissolve,139,0.9568345323741008,0.9925373134328358,0.9743589743589743,6,0,HGB
+hier_hgb_dynamic,44,month,2018-05,stable,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,44,month,2018-05,grow,1,0.0,0.0,0.0,1,1,HGB
+hier_hgb_dynamic,44,month,2018-05,shrink,1,0.0,0.0,0.0,1,0,HGB
+hier_hgb_dynamic,44,month,2018-05,merge,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,44,month,2018-05,split,4,0.5,0.6666666666666666,0.5714285714285715,2,0,HGB
+hier_hgb_dynamic,44,month,2018-05,dissolve,117,0.9572649572649573,0.9911504424778761,0.9739130434782609,5,0,HGB
+hier_hgb_dynamic,44,month,2018-06,stable,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,44,month,2018-06,grow,3,0.0,0.0,0.0,3,2,HGB
+hier_hgb_dynamic,44,month,2018-06,shrink,3,1.0,0.75,0.8571428571428571,0,0,HGB
+hier_hgb_dynamic,44,month,2018-06,merge,3,0.3333333333333333,0.2,0.25,2,2,HGB
+hier_hgb_dynamic,44,month,2018-06,split,3,0.6666666666666666,1.0,0.8,1,0,HGB
+hier_hgb_dynamic,44,month,2018-06,dissolve,128,0.96875,0.96875,0.96875,4,0,HGB
+hier_hgb_dynamic,44,month,2018-07,stable,2,0.0,0.0,0.0,2,2,HGB
+hier_hgb_dynamic,44,month,2018-07,grow,3,0.0,0.0,0.0,3,2,HGB
+hier_hgb_dynamic,44,month,2018-07,shrink,1,0.0,0.0,0.0,1,1,HGB
+hier_hgb_dynamic,44,month,2018-07,merge,3,0.0,0.0,0.0,3,2,HGB
+hier_hgb_dynamic,44,month,2018-07,split,8,0.5,1.0,0.6666666666666666,4,0,HGB
+hier_hgb_dynamic,44,month,2018-07,dissolve,129,0.9534883720930233,0.9461538461538461,0.9498069498069497,6,0,HGB
+hier_hgb_dynamic,44,month,2018-08,stable,1,0.0,0.0,0.0,1,0,HGB
+hier_hgb_dynamic,44,month,2018-08,grow,3,0.6666666666666666,0.2857142857142857,0.4,1,1,HGB
+hier_hgb_dynamic,44,month,2018-08,shrink,1,1.0,0.3333333333333333,0.5,0,0,HGB
+hier_hgb_dynamic,44,month,2018-08,merge,3,0.0,0.0,0.0,3,2,HGB
+hier_hgb_dynamic,44,month,2018-08,split,5,0.6,1.0,0.7499999999999999,2,0,HGB
+hier_hgb_dynamic,44,month,2018-08,dissolve,147,0.9591836734693877,0.9791666666666666,0.9690721649484536,6,0,HGB
+hier_hgb_dynamic,44,month,2018-09,stable,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,44,month,2018-09,grow,2,0.0,0.0,0.0,2,1,HGB
+hier_hgb_dynamic,44,month,2018-09,shrink,2,0.5,0.3333333333333333,0.4,1,0,HGB
+hier_hgb_dynamic,44,month,2018-09,merge,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,44,month,2018-09,split,4,0.5,0.6666666666666666,0.5714285714285715,2,0,HGB
+hier_hgb_dynamic,44,month,2018-09,dissolve,135,0.9111111111111111,0.9919354838709677,0.9498069498069498,12,0,HGB
+hier_lr_dynamic,42,month,2018-01,stable,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,42,month,2018-01,grow,1,0.0,0.0,0.0,1,0,LR đầy đủ
+hier_lr_dynamic,42,month,2018-01,shrink,5,0.6,0.75,0.6666666666666665,2,0,LR đầy đủ
+hier_lr_dynamic,42,month,2018-01,merge,2,0.0,0.0,0.0,2,2,LR đầy đủ
+hier_lr_dynamic,42,month,2018-01,split,4,0.75,0.6,0.6666666666666665,1,0,LR đầy đủ
+hier_lr_dynamic,42,month,2018-01,dissolve,132,0.9393939393939394,0.9841269841269841,0.9612403100775193,8,0,LR đầy đủ
+hier_lr_dynamic,42,month,2018-02,stable,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,42,month,2018-02,grow,2,0.0,0.0,0.0,2,2,LR đầy đủ
+hier_lr_dynamic,42,month,2018-02,shrink,2,0.5,1.0,0.6666666666666666,1,1,LR đầy đủ
+hier_lr_dynamic,42,month,2018-02,merge,2,0.0,0.0,0.0,2,2,LR đầy đủ
+hier_lr_dynamic,42,month,2018-02,split,4,1.0,1.0,1.0,0,0,LR đầy đủ
+hier_lr_dynamic,42,month,2018-02,dissolve,106,0.9339622641509434,0.9519230769230769,0.942857142857143,7,0,LR đầy đủ
+hier_lr_dynamic,42,month,2018-03,stable,1,0.0,0.0,0.0,1,1,LR đầy đủ
+hier_lr_dynamic,42,month,2018-03,grow,3,0.0,0.0,0.0,3,3,LR đầy đủ
+hier_lr_dynamic,42,month,2018-03,shrink,7,0.2857142857142857,0.3333333333333333,0.30769230769230765,5,3,LR đầy đủ
+hier_lr_dynamic,42,month,2018-03,merge,2,0.0,0.0,0.0,2,1,LR đầy đủ
+hier_lr_dynamic,42,month,2018-03,split,3,0.3333333333333333,0.3333333333333333,0.3333333333333333,2,0,LR đầy đủ
+hier_lr_dynamic,42,month,2018-03,dissolve,134,0.9253731343283582,0.9393939393939394,0.9323308270676692,10,0,LR đầy đủ
+hier_lr_dynamic,42,month,2018-04,stable,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,42,month,2018-04,grow,1,0.0,0.0,0.0,1,1,LR đầy đủ
+hier_lr_dynamic,42,month,2018-04,shrink,3,0.0,0.0,0.0,3,1,LR đầy đủ
+hier_lr_dynamic,42,month,2018-04,merge,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,42,month,2018-04,split,4,0.5,0.5,0.5,2,0,LR đầy đủ
+hier_lr_dynamic,42,month,2018-04,dissolve,139,0.9496402877697842,0.9850746268656716,0.9670329670329669,7,0,LR đầy đủ
+hier_lr_dynamic,42,month,2018-05,stable,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,42,month,2018-05,grow,1,0.0,0.0,0.0,1,1,LR đầy đủ
+hier_lr_dynamic,42,month,2018-05,shrink,1,0.0,0.0,0.0,1,0,LR đầy đủ
+hier_lr_dynamic,42,month,2018-05,merge,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,42,month,2018-05,split,4,0.75,0.75,0.75,1,0,LR đầy đủ
+hier_lr_dynamic,42,month,2018-05,dissolve,117,0.9658119658119658,0.9912280701754386,0.9783549783549784,4,0,LR đầy đủ
+hier_lr_dynamic,42,month,2018-06,stable,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,42,month,2018-06,grow,3,0.0,0.0,0.0,3,3,LR đầy đủ
+hier_lr_dynamic,42,month,2018-06,shrink,3,1.0,0.75,0.8571428571428571,0,0,LR đầy đủ
+hier_lr_dynamic,42,month,2018-06,merge,3,0.0,0.0,0.0,3,2,LR đầy đủ
+hier_lr_dynamic,42,month,2018-06,split,3,1.0,1.0,1.0,0,0,LR đầy đủ
+hier_lr_dynamic,42,month,2018-06,dissolve,128,0.953125,0.9606299212598425,0.9568627450980391,6,0,LR đầy đủ
+hier_lr_dynamic,42,month,2018-07,stable,2,0.0,0.0,0.0,2,2,LR đầy đủ
+hier_lr_dynamic,42,month,2018-07,grow,3,0.0,0.0,0.0,3,2,LR đầy đủ
+hier_lr_dynamic,42,month,2018-07,shrink,1,0.0,0.0,0.0,1,1,LR đầy đủ
+hier_lr_dynamic,42,month,2018-07,merge,3,0.3333333333333333,0.5,0.4,2,0,LR đầy đủ
+hier_lr_dynamic,42,month,2018-07,split,8,0.625,1.0,0.7692307692307693,3,0,LR đầy đủ
+hier_lr_dynamic,42,month,2018-07,dissolve,129,0.9534883720930233,0.9609375,0.9571984435797667,6,0,LR đầy đủ
+hier_lr_dynamic,42,month,2018-08,stable,1,0.0,0.0,0.0,1,0,LR đầy đủ
+hier_lr_dynamic,42,month,2018-08,grow,3,0.6666666666666666,0.4,0.5,1,1,LR đầy đủ
+hier_lr_dynamic,42,month,2018-08,shrink,1,1.0,0.3333333333333333,0.5,0,0,LR đầy đủ
+hier_lr_dynamic,42,month,2018-08,merge,3,0.6666666666666666,0.5,0.5714285714285715,1,1,LR đầy đủ
+hier_lr_dynamic,42,month,2018-08,split,5,0.6,1.0,0.7499999999999999,2,0,LR đầy đủ
+hier_lr_dynamic,42,month,2018-08,dissolve,147,0.9659863945578231,0.9861111111111112,0.9759450171821307,5,0,LR đầy đủ
+hier_lr_dynamic,42,month,2018-09,stable,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,42,month,2018-09,grow,2,0.5,0.09090909090909091,0.15384615384615385,1,1,LR đầy đủ
+hier_lr_dynamic,42,month,2018-09,shrink,2,1.0,0.6666666666666666,0.8,0,0,LR đầy đủ
+hier_lr_dynamic,42,month,2018-09,merge,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,42,month,2018-09,split,4,0.75,1.0,0.8571428571428571,1,0,LR đầy đủ
+hier_lr_dynamic,42,month,2018-09,dissolve,135,0.9185185185185185,0.992,0.9538461538461539,11,0,LR đầy đủ
+hier_lr_dynamic,43,month,2018-01,stable,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,43,month,2018-01,grow,1,0.0,0.0,0.0,1,0,LR đầy đủ
+hier_lr_dynamic,43,month,2018-01,shrink,5,0.6,0.75,0.6666666666666665,2,0,LR đầy đủ
+hier_lr_dynamic,43,month,2018-01,merge,2,0.0,0.0,0.0,2,2,LR đầy đủ
+hier_lr_dynamic,43,month,2018-01,split,4,0.75,0.6,0.6666666666666665,1,0,LR đầy đủ
+hier_lr_dynamic,43,month,2018-01,dissolve,132,0.9393939393939394,0.9841269841269841,0.9612403100775193,8,0,LR đầy đủ
+hier_lr_dynamic,43,month,2018-02,stable,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,43,month,2018-02,grow,2,0.0,0.0,0.0,2,2,LR đầy đủ
+hier_lr_dynamic,43,month,2018-02,shrink,2,0.5,1.0,0.6666666666666666,1,1,LR đầy đủ
+hier_lr_dynamic,43,month,2018-02,merge,2,0.0,0.0,0.0,2,2,LR đầy đủ
+hier_lr_dynamic,43,month,2018-02,split,4,1.0,1.0,1.0,0,0,LR đầy đủ
+hier_lr_dynamic,43,month,2018-02,dissolve,106,0.9339622641509434,0.9519230769230769,0.942857142857143,7,0,LR đầy đủ
+hier_lr_dynamic,43,month,2018-03,stable,1,0.0,0.0,0.0,1,1,LR đầy đủ
+hier_lr_dynamic,43,month,2018-03,grow,3,0.0,0.0,0.0,3,3,LR đầy đủ
+hier_lr_dynamic,43,month,2018-03,shrink,7,0.2857142857142857,0.3333333333333333,0.30769230769230765,5,3,LR đầy đủ
+hier_lr_dynamic,43,month,2018-03,merge,2,0.0,0.0,0.0,2,1,LR đầy đủ
+hier_lr_dynamic,43,month,2018-03,split,3,0.3333333333333333,0.3333333333333333,0.3333333333333333,2,0,LR đầy đủ
+hier_lr_dynamic,43,month,2018-03,dissolve,134,0.9253731343283582,0.9393939393939394,0.9323308270676692,10,0,LR đầy đủ
+hier_lr_dynamic,43,month,2018-04,stable,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,43,month,2018-04,grow,1,0.0,0.0,0.0,1,1,LR đầy đủ
+hier_lr_dynamic,43,month,2018-04,shrink,3,0.0,0.0,0.0,3,1,LR đầy đủ
+hier_lr_dynamic,43,month,2018-04,merge,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,43,month,2018-04,split,4,0.5,0.5,0.5,2,0,LR đầy đủ
+hier_lr_dynamic,43,month,2018-04,dissolve,139,0.9496402877697842,0.9850746268656716,0.9670329670329669,7,0,LR đầy đủ
+hier_lr_dynamic,43,month,2018-05,stable,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,43,month,2018-05,grow,1,0.0,0.0,0.0,1,1,LR đầy đủ
+hier_lr_dynamic,43,month,2018-05,shrink,1,0.0,0.0,0.0,1,0,LR đầy đủ
+hier_lr_dynamic,43,month,2018-05,merge,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,43,month,2018-05,split,4,0.75,0.75,0.75,1,0,LR đầy đủ
+hier_lr_dynamic,43,month,2018-05,dissolve,117,0.9658119658119658,0.9912280701754386,0.9783549783549784,4,0,LR đầy đủ
+hier_lr_dynamic,43,month,2018-06,stable,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,43,month,2018-06,grow,3,0.0,0.0,0.0,3,3,LR đầy đủ
+hier_lr_dynamic,43,month,2018-06,shrink,3,1.0,0.75,0.8571428571428571,0,0,LR đầy đủ
+hier_lr_dynamic,43,month,2018-06,merge,3,0.0,0.0,0.0,3,2,LR đầy đủ
+hier_lr_dynamic,43,month,2018-06,split,3,1.0,1.0,1.0,0,0,LR đầy đủ
+hier_lr_dynamic,43,month,2018-06,dissolve,128,0.953125,0.9606299212598425,0.9568627450980391,6,0,LR đầy đủ
+hier_lr_dynamic,43,month,2018-07,stable,2,0.0,0.0,0.0,2,2,LR đầy đủ
+hier_lr_dynamic,43,month,2018-07,grow,3,0.0,0.0,0.0,3,2,LR đầy đủ
+hier_lr_dynamic,43,month,2018-07,shrink,1,0.0,0.0,0.0,1,1,LR đầy đủ
+hier_lr_dynamic,43,month,2018-07,merge,3,0.3333333333333333,0.5,0.4,2,0,LR đầy đủ
+hier_lr_dynamic,43,month,2018-07,split,8,0.625,1.0,0.7692307692307693,3,0,LR đầy đủ
+hier_lr_dynamic,43,month,2018-07,dissolve,129,0.9534883720930233,0.9609375,0.9571984435797667,6,0,LR đầy đủ
+hier_lr_dynamic,43,month,2018-08,stable,1,0.0,0.0,0.0,1,0,LR đầy đủ
+hier_lr_dynamic,43,month,2018-08,grow,3,0.6666666666666666,0.4,0.5,1,1,LR đầy đủ
+hier_lr_dynamic,43,month,2018-08,shrink,1,1.0,0.3333333333333333,0.5,0,0,LR đầy đủ
+hier_lr_dynamic,43,month,2018-08,merge,3,0.6666666666666666,0.5,0.5714285714285715,1,1,LR đầy đủ
+hier_lr_dynamic,43,month,2018-08,split,5,0.6,1.0,0.7499999999999999,2,0,LR đầy đủ
+hier_lr_dynamic,43,month,2018-08,dissolve,147,0.9659863945578231,0.9861111111111112,0.9759450171821307,5,0,LR đầy đủ
+hier_lr_dynamic,43,month,2018-09,stable,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,43,month,2018-09,grow,2,0.5,0.09090909090909091,0.15384615384615385,1,1,LR đầy đủ
+hier_lr_dynamic,43,month,2018-09,shrink,2,1.0,0.6666666666666666,0.8,0,0,LR đầy đủ
+hier_lr_dynamic,43,month,2018-09,merge,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,43,month,2018-09,split,4,0.75,1.0,0.8571428571428571,1,0,LR đầy đủ
+hier_lr_dynamic,43,month,2018-09,dissolve,135,0.9185185185185185,0.992,0.9538461538461539,11,0,LR đầy đủ
+hier_lr_dynamic,44,month,2018-01,stable,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,44,month,2018-01,grow,1,0.0,0.0,0.0,1,0,LR đầy đủ
+hier_lr_dynamic,44,month,2018-01,shrink,5,0.6,0.75,0.6666666666666665,2,0,LR đầy đủ
+hier_lr_dynamic,44,month,2018-01,merge,2,0.0,0.0,0.0,2,2,LR đầy đủ
+hier_lr_dynamic,44,month,2018-01,split,4,0.75,0.6,0.6666666666666665,1,0,LR đầy đủ
+hier_lr_dynamic,44,month,2018-01,dissolve,132,0.9393939393939394,0.9841269841269841,0.9612403100775193,8,0,LR đầy đủ
+hier_lr_dynamic,44,month,2018-02,stable,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,44,month,2018-02,grow,2,0.0,0.0,0.0,2,2,LR đầy đủ
+hier_lr_dynamic,44,month,2018-02,shrink,2,0.5,1.0,0.6666666666666666,1,1,LR đầy đủ
+hier_lr_dynamic,44,month,2018-02,merge,2,0.0,0.0,0.0,2,2,LR đầy đủ
+hier_lr_dynamic,44,month,2018-02,split,4,1.0,1.0,1.0,0,0,LR đầy đủ
+hier_lr_dynamic,44,month,2018-02,dissolve,106,0.9339622641509434,0.9519230769230769,0.942857142857143,7,0,LR đầy đủ
+hier_lr_dynamic,44,month,2018-03,stable,1,0.0,0.0,0.0,1,1,LR đầy đủ
+hier_lr_dynamic,44,month,2018-03,grow,3,0.0,0.0,0.0,3,3,LR đầy đủ
+hier_lr_dynamic,44,month,2018-03,shrink,7,0.2857142857142857,0.3333333333333333,0.30769230769230765,5,3,LR đầy đủ
+hier_lr_dynamic,44,month,2018-03,merge,2,0.0,0.0,0.0,2,1,LR đầy đủ
+hier_lr_dynamic,44,month,2018-03,split,3,0.3333333333333333,0.3333333333333333,0.3333333333333333,2,0,LR đầy đủ
+hier_lr_dynamic,44,month,2018-03,dissolve,134,0.9253731343283582,0.9393939393939394,0.9323308270676692,10,0,LR đầy đủ
+hier_lr_dynamic,44,month,2018-04,stable,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,44,month,2018-04,grow,1,0.0,0.0,0.0,1,1,LR đầy đủ
+hier_lr_dynamic,44,month,2018-04,shrink,3,0.0,0.0,0.0,3,1,LR đầy đủ
+hier_lr_dynamic,44,month,2018-04,merge,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,44,month,2018-04,split,4,0.5,0.5,0.5,2,0,LR đầy đủ
+hier_lr_dynamic,44,month,2018-04,dissolve,139,0.9496402877697842,0.9850746268656716,0.9670329670329669,7,0,LR đầy đủ
+hier_lr_dynamic,44,month,2018-05,stable,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,44,month,2018-05,grow,1,0.0,0.0,0.0,1,1,LR đầy đủ
+hier_lr_dynamic,44,month,2018-05,shrink,1,0.0,0.0,0.0,1,0,LR đầy đủ
+hier_lr_dynamic,44,month,2018-05,merge,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,44,month,2018-05,split,4,0.75,0.75,0.75,1,0,LR đầy đủ
+hier_lr_dynamic,44,month,2018-05,dissolve,117,0.9658119658119658,0.9912280701754386,0.9783549783549784,4,0,LR đầy đủ
+hier_lr_dynamic,44,month,2018-06,stable,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,44,month,2018-06,grow,3,0.0,0.0,0.0,3,3,LR đầy đủ
+hier_lr_dynamic,44,month,2018-06,shrink,3,1.0,0.75,0.8571428571428571,0,0,LR đầy đủ
+hier_lr_dynamic,44,month,2018-06,merge,3,0.0,0.0,0.0,3,2,LR đầy đủ
+hier_lr_dynamic,44,month,2018-06,split,3,1.0,1.0,1.0,0,0,LR đầy đủ
+hier_lr_dynamic,44,month,2018-06,dissolve,128,0.953125,0.9606299212598425,0.9568627450980391,6,0,LR đầy đủ
+hier_lr_dynamic,44,month,2018-07,stable,2,0.0,0.0,0.0,2,2,LR đầy đủ
+hier_lr_dynamic,44,month,2018-07,grow,3,0.0,0.0,0.0,3,2,LR đầy đủ
+hier_lr_dynamic,44,month,2018-07,shrink,1,0.0,0.0,0.0,1,1,LR đầy đủ
+hier_lr_dynamic,44,month,2018-07,merge,3,0.3333333333333333,0.5,0.4,2,0,LR đầy đủ
+hier_lr_dynamic,44,month,2018-07,split,8,0.625,1.0,0.7692307692307693,3,0,LR đầy đủ
+hier_lr_dynamic,44,month,2018-07,dissolve,129,0.9534883720930233,0.9609375,0.9571984435797667,6,0,LR đầy đủ
+hier_lr_dynamic,44,month,2018-08,stable,1,0.0,0.0,0.0,1,0,LR đầy đủ
+hier_lr_dynamic,44,month,2018-08,grow,3,0.6666666666666666,0.4,0.5,1,1,LR đầy đủ
+hier_lr_dynamic,44,month,2018-08,shrink,1,1.0,0.3333333333333333,0.5,0,0,LR đầy đủ
+hier_lr_dynamic,44,month,2018-08,merge,3,0.6666666666666666,0.5,0.5714285714285715,1,1,LR đầy đủ
+hier_lr_dynamic,44,month,2018-08,split,5,0.6,1.0,0.7499999999999999,2,0,LR đầy đủ
+hier_lr_dynamic,44,month,2018-08,dissolve,147,0.9659863945578231,0.9861111111111112,0.9759450171821307,5,0,LR đầy đủ
+hier_lr_dynamic,44,month,2018-09,stable,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,44,month,2018-09,grow,2,0.5,0.09090909090909091,0.15384615384615385,1,1,LR đầy đủ
+hier_lr_dynamic,44,month,2018-09,shrink,2,1.0,0.6666666666666666,0.8,0,0,LR đầy đủ
+hier_lr_dynamic,44,month,2018-09,merge,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,44,month,2018-09,split,4,0.75,1.0,0.8571428571428571,1,0,LR đầy đủ
+hier_lr_dynamic,44,month,2018-09,dissolve,135,0.9185185185185185,0.992,0.9538461538461539,11,0,LR đầy đủ
+A_no_dynamics_matched,42,lineage_history,available,stable,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,42,lineage_history,available,grow,2,0.0,0.0,0.0,2,1,LR bỏ D
+A_no_dynamics_matched,42,lineage_history,available,shrink,6,0.0,0.0,0.0,6,0,LR bỏ D
+A_no_dynamics_matched,42,lineage_history,available,merge,3,0.3333333333333333,1.0,0.5,2,1,LR bỏ D
+A_no_dynamics_matched,42,lineage_history,available,split,19,0.8421052631578947,0.7272727272727273,0.7804878048780488,3,0,LR bỏ D
+A_no_dynamics_matched,42,lineage_history,available,dissolve,75,0.6933333333333334,0.9629629629629629,0.806201550387597,23,0,LR bỏ D
+A_no_dynamics_matched,42,lineage_history,missing,stable,4,0.0,0.0,0.0,4,4,LR bỏ D
+A_no_dynamics_matched,42,lineage_history,missing,grow,17,0.0,0.0,0.0,17,16,LR bỏ D
+A_no_dynamics_matched,42,lineage_history,missing,shrink,19,0.5263157894736842,0.38461538461538464,0.4444444444444444,9,5,LR bỏ D
+A_no_dynamics_matched,42,lineage_history,missing,merge,12,0.08333333333333333,0.2,0.11764705882352941,11,10,LR bỏ D
+A_no_dynamics_matched,42,lineage_history,missing,split,20,0.4,0.6666666666666666,0.5,12,0,LR bỏ D
+A_no_dynamics_matched,42,lineage_history,missing,dissolve,1092,0.9853479853479854,0.9684968496849685,0.9768497503404449,16,0,LR bỏ D
+A_no_dynamics_matched,43,lineage_history,available,stable,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,43,lineage_history,available,grow,2,0.0,0.0,0.0,2,1,LR bỏ D
+A_no_dynamics_matched,43,lineage_history,available,shrink,6,0.0,0.0,0.0,6,0,LR bỏ D
+A_no_dynamics_matched,43,lineage_history,available,merge,3,0.3333333333333333,1.0,0.5,2,1,LR bỏ D
+A_no_dynamics_matched,43,lineage_history,available,split,19,0.8421052631578947,0.7272727272727273,0.7804878048780488,3,0,LR bỏ D
+A_no_dynamics_matched,43,lineage_history,available,dissolve,75,0.6933333333333334,0.9629629629629629,0.806201550387597,23,0,LR bỏ D
+A_no_dynamics_matched,43,lineage_history,missing,stable,4,0.0,0.0,0.0,4,4,LR bỏ D
+A_no_dynamics_matched,43,lineage_history,missing,grow,17,0.0,0.0,0.0,17,16,LR bỏ D
+A_no_dynamics_matched,43,lineage_history,missing,shrink,19,0.5263157894736842,0.38461538461538464,0.4444444444444444,9,5,LR bỏ D
+A_no_dynamics_matched,43,lineage_history,missing,merge,12,0.08333333333333333,0.2,0.11764705882352941,11,10,LR bỏ D
+A_no_dynamics_matched,43,lineage_history,missing,split,20,0.4,0.6666666666666666,0.5,12,0,LR bỏ D
+A_no_dynamics_matched,43,lineage_history,missing,dissolve,1092,0.9853479853479854,0.9684968496849685,0.9768497503404449,16,0,LR bỏ D
+A_no_dynamics_matched,44,lineage_history,available,stable,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,44,lineage_history,available,grow,2,0.0,0.0,0.0,2,1,LR bỏ D
+A_no_dynamics_matched,44,lineage_history,available,shrink,6,0.0,0.0,0.0,6,0,LR bỏ D
+A_no_dynamics_matched,44,lineage_history,available,merge,3,0.3333333333333333,1.0,0.5,2,1,LR bỏ D
+A_no_dynamics_matched,44,lineage_history,available,split,19,0.8421052631578947,0.7272727272727273,0.7804878048780488,3,0,LR bỏ D
+A_no_dynamics_matched,44,lineage_history,available,dissolve,75,0.6933333333333334,0.9629629629629629,0.806201550387597,23,0,LR bỏ D
+A_no_dynamics_matched,44,lineage_history,missing,stable,4,0.0,0.0,0.0,4,4,LR bỏ D
+A_no_dynamics_matched,44,lineage_history,missing,grow,17,0.0,0.0,0.0,17,16,LR bỏ D
+A_no_dynamics_matched,44,lineage_history,missing,shrink,19,0.5263157894736842,0.38461538461538464,0.4444444444444444,9,5,LR bỏ D
+A_no_dynamics_matched,44,lineage_history,missing,merge,12,0.08333333333333333,0.2,0.11764705882352941,11,10,LR bỏ D
+A_no_dynamics_matched,44,lineage_history,missing,split,20,0.4,0.6666666666666666,0.5,12,0,LR bỏ D
+A_no_dynamics_matched,44,lineage_history,missing,dissolve,1092,0.9853479853479854,0.9684968496849685,0.9768497503404449,16,0,LR bỏ D
+hier_hgb_dynamic,42,lineage_history,available,stable,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,42,lineage_history,available,grow,2,0.5,0.1111111111111111,0.1818181818181818,1,0,HGB
+hier_hgb_dynamic,42,lineage_history,available,shrink,6,0.3333333333333333,0.2857142857142857,0.30769230769230765,4,0,HGB
+hier_hgb_dynamic,42,lineage_history,available,merge,3,0.3333333333333333,0.125,0.18181818181818182,2,1,HGB
+hier_hgb_dynamic,42,lineage_history,available,split,19,0.7368421052631579,0.7777777777777778,0.7567567567567567,5,0,HGB
+hier_hgb_dynamic,42,lineage_history,available,dissolve,75,0.8266666666666667,0.9841269841269841,0.898550724637681,13,0,HGB
+hier_hgb_dynamic,42,lineage_history,missing,stable,4,0.0,0.0,0.0,4,3,HGB
+hier_hgb_dynamic,42,lineage_history,missing,grow,17,0.11764705882352941,0.10526315789473684,0.1111111111111111,15,12,HGB
+hier_hgb_dynamic,42,lineage_history,missing,shrink,19,0.631578947368421,0.42857142857142855,0.5106382978723404,7,4,HGB
+hier_hgb_dynamic,42,lineage_history,missing,merge,12,0.16666666666666666,0.06666666666666667,0.09523809523809522,10,8,HGB
+hier_hgb_dynamic,42,lineage_history,missing,split,20,0.4,0.8,0.5333333333333333,12,0,HGB
+hier_hgb_dynamic,42,lineage_history,missing,dissolve,1092,0.9615384615384616,0.9749303621169917,0.9681881051175657,42,0,HGB
+hier_hgb_dynamic,43,lineage_history,available,stable,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,43,lineage_history,available,grow,2,0.5,0.1111111111111111,0.1818181818181818,1,0,HGB
+hier_hgb_dynamic,43,lineage_history,available,shrink,6,0.3333333333333333,0.2857142857142857,0.30769230769230765,4,0,HGB
+hier_hgb_dynamic,43,lineage_history,available,merge,3,0.3333333333333333,0.125,0.18181818181818182,2,1,HGB
+hier_hgb_dynamic,43,lineage_history,available,split,19,0.7368421052631579,0.7777777777777778,0.7567567567567567,5,0,HGB
+hier_hgb_dynamic,43,lineage_history,available,dissolve,75,0.8266666666666667,0.9841269841269841,0.898550724637681,13,0,HGB
+hier_hgb_dynamic,43,lineage_history,missing,stable,4,0.0,0.0,0.0,4,3,HGB
+hier_hgb_dynamic,43,lineage_history,missing,grow,17,0.11764705882352941,0.10526315789473684,0.1111111111111111,15,12,HGB
+hier_hgb_dynamic,43,lineage_history,missing,shrink,19,0.631578947368421,0.42857142857142855,0.5106382978723404,7,4,HGB
+hier_hgb_dynamic,43,lineage_history,missing,merge,12,0.16666666666666666,0.06666666666666667,0.09523809523809522,10,8,HGB
+hier_hgb_dynamic,43,lineage_history,missing,split,20,0.4,0.8,0.5333333333333333,12,0,HGB
+hier_hgb_dynamic,43,lineage_history,missing,dissolve,1092,0.9615384615384616,0.9749303621169917,0.9681881051175657,42,0,HGB
+hier_hgb_dynamic,44,lineage_history,available,stable,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,44,lineage_history,available,grow,2,0.5,0.1111111111111111,0.1818181818181818,1,0,HGB
+hier_hgb_dynamic,44,lineage_history,available,shrink,6,0.3333333333333333,0.2857142857142857,0.30769230769230765,4,0,HGB
+hier_hgb_dynamic,44,lineage_history,available,merge,3,0.3333333333333333,0.125,0.18181818181818182,2,1,HGB
+hier_hgb_dynamic,44,lineage_history,available,split,19,0.7368421052631579,0.7777777777777778,0.7567567567567567,5,0,HGB
+hier_hgb_dynamic,44,lineage_history,available,dissolve,75,0.8266666666666667,0.9841269841269841,0.898550724637681,13,0,HGB
+hier_hgb_dynamic,44,lineage_history,missing,stable,4,0.0,0.0,0.0,4,3,HGB
+hier_hgb_dynamic,44,lineage_history,missing,grow,17,0.11764705882352941,0.10526315789473684,0.1111111111111111,15,12,HGB
+hier_hgb_dynamic,44,lineage_history,missing,shrink,19,0.631578947368421,0.42857142857142855,0.5106382978723404,7,4,HGB
+hier_hgb_dynamic,44,lineage_history,missing,merge,12,0.16666666666666666,0.06666666666666667,0.09523809523809522,10,8,HGB
+hier_hgb_dynamic,44,lineage_history,missing,split,20,0.4,0.8,0.5333333333333333,12,0,HGB
+hier_hgb_dynamic,44,lineage_history,missing,dissolve,1092,0.9615384615384616,0.9749303621169917,0.9681881051175657,42,0,HGB
+hier_lr_dynamic,42,lineage_history,available,stable,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,42,lineage_history,available,grow,2,0.5,0.07692307692307693,0.13333333333333336,1,0,LR đầy đủ
+hier_lr_dynamic,42,lineage_history,available,shrink,6,0.3333333333333333,0.4,0.3636363636363636,4,0,LR đầy đủ
+hier_lr_dynamic,42,lineage_history,available,merge,3,0.3333333333333333,0.3333333333333333,0.3333333333333333,2,0,LR đầy đủ
+hier_lr_dynamic,42,lineage_history,available,split,19,0.8421052631578947,0.8,0.8205128205128205,3,0,LR đầy đủ
+hier_lr_dynamic,42,lineage_history,available,dissolve,75,0.8133333333333334,1.0,0.8970588235294117,14,0,LR đầy đủ
+hier_lr_dynamic,42,lineage_history,missing,stable,4,0.0,0.0,0.0,4,3,LR đầy đủ
+hier_lr_dynamic,42,lineage_history,missing,grow,17,0.11764705882352941,0.06666666666666667,0.0851063829787234,15,14,LR đầy đủ
+hier_lr_dynamic,42,lineage_history,missing,shrink,19,0.5263157894736842,0.4166666666666667,0.46511627906976744,9,6,LR đầy đủ
+hier_lr_dynamic,42,lineage_history,missing,merge,12,0.16666666666666666,0.25,0.2,10,8,LR đầy đủ
+hier_lr_dynamic,42,lineage_history,missing,split,20,0.55,0.7857142857142857,0.6470588235294117,9,0,LR đầy đủ
+hier_lr_dynamic,42,lineage_history,missing,dissolve,1092,0.9542124542124543,0.9711090400745573,0.9625866050808314,50,0,LR đầy đủ
+hier_lr_dynamic,43,lineage_history,available,stable,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,43,lineage_history,available,grow,2,0.5,0.07692307692307693,0.13333333333333336,1,0,LR đầy đủ
+hier_lr_dynamic,43,lineage_history,available,shrink,6,0.3333333333333333,0.4,0.3636363636363636,4,0,LR đầy đủ
+hier_lr_dynamic,43,lineage_history,available,merge,3,0.3333333333333333,0.3333333333333333,0.3333333333333333,2,0,LR đầy đủ
+hier_lr_dynamic,43,lineage_history,available,split,19,0.8421052631578947,0.8,0.8205128205128205,3,0,LR đầy đủ
+hier_lr_dynamic,43,lineage_history,available,dissolve,75,0.8133333333333334,1.0,0.8970588235294117,14,0,LR đầy đủ
+hier_lr_dynamic,43,lineage_history,missing,stable,4,0.0,0.0,0.0,4,3,LR đầy đủ
+hier_lr_dynamic,43,lineage_history,missing,grow,17,0.11764705882352941,0.06666666666666667,0.0851063829787234,15,14,LR đầy đủ
+hier_lr_dynamic,43,lineage_history,missing,shrink,19,0.5263157894736842,0.4166666666666667,0.46511627906976744,9,6,LR đầy đủ
+hier_lr_dynamic,43,lineage_history,missing,merge,12,0.16666666666666666,0.25,0.2,10,8,LR đầy đủ
+hier_lr_dynamic,43,lineage_history,missing,split,20,0.55,0.7857142857142857,0.6470588235294117,9,0,LR đầy đủ
+hier_lr_dynamic,43,lineage_history,missing,dissolve,1092,0.9542124542124543,0.9711090400745573,0.9625866050808314,50,0,LR đầy đủ
+hier_lr_dynamic,44,lineage_history,available,stable,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,44,lineage_history,available,grow,2,0.5,0.07692307692307693,0.13333333333333336,1,0,LR đầy đủ
+hier_lr_dynamic,44,lineage_history,available,shrink,6,0.3333333333333333,0.4,0.3636363636363636,4,0,LR đầy đủ
+hier_lr_dynamic,44,lineage_history,available,merge,3,0.3333333333333333,0.3333333333333333,0.3333333333333333,2,0,LR đầy đủ
+hier_lr_dynamic,44,lineage_history,available,split,19,0.8421052631578947,0.8,0.8205128205128205,3,0,LR đầy đủ
+hier_lr_dynamic,44,lineage_history,available,dissolve,75,0.8133333333333334,1.0,0.8970588235294117,14,0,LR đầy đủ
+hier_lr_dynamic,44,lineage_history,missing,stable,4,0.0,0.0,0.0,4,3,LR đầy đủ
+hier_lr_dynamic,44,lineage_history,missing,grow,17,0.11764705882352941,0.06666666666666667,0.0851063829787234,15,14,LR đầy đủ
+hier_lr_dynamic,44,lineage_history,missing,shrink,19,0.5263157894736842,0.4166666666666667,0.46511627906976744,9,6,LR đầy đủ
+hier_lr_dynamic,44,lineage_history,missing,merge,12,0.16666666666666666,0.25,0.2,10,8,LR đầy đủ
+hier_lr_dynamic,44,lineage_history,missing,split,20,0.55,0.7857142857142857,0.6470588235294117,9,0,LR đầy đủ
+hier_lr_dynamic,44,lineage_history,missing,dissolve,1092,0.9542124542124543,0.9711090400745573,0.9625866050808314,50,0,LR đầy đủ
+A_no_dynamics_matched,42,member_activity_history,available,stable,3,0.0,0.0,0.0,3,3,LR bỏ D
+A_no_dynamics_matched,42,member_activity_history,available,grow,11,0.0,0.0,0.0,11,9,LR bỏ D
+A_no_dynamics_matched,42,member_activity_history,available,shrink,24,0.4166666666666667,0.3448275862068966,0.37735849056603776,14,4,LR bỏ D
+A_no_dynamics_matched,42,member_activity_history,available,merge,8,0.125,0.2,0.15384615384615385,7,6,LR bỏ D
+A_no_dynamics_matched,42,member_activity_history,available,split,39,0.6153846153846154,0.7058823529411765,0.6575342465753424,15,0,LR bỏ D
+A_no_dynamics_matched,42,member_activity_history,available,dissolve,645,0.9457364341085271,0.9651898734177216,0.9553641346906813,35,0,LR bỏ D
+A_no_dynamics_matched,42,member_activity_history,missing_or_not_recorded,stable,1,0.0,0.0,0.0,1,1,LR bỏ D
+A_no_dynamics_matched,42,member_activity_history,missing_or_not_recorded,grow,8,0.0,0.0,0.0,8,8,LR bỏ D
+A_no_dynamics_matched,42,member_activity_history,missing_or_not_recorded,shrink,1,0.0,0.0,0.0,1,1,LR bỏ D
+A_no_dynamics_matched,42,member_activity_history,missing_or_not_recorded,merge,7,0.14285714285714285,1.0,0.25,6,5,LR bỏ D
+A_no_dynamics_matched,42,member_activity_history,missing_or_not_recorded,split,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,42,member_activity_history,missing_or_not_recorded,dissolve,522,0.9923371647509579,0.9718574108818011,0.9819905213270143,4,0,LR bỏ D
+A_no_dynamics_matched,43,member_activity_history,available,stable,3,0.0,0.0,0.0,3,3,LR bỏ D
+A_no_dynamics_matched,43,member_activity_history,available,grow,11,0.0,0.0,0.0,11,9,LR bỏ D
+A_no_dynamics_matched,43,member_activity_history,available,shrink,24,0.4166666666666667,0.3448275862068966,0.37735849056603776,14,4,LR bỏ D
+A_no_dynamics_matched,43,member_activity_history,available,merge,8,0.125,0.2,0.15384615384615385,7,6,LR bỏ D
+A_no_dynamics_matched,43,member_activity_history,available,split,39,0.6153846153846154,0.7058823529411765,0.6575342465753424,15,0,LR bỏ D
+A_no_dynamics_matched,43,member_activity_history,available,dissolve,645,0.9457364341085271,0.9651898734177216,0.9553641346906813,35,0,LR bỏ D
+A_no_dynamics_matched,43,member_activity_history,missing_or_not_recorded,stable,1,0.0,0.0,0.0,1,1,LR bỏ D
+A_no_dynamics_matched,43,member_activity_history,missing_or_not_recorded,grow,8,0.0,0.0,0.0,8,8,LR bỏ D
+A_no_dynamics_matched,43,member_activity_history,missing_or_not_recorded,shrink,1,0.0,0.0,0.0,1,1,LR bỏ D
+A_no_dynamics_matched,43,member_activity_history,missing_or_not_recorded,merge,7,0.14285714285714285,1.0,0.25,6,5,LR bỏ D
+A_no_dynamics_matched,43,member_activity_history,missing_or_not_recorded,split,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,43,member_activity_history,missing_or_not_recorded,dissolve,522,0.9923371647509579,0.9718574108818011,0.9819905213270143,4,0,LR bỏ D
+A_no_dynamics_matched,44,member_activity_history,available,stable,3,0.0,0.0,0.0,3,3,LR bỏ D
+A_no_dynamics_matched,44,member_activity_history,available,grow,11,0.0,0.0,0.0,11,9,LR bỏ D
+A_no_dynamics_matched,44,member_activity_history,available,shrink,24,0.4166666666666667,0.3448275862068966,0.37735849056603776,14,4,LR bỏ D
+A_no_dynamics_matched,44,member_activity_history,available,merge,8,0.125,0.2,0.15384615384615385,7,6,LR bỏ D
+A_no_dynamics_matched,44,member_activity_history,available,split,39,0.6153846153846154,0.7058823529411765,0.6575342465753424,15,0,LR bỏ D
+A_no_dynamics_matched,44,member_activity_history,available,dissolve,645,0.9457364341085271,0.9651898734177216,0.9553641346906813,35,0,LR bỏ D
+A_no_dynamics_matched,44,member_activity_history,missing_or_not_recorded,stable,1,0.0,0.0,0.0,1,1,LR bỏ D
+A_no_dynamics_matched,44,member_activity_history,missing_or_not_recorded,grow,8,0.0,0.0,0.0,8,8,LR bỏ D
+A_no_dynamics_matched,44,member_activity_history,missing_or_not_recorded,shrink,1,0.0,0.0,0.0,1,1,LR bỏ D
+A_no_dynamics_matched,44,member_activity_history,missing_or_not_recorded,merge,7,0.14285714285714285,1.0,0.25,6,5,LR bỏ D
+A_no_dynamics_matched,44,member_activity_history,missing_or_not_recorded,split,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,44,member_activity_history,missing_or_not_recorded,dissolve,522,0.9923371647509579,0.9718574108818011,0.9819905213270143,4,0,LR bỏ D
+hier_hgb_dynamic,42,member_activity_history,available,stable,3,0.0,0.0,0.0,3,2,HGB
+hier_hgb_dynamic,42,member_activity_history,available,grow,11,0.2727272727272727,0.11538461538461539,0.16216216216216214,8,4,HGB
+hier_hgb_dynamic,42,member_activity_history,available,shrink,24,0.5833333333333334,0.4,0.4745762711864407,10,3,HGB
+hier_hgb_dynamic,42,member_activity_history,available,merge,8,0.25,0.05555555555555555,0.0909090909090909,6,4,HGB
+hier_hgb_dynamic,42,member_activity_history,available,split,39,0.5641025641025641,0.7857142857142857,0.6567164179104477,17,0,HGB
+hier_hgb_dynamic,42,member_activity_history,available,dissolve,645,0.9178294573643411,0.9785123966942149,0.9472,53,0,HGB
+hier_hgb_dynamic,42,member_activity_history,missing_or_not_recorded,stable,1,0.0,0.0,0.0,1,1,HGB
+hier_hgb_dynamic,42,member_activity_history,missing_or_not_recorded,grow,8,0.0,0.0,0.0,8,8,HGB
+hier_hgb_dynamic,42,member_activity_history,missing_or_not_recorded,shrink,1,0.0,0.0,0.0,1,1,HGB
+hier_hgb_dynamic,42,member_activity_history,missing_or_not_recorded,merge,7,0.14285714285714285,0.5,0.22222222222222224,6,5,HGB
+hier_hgb_dynamic,42,member_activity_history,missing_or_not_recorded,split,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,42,member_activity_history,missing_or_not_recorded,dissolve,522,0.9961685823754789,0.9719626168224299,0.9839167455061494,2,0,HGB
+hier_hgb_dynamic,43,member_activity_history,available,stable,3,0.0,0.0,0.0,3,2,HGB
+hier_hgb_dynamic,43,member_activity_history,available,grow,11,0.2727272727272727,0.11538461538461539,0.16216216216216214,8,4,HGB
+hier_hgb_dynamic,43,member_activity_history,available,shrink,24,0.5833333333333334,0.4,0.4745762711864407,10,3,HGB
+hier_hgb_dynamic,43,member_activity_history,available,merge,8,0.25,0.05555555555555555,0.0909090909090909,6,4,HGB
+hier_hgb_dynamic,43,member_activity_history,available,split,39,0.5641025641025641,0.7857142857142857,0.6567164179104477,17,0,HGB
+hier_hgb_dynamic,43,member_activity_history,available,dissolve,645,0.9178294573643411,0.9785123966942149,0.9472,53,0,HGB
+hier_hgb_dynamic,43,member_activity_history,missing_or_not_recorded,stable,1,0.0,0.0,0.0,1,1,HGB
+hier_hgb_dynamic,43,member_activity_history,missing_or_not_recorded,grow,8,0.0,0.0,0.0,8,8,HGB
+hier_hgb_dynamic,43,member_activity_history,missing_or_not_recorded,shrink,1,0.0,0.0,0.0,1,1,HGB
+hier_hgb_dynamic,43,member_activity_history,missing_or_not_recorded,merge,7,0.14285714285714285,0.5,0.22222222222222224,6,5,HGB
+hier_hgb_dynamic,43,member_activity_history,missing_or_not_recorded,split,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,43,member_activity_history,missing_or_not_recorded,dissolve,522,0.9961685823754789,0.9719626168224299,0.9839167455061494,2,0,HGB
+hier_hgb_dynamic,44,member_activity_history,available,stable,3,0.0,0.0,0.0,3,2,HGB
+hier_hgb_dynamic,44,member_activity_history,available,grow,11,0.2727272727272727,0.11538461538461539,0.16216216216216214,8,4,HGB
+hier_hgb_dynamic,44,member_activity_history,available,shrink,24,0.5833333333333334,0.4,0.4745762711864407,10,3,HGB
+hier_hgb_dynamic,44,member_activity_history,available,merge,8,0.25,0.05555555555555555,0.0909090909090909,6,4,HGB
+hier_hgb_dynamic,44,member_activity_history,available,split,39,0.5641025641025641,0.7857142857142857,0.6567164179104477,17,0,HGB
+hier_hgb_dynamic,44,member_activity_history,available,dissolve,645,0.9178294573643411,0.9785123966942149,0.9472,53,0,HGB
+hier_hgb_dynamic,44,member_activity_history,missing_or_not_recorded,stable,1,0.0,0.0,0.0,1,1,HGB
+hier_hgb_dynamic,44,member_activity_history,missing_or_not_recorded,grow,8,0.0,0.0,0.0,8,8,HGB
+hier_hgb_dynamic,44,member_activity_history,missing_or_not_recorded,shrink,1,0.0,0.0,0.0,1,1,HGB
+hier_hgb_dynamic,44,member_activity_history,missing_or_not_recorded,merge,7,0.14285714285714285,0.5,0.22222222222222224,6,5,HGB
+hier_hgb_dynamic,44,member_activity_history,missing_or_not_recorded,split,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,44,member_activity_history,missing_or_not_recorded,dissolve,522,0.9961685823754789,0.9719626168224299,0.9839167455061494,2,0,HGB
+hier_lr_dynamic,42,member_activity_history,available,stable,3,0.0,0.0,0.0,3,2,LR đầy đủ
+hier_lr_dynamic,42,member_activity_history,available,grow,11,0.2727272727272727,0.07317073170731707,0.11538461538461536,8,6,LR đầy đủ
+hier_lr_dynamic,42,member_activity_history,available,shrink,24,0.5,0.41379310344827586,0.4528301886792453,12,5,LR đầy đủ
+hier_lr_dynamic,42,member_activity_history,available,merge,8,0.25,0.2222222222222222,0.23529411764705882,6,3,LR đầy đủ
+hier_lr_dynamic,42,member_activity_history,available,split,39,0.6923076923076923,0.7941176470588235,0.7397260273972601,12,0,LR đầy đủ
+hier_lr_dynamic,42,member_activity_history,available,dissolve,645,0.9131782945736434,0.9735537190082645,0.9424,56,0,LR đầy đủ
+hier_lr_dynamic,42,member_activity_history,missing_or_not_recorded,stable,1,0.0,0.0,0.0,1,1,LR đầy đủ
+hier_lr_dynamic,42,member_activity_history,missing_or_not_recorded,grow,8,0.0,0.0,0.0,8,8,LR đầy đủ
+hier_lr_dynamic,42,member_activity_history,missing_or_not_recorded,shrink,1,0.0,0.0,0.0,1,1,LR đầy đủ
+hier_lr_dynamic,42,member_activity_history,missing_or_not_recorded,merge,7,0.14285714285714285,0.5,0.22222222222222224,6,5,LR đầy đủ
+hier_lr_dynamic,42,member_activity_history,missing_or_not_recorded,split,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,42,member_activity_history,missing_or_not_recorded,dissolve,522,0.9846743295019157,0.9716446124763705,0.9781160799238819,8,0,LR đầy đủ
+hier_lr_dynamic,43,member_activity_history,available,stable,3,0.0,0.0,0.0,3,2,LR đầy đủ
+hier_lr_dynamic,43,member_activity_history,available,grow,11,0.2727272727272727,0.07317073170731707,0.11538461538461536,8,6,LR đầy đủ
+hier_lr_dynamic,43,member_activity_history,available,shrink,24,0.5,0.41379310344827586,0.4528301886792453,12,5,LR đầy đủ
+hier_lr_dynamic,43,member_activity_history,available,merge,8,0.25,0.2222222222222222,0.23529411764705882,6,3,LR đầy đủ
+hier_lr_dynamic,43,member_activity_history,available,split,39,0.6923076923076923,0.7941176470588235,0.7397260273972601,12,0,LR đầy đủ
+hier_lr_dynamic,43,member_activity_history,available,dissolve,645,0.9131782945736434,0.9735537190082645,0.9424,56,0,LR đầy đủ
+hier_lr_dynamic,43,member_activity_history,missing_or_not_recorded,stable,1,0.0,0.0,0.0,1,1,LR đầy đủ
+hier_lr_dynamic,43,member_activity_history,missing_or_not_recorded,grow,8,0.0,0.0,0.0,8,8,LR đầy đủ
+hier_lr_dynamic,43,member_activity_history,missing_or_not_recorded,shrink,1,0.0,0.0,0.0,1,1,LR đầy đủ
+hier_lr_dynamic,43,member_activity_history,missing_or_not_recorded,merge,7,0.14285714285714285,0.5,0.22222222222222224,6,5,LR đầy đủ
+hier_lr_dynamic,43,member_activity_history,missing_or_not_recorded,split,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,43,member_activity_history,missing_or_not_recorded,dissolve,522,0.9846743295019157,0.9716446124763705,0.9781160799238819,8,0,LR đầy đủ
+hier_lr_dynamic,44,member_activity_history,available,stable,3,0.0,0.0,0.0,3,2,LR đầy đủ
+hier_lr_dynamic,44,member_activity_history,available,grow,11,0.2727272727272727,0.07317073170731707,0.11538461538461536,8,6,LR đầy đủ
+hier_lr_dynamic,44,member_activity_history,available,shrink,24,0.5,0.41379310344827586,0.4528301886792453,12,5,LR đầy đủ
+hier_lr_dynamic,44,member_activity_history,available,merge,8,0.25,0.2222222222222222,0.23529411764705882,6,3,LR đầy đủ
+hier_lr_dynamic,44,member_activity_history,available,split,39,0.6923076923076923,0.7941176470588235,0.7397260273972601,12,0,LR đầy đủ
+hier_lr_dynamic,44,member_activity_history,available,dissolve,645,0.9131782945736434,0.9735537190082645,0.9424,56,0,LR đầy đủ
+hier_lr_dynamic,44,member_activity_history,missing_or_not_recorded,stable,1,0.0,0.0,0.0,1,1,LR đầy đủ
+hier_lr_dynamic,44,member_activity_history,missing_or_not_recorded,grow,8,0.0,0.0,0.0,8,8,LR đầy đủ
+hier_lr_dynamic,44,member_activity_history,missing_or_not_recorded,shrink,1,0.0,0.0,0.0,1,1,LR đầy đủ
+hier_lr_dynamic,44,member_activity_history,missing_or_not_recorded,merge,7,0.14285714285714285,0.5,0.22222222222222224,6,5,LR đầy đủ
+hier_lr_dynamic,44,member_activity_history,missing_or_not_recorded,split,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,44,member_activity_history,missing_or_not_recorded,dissolve,522,0.9846743295019157,0.9716446124763705,0.9781160799238819,8,0,LR đầy đủ
+A_no_dynamics_matched,42,size_history,2|available,stable,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,42,size_history,2|available,grow,1,0.0,0.0,0.0,1,0,LR bỏ D
+A_no_dynamics_matched,42,size_history,2|available,shrink,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,42,size_history,2|available,merge,2,0.0,0.0,0.0,2,1,LR bỏ D
+A_no_dynamics_matched,42,size_history,2|available,split,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,42,size_history,2|available,dissolve,65,0.7384615384615385,0.9795918367346939,0.8421052631578948,17,0,LR bỏ D
+A_no_dynamics_matched,42,size_history,2|missing,stable,4,0.0,0.0,0.0,4,4,LR bỏ D
+A_no_dynamics_matched,42,size_history,2|missing,grow,12,0.0,0.0,0.0,12,11,LR bỏ D
+A_no_dynamics_matched,42,size_history,2|missing,shrink,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,42,size_history,2|missing,merge,9,0.1111111111111111,0.5,0.1818181818181818,8,7,LR bỏ D
+A_no_dynamics_matched,42,size_history,2|missing,split,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,42,size_history,2|missing,dissolve,764,0.9882198952879581,0.9716859716859717,0.9798831927319922,9,0,LR bỏ D
+A_no_dynamics_matched,42,size_history,3-4|available,stable,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,42,size_history,3-4|available,grow,1,0.0,0.0,0.0,1,1,LR bỏ D
+A_no_dynamics_matched,42,size_history,3-4|available,shrink,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,42,size_history,3-4|available,merge,1,1.0,1.0,1.0,0,0,LR bỏ D
+A_no_dynamics_matched,42,size_history,3-4|available,split,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,42,size_history,3-4|available,dissolve,9,0.3333333333333333,0.75,0.46153846153846156,6,0,LR bỏ D
+A_no_dynamics_matched,42,size_history,3-4|missing,stable,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,42,size_history,3-4|missing,grow,5,0.0,0.0,0.0,5,5,LR bỏ D
+A_no_dynamics_matched,42,size_history,3-4|missing,shrink,2,0.0,0.0,0.0,2,2,LR bỏ D
+A_no_dynamics_matched,42,size_history,3-4|missing,merge,3,0.0,0.0,0.0,3,3,LR bỏ D
+A_no_dynamics_matched,42,size_history,3-4|missing,split,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,42,size_history,3-4|missing,dissolve,218,1.0,0.956140350877193,0.9775784753363228,0,0,LR bỏ D
+A_no_dynamics_matched,42,size_history,5-20|available,stable,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,42,size_history,5-20|available,grow,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,42,size_history,5-20|available,shrink,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,42,size_history,5-20|available,merge,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,42,size_history,5-20|available,split,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,42,size_history,5-20|available,dissolve,1,1.0,1.0,1.0,0,0,LR bỏ D
+A_no_dynamics_matched,42,size_history,5-20|missing,stable,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,42,size_history,5-20|missing,grow,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,42,size_history,5-20|missing,shrink,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,42,size_history,5-20|missing,merge,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,42,size_history,5-20|missing,split,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,42,size_history,5-20|missing,dissolve,96,0.9895833333333334,1.0,0.9947643979057591,1,0,LR bỏ D
+A_no_dynamics_matched,42,size_history,>20|available,stable,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,42,size_history,>20|available,grow,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,42,size_history,>20|available,shrink,6,0.0,0.0,0.0,6,0,LR bỏ D
+A_no_dynamics_matched,42,size_history,>20|available,merge,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,42,size_history,>20|available,split,19,0.8421052631578947,0.7272727272727273,0.7804878048780488,3,0,LR bỏ D
+A_no_dynamics_matched,42,size_history,>20|available,dissolve,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,42,size_history,>20|missing,stable,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,42,size_history,>20|missing,grow,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,42,size_history,>20|missing,shrink,17,0.5882352941176471,0.38461538461538464,0.46511627906976744,7,3,LR bỏ D
+A_no_dynamics_matched,42,size_history,>20|missing,merge,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,42,size_history,>20|missing,split,20,0.4,0.6666666666666666,0.5,12,0,LR bỏ D
+A_no_dynamics_matched,42,size_history,>20|missing,dissolve,14,0.5714285714285714,0.7272727272727273,0.64,6,0,LR bỏ D
+A_no_dynamics_matched,43,size_history,2|available,stable,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,43,size_history,2|available,grow,1,0.0,0.0,0.0,1,0,LR bỏ D
+A_no_dynamics_matched,43,size_history,2|available,shrink,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,43,size_history,2|available,merge,2,0.0,0.0,0.0,2,1,LR bỏ D
+A_no_dynamics_matched,43,size_history,2|available,split,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,43,size_history,2|available,dissolve,65,0.7384615384615385,0.9795918367346939,0.8421052631578948,17,0,LR bỏ D
+A_no_dynamics_matched,43,size_history,2|missing,stable,4,0.0,0.0,0.0,4,4,LR bỏ D
+A_no_dynamics_matched,43,size_history,2|missing,grow,12,0.0,0.0,0.0,12,11,LR bỏ D
+A_no_dynamics_matched,43,size_history,2|missing,shrink,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,43,size_history,2|missing,merge,9,0.1111111111111111,0.5,0.1818181818181818,8,7,LR bỏ D
+A_no_dynamics_matched,43,size_history,2|missing,split,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,43,size_history,2|missing,dissolve,764,0.9882198952879581,0.9716859716859717,0.9798831927319922,9,0,LR bỏ D
+A_no_dynamics_matched,43,size_history,3-4|available,stable,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,43,size_history,3-4|available,grow,1,0.0,0.0,0.0,1,1,LR bỏ D
+A_no_dynamics_matched,43,size_history,3-4|available,shrink,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,43,size_history,3-4|available,merge,1,1.0,1.0,1.0,0,0,LR bỏ D
+A_no_dynamics_matched,43,size_history,3-4|available,split,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,43,size_history,3-4|available,dissolve,9,0.3333333333333333,0.75,0.46153846153846156,6,0,LR bỏ D
+A_no_dynamics_matched,43,size_history,3-4|missing,stable,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,43,size_history,3-4|missing,grow,5,0.0,0.0,0.0,5,5,LR bỏ D
+A_no_dynamics_matched,43,size_history,3-4|missing,shrink,2,0.0,0.0,0.0,2,2,LR bỏ D
+A_no_dynamics_matched,43,size_history,3-4|missing,merge,3,0.0,0.0,0.0,3,3,LR bỏ D
+A_no_dynamics_matched,43,size_history,3-4|missing,split,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,43,size_history,3-4|missing,dissolve,218,1.0,0.956140350877193,0.9775784753363228,0,0,LR bỏ D
+A_no_dynamics_matched,43,size_history,5-20|available,stable,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,43,size_history,5-20|available,grow,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,43,size_history,5-20|available,shrink,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,43,size_history,5-20|available,merge,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,43,size_history,5-20|available,split,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,43,size_history,5-20|available,dissolve,1,1.0,1.0,1.0,0,0,LR bỏ D
+A_no_dynamics_matched,43,size_history,5-20|missing,stable,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,43,size_history,5-20|missing,grow,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,43,size_history,5-20|missing,shrink,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,43,size_history,5-20|missing,merge,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,43,size_history,5-20|missing,split,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,43,size_history,5-20|missing,dissolve,96,0.9895833333333334,1.0,0.9947643979057591,1,0,LR bỏ D
+A_no_dynamics_matched,43,size_history,>20|available,stable,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,43,size_history,>20|available,grow,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,43,size_history,>20|available,shrink,6,0.0,0.0,0.0,6,0,LR bỏ D
+A_no_dynamics_matched,43,size_history,>20|available,merge,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,43,size_history,>20|available,split,19,0.8421052631578947,0.7272727272727273,0.7804878048780488,3,0,LR bỏ D
+A_no_dynamics_matched,43,size_history,>20|available,dissolve,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,43,size_history,>20|missing,stable,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,43,size_history,>20|missing,grow,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,43,size_history,>20|missing,shrink,17,0.5882352941176471,0.38461538461538464,0.46511627906976744,7,3,LR bỏ D
+A_no_dynamics_matched,43,size_history,>20|missing,merge,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,43,size_history,>20|missing,split,20,0.4,0.6666666666666666,0.5,12,0,LR bỏ D
+A_no_dynamics_matched,43,size_history,>20|missing,dissolve,14,0.5714285714285714,0.7272727272727273,0.64,6,0,LR bỏ D
+A_no_dynamics_matched,44,size_history,2|available,stable,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,44,size_history,2|available,grow,1,0.0,0.0,0.0,1,0,LR bỏ D
+A_no_dynamics_matched,44,size_history,2|available,shrink,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,44,size_history,2|available,merge,2,0.0,0.0,0.0,2,1,LR bỏ D
+A_no_dynamics_matched,44,size_history,2|available,split,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,44,size_history,2|available,dissolve,65,0.7384615384615385,0.9795918367346939,0.8421052631578948,17,0,LR bỏ D
+A_no_dynamics_matched,44,size_history,2|missing,stable,4,0.0,0.0,0.0,4,4,LR bỏ D
+A_no_dynamics_matched,44,size_history,2|missing,grow,12,0.0,0.0,0.0,12,11,LR bỏ D
+A_no_dynamics_matched,44,size_history,2|missing,shrink,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,44,size_history,2|missing,merge,9,0.1111111111111111,0.5,0.1818181818181818,8,7,LR bỏ D
+A_no_dynamics_matched,44,size_history,2|missing,split,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,44,size_history,2|missing,dissolve,764,0.9882198952879581,0.9716859716859717,0.9798831927319922,9,0,LR bỏ D
+A_no_dynamics_matched,44,size_history,3-4|available,stable,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,44,size_history,3-4|available,grow,1,0.0,0.0,0.0,1,1,LR bỏ D
+A_no_dynamics_matched,44,size_history,3-4|available,shrink,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,44,size_history,3-4|available,merge,1,1.0,1.0,1.0,0,0,LR bỏ D
+A_no_dynamics_matched,44,size_history,3-4|available,split,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,44,size_history,3-4|available,dissolve,9,0.3333333333333333,0.75,0.46153846153846156,6,0,LR bỏ D
+A_no_dynamics_matched,44,size_history,3-4|missing,stable,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,44,size_history,3-4|missing,grow,5,0.0,0.0,0.0,5,5,LR bỏ D
+A_no_dynamics_matched,44,size_history,3-4|missing,shrink,2,0.0,0.0,0.0,2,2,LR bỏ D
+A_no_dynamics_matched,44,size_history,3-4|missing,merge,3,0.0,0.0,0.0,3,3,LR bỏ D
+A_no_dynamics_matched,44,size_history,3-4|missing,split,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,44,size_history,3-4|missing,dissolve,218,1.0,0.956140350877193,0.9775784753363228,0,0,LR bỏ D
+A_no_dynamics_matched,44,size_history,5-20|available,stable,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,44,size_history,5-20|available,grow,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,44,size_history,5-20|available,shrink,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,44,size_history,5-20|available,merge,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,44,size_history,5-20|available,split,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,44,size_history,5-20|available,dissolve,1,1.0,1.0,1.0,0,0,LR bỏ D
+A_no_dynamics_matched,44,size_history,5-20|missing,stable,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,44,size_history,5-20|missing,grow,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,44,size_history,5-20|missing,shrink,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,44,size_history,5-20|missing,merge,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,44,size_history,5-20|missing,split,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,44,size_history,5-20|missing,dissolve,96,0.9895833333333334,1.0,0.9947643979057591,1,0,LR bỏ D
+A_no_dynamics_matched,44,size_history,>20|available,stable,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,44,size_history,>20|available,grow,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,44,size_history,>20|available,shrink,6,0.0,0.0,0.0,6,0,LR bỏ D
+A_no_dynamics_matched,44,size_history,>20|available,merge,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,44,size_history,>20|available,split,19,0.8421052631578947,0.7272727272727273,0.7804878048780488,3,0,LR bỏ D
+A_no_dynamics_matched,44,size_history,>20|available,dissolve,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,44,size_history,>20|missing,stable,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,44,size_history,>20|missing,grow,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,44,size_history,>20|missing,shrink,17,0.5882352941176471,0.38461538461538464,0.46511627906976744,7,3,LR bỏ D
+A_no_dynamics_matched,44,size_history,>20|missing,merge,0,0.0,0.0,0.0,0,0,LR bỏ D
+A_no_dynamics_matched,44,size_history,>20|missing,split,20,0.4,0.6666666666666666,0.5,12,0,LR bỏ D
+A_no_dynamics_matched,44,size_history,>20|missing,dissolve,14,0.5714285714285714,0.7272727272727273,0.64,6,0,LR bỏ D
+hier_hgb_dynamic,42,size_history,2|available,stable,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,42,size_history,2|available,grow,1,0.0,0.0,0.0,1,0,HGB
+hier_hgb_dynamic,42,size_history,2|available,shrink,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,42,size_history,2|available,merge,2,0.5,0.16666666666666666,0.25,1,0,HGB
+hier_hgb_dynamic,42,size_history,2|available,split,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,42,size_history,2|available,dissolve,65,0.8615384615384616,1.0,0.9256198347107438,9,0,HGB
+hier_hgb_dynamic,42,size_history,2|missing,stable,4,0.0,0.0,0.0,4,3,HGB
+hier_hgb_dynamic,42,size_history,2|missing,grow,12,0.16666666666666666,0.13333333333333333,0.14814814814814814,10,7,HGB
+hier_hgb_dynamic,42,size_history,2|missing,shrink,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,42,size_history,2|missing,merge,9,0.1111111111111111,0.041666666666666664,0.06060606060606061,8,7,HGB
+hier_hgb_dynamic,42,size_history,2|missing,split,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,42,size_history,2|missing,dissolve,764,0.9594240837696335,0.9773333333333334,0.9682959048877147,31,0,HGB
+hier_hgb_dynamic,42,size_history,3-4|available,stable,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,42,size_history,3-4|available,grow,1,1.0,0.3333333333333333,0.5,0,0,HGB
+hier_hgb_dynamic,42,size_history,3-4|available,shrink,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,42,size_history,3-4|available,merge,1,0.0,0.0,0.0,1,1,HGB
+hier_hgb_dynamic,42,size_history,3-4|available,split,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,42,size_history,3-4|available,dissolve,9,0.5555555555555556,0.8333333333333334,0.6666666666666667,4,0,HGB
+hier_hgb_dynamic,42,size_history,3-4|missing,stable,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,42,size_history,3-4|missing,grow,5,0.0,0.0,0.0,5,5,HGB
+hier_hgb_dynamic,42,size_history,3-4|missing,shrink,2,0.0,0.0,0.0,2,1,HGB
+hier_hgb_dynamic,42,size_history,3-4|missing,merge,3,0.3333333333333333,0.16666666666666666,0.2222222222222222,2,1,HGB
+hier_hgb_dynamic,42,size_history,3-4|missing,split,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,42,size_history,3-4|missing,dissolve,218,0.9678899082568807,0.9678899082568807,0.9678899082568807,7,0,HGB
+hier_hgb_dynamic,42,size_history,5-20|available,stable,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,42,size_history,5-20|available,grow,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,42,size_history,5-20|available,shrink,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,42,size_history,5-20|available,merge,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,42,size_history,5-20|available,split,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,42,size_history,5-20|available,dissolve,1,1.0,1.0,1.0,0,0,HGB
+hier_hgb_dynamic,42,size_history,5-20|missing,stable,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,42,size_history,5-20|missing,grow,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,42,size_history,5-20|missing,shrink,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,42,size_history,5-20|missing,merge,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,42,size_history,5-20|missing,split,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,42,size_history,5-20|missing,dissolve,96,0.9895833333333334,1.0,0.9947643979057591,1,0,HGB
+hier_hgb_dynamic,42,size_history,>20|available,stable,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,42,size_history,>20|available,grow,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,42,size_history,>20|available,shrink,6,0.3333333333333333,0.2857142857142857,0.30769230769230765,4,0,HGB
+hier_hgb_dynamic,42,size_history,>20|available,merge,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,42,size_history,>20|available,split,19,0.7368421052631579,0.7777777777777778,0.7567567567567567,5,0,HGB
+hier_hgb_dynamic,42,size_history,>20|available,dissolve,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,42,size_history,>20|missing,stable,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,42,size_history,>20|missing,grow,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,42,size_history,>20|missing,shrink,17,0.7058823529411765,0.4444444444444444,0.5454545454545455,5,3,HGB
+hier_hgb_dynamic,42,size_history,>20|missing,merge,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,42,size_history,>20|missing,split,20,0.4,0.8,0.5333333333333333,12,0,HGB
+hier_hgb_dynamic,42,size_history,>20|missing,dissolve,14,0.7857142857142857,0.7857142857142857,0.7857142857142857,3,0,HGB
+hier_hgb_dynamic,43,size_history,2|available,stable,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,43,size_history,2|available,grow,1,0.0,0.0,0.0,1,0,HGB
+hier_hgb_dynamic,43,size_history,2|available,shrink,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,43,size_history,2|available,merge,2,0.5,0.16666666666666666,0.25,1,0,HGB
+hier_hgb_dynamic,43,size_history,2|available,split,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,43,size_history,2|available,dissolve,65,0.8615384615384616,1.0,0.9256198347107438,9,0,HGB
+hier_hgb_dynamic,43,size_history,2|missing,stable,4,0.0,0.0,0.0,4,3,HGB
+hier_hgb_dynamic,43,size_history,2|missing,grow,12,0.16666666666666666,0.13333333333333333,0.14814814814814814,10,7,HGB
+hier_hgb_dynamic,43,size_history,2|missing,shrink,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,43,size_history,2|missing,merge,9,0.1111111111111111,0.041666666666666664,0.06060606060606061,8,7,HGB
+hier_hgb_dynamic,43,size_history,2|missing,split,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,43,size_history,2|missing,dissolve,764,0.9594240837696335,0.9773333333333334,0.9682959048877147,31,0,HGB
+hier_hgb_dynamic,43,size_history,3-4|available,stable,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,43,size_history,3-4|available,grow,1,1.0,0.3333333333333333,0.5,0,0,HGB
+hier_hgb_dynamic,43,size_history,3-4|available,shrink,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,43,size_history,3-4|available,merge,1,0.0,0.0,0.0,1,1,HGB
+hier_hgb_dynamic,43,size_history,3-4|available,split,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,43,size_history,3-4|available,dissolve,9,0.5555555555555556,0.8333333333333334,0.6666666666666667,4,0,HGB
+hier_hgb_dynamic,43,size_history,3-4|missing,stable,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,43,size_history,3-4|missing,grow,5,0.0,0.0,0.0,5,5,HGB
+hier_hgb_dynamic,43,size_history,3-4|missing,shrink,2,0.0,0.0,0.0,2,1,HGB
+hier_hgb_dynamic,43,size_history,3-4|missing,merge,3,0.3333333333333333,0.16666666666666666,0.2222222222222222,2,1,HGB
+hier_hgb_dynamic,43,size_history,3-4|missing,split,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,43,size_history,3-4|missing,dissolve,218,0.9678899082568807,0.9678899082568807,0.9678899082568807,7,0,HGB
+hier_hgb_dynamic,43,size_history,5-20|available,stable,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,43,size_history,5-20|available,grow,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,43,size_history,5-20|available,shrink,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,43,size_history,5-20|available,merge,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,43,size_history,5-20|available,split,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,43,size_history,5-20|available,dissolve,1,1.0,1.0,1.0,0,0,HGB
+hier_hgb_dynamic,43,size_history,5-20|missing,stable,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,43,size_history,5-20|missing,grow,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,43,size_history,5-20|missing,shrink,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,43,size_history,5-20|missing,merge,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,43,size_history,5-20|missing,split,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,43,size_history,5-20|missing,dissolve,96,0.9895833333333334,1.0,0.9947643979057591,1,0,HGB
+hier_hgb_dynamic,43,size_history,>20|available,stable,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,43,size_history,>20|available,grow,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,43,size_history,>20|available,shrink,6,0.3333333333333333,0.2857142857142857,0.30769230769230765,4,0,HGB
+hier_hgb_dynamic,43,size_history,>20|available,merge,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,43,size_history,>20|available,split,19,0.7368421052631579,0.7777777777777778,0.7567567567567567,5,0,HGB
+hier_hgb_dynamic,43,size_history,>20|available,dissolve,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,43,size_history,>20|missing,stable,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,43,size_history,>20|missing,grow,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,43,size_history,>20|missing,shrink,17,0.7058823529411765,0.4444444444444444,0.5454545454545455,5,3,HGB
+hier_hgb_dynamic,43,size_history,>20|missing,merge,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,43,size_history,>20|missing,split,20,0.4,0.8,0.5333333333333333,12,0,HGB
+hier_hgb_dynamic,43,size_history,>20|missing,dissolve,14,0.7857142857142857,0.7857142857142857,0.7857142857142857,3,0,HGB
+hier_hgb_dynamic,44,size_history,2|available,stable,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,44,size_history,2|available,grow,1,0.0,0.0,0.0,1,0,HGB
+hier_hgb_dynamic,44,size_history,2|available,shrink,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,44,size_history,2|available,merge,2,0.5,0.16666666666666666,0.25,1,0,HGB
+hier_hgb_dynamic,44,size_history,2|available,split,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,44,size_history,2|available,dissolve,65,0.8615384615384616,1.0,0.9256198347107438,9,0,HGB
+hier_hgb_dynamic,44,size_history,2|missing,stable,4,0.0,0.0,0.0,4,3,HGB
+hier_hgb_dynamic,44,size_history,2|missing,grow,12,0.16666666666666666,0.13333333333333333,0.14814814814814814,10,7,HGB
+hier_hgb_dynamic,44,size_history,2|missing,shrink,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,44,size_history,2|missing,merge,9,0.1111111111111111,0.041666666666666664,0.06060606060606061,8,7,HGB
+hier_hgb_dynamic,44,size_history,2|missing,split,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,44,size_history,2|missing,dissolve,764,0.9594240837696335,0.9773333333333334,0.9682959048877147,31,0,HGB
+hier_hgb_dynamic,44,size_history,3-4|available,stable,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,44,size_history,3-4|available,grow,1,1.0,0.3333333333333333,0.5,0,0,HGB
+hier_hgb_dynamic,44,size_history,3-4|available,shrink,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,44,size_history,3-4|available,merge,1,0.0,0.0,0.0,1,1,HGB
+hier_hgb_dynamic,44,size_history,3-4|available,split,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,44,size_history,3-4|available,dissolve,9,0.5555555555555556,0.8333333333333334,0.6666666666666667,4,0,HGB
+hier_hgb_dynamic,44,size_history,3-4|missing,stable,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,44,size_history,3-4|missing,grow,5,0.0,0.0,0.0,5,5,HGB
+hier_hgb_dynamic,44,size_history,3-4|missing,shrink,2,0.0,0.0,0.0,2,1,HGB
+hier_hgb_dynamic,44,size_history,3-4|missing,merge,3,0.3333333333333333,0.16666666666666666,0.2222222222222222,2,1,HGB
+hier_hgb_dynamic,44,size_history,3-4|missing,split,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,44,size_history,3-4|missing,dissolve,218,0.9678899082568807,0.9678899082568807,0.9678899082568807,7,0,HGB
+hier_hgb_dynamic,44,size_history,5-20|available,stable,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,44,size_history,5-20|available,grow,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,44,size_history,5-20|available,shrink,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,44,size_history,5-20|available,merge,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,44,size_history,5-20|available,split,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,44,size_history,5-20|available,dissolve,1,1.0,1.0,1.0,0,0,HGB
+hier_hgb_dynamic,44,size_history,5-20|missing,stable,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,44,size_history,5-20|missing,grow,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,44,size_history,5-20|missing,shrink,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,44,size_history,5-20|missing,merge,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,44,size_history,5-20|missing,split,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,44,size_history,5-20|missing,dissolve,96,0.9895833333333334,1.0,0.9947643979057591,1,0,HGB
+hier_hgb_dynamic,44,size_history,>20|available,stable,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,44,size_history,>20|available,grow,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,44,size_history,>20|available,shrink,6,0.3333333333333333,0.2857142857142857,0.30769230769230765,4,0,HGB
+hier_hgb_dynamic,44,size_history,>20|available,merge,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,44,size_history,>20|available,split,19,0.7368421052631579,0.7777777777777778,0.7567567567567567,5,0,HGB
+hier_hgb_dynamic,44,size_history,>20|available,dissolve,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,44,size_history,>20|missing,stable,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,44,size_history,>20|missing,grow,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,44,size_history,>20|missing,shrink,17,0.7058823529411765,0.4444444444444444,0.5454545454545455,5,3,HGB
+hier_hgb_dynamic,44,size_history,>20|missing,merge,0,0.0,0.0,0.0,0,0,HGB
+hier_hgb_dynamic,44,size_history,>20|missing,split,20,0.4,0.8,0.5333333333333333,12,0,HGB
+hier_hgb_dynamic,44,size_history,>20|missing,dissolve,14,0.7857142857142857,0.7857142857142857,0.7857142857142857,3,0,HGB
+hier_lr_dynamic,42,size_history,2|available,stable,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,42,size_history,2|available,grow,1,0.0,0.0,0.0,1,0,LR đầy đủ
+hier_lr_dynamic,42,size_history,2|available,shrink,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,42,size_history,2|available,merge,2,0.0,0.0,0.0,2,0,LR đầy đủ
+hier_lr_dynamic,42,size_history,2|available,split,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,42,size_history,2|available,dissolve,65,0.8615384615384616,1.0,0.9256198347107438,9,0,LR đầy đủ
+hier_lr_dynamic,42,size_history,2|missing,stable,4,0.0,0.0,0.0,4,3,LR đầy đủ
+hier_lr_dynamic,42,size_history,2|missing,grow,12,0.16666666666666666,0.06666666666666667,0.09523809523809522,10,9,LR đầy đủ
+hier_lr_dynamic,42,size_history,2|missing,shrink,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,42,size_history,2|missing,merge,9,0.2222222222222222,0.3333333333333333,0.26666666666666666,7,5,LR đầy đủ
+hier_lr_dynamic,42,size_history,2|missing,split,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,42,size_history,2|missing,dissolve,764,0.9450261780104712,0.9769959404600812,0.9607451763140386,42,0,LR đầy đủ
+hier_lr_dynamic,42,size_history,3-4|available,stable,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,42,size_history,3-4|available,grow,1,1.0,0.2,0.33333333333333337,0,0,LR đầy đủ
+hier_lr_dynamic,42,size_history,3-4|available,shrink,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,42,size_history,3-4|available,merge,1,1.0,1.0,1.0,0,0,LR đầy đủ
+hier_lr_dynamic,42,size_history,3-4|available,split,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,42,size_history,3-4|available,dissolve,9,0.4444444444444444,1.0,0.6153846153846153,5,0,LR đầy đủ
+hier_lr_dynamic,42,size_history,3-4|missing,stable,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,42,size_history,3-4|missing,grow,5,0.0,0.0,0.0,5,5,LR đầy đủ
+hier_lr_dynamic,42,size_history,3-4|missing,shrink,2,0.0,0.0,0.0,2,2,LR đầy đủ
+hier_lr_dynamic,42,size_history,3-4|missing,merge,3,0.0,0.0,0.0,3,3,LR đầy đủ
+hier_lr_dynamic,42,size_history,3-4|missing,split,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,42,size_history,3-4|missing,dissolve,218,0.9862385321100917,0.9555555555555556,0.9706546275395033,3,0,LR đầy đủ
+hier_lr_dynamic,42,size_history,5-20|available,stable,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,42,size_history,5-20|available,grow,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,42,size_history,5-20|available,shrink,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,42,size_history,5-20|available,merge,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,42,size_history,5-20|available,split,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,42,size_history,5-20|available,dissolve,1,1.0,1.0,1.0,0,0,LR đầy đủ
+hier_lr_dynamic,42,size_history,5-20|missing,stable,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,42,size_history,5-20|missing,grow,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,42,size_history,5-20|missing,shrink,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,42,size_history,5-20|missing,merge,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,42,size_history,5-20|missing,split,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,42,size_history,5-20|missing,dissolve,96,0.9895833333333334,1.0,0.9947643979057591,1,0,LR đầy đủ
+hier_lr_dynamic,42,size_history,>20|available,stable,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,42,size_history,>20|available,grow,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,42,size_history,>20|available,shrink,6,0.3333333333333333,0.4,0.3636363636363636,4,0,LR đầy đủ
+hier_lr_dynamic,42,size_history,>20|available,merge,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,42,size_history,>20|available,split,19,0.8421052631578947,0.8,0.8205128205128205,3,0,LR đầy đủ
+hier_lr_dynamic,42,size_history,>20|available,dissolve,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,42,size_history,>20|missing,stable,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,42,size_history,>20|missing,grow,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,42,size_history,>20|missing,shrink,17,0.5882352941176471,0.43478260869565216,0.5,7,4,LR đầy đủ
+hier_lr_dynamic,42,size_history,>20|missing,merge,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,42,size_history,>20|missing,split,20,0.55,0.7857142857142857,0.6470588235294117,9,0,LR đầy đủ
+hier_lr_dynamic,42,size_history,>20|missing,dissolve,14,0.7142857142857143,0.7142857142857143,0.7142857142857143,4,0,LR đầy đủ
+hier_lr_dynamic,43,size_history,2|available,stable,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,43,size_history,2|available,grow,1,0.0,0.0,0.0,1,0,LR đầy đủ
+hier_lr_dynamic,43,size_history,2|available,shrink,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,43,size_history,2|available,merge,2,0.0,0.0,0.0,2,0,LR đầy đủ
+hier_lr_dynamic,43,size_history,2|available,split,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,43,size_history,2|available,dissolve,65,0.8615384615384616,1.0,0.9256198347107438,9,0,LR đầy đủ
+hier_lr_dynamic,43,size_history,2|missing,stable,4,0.0,0.0,0.0,4,3,LR đầy đủ
+hier_lr_dynamic,43,size_history,2|missing,grow,12,0.16666666666666666,0.06666666666666667,0.09523809523809522,10,9,LR đầy đủ
+hier_lr_dynamic,43,size_history,2|missing,shrink,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,43,size_history,2|missing,merge,9,0.2222222222222222,0.3333333333333333,0.26666666666666666,7,5,LR đầy đủ
+hier_lr_dynamic,43,size_history,2|missing,split,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,43,size_history,2|missing,dissolve,764,0.9450261780104712,0.9769959404600812,0.9607451763140386,42,0,LR đầy đủ
+hier_lr_dynamic,43,size_history,3-4|available,stable,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,43,size_history,3-4|available,grow,1,1.0,0.2,0.33333333333333337,0,0,LR đầy đủ
+hier_lr_dynamic,43,size_history,3-4|available,shrink,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,43,size_history,3-4|available,merge,1,1.0,1.0,1.0,0,0,LR đầy đủ
+hier_lr_dynamic,43,size_history,3-4|available,split,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,43,size_history,3-4|available,dissolve,9,0.4444444444444444,1.0,0.6153846153846153,5,0,LR đầy đủ
+hier_lr_dynamic,43,size_history,3-4|missing,stable,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,43,size_history,3-4|missing,grow,5,0.0,0.0,0.0,5,5,LR đầy đủ
+hier_lr_dynamic,43,size_history,3-4|missing,shrink,2,0.0,0.0,0.0,2,2,LR đầy đủ
+hier_lr_dynamic,43,size_history,3-4|missing,merge,3,0.0,0.0,0.0,3,3,LR đầy đủ
+hier_lr_dynamic,43,size_history,3-4|missing,split,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,43,size_history,3-4|missing,dissolve,218,0.9862385321100917,0.9555555555555556,0.9706546275395033,3,0,LR đầy đủ
+hier_lr_dynamic,43,size_history,5-20|available,stable,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,43,size_history,5-20|available,grow,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,43,size_history,5-20|available,shrink,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,43,size_history,5-20|available,merge,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,43,size_history,5-20|available,split,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,43,size_history,5-20|available,dissolve,1,1.0,1.0,1.0,0,0,LR đầy đủ
+hier_lr_dynamic,43,size_history,5-20|missing,stable,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,43,size_history,5-20|missing,grow,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,43,size_history,5-20|missing,shrink,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,43,size_history,5-20|missing,merge,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,43,size_history,5-20|missing,split,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,43,size_history,5-20|missing,dissolve,96,0.9895833333333334,1.0,0.9947643979057591,1,0,LR đầy đủ
+hier_lr_dynamic,43,size_history,>20|available,stable,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,43,size_history,>20|available,grow,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,43,size_history,>20|available,shrink,6,0.3333333333333333,0.4,0.3636363636363636,4,0,LR đầy đủ
+hier_lr_dynamic,43,size_history,>20|available,merge,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,43,size_history,>20|available,split,19,0.8421052631578947,0.8,0.8205128205128205,3,0,LR đầy đủ
+hier_lr_dynamic,43,size_history,>20|available,dissolve,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,43,size_history,>20|missing,stable,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,43,size_history,>20|missing,grow,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,43,size_history,>20|missing,shrink,17,0.5882352941176471,0.43478260869565216,0.5,7,4,LR đầy đủ
+hier_lr_dynamic,43,size_history,>20|missing,merge,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,43,size_history,>20|missing,split,20,0.55,0.7857142857142857,0.6470588235294117,9,0,LR đầy đủ
+hier_lr_dynamic,43,size_history,>20|missing,dissolve,14,0.7142857142857143,0.7142857142857143,0.7142857142857143,4,0,LR đầy đủ
+hier_lr_dynamic,44,size_history,2|available,stable,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,44,size_history,2|available,grow,1,0.0,0.0,0.0,1,0,LR đầy đủ
+hier_lr_dynamic,44,size_history,2|available,shrink,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,44,size_history,2|available,merge,2,0.0,0.0,0.0,2,0,LR đầy đủ
+hier_lr_dynamic,44,size_history,2|available,split,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,44,size_history,2|available,dissolve,65,0.8615384615384616,1.0,0.9256198347107438,9,0,LR đầy đủ
+hier_lr_dynamic,44,size_history,2|missing,stable,4,0.0,0.0,0.0,4,3,LR đầy đủ
+hier_lr_dynamic,44,size_history,2|missing,grow,12,0.16666666666666666,0.06666666666666667,0.09523809523809522,10,9,LR đầy đủ
+hier_lr_dynamic,44,size_history,2|missing,shrink,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,44,size_history,2|missing,merge,9,0.2222222222222222,0.3333333333333333,0.26666666666666666,7,5,LR đầy đủ
+hier_lr_dynamic,44,size_history,2|missing,split,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,44,size_history,2|missing,dissolve,764,0.9450261780104712,0.9769959404600812,0.9607451763140386,42,0,LR đầy đủ
+hier_lr_dynamic,44,size_history,3-4|available,stable,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,44,size_history,3-4|available,grow,1,1.0,0.2,0.33333333333333337,0,0,LR đầy đủ
+hier_lr_dynamic,44,size_history,3-4|available,shrink,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,44,size_history,3-4|available,merge,1,1.0,1.0,1.0,0,0,LR đầy đủ
+hier_lr_dynamic,44,size_history,3-4|available,split,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,44,size_history,3-4|available,dissolve,9,0.4444444444444444,1.0,0.6153846153846153,5,0,LR đầy đủ
+hier_lr_dynamic,44,size_history,3-4|missing,stable,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,44,size_history,3-4|missing,grow,5,0.0,0.0,0.0,5,5,LR đầy đủ
+hier_lr_dynamic,44,size_history,3-4|missing,shrink,2,0.0,0.0,0.0,2,2,LR đầy đủ
+hier_lr_dynamic,44,size_history,3-4|missing,merge,3,0.0,0.0,0.0,3,3,LR đầy đủ
+hier_lr_dynamic,44,size_history,3-4|missing,split,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,44,size_history,3-4|missing,dissolve,218,0.9862385321100917,0.9555555555555556,0.9706546275395033,3,0,LR đầy đủ
+hier_lr_dynamic,44,size_history,5-20|available,stable,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,44,size_history,5-20|available,grow,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,44,size_history,5-20|available,shrink,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,44,size_history,5-20|available,merge,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,44,size_history,5-20|available,split,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,44,size_history,5-20|available,dissolve,1,1.0,1.0,1.0,0,0,LR đầy đủ
+hier_lr_dynamic,44,size_history,5-20|missing,stable,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,44,size_history,5-20|missing,grow,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,44,size_history,5-20|missing,shrink,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,44,size_history,5-20|missing,merge,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,44,size_history,5-20|missing,split,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,44,size_history,5-20|missing,dissolve,96,0.9895833333333334,1.0,0.9947643979057591,1,0,LR đầy đủ
+hier_lr_dynamic,44,size_history,>20|available,stable,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,44,size_history,>20|available,grow,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,44,size_history,>20|available,shrink,6,0.3333333333333333,0.4,0.3636363636363636,4,0,LR đầy đủ
+hier_lr_dynamic,44,size_history,>20|available,merge,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,44,size_history,>20|available,split,19,0.8421052631578947,0.8,0.8205128205128205,3,0,LR đầy đủ
+hier_lr_dynamic,44,size_history,>20|available,dissolve,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,44,size_history,>20|missing,stable,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,44,size_history,>20|missing,grow,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,44,size_history,>20|missing,shrink,17,0.5882352941176471,0.43478260869565216,0.5,7,4,LR đầy đủ
+hier_lr_dynamic,44,size_history,>20|missing,merge,0,0.0,0.0,0.0,0,0,LR đầy đủ
+hier_lr_dynamic,44,size_history,>20|missing,split,20,0.55,0.7857142857142857,0.6470588235294117,9,0,LR đầy đủ
+hier_lr_dynamic,44,size_history,>20|missing,dissolve,14,0.7142857142857143,0.7142857142857143,0.7142857142857143,4,0,LR đầy đủ
