@@ -1,0 +1,115 @@
+{
+    "title":  "GED threshold sensitivity — independent reproduction",
+    "date":  "2026-11-19",
+    "status":  "completed",
+    "purpose":  "Independent reproduction and supplementary case-level and per-seed outputs",
+    "protocol":  {
+                     "link_thresholds":  [
+                                             0.5,
+                                             0.45,
+                                             0.55
+                                         ],
+                     "dissolve_thresholds":  [
+                                                 0.1,
+                                                 0.05,
+                                                 0.15
+                                             ],
+                     "configurations":  [
+                                            {
+                                                "link_threshold":  0.5,
+                                                "dissolve_threshold":  0.1,
+                                                "role":  "baseline"
+                                            },
+                                            {
+                                                "link_threshold":  0.45,
+                                                "dissolve_threshold":  0.1,
+                                                "role":  "alternative"
+                                            },
+                                            {
+                                                "link_threshold":  0.55,
+                                                "dissolve_threshold":  0.1,
+                                                "role":  "alternative"
+                                            },
+                                            {
+                                                "link_threshold":  0.5,
+                                                "dissolve_threshold":  0.05,
+                                                "role":  "alternative"
+                                            },
+                                            {
+                                                "link_threshold":  0.5,
+                                                "dissolve_threshold":  0.15,
+                                                "role":  "alternative"
+                                            }
+                                        ],
+                     "alpha_beta_use_same_link_threshold":  true,
+                     "evaluation_classes":  [
+                                                "stable",
+                                                "grow",
+                                                "shrink",
+                                                "merge",
+                                                "split",
+                                                "dissolve"
+                                            ],
+                     "unresolved_excluded_from_six_class_metrics":  true,
+                     "censored_excluded_from_six_class_metrics":  true,
+                     "unresolved_recoded_as_dissolve":  false,
+                     "model_retraining":  false,
+                     "models":  [
+                                    "hier_lr_dynamic",
+                                    "hier_hgb_dynamic"
+                                ],
+                     "seeds":  [
+                                   42,
+                                   43,
+                                   44
+                               ],
+                     "baseline_frozen_test_cases":  1269,
+                     "prediction_rows_per_model":  3807,
+                     "scoring":  "Calculate metrics separately per seed, then average across seeds"
+                 },
+    "reproduction_checks":  {
+                                "baseline_labels_exact_match":  true,
+                                "baseline_observed":  11562,
+                                "baseline_eligible":  7490,
+                                "baseline_unresolved":  4072,
+                                "baseline_censored":  183,
+                                "baseline_coverage":  0.64781179726690885,
+                                "threshold_summary_rows":  5,
+                                "changed_case_rows_across_alternatives":  1053,
+                                "frozen_prediction_summary_rows":  10,
+                                "frozen_prediction_per_seed_rows":  30,
+                                "historical_aggregate_tables_match":  true
+                            },
+    "historical_aggregate_directory":  "reports/tables/sna-feedback-20261111/",
+    "scripts":  [
+                    {
+                        "path":  "scripts/analyze_ged_threshold_sensitivity.py",
+                        "sha256":  "907f2c8e91671755d60fe051e6892abf42583c73a7af30c95d14097d9ad797d4",
+                        "bytes":  9246
+                    },
+                    {
+                        "path":  "scripts/analyze_ged_frozen_prediction_sensitivity.py",
+                        "sha256":  "b6f1190877f46dad63b6a8e91737d4d4225a2c00e0b8b496b864b0f581f4ed86",
+                        "bytes":  8857
+                    }
+                ],
+    "outputs":  [
+                    {
+                        "path":  "reports/tables/ged-threshold-sensitivity-20261119/ged_threshold_case_changes.csv",
+                        "sha256":  "a76f6b59d3d220549a0ff0eea983f594446cb1c43ed4f97c207b17c11ea222bb",
+                        "bytes":  108302
+                    },
+                    {
+                        "path":  "reports/tables/ged-threshold-sensitivity-20261119/ged_frozen_prediction_sensitivity_per_seed.csv",
+                        "sha256":  "6ca3f0580a11cea17eff119c9657b3fefb39fd6ae0915a4ff102edfdc75c5b57",
+                        "bytes":  3930
+                    }
+                ],
+    "source_data":  [
+                        {
+                            "path":  "artifacts/acceptance/lan-week4-input-001/full-study-2016/artifacts/temporal/activity-study-001/stages/evaluation/attempt-001/predictions.csv",
+                            "description":  "Frozen evaluation predictions",
+                            "sha256":  "498212fe1c757badc5d50ca206057c7abf8ec8544bcf9b4f08f56a0822df3e07"
+                        }
+                    ]
+}

@@ -7,3 +7,6 @@ artifacts/
 .env
 .env.*
 .ipynb_checkpoints/
+
+# Local GED sensitivity analysis outputs
+/analysis_outputs_*/
