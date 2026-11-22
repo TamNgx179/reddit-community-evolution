@@ -153,7 +153,7 @@ def package_label_review_handoff(packet, output, role):
     provenance = f"""# Provenance declaration — {role}
 
 - Reviewer identity:
-- Rubric/version used: frozen_v1.1 only after coordinator confirmation
+- Rubric/version used: frozen_v1.1 (`docs/REVIEW-RUBRIC-V1.1.md`)
 - Did you use AI assistance? yes/no
 - If yes, describe exactly what was used and keep suggestions separate from the final decision.
 - Answer key, tracker label/reason and model predictions seen before locking? yes/no

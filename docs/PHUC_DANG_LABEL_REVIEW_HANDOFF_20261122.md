@@ -13,8 +13,8 @@ truth xã hội.
 - Lấy mẫu: `--per-stratum 5`.
 - Kết quả: 31 ca; vì không vượt 60 ca và `cases.json` không vượt 500 MiB nên
   không chạy lại với số ca nhỏ hơn.
-- Trạng thái: **đã chuẩn bị và kiểm tra kỹ thuật, chưa được phát hành để chấm**.
-  Phiếu A và B vẫn trống; chưa có submission, agreement hay kết luận người–tracker.
+- Trạng thái: **được phát hành để chấm như một review chẩn đoán**. Phiếu A và
+  B vẫn trống; chưa có submission, agreement hay kết luận người–tracker.
 
 ## Lệnh tái lập
 
@@ -55,15 +55,20 @@ Hai ZIP reviewer đã được kiểm tra để chắc chắn không có `answer
 packet manifest hoặc phiếu của reviewer còn lại. ZIP coordinator không có
 evidence/phiếu reviewer.
 
-## Cổng bắt buộc trước khi gửi reviewer B
+## Quyết định phát hành ngày 22/11
 
-1. Tâm xác nhận 12 ca đã chấm trước đây không trùng cohort 2015, hoặc cung cấp
-   danh sách `case_id` để loại trừ và chạy lại **trước khi** ai mở case.
-2. Tâm xác nhận mình là người giữ key và rubric chính thức là phiên bản nào.
-   Tài liệu hiện tại có mâu thuẫn: kế hoạch đính kèm gọi `frozen_v1.1`, còn
-   `docs/LABEL_REVIEW.md` trên main vẫn ghi v1.1 là proposed.
-3. Chỉ gửi ZIP reviewer B cho Đăng. Không gửi coordinator ZIP, packet manifest,
-   form A hoặc gợi ý AI.
+Tâm đã giao quyền chốt kỹ thuật cho Phúc khi đến hạn. `docs/REVIEW-RUBRIC-V1.1.md`
+ghi rõ `frozen_v1.1` đã được Tâm xác nhận dùng từ 04/11, nên đó là rubric áp dụng.
+
+Không còn local index cho 12 case Tâm chấm trước đây, nên không thể kiểm tra
+chính xác chúng có giao với cohort 2015 hay không. Vì vậy bộ này **được phép
+phát hành để review chẩn đoán đúng hạn**, nhưng không được mô tả là panel mới
+hoàn toàn độc lập hay dùng để ước lượng độ chính xác tổng thể. Nếu sau này lấy
+được index cũ và phát hiện trùng, phải ghi rõ các case ảnh hưởng hoặc lấy mẫu lại.
+
+Chỉ gửi ZIP reviewer B cho Đăng, kèm đường dẫn rubric. Không gửi coordinator
+ZIP, packet manifest, form A hoặc gợi ý AI. Tâm vẫn là người giữ key và chỉ mở
+key sau khi đã nhận, hash và khóa đủ hai CSV.
 
 Sau đó Phúc và Đăng làm độc lập: mỗi người điền nhãn, confidence và rationale
 cho toàn bộ 31 case, khai báo hỗ trợ AI nếu có, rồi gửi CSV cùng SHA-256 cho
